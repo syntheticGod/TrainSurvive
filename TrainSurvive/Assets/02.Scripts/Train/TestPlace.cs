@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TestPlace : MonoBehaviour {
-    
 
     public void Place(Facility facility) {
         PlaceFacility.Place(this, facility);

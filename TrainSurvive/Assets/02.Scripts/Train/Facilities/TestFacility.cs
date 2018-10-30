@@ -9,5 +9,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TestFacility : Facility {
-    public override string Name { get; } = "TestFacility";
+
+    public override void OnBuildCompleted() {
+        Debug.Log("BUILT! " + Name);
+    }
 }

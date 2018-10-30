@@ -29,10 +29,13 @@ public class PlaceFacility {
     /// </summary>
     public static State PlaceState { get; private set; } = State.IDLE;
 
+    private static Color originColor = new Color(1, 1, 1, 0.6f);
+    private static Color blockColor = new Color(1, 0, 0, 0.6f);
+
     /// <summary>
     /// 调用该方法以开始放置一个物体，物体将跟随鼠标位置，左键放置，右键退出。
     /// 当设施与在ProjectSettings/Physics2D中设置的允许与Facility层碰撞的层发生碰撞时将自动标红并阻止放置。
-    /// 采用OverlapBoxNonAlloc优化GC，因此同时发生的碰撞不得超过缓冲大小（现在是50，大部分情况应该够用了）。
+    /// 采用NonAlloc优化GC，因此同时发生的碰撞不得超过缓冲大小（现在是50，大部分情况应该够用了）。
     /// </summary>
     /// <param name="context">提供一个执行协程的上下文，必须是Active的。</param>
     /// <param name="facility">要放置的物体。</param>
@@ -54,8 +57,8 @@ public class PlaceFacility {
         Facility facility = facilityGO.GetComponent<Facility>();
         Transform fTransform = facilityGO.GetComponent<Transform>();
         SpriteRenderer fSpriteRenderer = facilityGO.GetComponent<SpriteRenderer>();
-        Color fSpriteColor = fSpriteRenderer.color;
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
+
         while (PlaceState == State.PLACING) {
             RaycastHit2D? hit = getPlacablePointByMousePosition(facility.RequireLayers);
             bool isCollided = false;
@@ -64,21 +67,24 @@ public class PlaceFacility {
                 facilityGO.SetActive(true);
                 isCollided = checkCollided(facilityGO, hit.Value);
                 if (isCollided) {
-                    fSpriteRenderer.color = new Color(1, 0, 0, 0.6f);
+                    fSpriteRenderer.color = blockColor;
                 } else {
-                    fSpriteRenderer.color = fSpriteColor;
+                    fSpriteRenderer.color = originColor;
                 }
             } else {
                 facilityGO.SetActive(false);
             }
+            // 按右键退出
             if (Input.GetMouseButton(1)) {
                 StopPlacing();
             }
+            // 左键放置
             if (Input.GetMouseButton(0) && facilityGO.activeSelf && !isCollided) {
-                place(facility);
+                place(facility, fSpriteRenderer);
             }
             yield return wait;
         }
+
         if (PlaceState == State.IDLE) {
             facilityGO.SetActive(false);
             Object.Destroy(facilityGO);
@@ -100,21 +106,24 @@ public class PlaceFacility {
         return false;
     }
 
-    private static void place(Facility facility) {
+    private static void place(Facility facility, SpriteRenderer spriteRenderer) {
+        spriteRenderer.color = facility.HighlightColor;
         facility.OnPlaced();
         PlaceState = State.PLACED;
     }
 
-    private static RaycastHit2D? getPlacablePointByMousePosition(LayerMask[] acceptableLayers) {
+    private static RaycastHit2D? getPlacablePointByMousePosition(LayerMask acceptableLayers) {
         Vector3 _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 mousePos = new Vector2(_mousePos.x, _mousePos.y);
         float minDistance = float.MaxValue;
         RaycastHit2D? result = null;
-        for (int i = 0; i < acceptableLayers.Length; i++) {
-            LayerMask layer = acceptableLayers[i];
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.down, 999, layer.value);
+        RaycastHit2D[] hits = new RaycastHit2D[50];
+        int length = Physics2D.RaycastNonAlloc(mousePos, Vector2.down, hits, float.MaxValue, acceptableLayers.value);
+        for (int i = 0; i < length; i++) {
+            RaycastHit2D hit = hits[i];
             if (hit.collider && hit.distance < minDistance && hit.distance > 0) {
                 result = hit;
+                minDistance = hit.distance;
             }
         }
         return result;
