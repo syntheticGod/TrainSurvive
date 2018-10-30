@@ -1,8 +1,8 @@
 ﻿# 本项目的ignore
 
 #该文件是存放开发者姓名的文件，不需要上传
-Assets/Scripts/Editor/name.txt
-Assets/Scripts/Editor/name.txt.meta
+Assets/02.Scripts/Editor/name.txt
+Assets/02.Scripts/Editor/name.txt.meta
 
 #以下内容参考了 https://github.com/github/gitignore/blob/master/Unity.gitignore
 

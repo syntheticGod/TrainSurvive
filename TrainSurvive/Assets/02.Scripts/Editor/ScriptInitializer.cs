@@ -29,12 +29,12 @@ public class ScriptInitializer : UnityEditor.AssetModificationProcessor
         {
             if (author == null)
             {
-                if (File.Exists("Assets/Scripts/Editor/name.txt"))
-                    author = File.ReadAllText("Assets/Scripts/Editor/name.txt");
+                if (File.Exists("Assets/02.Scripts/Editor/name.txt"))
+                    author = File.ReadAllText("Assets/02.Scripts/Editor/name.txt");
                 else
                     throw new FileNotFoundException("开发者姓名文件未找到。" 
-                        + "请建立Assets/Scripts/Editor/name.txt，并写入姓名。"
-                        , "Assets/Scripts/Editor/name.txt");
+                        + "请建立Assets/02.Scripts/Editor/name.txt，并写入姓名。"
+                        , "Assets/02.Scripts/Editor/name.txt");
             }
             string content = annotationFormat.Clone() as string;
             content = content.Replace("#DESCRIPTION#", "");
