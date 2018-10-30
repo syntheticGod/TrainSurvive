@@ -22,6 +22,7 @@ public class ScriptInitializer : UnityEditor.AssetModificationProcessor
            " * 版本：#VERSION#\r\n" +
            " */\r\n";
     private static string author = null;
+    private static string authorFile = "Assets/02.Scripts/Editor/name.txt";
     public static void OnWillCreateAsset(string path)
     {
         path = path.Replace(".meta", "");
@@ -29,12 +30,12 @@ public class ScriptInitializer : UnityEditor.AssetModificationProcessor
         {
             if (author == null)
             {
-                if (File.Exists("Assets/Scripts/Editor/name.txt"))
-                    author = File.ReadAllText("Assets/Scripts/Editor/name.txt");
+                if (File.Exists(authorFile))
+                    author = File.ReadAllText(authorFile);
                 else
                     throw new FileNotFoundException("开发者姓名文件未找到。" 
-                        + "请建立Assets/Scripts/Editor/name.txt，并写入姓名。"
-                        , "Assets/Scripts/Editor/name.txt");
+                        + "请建立"+ authorFile + "，并写入姓名。请删去重新建立。"
+                        , authorFile);
             }
             string content = annotationFormat.Clone() as string;
             content = content.Replace("#DESCRIPTION#", "");
