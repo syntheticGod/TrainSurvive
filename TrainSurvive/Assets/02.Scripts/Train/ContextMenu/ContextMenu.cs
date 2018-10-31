@@ -6,18 +6,14 @@
  */
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ContextMenu {
-
-    /// <summary>
-    /// 点击按钮触发的事件
-    /// </summary>
-    public delegate void OnClick();
-
+    
     private class Pair {
         public string Text { get; set; }
-        public OnClick OnClick { get; set; }
+        public UnityAction OnClick { get; set; }
     }
 
     private static GameObject _canvasPrefab;
@@ -49,7 +45,7 @@ public class ContextMenu {
     /// </summary>
     /// <param name="text">按钮文本</param>
     /// <param name="onClick">按钮事件</param>
-    public void PutButton(string text, OnClick onClick) {
+    public void PutButton(string text, UnityAction onClick) {
         for (int i = 0; i < buttons.Count; i++) {
             if (buttons[i].Text == text) {
                 buttons[i].OnClick = onClick;
@@ -81,10 +77,8 @@ public class ContextMenu {
             Button button = buttonGO.GetComponent<Button>();
             Text text = buttonGO.GetComponentInChildren<Text>();
             text.text = buttons[i].Text;
-            button.onClick.AddListener(() => {
-                Close();
-                buttons[i].OnClick();
-            });
+            button.onClick.AddListener(Close);
+            button.onClick.AddListener(buttons[i].OnClick);
         }
     }
 
