@@ -179,6 +179,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &337465872
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393950455927336, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 467faeb7eeabed642a2869c49e1c066a, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &354269902
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapWidth: 100
   mapHeight: 100
-  plainObject: {fileID: 1917837823932434, guid: 1540d0cbcba8f3b4cb3a1b0376830b33,
+  plainObject: {fileID: 1866022609688322, guid: 467faeb7eeabed642a2869c49e1c066a,
     type: 2}
   hillObject: {fileID: 1390794882066930, guid: 4cd6ed9603b08634db8ac372145eb79a, type: 2}
   mountainObject: {fileID: 1390794882066930, guid: 4cd6ed9603b08634db8ac372145eb79a,
