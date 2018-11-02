@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Map))]
+[CustomEditor(typeof(MapGenerate))]
 public class MapModelCreate : Editor {
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
         if (GUILayout.Button("Create Map Model")) {
-            Map map = target as Map;
-            map.createModel();
+            MapGenerate map = target as MapGenerate;
+            map.CreateModel();
         }
     }
 }
