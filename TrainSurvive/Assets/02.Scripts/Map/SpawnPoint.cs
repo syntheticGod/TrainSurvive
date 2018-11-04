@@ -1,5 +1,7 @@
 /*
  * 描述：这是每一个单独的地块类
+ * 目前地块的属性有气候、地形或者是特殊地块
+ * 
  * 作者：王安鑫
  * 创建时间：2018/11/1 11:39:06
  * 版本：v0.1
@@ -9,6 +11,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnPoint {
+    //每个地块的气候种类
+    public enum ClimateEnum {
+        NONE = -1,
+
+        //热带
+        TROPIC,
+
+        //冻原
+        TUNDRA,
+
+        //炎热
+        HEAT,
+
+        //极寒
+        COLD,
+
+        NUM
+    }
+
     //每个地块单独的种类
     public enum TerrainEnum {
         NONE = -1,
@@ -30,7 +51,7 @@ public class SpawnPoint {
 
     //当前地块是不是其中一个特殊地块
     public enum SpecialTerrainEnum
-        {
+    {
         NONE = -1,
 
         //城镇
@@ -64,8 +85,8 @@ public class SpawnPoint {
     }
 
     //设置当前地块的地形
-    public void SetTerrainEnum() {
-
+    public void SetTerrainEnum(TerrainEnum terrainType) {
+        this.terrainType = terrainType;
     }
 
     //设置当前的特殊地块

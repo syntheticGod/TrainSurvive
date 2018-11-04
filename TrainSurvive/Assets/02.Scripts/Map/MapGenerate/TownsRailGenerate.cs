@@ -1,6 +1,9 @@
 /*
  * 描述：这是生成城镇和铁轨的类
  * 必须有一个GameObject叫MapBuild并且有脚本MapGenerate
+ * 城镇生成算法是将大地图划分为相等大小的若干个块，城镇在块中生成，保证了城镇之间的距离及随机性
+ * 铁轨生成是相邻块的城镇才可搭建铁轨，通过先使x轴相等，再使y轴相等来保证铁轨生成的一致性
+ * 
  * 作者：王安鑫
  * 创建时间：2018/11/1 20:24:51
  * 版本：v0.1
@@ -44,8 +47,12 @@ public class TownsRailGenerate : MonoBehaviour {
         towns.transform.parent = mapGenerate.mapRootObject.transform;
         rails.transform.parent = mapGenerate.mapRootObject.transform;
 
-        //生成城镇
-        BuildTowns();
+        //如果是第一次载入就生成城镇
+        if (mapGenerate.isCreateMap) {
+            BuildTowns();
+        }
+        //对城镇进行绘画
+        PaintTowns();
 
         //生成铁轨
         BuildRails();
@@ -65,9 +72,6 @@ public class TownsRailGenerate : MonoBehaviour {
         //初始化城镇位置数组
         mapGenerate.mapData.townsPos = new Vector2[rowNum, rowNum];
 
-        //当前城镇的index
-        //int curTownIndex = 0;
-
         int marginX = Mathf.Min(minDist / 4, offsetX / 4);
         int marginZ = Mathf.Min(minDist / 4, offsetZ / 4);
 
@@ -80,7 +84,19 @@ public class TownsRailGenerate : MonoBehaviour {
                 int posz = Random.Range(marginZ, offsetZ - marginZ) + j * offsetZ;
                 mapGenerate.mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
                 mapGenerate.mapData.townsPos[i, j] = new Vector2(posx, posz);
+            }
+        }
+    }
 
+    private void PaintTowns() {
+        //获取行数和列数
+        int rowNum = mapGenerate.mapData.townsPos.GetLength(0);
+        int colNum = mapGenerate.mapData.townsPos.GetLength(1);
+
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < colNum; j++) {
+                int posx = (int)mapGenerate.mapData.townsPos[i, j].x;
+                int posz = (int)mapGenerate.mapData.townsPos[i, j].y;
                 //对城镇图标进行绘画
                 GameObject o = Instantiate(townObject,
                     mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, 0, mapGenerate.spawnOffsetZ * posz),
@@ -120,6 +136,7 @@ public class TownsRailGenerate : MonoBehaviour {
 
     /** 将城镇连接起来
      * 铁轨的生成算法是，先使x轴相等，再使y轴相等
+     * 根据铁轨的路径和转折点绘画出当前铁轨
      */
     private void ConnectTown(Vector2 from, Vector2 to) {
         //Debug.Log(from + "  " + to);

@@ -591,6 +591,7 @@ MonoBehaviour:
   mountainSize: 3
   waterSize: 3
   treeSize: 3
+  isCreateMap: 0
 --- !u!4 &1108445042
 Transform:
   m_ObjectHideFlags: 0
