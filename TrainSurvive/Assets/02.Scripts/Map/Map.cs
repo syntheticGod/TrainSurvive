@@ -99,7 +99,7 @@ public class Map : MonoBehaviour {
 
     //生成特定的地形
     private void buildSpecialTerrain(int terrainSize, int terrainNum, SPAWN_POINT_TYPE pointType) {
-        Random random = new Random();
+
 
         //随机生成
         for (int i = 0; i < terrainNum; i++) {
