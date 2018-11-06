@@ -1,4 +1,10 @@
 /*
+ * 描述：
+ * 作者：����
+ * 创建时间：2018/11/6 23:29:41
+ * 版本：v0.1
+ */
+/*
  * 描述：专门为只能嵌入一个物品的容器设计的附加类
  * 作者：张皓翔
  * 创建时间：2018/11/6 19:53:41
@@ -18,10 +24,11 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
-        //if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
-        //    return;
-        gridCtrl = grid.GetComponent<ItemGridCtrl>();
+        if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
+            return;
         grid = eventData.pointerDrag;
+        gridCtrl = grid.GetComponent<ItemGridCtrl>();
+        
         
 
         InventoryCtrl tempController = grid.GetComponent<ItemGridCtrl>().GetController();

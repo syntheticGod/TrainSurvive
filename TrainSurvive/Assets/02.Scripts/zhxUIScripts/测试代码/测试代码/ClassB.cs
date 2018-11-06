@@ -1,4 +1,10 @@
-﻿using System;
+/*
+ * 描述：
+ * 作者：����
+ * 创建时间：2018/11/6 23:29:41
+ * 版本：v0.1
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

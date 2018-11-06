@@ -122,17 +122,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1885094596022760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 973eae6e81aacd24ebc4f43459134ba7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3082da2a7b881794f95eb2dd6605ca12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stateImg: []
-  markSprite: {fileID: 21300000, guid: a06acbe1ba3fc1c4b8077d77af2153f4, type: 3}
+  markSprite: {fileID: 21300000, guid: 977b4625d417be64bbc59933c17a53a1, type: 3}
   mark: {fileID: 114634712879330100}
   state: {fileID: 114238503391379168}
   itemSprite: {fileID: 114637502062633562}
-  informPanel: {fileID: 1902102611812880, guid: 535110700ead82148818b27d90d1e4e2,
+  informPanel: {fileID: 1902102611812880, guid: 98418723a6b8f414c90f4ed151663f10,
     type: 2}
-  splitPanel: {fileID: 1216511763439400, guid: 3fe56a1338ad2744fb510827f90d63ca, type: 2}
+  splitPanel: {fileID: 1216511763439400, guid: 2b25b48c35d3bbe48846dace465360fa, type: 2}
   showPileNum: {fileID: 114552169054220534}
 --- !u!114 &114238503391379168
 MonoBehaviour:
@@ -208,7 +208,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: b8f31b66b7d907f40bc5444b66aba2af, type: 3}
+    m_Font: {fileID: 12800000, guid: 2acbd34bdcbb7204295c62b672a4a24a, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
