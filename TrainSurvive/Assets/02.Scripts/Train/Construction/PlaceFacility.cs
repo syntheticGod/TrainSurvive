@@ -65,11 +65,15 @@ public class PlaceFacility {
             if (hit.HasValue) {
                 fTransform.SetPositionAndRotation(hit.Value.point, Quaternion.identity);
                 facilityGO.SetActive(true);
-                isCollided = checkCollided(facilityGO, hit.Value);
-                if (isCollided) {
-                    fSpriteRenderer.color = blockColor;
+                if (isCostsAvailable(facility)) {
+                    isCollided = checkCollided(facilityGO, hit.Value);
+                    if (isCollided) {
+                        fSpriteRenderer.color = blockColor;
+                    } else {
+                        fSpriteRenderer.color = originColor;
+                    }
                 } else {
-                    fSpriteRenderer.color = originColor;
+                    fSpriteRenderer.color = blockColor;
                 }
             } else {
                 facilityGO.SetActive(false);
@@ -107,8 +111,11 @@ public class PlaceFacility {
     }
 
     private static void place(Facility facility, SpriteRenderer spriteRenderer) {
+        if (!facility.OnPlaced()) {
+            spriteRenderer.color = blockColor;
+            return;
+        }
         spriteRenderer.color = facility.HighlightColor;
-        facility.OnPlaced();
         PlaceState = State.PLACED;
     }
 
@@ -127,5 +134,9 @@ public class PlaceFacility {
             }
         }
         return result;
+    }
+
+    private static bool isCostsAvailable(Facility facility) {
+        return true;
     }
 }

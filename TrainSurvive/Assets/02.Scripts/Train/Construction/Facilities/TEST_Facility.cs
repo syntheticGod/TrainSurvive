@@ -5,10 +5,14 @@
  * 版本：v0.1
  */
 using UnityEngine;
+using UnityEngine.UI;
 
-public class TestFacility : Facility {
+public class TEST_Facility : Facility {
     public override string Name { get; } = "Bili";
     public override float WorkAll { get; } = 5;
+    public override Cost[] Costs { get; } = {
+        new Cost(){ItemID = 0, Count = 0}
+    };
 
     protected override void OnRemove() {
         Debug.Log(Name + ": OnRemove");

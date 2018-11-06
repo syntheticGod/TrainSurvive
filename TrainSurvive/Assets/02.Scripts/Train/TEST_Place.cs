@@ -6,7 +6,7 @@
  */
 using UnityEngine;
 
-public class TestPlace : MonoBehaviour {
+public class TEST_Place : MonoBehaviour {
 
     public void Place(Facility facility) {
         PlaceFacility.Place(this, facility);

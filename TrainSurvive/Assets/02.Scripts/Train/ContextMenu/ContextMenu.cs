@@ -40,19 +40,38 @@ public class ContextMenu {
     private GameObject canvasGO;
 
     /// <summary>
-    /// 在菜单中添加一个按钮。
-    /// 如果text按钮已经存在则修改回调。否则将按钮加到菜单最后。
+    /// 在菜单中添加/更新/删除一个按钮。
     /// </summary>
     /// <param name="text">按钮文本</param>
-    /// <param name="onClick">按钮事件</param>
-    public void PutButton(string text, UnityAction onClick) {
+    /// <param name="index">显示位置，从0开始，如果为负数则保持原优先级（更新时）或放在队列末尾（添加时）。</param>
+    /// <param name="onClick">按钮事件，如果为null则从列表中删除该项。</param>
+    public void PutButton(string text, int index, UnityAction onClick) {
         for (int i = 0; i < buttons.Count; i++) {
             if (buttons[i].Text == text) {
-                buttons[i].OnClick = onClick;
+                if (onClick == null) {
+                    // 删除
+                    buttons.RemoveAt(i);
+                } else {
+                    if (index < 0) {
+                        // 更新
+                        buttons[i].OnClick = onClick;
+                    } else {
+                        // 重排
+                        buttons.RemoveAt(i);
+                        break;
+                    }
+                }
                 return;
             }
         }
-        buttons.Add(new Pair() { Text = text, OnClick = onClick });
+        if (onClick != null) {
+            Pair pair = new Pair() { Text = text, OnClick = onClick };
+            if (index < 0 || index >= buttons.Count) {
+                buttons.Add(pair);
+            } else {
+                buttons.Insert(index, pair);
+            }
+        }
     }
     
     /// <summary>
