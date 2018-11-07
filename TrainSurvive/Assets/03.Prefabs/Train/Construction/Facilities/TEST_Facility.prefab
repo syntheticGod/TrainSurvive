@@ -83,8 +83,8 @@ MonoBehaviour:
     m_Bits: 256
   IndicatorPrefab: {fileID: 114699973544657306, guid: 87042105da9dd434599656b025391fc2,
     type: 2}
-  FacilityUIPrefab: {fileID: 1160699627112846, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
+  FacilityUIName: TEST_FacilityUI
+  Menus: []
 --- !u!212 &212771478093524012
 SpriteRenderer:
   m_ObjectHideFlags: 1
