@@ -20,12 +20,13 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     private GameObject grid;        //包含的物品格实例
     private ItemGridCtrl gridCtrl;
     public PublicData.Charge ChargeIn;
+    public GameObject Prefab;
 
 
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
-        if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
-            return;
+        //if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
+        //    return;
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
         
@@ -41,7 +42,13 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         //grid.GetComponent<RectTransform>().position = Vector2.zero;
     }
 
-    public bool AddNum(int num)
+    public void Clear()
+    {
+        grid = null;
+        gridCtrl = null;
+    }
+
+    private bool AddNum(int num)
     {   //若增加这些物品后达超过堆叠上限，则直接返回FALSE，否则返回TRUE
         if(gridCtrl.item.currPileNum + num > gridCtrl.item.maxPileNum)
         {
@@ -51,13 +58,25 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         return true;
     }
 
-    public bool DeductNum(int num)
-    {   //若剩余物品不够一次性扣除，则直接返回FALSE，否则返回TRUE，物品是否存在由外部判断
-        if(gridCtrl.item.currPileNum - num < 0)
+    public bool CanConsume(int consumeNum)
+    {   //预判该物品是否足够量的消耗
+        if (gridCtrl.item.currPileNum - consumeNum < 0)
         {
             return false;
         }
-        else if(gridCtrl.item.currPileNum - num == 0)
+        else
+        {
+            return true;
+        }
+    }
+
+    public bool Consume(int consumeNum)
+    {   //若剩余物品不够一次性扣除，则直接返回FALSE，否则返回TRUE，物品是否存在由外部判断
+        if(gridCtrl.item.currPileNum - consumeNum < 0)
+        {
+            return false;
+        }
+        else if(gridCtrl.item.currPileNum - consumeNum == 0)
         {
             Destroy(grid);
             grid = null;
@@ -65,7 +84,29 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         }
         else
         {
-            gridCtrl.item.currPileNum -= num;
+            gridCtrl.item.currPileNum -= consumeNum;
+        }
+        return true;
+    }
+
+    public bool GeneratorItem(int id,int num)
+    {
+        if(grid != null)
+        {
+            if(gridCtrl.item.id != id || gridCtrl.item.currPileNum + num > gridCtrl.item.maxPileNum)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            Item demoItem = new Assets._02.Scripts.zhxUIScripts.Material(id);
+            grid = Instantiate(Prefab);
+            gridCtrl = grid.GetComponent<ItemGridCtrl>();
+            demoItem.belongGrid = gridCtrl;
+            gridCtrl.BindContainer(gameObject);
+            gridCtrl.BindItem(demoItem);
+            grid.transform.SetParent(gameObject.transform);
         }
         return true;
     }

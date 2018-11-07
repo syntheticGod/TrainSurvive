@@ -59,9 +59,8 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     public void AddGrid(Item item)                      //添加一个物品格实例
     {
-        int index = itemGridInst.Count;
         GameObject tempGrid = Instantiate(itemGrid);
-        tempGrid.GetComponent<ItemGridCtrl>().BindItem(item, index);
+        tempGrid.GetComponent<ItemGridCtrl>().BindItem(item);
         tempGrid.GetComponent<ItemGridCtrl>().BindController(this);
         //tempGrid.GetComponent<ItemGridCtrl>().BindContainer(gameObject);
         itemGridInst.Add(tempGrid);

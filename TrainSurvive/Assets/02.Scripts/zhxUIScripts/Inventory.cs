@@ -205,18 +205,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             return restNum;
         }
 
-        public void PopItem(int index)
-        {
-            if(index >= _items.Count)
-            {
-                Debug.Log("物品索引错误——Inventory.cs");
-                return;
-            }
-            _curr_size -= _items[index].size * _items[index].currPileNum;
-            _items.RemoveAt(index);
-            
 
-        }
 
         public void PopItem(Item item)                          //弹出所有物体
         {

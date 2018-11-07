@@ -23,21 +23,11 @@ using UnityEngine.SceneManagement;
 
 public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private int _index;
+
     private Item _item;
     public Sprite[] stateImg;
 
-    public int index
-    {
-        get
-        {
-            return _index;
-        }
-        set
-        {
-            _index = value;
-        }
-    }       //疑
+
     public Item item
     {
         get
@@ -87,10 +77,9 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         belongContainer = container;
     }
 
-    public void BindItem(Item item,int index)
+    public void BindItem(Item item)
     {
         _item = item;
-        _index = index;
         _item.belongGrid = this;
         mark.color = markColors[(int)_item.rarity];
         itemSprite.sprite = _item.sprite;
@@ -123,16 +112,27 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
             return;
         if(restNum == 0)
         {
-            belongController.RemoveGrid(gameObject);
-            Destroy(gameObject);
-            if(belongController != null)
-                belongController.coreInventory.PopItem(item);
+            DestroyMySelf();
         }
         else
         {
             item.currPileNum = restNum;
         }
         
+    }
+
+    public void DestroyMySelf()
+    {
+        if (belongController != null)
+        {
+            belongController.RemoveGrid(gameObject);
+            belongController.coreInventory.PopItem(item);
+        }
+        else
+        {
+            belongContainer.GetComponent<UnitInventoryCtrl>().Clear();
+        }
+        Destroy(gameObject);
     }
 
     public InventoryCtrl GetController()
@@ -215,7 +215,12 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
                 }
                 else
                 {   //非物品栏收到不同物品堆叠请求 -> 直接交换双方物品  （有些物品不能放在某些设备上，这个需要设备的脚本去把控）
-                    Debug.Log(oriGridCtrl.belongController);
+                    //---------------------------------------------------------------------------------------------------------
+                    //if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
+                    //{
+                    //    return;
+                    //}
+                    //----------------------------------------------------------------------------------------------------------
                     float restSize = oriGridCtrl.belongController.coreInventory.maxSize - oriGridCtrl.belongController.coreInventory.currSize;
                     float deltaSize = item.size * item.currPileNum - oriGridCtrl.item.size * oriGridCtrl.item.currPileNum;
                     if(deltaSize > restSize)   //对方是从物品栏中拖拽过来的（需要保证对方就是物品栏）
@@ -272,6 +277,10 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         //Destroy(draggingImg);
         //当自己拖拽到自己上，则不做处理，销毁
         Destroy(GameObject.Find("tempDragImg"));
+        if(eventData.pointerCurrentRaycast.gameObject.name == "Discard")
+        {
+            DestroyMySelf();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
