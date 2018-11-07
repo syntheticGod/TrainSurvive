@@ -5,10 +5,12 @@
  * 创建时间：2018/10/31 0:43:33
  * 版本：v0.1
  */
- using UnityEngine;
+using UnityEngine;
 
-namespace worldname { 
-    public interface IMapForTrain {
+namespace WorldMap
+{
+    public interface IMapForTrain
+    {
         /// <summary>
         /// 获取地图的X轴方块个数，和Z轴的方块个数
         /// </summary>
@@ -30,5 +32,62 @@ namespace worldname {
         /// <param name="position">地图坐标，不是世界坐标</param>
         /// <returns></returns>
         bool ifRail(Vector2Int position);
+    }
+    //测试类
+    public class MapForTest : IMapForTrain
+    {
+        public GameObject block;
+        public GameObject mapBuilder;
+        public GameObject worldMap;
+        private Vector2 blockSize;
+        private Vector2 mapOrigin;
+        private Vector2Int mapSize;
+        public MapForTest()
+        {
+            mapBuilder = GameObject.Find("MapBuild");
+            block = GameObject.Find("load(Clone)");
+            worldMap = GameObject.Find("worldmap");
+            //MapGenerate mapComponent = mapBuilder.GetComponent<MapGenerate>();
+            mapSize = new Vector2Int
+            {
+                x = 300,
+                y = 300
+            };
+            blockSize = new Vector2
+            {
+                x = block.GetComponent<SpriteRenderer>()
+                        .sprite.bounds.size.x,
+                y = block.GetComponent<SpriteRenderer>()
+                        .sprite.bounds.size.y,
+            };
+            mapOrigin = new Vector2
+            {
+                x = worldMap.transform.position.x,
+                y = worldMap.transform.position.z
+            };
+            Debug.Log("map size:" + mapSize);
+            Debug.Log("map origin:" + mapOrigin);
+            Debug.Log("block size:" + blockSize);
+        }
+
+        public Vector2 getBlockSize()
+        {
+            return blockSize;
+        }
+
+        public Vector2 getMapOrigin()
+        {
+            return mapOrigin;
+        }
+
+        public Vector2Int getMapSize()
+        {
+            return mapSize;
+        }
+
+        public bool ifRail(Vector2Int position)
+        {
+            return true;
+        }
     }
 }

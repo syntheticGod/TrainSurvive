@@ -5,7 +5,7 @@
  * 版本：v0.1
  */
 using UnityEngine;
-namespace worldname
+namespace WorldMap
 {
     public class MathUtilsByXYS
     {

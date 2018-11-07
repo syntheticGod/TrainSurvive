@@ -18,7 +18,7 @@ using System.IO;
 using UnityEngine;
 
 namespace WorldMap {
-    public class MapGenerate : MonoBehaviour, worldname.IMapForTrain {
+    public class MapGenerate : MonoBehaviour, IMapForTrain {
 
         //大地图的宽高（x轴和z轴地块的个数）
         public int mapWidth = 100;

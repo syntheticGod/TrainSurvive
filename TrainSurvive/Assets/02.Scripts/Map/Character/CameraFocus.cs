@@ -1,11 +1,12 @@
 /*
- * 描述：控制摄像机跟踪目标
+ * 描述：控制摄像机跟踪目标，
+ *          该脚本应该绑定到摄像机对象上。
  * 作者：项叶盛
  * 创建时间：2018/10/31 1:54:52
  * 版本：v0.1
  */
 using UnityEngine;
-namespace worldname
+namespace WorldMap
 {
     public class CameraFocus : MonoBehaviour, ICameraFocus
     {

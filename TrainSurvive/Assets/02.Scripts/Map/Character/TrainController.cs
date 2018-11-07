@@ -1,5 +1,6 @@
 /*
- * 描述：玩家控制列车移动的控制器。
+ * 描述：玩家控制列车移动的控制器，
+ *          该脚本应该绑定到列车对象上。
  * 作者：项叶盛
  * 创建时间：2018/10/31 0:29:36
  * 版本：v0.1
@@ -8,11 +9,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace worldname
+namespace WorldMap
 {
     public class TrainController : MonoBehaviour
     {
-        public int initPositionX = 50, initPositionZ = 50;
+        public Vector2 InitPosition { set; get; }
+        private const int levelOfTrain = 1;
         //列车移动一格所花的时间，现实中的时间。单位：秒
         public int timePerStepTrain = 1800;//0.5小时
         public float smoothTime = 0.3F;
@@ -30,20 +32,24 @@ namespace worldname
         private float xVelocity = 0.0F;
         private float zVelocity = 0.0F;
 
-        //传入的游戏对象或脚本
-        public GameObject mainCamera;
+        //主摄像机
+        private Camera mainCamera;
+        //地图脚本，用于获取地图信息
         private IMapForTrain iMapForTrain;
+        //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-
+        public void init(GameObject mapBuild, Vector2 initPosition)
+        {
+            iMapForTrain = mapBuild.GetComponent<IMapForTrain>();
+            Debug.Assert(null != iMapForTrain);
+            InitPosition = initPosition;
+        }
         void Start()
         {
-            iMapForTrain = transform.GetComponentInParent<IMapForTrain>();
-            transform.position = new Vector3(initPositionX, transform.position.y,
-                initPositionZ);
+            //初始化变量
+            mainCamera = Camera.main;
+            Debug.Assert(null != mainCamera,"需要将主摄像机的Tag改为MainCamera");
             cameraFocus = mainCamera.GetComponent<ICameraFocus>();
-            cameraFocus.focusLock(transform);
-            //FOR TEST : 新建一个测试用的Map
-            iMapForTrain = new MapForTest();
             //防止Block大小过小，导致除法错误
             blockSize = iMapForTrain.getBlockSize();
             if (blockSize.x < 0.1 || blockSize.y < 0.1)
@@ -52,8 +58,11 @@ namespace worldname
             }
             mapOrigin = iMapForTrain.getMapOrigin();
             mapOriginUnit = mapOrigin / blockSize + new Vector2(0.5F, 0.5F);
-            targetPosition = new Vector3(0, transform.position.y, 0);
-
+            targetPosition = new Vector3(0, levelOfTrain, 0);
+            //初始化GameObject
+            transform.position = new Vector3(InitPosition.x, levelOfTrain, InitPosition.y);
+            //焦距自己
+            cameraFocus.focusLock(transform);
         }
 
         void Update()
