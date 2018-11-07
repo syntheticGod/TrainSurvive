@@ -31,27 +31,31 @@ public class TestHelloWorld {
         world.addMoneyWrong(100);
         Assert.AreEqual(world.Money, 100);
     }
-    private void sort(char[] ws) {
-        for(int i = 0; i < ws.Length-1; i++) {
-            if(ws[i]>ws[i+1]) {
-                char temp = ws[i];
-                ws[i] = ws[i + 1];
-                ws[i + 1] = temp;
-            }
-        }
-    }
-    private string print(char [] ws) {
-        string text = "";
-        foreach(char w in ws){
-            text += w;
-        }
-        return text;
-    }
+
     [Test]
     public void testWord() {
-        char[] w = { 'j','l','x','w','g','z' };
-        Debug.Log(print(w));
-        sort(w);
-        Debug.Log(print(w));
+        Vector3 c = new Vector3(1, 1, 1);
+        MyClass d = new MyClass(2);
+        a(c, d);
+        Debug.Log(c.x + "my:" + d.a);
+        b(ref c);
+        Debug.Log(c.x);
     }
+    private void a(Vector3 c, MyClass d)
+    {
+        c.x = 22;
+        d.a = 22;
+    }  
+    private void b(ref Vector3 c)
+    {
+        c.x = 33;
+    }
+}
+public class MyClass
+{
+    public MyClass(int a)
+    {
+        this.a = a;
+    }
+    public int a;
 }
