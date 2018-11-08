@@ -18,7 +18,7 @@ using System.IO;
 using UnityEngine;
 
 namespace WorldMap {
-    public class MapGenerate : MonoBehaviour, IMapForTrain {
+    public class MapGenerate : MonoBehaviour, IMapForTrainTemp {
 
         //大地图的宽高（x轴和z轴地块的个数）
         public int mapWidth = 100;
@@ -231,20 +231,16 @@ namespace WorldMap {
             }
         }
 
-        public Vector2Int getMapSize() {
+        public Vector2Int GetMapSize() {
             return new Vector2Int(mapWidth, mapHeight);
         }
 
-        public Vector2 getMapOrigin() {
+        public Vector2 GetMapOrigin() {
             return new Vector2(orign.x, orign.z);
         }
 
-        public Vector2 getBlockSize() {
+        public Vector2 GetBlockSize() {
             return new Vector2(spawnOffsetX, spawnOffsetZ);
-        }
-
-        public bool ifRail(Vector2Int position) {
-            return mapData.data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
         }
     }
 }
