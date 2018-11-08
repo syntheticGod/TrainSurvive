@@ -14,7 +14,7 @@ using System.IO;
 using UnityEngine;
 
 namespace WorldMap {
-    public class Map {
+    public class Map : IMapForTrain{
 
         //大地图的宽高（x轴和z轴地块的个数）
         public int rowNum { get; private set; }
@@ -109,6 +109,60 @@ namespace WorldMap {
                     townsPos[lineCnt, col] = new Vector2(posx, posz);
                 }
             }
+        }
+        
+        /// <summary>
+        /// 判断点是否在地图内部
+        /// </summary>
+        /// <param name="position">地图坐标</param>
+        /// <returns>在内部返回真</returns>
+        public bool IfInter(ref Vector2Int position)
+        {
+            if (position.x >= colNum || position.x < 0) return false;
+            if (position.y > rowNum || position.y < 0) return false;
+            return true;
+        }
+        /// <summary>
+        /// 判断地图坐标是否是轨道
+        /// </summary>
+        /// <param name="position">地图坐标，不是世界坐标</param>
+        /// <returns></returns>
+        public bool IfRail(ref Vector2Int position)
+        {
+            return IfInter(ref position) &&
+                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
+        }
+        public bool IfRail(Vector2Int position)
+        {
+            return IfInter(ref position) &&
+                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
+        }
+        /// <summary>
+        /// 判断地图坐标是否是城镇
+        /// </summary>
+        /// <param name="position">地图坐标，不是世界坐标</param>
+        /// <returns></returns>
+        public bool IfTown(ref Vector2Int position)
+        {
+            return IfInter(ref position) &&
+                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
+        }
+        public bool IfTown(Vector2Int position)
+        {
+            return IfInter(ref position) &&
+                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
+        }
+        /// <summary>
+        /// 获取轨道的两端。
+        /// 如果铁轨只有一个点时，两个端点会重合。
+        /// </summary>
+        /// <param name="railPosition">传入铁轨的地图坐标。</param>
+        /// <param name="end1">传出一端的地图坐标</param>
+        /// <param name="end2">传出另一端的地图坐标</param>
+        /// <returns>false：如果指定点不是铁轨则</returns>
+        public bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int end1, out Vector2Int end2)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
