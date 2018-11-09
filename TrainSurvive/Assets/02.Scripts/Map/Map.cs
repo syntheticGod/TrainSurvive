@@ -108,8 +108,6 @@ namespace WorldMap {
                     int posz = int.Parse(curLineData[col * 2 + 1]);
                     //创建城镇类
                     towns[lineCnt, col]= new Town(new Vector2Int(posx, posz));
-                    //赋予当前地块城镇id
-                    data[posx, posz].SetTownId(new Vector2Int(lineCnt, col));
                 }
             }
         }

@@ -67,7 +67,9 @@ namespace WorldMap {
             BuildRails();
         }
 
-        /**生成城镇
+        
+
+        /**只生成城镇类
          * 假设地图是nxn
          * 只会生成城镇个数的pow(floor(sqrt(n)), 2)
          * 城镇单位为1x1
@@ -95,17 +97,17 @@ namespace WorldMap {
                     int posx = Random.Range(marginX, offsetX - marginX) + i * offsetX;
                     int posz = Random.Range(marginZ, offsetZ - marginZ) + j * offsetZ;
                     
-                    //设置城镇属性
-                    mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
-                    mapData.data[posx, posz].SetTownId(new Vector2Int(i, j));
-
                     //Debug.Log(mapData.data[posx, posz].townPos);
-
                     towns[i, j] = new Town(new Vector2Int(posx, posz));
                 }
             }
         }
 
+
+        /// <summary>
+        /// 在地图上进行城镇的绘画
+        /// 并赋予地块相应的属性
+        /// </summary>
         private void PaintTowns() {
             //获取行数和列数
             int townRowNum = towns.GetLength(0);
@@ -122,6 +124,10 @@ namespace WorldMap {
                     o.transform.parent = townParentObject.transform;
                     //设置城镇的偏移
                     o.transform.position = o.transform.position + townOffsetVec3;
+
+                    //设置城镇属性
+                    mapData.data[pos.x, pos.y].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
+                    mapData.data[pos.x, pos.y].SetTownId(new Vector2Int(i, j));
                 }
             }
         }
