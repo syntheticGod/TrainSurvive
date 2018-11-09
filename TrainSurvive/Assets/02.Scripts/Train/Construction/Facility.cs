@@ -60,8 +60,8 @@ public abstract class Facility : MonoBehaviour {
     public LayerMask RequireLayers;
     [Tooltip("状态指示器。")] [SerializeField]
     private Indicator IndicatorPrefab;
-    [Tooltip("设施UI名称。")] [SerializeField]
-    private string FacilityUIName;
+    [Tooltip("设施UI Prefab。")] [SerializeField]
+    private GameObject FacilityUIPrefab;
 
     /// <summary>
     /// 状态指示器
@@ -147,7 +147,6 @@ public abstract class Facility : MonoBehaviour {
     }
     private State _FacilityState = State.NONE;
     
-    private SpriteRenderer spriteRenderer;
     private ContextMenu contextMenu;
 
     private static UIManager _uiManager;
@@ -157,6 +156,24 @@ public abstract class Facility : MonoBehaviour {
                 _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
             }
             return _uiManager;
+        }
+    }
+
+    private GameObject _facilityUIObj;
+    protected GameObject facilityUIObj {
+        get {
+            if(_facilityUIObj == null)
+                _facilityUIObj = uiManager.CreateFacilityUI(FacilityUIPrefab);
+            return _facilityUIObj;
+        }
+    }
+
+    private SpriteRenderer _spriteRenderer;
+    private SpriteRenderer spriteRenderer {
+        get {
+            if (_spriteRenderer == null)
+                _spriteRenderer = GetComponent<SpriteRenderer>();
+            return _spriteRenderer;
         }
     }
 
@@ -174,7 +191,9 @@ public abstract class Facility : MonoBehaviour {
             Indicator = Instantiate(IndicatorPrefab, transform);
         }
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (FacilityUIPrefab == null) {
+            Debug.LogError("该Facility对象必须填写FacilityUIPrefab。", this);
+        }
     }
     
     /// <summary>
@@ -234,9 +253,9 @@ public abstract class Facility : MonoBehaviour {
     /// </summary>
     protected abstract void OnStart();
     /// <summary>
-    /// 当设施进入启动状态的回调。
+    /// 当打开设施界面时。
     /// </summary>
-    protected abstract void OnInitFacilityUI(GameObject facilityUI);
+    protected abstract void OnInitFacilityUI();
     /// <summary>
     /// 当设施停止工作时的回调。
     /// </summary>
@@ -253,7 +272,10 @@ public abstract class Facility : MonoBehaviour {
                 break;
             case State.WORKING:
             case State.STOPPED:
-                contextMenu.PutButton("查看", 0, () => { OnInitFacilityUI(uiManager.ShowFacilityUI(FacilityUIName)); });
+                contextMenu.PutButton("查看", 0, () => {
+                    uiManager.ShowFaclityUI(facilityUIObj);
+                    OnInitFacilityUI();
+                });
                 contextMenu.PutButton("拆除", 1, () => FacilityState = State.REMOVING);
                 break;
             default:

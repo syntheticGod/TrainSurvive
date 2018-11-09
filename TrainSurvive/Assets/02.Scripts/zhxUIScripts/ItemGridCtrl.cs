@@ -128,10 +128,6 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
             belongController.RemoveGrid(gameObject);
             belongController.coreInventory.PopItem(item);
         }
-        else
-        {
-            belongContainer.GetComponent<UnitInventoryCtrl>().Clear();
-        }
         Destroy(gameObject);
     }
 
@@ -277,7 +273,7 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         //Destroy(draggingImg);
         //当自己拖拽到自己上，则不做处理，销毁
         Destroy(GameObject.Find("tempDragImg"));
-        if(eventData.pointerCurrentRaycast.gameObject.name == "Discard")
+        if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
             DestroyMySelf();
         }

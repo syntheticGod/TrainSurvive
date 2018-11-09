@@ -16,44 +16,38 @@ public class UIManager : MonoBehaviour {
     [Tooltip("InventoryPanel子物体")] [SerializeField]
     private RectTransform InventoryPanel;
 
-    private RectTransform _currentFacilityUI;
-    private RectTransform currentFacilityUI {
+    private GameObject _currentFacilityUI;
+    private GameObject currentFacilityUI {
         get {
             return _currentFacilityUI;
         }
         set {
             if (_currentFacilityUI != null) {
-                _currentFacilityUI.gameObject.SetActive(false);
+                _currentFacilityUI.SetActive(false);
             }
             if (value != null) {
-                value.gameObject.SetActive(true);
+                value.SetActive(true);
             }
             _currentFacilityUI = value;
         }
     }
 
-    private Dictionary<string, RectTransform> cacheFacilityUI = new Dictionary<string, RectTransform>();
-    private RectTransform getFacilityUI(string name) {
-        if (cacheFacilityUI.ContainsKey(name)) {
-            return cacheFacilityUI[name];
-        }
-        RectTransform child = FacilityUI.Find(name) as RectTransform;
-        if (child == null) {
-            Debug.LogError("在FacilityUI下没有找到: " + name, FacilityUI);
-            return null;
-        }
-        cacheFacilityUI[name] = child;
-        return child;
+    /// <summary>
+    /// 创建设施查看界面
+    /// </summary>
+    /// <param name="ui">UI Prefab</param>
+    public GameObject CreateFacilityUI(GameObject ui) {
+        GameObject uiObj = Instantiate(ui, FacilityUI);
+        uiObj.SetActive(false);
+        return uiObj;
     }
 
     /// <summary>
     /// 显示设施查看界面
     /// </summary>
-    /// <param name="name">UI在Inspector里的名称</param>
-    public GameObject ShowFacilityUI(string name) {
-        RectTransform child = getFacilityUI(name);
-        currentFacilityUI = child;
-        return currentFacilityUI.gameObject;
+    /// <param name="ui">UI实体</param>
+    public void ShowFaclityUI(GameObject ui) {
+        currentFacilityUI = ui;
     }
 
     /// <summary>
