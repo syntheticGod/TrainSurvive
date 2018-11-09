@@ -11,10 +11,10 @@ using UnityEngine;
 
 
 public class MenuScript : MonoBehaviour {
-    ResourceController rc;
+    TimeController rc;
 	// Use this for initialization
 	void Start () {
-        rc = ResourceController.getInstance();
+        rc = TimeController.getInstance();
 
     }
 	
@@ -26,21 +26,21 @@ public class MenuScript : MonoBehaviour {
 
     public void pauseGame()
     {
-        rc.setGameSpeedRate(ResourceController.speedRate.stop);
+        rc.setGameSpeedRate(TimeController.speedRate.stop);
     }
     public void setNormalSpeed()
     {
-        rc.setGameSpeedRate(ResourceController.speedRate.normal);
+        rc.setGameSpeedRate(TimeController.speedRate.normal);
   
     }
     public void setHighSpeed()
     {
-        rc.setGameSpeedRate(ResourceController.speedRate.fast);
+        rc.setGameSpeedRate(TimeController.speedRate.fast);
         
     }
     public void setMaxSpeed()
     {
-        rc.setGameSpeedRate(ResourceController.speedRate.veryfast);
+        rc.setGameSpeedRate(TimeController.speedRate.veryfast);
     }
 
     public void changeToNoTimeScene(string sceneName)
