@@ -99,6 +99,8 @@ namespace WorldMap {
                     mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
                     mapData.data[posx, posz].SetTownId(new Vector2Int(i, j));
 
+                    //Debug.Log(mapData.data[posx, posz].townPos);
+
                     towns[i, j] = new Town(new Vector2Int(posx, posz));
                 }
             }
@@ -237,8 +239,10 @@ namespace WorldMap {
 
                 //设置铁轨(属性，终点城镇坐标，起点城镇坐标)
                 mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
-                mapData.data[posx, posz].SetTownId(toTownPos);
+                mapData.data[posx, posz].SetTownId(fromTownPos);
                 mapData.data[posx, posz].SetStartTownId(toTownPos);
+
+                //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
 
                 //对铁轨图标进行绘画
                 GameObject o = Instantiate(railDirectObject,

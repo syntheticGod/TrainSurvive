@@ -106,7 +106,10 @@ namespace WorldMap {
                 for (int col = 0; col < townsColNum; col++) {
                     int posx = int.Parse(curLineData[col * 2]);
                     int posz = int.Parse(curLineData[col * 2 + 1]);
+                    //创建城镇类
                     towns[lineCnt, col]= new Town(new Vector2Int(posx, posz));
+                    //赋予当前地块城镇id
+                    data[posx, posz].SetTownId(new Vector2Int(lineCnt, col));
                 }
             }
         }
@@ -155,8 +158,11 @@ namespace WorldMap {
             if (IfRail(railPosition) == false) {
                 return false;
             } else {
-                start = data[railPosition.x, railPosition.y].startTownPos;
-                end = data[railPosition.x, railPosition.y].townPos;
+                Vector2Int startTownPos = data[railPosition.x, railPosition.y].startTownPos;
+                Vector2Int endTownPos = data[railPosition.x, railPosition.y].townPos;
+
+                start = towns[startTownPos.x, startTownPos.y].position;
+                end = towns[endTownPos.x, endTownPos.y].position;
                 return true;
             }
         }
