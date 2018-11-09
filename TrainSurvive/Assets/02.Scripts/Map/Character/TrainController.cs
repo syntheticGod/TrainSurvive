@@ -82,8 +82,7 @@ namespace WorldMap
                 };
                 Vector2Int clickBlockIndex = whereTheClickedBlock(clickedPosition);
                 //判断点击处是否是铁轨
-                if (iMapForTrain.ifRail(clickBlockIndex))
-                {
+                if (iMapForTrain.ifRail(clickBlockIndex)) {
                     moveTrainTo(calBlockCenterByIndex(clickBlockIndex));
                 }
             }

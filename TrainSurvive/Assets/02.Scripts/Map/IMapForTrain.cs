@@ -16,14 +16,12 @@ namespace WorldMap
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
         /// <returns></returns>
-        bool IfRail(ref Vector2Int position);
         bool IfRail(Vector2Int position);
         /// <summary>
         /// 判断地图坐标是否是城镇
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
         /// <returns></returns>
-        bool IfTown(ref Vector2Int position);
         bool IfTown(Vector2Int position);
         /// <summary>
         /// 获取轨道的两端。

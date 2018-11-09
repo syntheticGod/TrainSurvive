@@ -16,15 +16,15 @@ using UnityEngine;
 namespace WorldMap {
     public class Map : IMapForTrain{
 
-        //大地图的宽高（x轴和z轴地块的个数）
+        //大地图的宽高（rowNum为x轴的个数，colNum为z轴地块的个数）
         public int rowNum { get; private set; }
         public int colNum { get; private set; }
 
         //地图中的每个块
         public SpawnPoint[,] data;
 
-        //各个城镇的位置
-        public Vector2[,] townsPos;
+        //城镇类
+        public Town[,] towns;
 
         //对地图属性做初始化
         public Map(int rowNum, int colNum) {
@@ -52,14 +52,14 @@ namespace WorldMap {
             }
 
             //写入城镇的宽高
-            int rowNum = townsPos.GetLength(0);
-            int colNum = townsPos.GetLength(1);
+            int rowNum = towns.GetLength(0);
+            int colNum = towns.GetLength(1);
             sw.WriteLine(rowNum + "," + colNum);
             //写入城镇的位置信息
             for (int i = 0; i < rowNum; i++) {
-                string row = townsPos[i, 0].x + "," + townsPos[i, 0].y;
+                string row = towns[i, 0].position.x + "," + towns[i, 0].position.y;
                 for (int j = 1; j < colNum; j++) {
-                    row += "," + townsPos[i, j].x + "," + townsPos[i, j].y;
+                    row += "," + towns[i, j].position.x + "," + towns[i, j].position.y;
                 }
                 sw.WriteLine(row);
             }
@@ -97,7 +97,7 @@ namespace WorldMap {
             int townsColNum = int.Parse(sizewh[1]);
 
             //初始化城镇位置数组
-            townsPos = new Vector2[townsRowNum, townsRowNum];
+            towns = new Town[townsRowNum, townsColNum];
 
             //获取城镇数据
             for (int lineCnt = 0; lineCnt < townsRowNum; lineCnt++) {
@@ -106,7 +106,7 @@ namespace WorldMap {
                 for (int col = 0; col < townsColNum; col++) {
                     int posx = int.Parse(curLineData[col * 2]);
                     int posz = int.Parse(curLineData[col * 2 + 1]);
-                    townsPos[lineCnt, col] = new Vector2(posx, posz);
+                    towns[lineCnt, col]= new Town(new Vector2Int(posx, posz));
                 }
             }
         }
@@ -116,10 +116,10 @@ namespace WorldMap {
         /// </summary>
         /// <param name="position">地图坐标</param>
         /// <returns>在内部返回真</returns>
-        public bool IfInter(ref Vector2Int position)
+        public bool IfInter(Vector2Int position)
         {
-            if (position.x >= colNum || position.x < 0) return false;
-            if (position.y > rowNum || position.y < 0) return false;
+            if (position.x >= rowNum || position.x < 0) return false;
+            if (position.y >= colNum || position.y < 0) return false;
             return true;
         }
         /// <summary>
@@ -127,14 +127,8 @@ namespace WorldMap {
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
         /// <returns></returns>
-        public bool IfRail(ref Vector2Int position)
-        {
-            return IfInter(ref position) &&
-                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
-        }
-        public bool IfRail(Vector2Int position)
-        {
-            return IfInter(ref position) &&
+        public bool IfRail(Vector2Int position) {
+            return IfInter(position) &&
                 data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
         }
         /// <summary>
@@ -142,14 +136,8 @@ namespace WorldMap {
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
         /// <returns></returns>
-        public bool IfTown(ref Vector2Int position)
-        {
-            return IfInter(ref position) &&
-                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
-        }
-        public bool IfTown(Vector2Int position)
-        {
-            return IfInter(ref position) &&
+        public bool IfTown(Vector2Int position) {
+            return IfInter(position) &&
                 data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
         }
         /// <summary>
@@ -157,12 +145,20 @@ namespace WorldMap {
         /// 如果铁轨只有一个点时，两个端点会重合。
         /// </summary>
         /// <param name="railPosition">传入铁轨的地图坐标。</param>
-        /// <param name="end1">传出一端的地图坐标</param>
-        /// <param name="end2">传出另一端的地图坐标</param>
+        /// <param name="start">传出一端的地图坐标</param>
+        /// <param name="end">传出另一端的地图坐标</param>
         /// <returns>false：如果指定点不是铁轨则</returns>
-        public bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int end1, out Vector2Int end2)
+        public bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end)
         {
-            throw new System.NotImplementedException();
+            start = new Vector2Int();
+            end = new Vector2Int();
+            if (IfRail(railPosition) == false) {
+                return false;
+            } else {
+                start = data[railPosition.x, railPosition.y].startTownPos;
+                end = data[railPosition.x, railPosition.y].townPos;
+                return true;
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -350,7 +350,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4412484348914114, guid: 1540d0cbcba8f3b4cb3a1b0376830b33, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4412484348914114, guid: 1540d0cbcba8f3b4cb3a1b0376830b33, type: 2}
       propertyPath: m_LocalPosition.y
@@ -358,7 +358,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4412484348914114, guid: 1540d0cbcba8f3b4cb3a1b0376830b33, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4412484348914114, guid: 1540d0cbcba8f3b4cb3a1b0376830b33, type: 2}
       propertyPath: m_LocalRotation.x
@@ -636,11 +636,9 @@ MonoBehaviour:
   mapHeight: 100
   plainObject: {fileID: 1866022609688322, guid: 467faeb7eeabed642a2869c49e1c066a,
     type: 2}
-  hillObject: {fileID: 1390794882066930, guid: 4cd6ed9603b08634db8ac372145eb79a, type: 2}
-  mountainObject: {fileID: 1390794882066930, guid: 4cd6ed9603b08634db8ac372145eb79a,
-    type: 2}
-  froestObject: {fileID: 1425257208691422, guid: 5040f0cc629cddb439783a347505d22b,
-    type: 2}
+  hillObject: {fileID: 0}
+  mountainObject: {fileID: 0}
+  froestObject: {fileID: 0}
   mapRootObject: {fileID: 0}
   loadNum: 0
   waterNum: 0
@@ -649,7 +647,7 @@ MonoBehaviour:
   mountainSize: 3
   waterSize: 3
   treeSize: 3
-  isCreateMap: 1
+  isCreateMap: 0
 --- !u!4 &1108445042
 Transform:
   m_ObjectHideFlags: 0
