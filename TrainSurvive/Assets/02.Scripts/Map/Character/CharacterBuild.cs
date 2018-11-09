@@ -11,8 +11,8 @@ namespace WorldMap
 {
     public class CharacterBuild : MonoBehaviour
     {
-        public float InitPositionForTrainX = 50F;
-        public float InitPositionForTrainZ = 50F;
+        public int InitIndexForXTrain = 50;
+        public int InitIndexForZTrain = 46;
         public GameObject mapBuild;
         public GameObject trainPrefab;
 
@@ -33,7 +33,7 @@ namespace WorldMap
             characterObject = new GameObject("Character");
             trainObject = Instantiate(trainPrefab);
             trainController = trainObject.GetComponent<TrainController>();
-            trainController.init(mapBuild, new Vector2(InitPositionForTrainX, InitPositionForTrainZ));
+            trainController.init(mapBuild.GetComponent<MapGenerate>(), mapBuild.GetComponent<MapGenerate>().mapData, new Vector2Int(InitIndexForXTrain, InitIndexForZTrain));
             trainObject.transform.parent = characterObject.transform;
         }
     }
