@@ -194,7 +194,6 @@ namespace WorldMap {
                     if (mapData.data[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
-                    railPath.Add(new Vector2Int(posx, posz));
 
                     //对铁轨图标进行旋转
                     if (from.x < to.x) {
@@ -226,50 +225,55 @@ namespace WorldMap {
                 }
             }
 
+            //如果有拐弯的铁轨，将其在最后加入
+            if (railTurnAngle != -1) {
+                railPath.Add(new Vector2Int(to.x, from.y));
+            }
+
             //对铁轨进行绘制
             PaintRail(railPath, xRailNum, railTurnAngle, from, to);
         }
 
-        //对铁轨进行绘画处理
+        /// <summary>
+        /// 对铁轨进行绘画处理
+        /// </summary>
+        /// <param name="railPath">记录每个铁轨坐标的队列</param>
+        /// <param name="xRailNum">x轴铁轨的个数（横）</param>
+        /// <param name="railTurnAngle">如果有转弯的铁轨，这是转弯铁轨的角度；如果没有，则为-1</param>
+        /// <param name="from">起点城镇位置</param>
+        /// <param name="to">终点城镇的位置</param>
         private void PaintRail(List<Vector2Int> railPath, int xRailNum, int railTurnAngle, Vector2Int from, Vector2Int to) {
             //记录起始和终止的城镇坐标
             Vector2Int fromTownPos = mapData.data[from.x, from.y].townPos;
             Vector2Int toTownPos = mapData.data[to.x, to.y].townPos;
             
-            //如果无铁轨碰撞
-            int curRailIndex = 0;
+            //如果无拐弯的铁轨
+            int directRailNum = railTurnAngle == -1 ? railPath.Count : railPath.Count - 1;
             //先绘画出x轴方向的铁轨
-            for (curRailIndex = 0; curRailIndex < xRailNum; curRailIndex++) {
+            for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++) {
                 int posx = railPath[curRailIndex].x;
                 int posz = railPath[curRailIndex].y;
 
                 //设置铁轨属性
                 SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
-                PaintSingleRail(posx, posz, true, new Vector3());
+                if (curRailIndex < xRailNum) {
+                    PaintSingleRail(posx, posz, true, new Vector3());
+                } else {
+                    PaintSingleRail(posx, posz, true, new Vector3(0, 90, 0));
+                }
                 //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
             }
 
             //x轴最后一段铁轨特殊处理（拐弯处）
             if (railTurnAngle != -1) {
-                int posx = railPath[curRailIndex].x;
-                int posz = railPath[curRailIndex].y;
-                curRailIndex++;
+                int posx = railPath[railPath.Count - 1].x;
+                int posz = railPath[railPath.Count - 1].y;
 
                 //设置铁轨属性
                 SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
                 PaintSingleRail(posx, posz, false, new Vector3(0, railTurnAngle, 0));
-            }
-
-            for (; curRailIndex < railPath.Count; curRailIndex++) {
-                int posx = railPath[curRailIndex].x;
-                int posz = railPath[curRailIndex].y;
-
-                //设置铁轨属性
-                SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
-                //对铁轨图标进行绘画
-                PaintSingleRail(posx, posz, true, new Vector3(0, 90, 0));
             }
         }
 
