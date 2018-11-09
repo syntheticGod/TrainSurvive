@@ -40,10 +40,12 @@ namespace WorldMap
             isFirmFocus = true;
             targetTransform = t;
         }
-        private bool ifFocused(Transform t)
+        private bool ifFocused(Vector3 foscus)
         {
-            return MathUtilsByXYS.ifCloselyXZ(transform.position,
-                t.position);
+            //忽略y轴
+            return MathUtilsByXYS.ApproximatelyInView(MathUtilsByXYS.IgnoreY
+                (transform.position), MathUtilsByXYS.IgnoreY
+                (foscus));
         }
 
         void Start()
@@ -55,29 +57,21 @@ namespace WorldMap
             //摄像机焦聚
             if (enableFocus && isContinueFocus)
             {
-               
                 Vector3 position = transform.position;
-                if (!MathUtilsByXYS.ifCloselyXZ(ref position, ref targetPosition))
+                if (isFirmFocus)
+                    targetPosition = targetTransform.position;
+                if (!ifFocused(targetPosition))
                 {
-                    if (isFirmFocus)
-                    {
-                        transform.position = MathUtilsByXYS.goStraightSmoothlyXZ(
-                            position, targetTransform.position, smoothTime,
-                            ref xVelocity, ref zVelocity);
-                    }
-                    else
-                    {
-                        MathUtilsByXYS.goStraightSmoothlyXZ(ref position,
-                                targetPosition, smoothTime,
-                                ref xVelocity, ref zVelocity);
-                        transform.position = position;
-                    }
+                    transform.position = MathUtilsByXYS.goStraightSmoothlyXZ(
+                        position, targetPosition, smoothTime,
+                        ref xVelocity, ref zVelocity);
+                    //Debug.Log("move camera to " + transform.position + " from " + position);
                 }
                 else
                 {
                     //只有软焦聚时才会在最后停止
                     isContinueFocus = isFirmFocus;
-                }   
+                }
             }
         }
     }
