@@ -243,21 +243,11 @@ namespace WorldMap {
                 int posx = railPath[curRailIndex].x;
                 int posz = railPath[curRailIndex].y;
 
-                //设置铁轨(属性，终点城镇坐标，起点城镇坐标)
-                mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
-                mapData.data[posx, posz].SetTownId(fromTownPos);
-                mapData.data[posx, posz].SetStartTownId(toTownPos);
-
-                //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
-
+                //设置铁轨属性
+                SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
-                GameObject o = Instantiate(railDirectObject,
-                    mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, 0, mapGenerate.spawnOffsetZ * posz),
-                    railDirectObject.transform.rotation);
-                //将铁轨图标放在同一gameObject下
-                o.transform.parent = railParentObject.transform;
-                //设置铁轨的偏移
-                o.transform.position = o.transform.position + railOffsetVec3;
+                PaintSingleRail(posx, posz, true, new Vector3());
+                //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
             }
 
             //x轴最后一段铁轨特殊处理（拐弯处）
@@ -265,34 +255,58 @@ namespace WorldMap {
                 int posx = railPath[curRailIndex].x;
                 int posz = railPath[curRailIndex].y;
                 curRailIndex++;
-                mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
 
+                //设置铁轨属性
+                SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
-                GameObject o = Instantiate(railTurnObject,
-                    mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, 0, mapGenerate.spawnOffsetZ * posz),
-                    railTurnObject.transform.rotation);
-                o.transform.parent = railParentObject.transform;
-                o.transform.position = o.transform.position + railOffsetVec3;
-
-                o.transform.rotation = Quaternion.Euler(o.transform.eulerAngles + new Vector3(0, railTurnAngle, 0));
+                PaintSingleRail(posx, posz, false, new Vector3(0, railTurnAngle, 0));
             }
 
             for (; curRailIndex < railPath.Count; curRailIndex++) {
                 int posx = railPath[curRailIndex].x;
                 int posz = railPath[curRailIndex].y;
 
-                mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
+                //设置铁轨属性
+                SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
-                GameObject o = Instantiate(railDirectObject,
-                    mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, 0, mapGenerate.spawnOffsetZ * posz),
-                    railDirectObject.transform.rotation);
-                //将铁轨图标放在同一gameObject下
-                o.transform.parent = railParentObject.transform;
-                //设置铁轨的偏移
-                o.transform.position = o.transform.position + railOffsetVec3;
-                //设置铁轨的旋转
-                o.transform.rotation = Quaternion.Euler(o.transform.eulerAngles + new Vector3(0, 90, 0));
+                PaintSingleRail(posx, posz, true, new Vector3(0, 90, 0));
             }
+        }
+
+        /// <summary>
+        /// 设置铁轨(属性，终点城镇坐标，起点城镇坐标)
+        /// </summary>
+        /// <param name="posx">当前铁轨的坐标</param>
+        /// <param name="posz"></param>
+        /// <param name="fromTownPos">起始城镇的位置</param>
+        /// <param name="toTownPos">终点城镇的位置</param>
+        private void SetSpawnPointRailProperty(int posx, int posz, Vector2Int fromTownPos, Vector2Int toTownPos) {
+            mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
+            mapData.data[posx, posz].SetTownId(fromTownPos);
+            mapData.data[posx, posz].SetStartTownId(toTownPos);
+        }
+
+        /// <summary>
+        /// 对单独铁轨进行绘画处理
+        /// </summary>
+        /// <param name="posx">当前铁轨x轴位置</param>
+        /// <param name="posz">当前铁轨z轴位置</param>
+        /// <param name="isDirect">当前铁轨是否是直的铁轨</param>
+        /// <param name="rotate">当前铁轨需要旋转的角度</param>
+        private void PaintSingleRail(int posx, int posz, bool isDirect, Vector3 rotate) {
+            //判断是转弯的object还是旋转的object
+            GameObject railObject = isDirect ? railDirectObject : railTurnObject;
+
+            //对铁轨图标进行绘画
+            GameObject o = Instantiate(railObject,
+                mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, 0, mapGenerate.spawnOffsetZ * posz),
+                railObject.transform.rotation);
+            //将铁轨图标放在同一gameObject下
+            o.transform.parent = railParentObject.transform;
+            //设置铁轨的偏移
+            o.transform.position = o.transform.position + railOffsetVec3;
+            //对铁轨进行旋转
+            o.transform.rotation = Quaternion.Euler(o.transform.eulerAngles + rotate);
         }
     }
 }
