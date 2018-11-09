@@ -28,9 +28,9 @@ namespace WorldMap
         /// 如果铁轨只有一个点时，两个端点会重合。
         /// </summary>
         /// <param name="railPosition">传入铁轨的地图坐标。</param>
-        /// <param name="end1">传出一端的地图坐标</param>
-        /// <param name="end2">传出另一端的地图坐标</param>
+        /// <param name="start">传出铁轨发出端的地图坐标</param>
+        /// <param name="end">传出接入端的地图坐标</param>
         /// <returns>false：如果指定点不是铁轨则</returns>
-        bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int end1, out Vector2Int end2);
+        bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end);
     }
 }
