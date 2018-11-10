@@ -8,10 +8,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace WorldMap
 {
-    public class TrainController : MonoBehaviour
+    public class TrainController : MonoBehaviour, OnClickListener
     {
         private const int levelOfTrain = 1;
 
@@ -38,7 +40,8 @@ namespace WorldMap
         private IMapForTrainTemp iMapForTrainTemp;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-
+        private EventSystem eventSystem;
+        private GraphicRaycaster graphicRaycaster;
         /// <summary>
         /// 一些变量设置
         /// </summary>
@@ -56,6 +59,7 @@ namespace WorldMap
             mapOrigin = iMapForTrainTemp.GetMapOrigin();
             mapOriginUnit = mapOrigin / blockSize + new Vector2(0.5F, 0.5F);
             train = new Train(true);
+            ButtonHandler.Instance.AddListeners(this);
         }
         void Start()
         {
@@ -69,6 +73,10 @@ namespace WorldMap
             iMapForTrain.MoveToThisSpawn(InitIndex);
             //焦距自己
             cameraFocus.focusLock(transform);
+            //
+            GameObject canvas = GameObject.Find("Canvas") ;
+            graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
+            eventSystem = canvas.GetComponent<EventSystem>();
         }
 
         void Update()
@@ -76,6 +84,9 @@ namespace WorldMap
             //点击事件处理
             if (Input.GetKeyUp(KeyCode.Mouse0))
             {
+                //如果检测到是UI层，则不处理。
+                if (EventSystem.current.IsPointerOverGameObject())
+                    return;
                 Ray ray = mainCamera.GetComponent<Camera>()
                     .ScreenPointToRay(Input.mousePosition);
                 //因为摄像机的Projection 为 Orthographic，所以Ray的方向都是平行的
@@ -86,16 +97,16 @@ namespace WorldMap
                 Vector2 currentPosition = WorldPosToMapPos(transform.position);
                 Vector2Int clickIndex = WhereTheBlockByIndex(ref clickedPosition);
                 Vector2Int currentIndex = WhereTheBlockByIndex(ref currentPosition);
+                Vector2 startOfRail = new Vector2();
+                Vector2 endOfRail = new Vector2();
+                bool movePositive = true;
                 //判断点击处是否是铁轨
-                if (CanReachableAndSet(ref currentIndex, ref clickIndex))
+                if (CanReachableAndSet(ref currentIndex, ref clickIndex, ref startOfRail, ref endOfRail, ref movePositive))
                 {
-                    if (train.IsStop)
-                    {
-                        train.StartRun();
-                    }
+                    train.StartRun(startOfRail, endOfRail, movePositive);
                 }
             }
-            //Debug.Log("if enable move:" + train.IsMovable + " is running ? :" + train.IsRunning);
+
             //列车移动判断
             if (train.IsMovable && train.IsRunning)
             {
@@ -152,7 +163,7 @@ namespace WorldMap
             //再加上 原块的中心坐标 就是世界坐标
             return index2d * blockSize + mapOrigin;
         }
-        private bool CanReachableAndSet(ref Vector2Int currentIndex, ref Vector2Int clickIndex)
+        private bool CanReachableAndSet(ref Vector2Int currentIndex, ref Vector2Int clickIndex, ref Vector2 startOfRail, ref Vector2 endOfRail, ref bool movePositive)
         {
             Vector2Int clickedStart, clickedEnd, currentStart, currentEnd;
             if (!iMapForTrain.GetEachEndsOfRail(clickIndex, out clickedStart, out clickedEnd))
@@ -193,13 +204,29 @@ namespace WorldMap
                 return false;
             }
             //允许移动
-            train.SetStartStationOfRail(CalBlockCenterByIndex(currentStart));
-            train.SetEndStationOfRail(CalBlockCenterByIndex(currentEnd));
+            startOfRail = CalBlockCenterByIndex(currentStart);
+            endOfRail = CalBlockCenterByIndex(currentEnd);
             Debug.Log("目前位置：" + currentIndex + "点击处:" + clickIndex);
             //判断铁轨结尾方向与前往方向是否一致
             //先判断x轴方向是否一致，再判断z轴方向
-            train.IsMovePositive = ((currentEnd.x - currentIndex.x) * (clickIndex.x - currentIndex.x) > 0 || (currentEnd.y - currentIndex.y) * (clickIndex.y - currentIndex.y) > 0);
+            movePositive = ((currentEnd.x - currentIndex.x) * (clickIndex.x - currentIndex.x) > 0 || (currentEnd.y - currentIndex.y) * (clickIndex.y - currentIndex.y) > 0);
             return true;
+        }
+        public void OnClick(BUTTON_ID id)
+        {
+            if (!ButtonHandler.IsTrain(id))
+                return;
+            switch (id)
+            {
+                case BUTTON_ID.TRAIN_RUN:
+                    Debug.Log("开车指令");
+                    train.ContinueRun();
+                    break;
+                case BUTTON_ID.TRAIN_STOP:
+                    Debug.Log("停车指令");
+                    train.Stop();
+                    break;
+            }
         }
     }
 }

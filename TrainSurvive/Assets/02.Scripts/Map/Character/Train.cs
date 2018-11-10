@@ -13,14 +13,15 @@ namespace WorldMap
     {
         private float velocity = 0.0F;
         private float smoothTime = 0.3F;
-
-        private StateType state;
+        private float maxSpeed = 1F;
+        private STATE state;
         private Rail railStandingOn;
         private Vector2 nextStopPosition;
         public Train(bool movable)
         {
             railStandingOn = new Rail(Vector2Int.zero, Vector2Int.zero);
             IsMovable = movable;
+            state = STATE.ARRIVE;
         }
         /// <summary>
         /// 列车在运行时，下一帧的坐标。
@@ -45,12 +46,13 @@ namespace WorldMap
             if (MathUtilsByXYS.ApproximatelyInView(roadVecter, Vector2.zero))
             {
                 //到达目的地
-                Stop();
+                Debug.Log("到达目的地");
+                Arrive();
                 return false;
             }
             float remainedRoad = roadVecter.x + roadVecter.y;
             //remainedRoad一定是大于0的
-            float deltaRoad = remainedRoad - Mathf.SmoothDamp(remainedRoad, 0, ref velocity, smoothTime);
+            float deltaRoad = remainedRoad - Mathf.SmoothDamp(remainedRoad, 0, ref velocity, smoothTime, maxSpeed);
             //Debug.Log("remainedRoad:" + remainedRoad + "delta road is:" + deltaRoad);
             //Debug.Log("roadVecter.x:" + roadVecter.x + " and 0:" + MathUtilsByXYS.ApproximatelyInView(roadVecter.x, 0));
             //Debug.Log("IsMovePositive:" + IsMovePositive);
@@ -72,42 +74,78 @@ namespace WorldMap
             }
             return true;
         }
-        public void Stop()
-        {
-            Debug.Log("到达目的地");
-            state = StateType.STOP;
-        }
+        /// <summary>
+        /// 修改current的值
+        /// </summary>
+        /// <param name="current">当前值</param>
+        /// <param name="delta">正差值</param>
+        /// <param name="positive">增加还是减小</param>
         private void Approch(ref float current, float delta, bool positive)
         {
             current += positive ? delta : -delta;
         }
-        public void StartRun()
+        /// <summary>
+        /// 启动列车，重新计算起止点。
+        /// </summary>
+        /// <param name="startOfRail">铁轨的</param>
+        /// <param name="endOfRail"></param>
+        public void StartRun(Vector2 startOfRail, Vector2 endOfRail, bool movePositive)
         {
+            Debug.Log("列车是否到站:"+IsArrived);
+            //如果未到站则不能启动列车
+            if (!IsArrived) return;
+            railStandingOn.Start = startOfRail;
+            railStandingOn.End = endOfRail;
+            IsMovePositive = movePositive;
             nextStopPosition = NextStation;
             velocity = 0.0F;
-            state = StateType.RUNNING;
+            state = STATE.RUNNING;
         }
-        public void SetStartStationOfRail(Vector2 station)
+        /// <summary>
+        /// 到站了
+        /// </summary>
+        public void Arrive()
         {
-            railStandingOn.Start = station;
+            state = STATE.ARRIVE;
         }
-        public void SetEndStationOfRail(Vector2 station)
+        /// <summary>
+        /// 列车继续运行
+        /// </summary>
+        public void ContinueRun()
         {
-            railStandingOn.End = station;
+            //必须暂停才能继续运行
+            if (!IsStop) return;
+            state = STATE.RUNNING;
         }
-        public bool IsRunning { get { return state == StateType.RUNNING; } }
-        public bool IsStop { get { return state == StateType.STOP; } }
+        /// <summary>
+        /// 暂时暂停列车运行
+        /// </summary>
+        public void Stop()
+        {
+            state = STATE.STOP;
+        }
+        public bool IsRunning {
+            get { return state == STATE.RUNNING; }
+        }
+        public bool IsStop {
+            get { return state == STATE.STOP; }
+        }
+        public bool IsArrived
+        {
+            get { return state == STATE.ARRIVE; }
+        }
         public bool IsMovable { get; }
-        public bool IsMovePositive { set; get; }
+        public bool IsMovePositive { private set; get; }
         public Vector2 NextStation {
             get {
                 return IsMovePositive ? railStandingOn.End : railStandingOn.Start;
             }
         }
-        public enum StateType
+        public enum STATE
         {
-            STOP,
-            RUNNING
+            ARRIVE,
+            RUNNING,
+            STOP
         }
     }
 }
