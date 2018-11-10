@@ -33,5 +33,12 @@ namespace WorldMap
         /// <returns>false：如果指定点不是铁轨则</returns>
         bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end);
         bool MoveToThisSpawn(Vector2Int position);
+
+        /// <summary>
+        /// 判断地图坐标是不是处于可见状态
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        bool isSpawnVisible(Vector2Int position);
     }
 }

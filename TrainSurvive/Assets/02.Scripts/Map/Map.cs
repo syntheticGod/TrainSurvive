@@ -167,6 +167,18 @@ namespace WorldMap {
         }
 
         /// <summary>
+        /// 判断地图坐标是不是处于可见状态
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool isSpawnVisible(Vector2Int position) {
+            if (IfInter(position) == false) {
+                return false;
+            }
+            return data[position.x, position.y].viewState != SpawnPoint.SpawnViewStateEnum.INVISIBLE;
+        }
+
+        /// <summary>
         /// 获取轨道的两端。
         /// 如果铁轨只有一个点时，两个端点会重合。
         /// </summary>
