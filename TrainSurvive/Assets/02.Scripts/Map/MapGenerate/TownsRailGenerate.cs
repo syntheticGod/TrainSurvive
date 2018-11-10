@@ -286,8 +286,8 @@ namespace WorldMap {
         /// <param name="toTownPos">终点城镇的位置</param>
         private void SetSpawnPointRailProperty(int posx, int posz, Vector2Int fromTownPos, Vector2Int toTownPos) {
             mapData.data[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
-            mapData.data[posx, posz].SetTownId(fromTownPos);
-            mapData.data[posx, posz].SetStartTownId(toTownPos);
+            mapData.data[posx, posz].SetStartTownId(fromTownPos);
+            mapData.data[posx, posz].SetTownId(toTownPos);
         }
 
         /// <summary>
