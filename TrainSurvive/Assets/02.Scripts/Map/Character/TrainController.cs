@@ -93,15 +93,13 @@ namespace WorldMap
                     }
                 }
             }
-            Debug.Log("if enable move:" + train.IsMovable + " is running ? :" + train.IsRunning);
+            //Debug.Log("if enable move:" + train.IsMovable + " is running ? :" + train.IsRunning);
             //列车移动判断
             if (train.IsMovable && train.IsRunning)
             {
                 Vector2 formatPosition = WorldPosToMapPos(transform.position);
                 if (train.Run(ref formatPosition))
                     transform.position = MapPosToWorldPos(formatPosition);
-                else
-                    Debug.Log("到达目的地：" + formatPosition);
             }
         }
         /// <summary>
