@@ -43,13 +43,17 @@ namespace WorldMap
             if (positiveX = (roadVecter.x <= 0)) roadVecter.x = -roadVecter.x;
             if (positiveY = (roadVecter.y <= 0)) roadVecter.y = -roadVecter.y;
             if (MathUtilsByXYS.ApproximatelyInView(roadVecter, Vector2.zero))
+            {
+                //到达目的地
+                Stop();
                 return false;
+            }
             float remainedRoad = roadVecter.x + roadVecter.y;
             //remainedRoad一定是大于0的
             float deltaRoad = remainedRoad - Mathf.SmoothDamp(remainedRoad, 0, ref velocity, smoothTime);
-            Debug.Log("remainedRoad:" + remainedRoad + "delta road is:" + deltaRoad);
-            Debug.Log("roadVecter.x:" + roadVecter.x + " and 0:" + MathUtilsByXYS.ApproximatelyInView(roadVecter.x, 0));
-            Debug.Log("IsMovePositive:" + IsMovePositive);
+            //Debug.Log("remainedRoad:" + remainedRoad + "delta road is:" + deltaRoad);
+            //Debug.Log("roadVecter.x:" + roadVecter.x + " and 0:" + MathUtilsByXYS.ApproximatelyInView(roadVecter.x, 0));
+            //Debug.Log("IsMovePositive:" + IsMovePositive);
             if (IsMovePositive)
             {
                 //如果沿着轨道正方向移动，则x轴的优先度要高于y轴的优先度
@@ -67,6 +71,11 @@ namespace WorldMap
                     Approch(ref current.x, Mathf.Min(deltaRoad, roadVecter.x), positiveX);
             }
             return true;
+        }
+        public void Stop()
+        {
+            Debug.Log("到达目的地");
+            state = StateType.STOP;
         }
         private void Approch(ref float current, float delta, bool positive)
         {
@@ -92,7 +101,7 @@ namespace WorldMap
         public bool IsMovePositive { set; get; }
         public Vector2 NextStation {
             get {
-                return IsMovePositive ? railStandingOn.Start : railStandingOn.End;
+                return IsMovePositive ? railStandingOn.End : railStandingOn.Start;
             }
         }
         public enum StateType
