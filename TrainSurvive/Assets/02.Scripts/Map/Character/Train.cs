@@ -33,7 +33,6 @@ namespace WorldMap
         /// </returns>
         public bool Run(ref Vector2 current)
         {
-            //TODO：将
             bool positiveX = true;
             bool positiveY = true;
             //原点 - 目标

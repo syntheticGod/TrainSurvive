@@ -17,22 +17,14 @@ namespace WorldMap
     {
         private const int levelOfTrain = 1;
 
-        //列车移动一格所花的时间，现实中的时间。单位：秒
-        public int timePerStepTrain = 1800;//0.5小时
-        public float smoothTime = 0.3F;
-
         //私有信息
         private Vector2Int InitIndex;
         private Vector2 blockSize;            //readonly
         private Vector2 mapOrigin;          //readonly
         private Vector2 mapOriginUnit;    //readonly
 
-
-        //移动相关
+        //列车
         private Train train;
-        private Vector3 targetPosition;
-        //private Queue<Vector2> targetPositions;
-
         //主摄像机
         private Camera mainCamera;
         //地图脚本，用于获取地图信息
@@ -55,7 +47,6 @@ namespace WorldMap
             InitIndex = initIndex;
             blockSize = iMapForTrainTemp.GetBlockSize();
             Debug.Assert(blockSize.x > 0.1 && blockSize.y > 0.1, "块大小设置的过小");
-            targetPosition = new Vector3(0, levelOfTrain, 0);
             mapOrigin = iMapForTrainTemp.GetMapOrigin();
             mapOriginUnit = mapOrigin / blockSize + new Vector2(0.5F, 0.5F);
             train = new Train(true);
