@@ -65,9 +65,7 @@ namespace WorldMap {
 
             //生成铁轨
             BuildRails();
-        }
-
-        
+        }     
 
         /**只生成城镇类
          * 假设地图是nxn
@@ -103,7 +101,6 @@ namespace WorldMap {
             }
         }
 
-
         /// <summary>
         /// 在地图上进行城镇的绘画
         /// 并赋予地块相应的属性
@@ -128,6 +125,9 @@ namespace WorldMap {
                     //设置城镇属性
                     mapData.data[pos.x, pos.y].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
                     mapData.data[pos.x, pos.y].SetTownId(new Vector2Int(i, j));
+
+                    //设置城镇的gameObject
+                    mapData.data[pos.x, pos.y].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TOWN, o);
                 }
             }
         }
@@ -231,7 +231,7 @@ namespace WorldMap {
             }
 
             //对铁轨进行绘制
-            PaintRail(railPath, xRailNum, railTurnAngle, from, to);
+            PaintRailPath(railPath, xRailNum, railTurnAngle, from, to);
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace WorldMap {
         /// <param name="railTurnAngle">如果有转弯的铁轨，这是转弯铁轨的角度；如果没有，则为-1</param>
         /// <param name="from">起点城镇位置</param>
         /// <param name="to">终点城镇的位置</param>
-        private void PaintRail(List<Vector2Int> railPath, int xRailNum, int railTurnAngle, Vector2Int from, Vector2Int to) {
+        private void PaintRailPath(List<Vector2Int> railPath, int xRailNum, int railTurnAngle, Vector2Int from, Vector2Int to) {
             //记录起始和终止的城镇坐标
             Vector2Int fromTownPos = mapData.data[from.x, from.y].townPos;
             Vector2Int toTownPos = mapData.data[to.x, to.y].townPos;
@@ -311,6 +311,9 @@ namespace WorldMap {
             o.transform.position = o.transform.position + railOffsetVec3;
             //对铁轨进行旋转
             o.transform.rotation = Quaternion.Euler(o.transform.eulerAngles + rotate);
+
+            //绑定铁轨的gameObject
+            mapData.data[posx, posz].SetSpawnObject(SpawnPoint.SpawnObjectEnum.RAIL, o);
         }
     }
 }

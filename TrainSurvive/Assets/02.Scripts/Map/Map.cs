@@ -111,18 +111,41 @@ namespace WorldMap {
                 }
             }
         }
+
+        //更新地图地块的移动显示
+        public bool MoveToThisSpawn(Vector2Int position) {
+            if (IfInter(position) == false) {
+                return false;
+            }
+
+            //更新周围8个格子内的视野
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    Vector2Int newPos = position + new Vector2Int(i, j);
+                    if (IfInter(newPos)) {
+                        //如果是玩家当前处于的位置，则它处于显示的状态，否则处于半显示状态
+                        if (i == 0 && j == 0) {
+                            data[newPos.x, newPos.y].SetViewState(SpawnPoint.SpawnViewStateEnum.VISBLE);
+                        } else {
+                            data[newPos.x, newPos.y].SetViewState(SpawnPoint.SpawnViewStateEnum.HALF_INVISIBLE);
+                        }
+                    }
+                }
+            }
+            return true;
+        }
         
         /// <summary>
         /// 判断点是否在地图内部
         /// </summary>
         /// <param name="position">地图坐标</param>
         /// <returns>在内部返回真</returns>
-        public bool IfInter(Vector2Int position)
-        {
+        public bool IfInter(Vector2Int position) {
             if (position.x >= rowNum || position.x < 0) return false;
             if (position.y >= colNum || position.y < 0) return false;
             return true;
         }
+
         /// <summary>
         /// 判断地图坐标是否是轨道
         /// </summary>
@@ -132,6 +155,7 @@ namespace WorldMap {
             return IfInter(position) &&
                 data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
         }
+
         /// <summary>
         /// 判断地图坐标是否是城镇
         /// </summary>
@@ -141,6 +165,7 @@ namespace WorldMap {
             return IfInter(position) &&
                 data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
         }
+
         /// <summary>
         /// 获取轨道的两端。
         /// 如果铁轨只有一个点时，两个端点会重合。
@@ -149,8 +174,7 @@ namespace WorldMap {
         /// <param name="start">传出一端的地图坐标</param>
         /// <param name="end">传出另一端的地图坐标</param>
         /// <returns>false：如果指定点不是铁轨则</returns>
-        public bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end)
-        {
+        public bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end) {
             start = new Vector2Int();
             end = new Vector2Int();
             if (IfRail(railPosition) == false) {

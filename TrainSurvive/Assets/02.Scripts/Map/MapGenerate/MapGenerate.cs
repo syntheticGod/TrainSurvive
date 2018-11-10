@@ -28,7 +28,7 @@ namespace WorldMap {
         public GameObject plainObject;
         public GameObject hillObject;
         public GameObject mountainObject;
-        public GameObject froestObject;
+        public GameObject forestObject;
 
         //将地形存放到同一object下
         private GameObject[] mapObject;
@@ -85,7 +85,7 @@ namespace WorldMap {
             mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
             mapObject[(int)SpawnPoint.TerrainEnum.PLAIN] = plainObject;
             mapObject[(int)SpawnPoint.TerrainEnum.HILL] = hillObject;
-            mapObject[(int)SpawnPoint.TerrainEnum.FOREST] = froestObject;
+            mapObject[(int)SpawnPoint.TerrainEnum.FOREST] = forestObject;
             mapObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = mountainObject;
 
             //将地图素材存放到同一object中
@@ -108,10 +108,11 @@ namespace WorldMap {
                 ReadMapInfo();
             }
 
+            //对地形进行绘画
+            PaintTerrain();
+
             //生成城镇，并绘画出城镇和铁轨
             townsRailGenerate.StartGenerate();
-
-            PaintTerrain();
 
             //如果是第一次生成地图的静态数据，要将其保存
             if (isCreateMap) {
@@ -227,6 +228,9 @@ namespace WorldMap {
                         Quaternion.identity);
                     o.transform.Rotate(90, 0, 0);
                     o.transform.parent = mapParent[(int)mapData.data[i, j].terrainType].transform;
+
+                    //绑定地块的gameObject
+                    mapData.data[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
                 }
             }
         }
