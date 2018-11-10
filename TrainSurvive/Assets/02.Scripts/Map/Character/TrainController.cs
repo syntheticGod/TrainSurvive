@@ -65,6 +65,8 @@ namespace WorldMap
             cameraFocus = mainCamera.GetComponent<ICameraFocus>();
             Vector2 position = CalBlockCenterByIndex(InitIndex);
             transform.position = new Vector3(InitIndex.x, levelOfTrain, InitIndex.y);
+            //驱散迷雾
+            iMapForTrain.MoveToThisSpawn(InitIndex);
             //焦距自己
             cameraFocus.focusLock(transform);
         }
@@ -99,7 +101,12 @@ namespace WorldMap
             {
                 Vector2 formatPosition = WorldPosToMapPos(transform.position);
                 if (train.Run(ref formatPosition))
+                {
                     transform.position = MapPosToWorldPos(formatPosition);
+                    Vector2Int trainMapIndex = WhereTheBlockByIndex(ref formatPosition);
+                    //驱散迷雾
+                    iMapForTrain.MoveToThisSpawn(trainMapIndex);
+                }
             }
         }
         /// <summary>

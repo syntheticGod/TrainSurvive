@@ -32,5 +32,6 @@ namespace WorldMap
         /// <param name="end">传出接入端的地图坐标</param>
         /// <returns>false：如果指定点不是铁轨则</returns>
         bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end);
+        bool MoveToThisSpawn(Vector2Int position);
     }
 }
