@@ -170,7 +170,7 @@ namespace WorldMap {
         public void SetSpawnObject(SpawnObjectEnum spawnObjectEnum, GameObject spawnObject) {
             this.spawnObjects.Insert((int)spawnObjectEnum, spawnObject);
             //设置当前地块的可见状态
-            UpdateViewStateDisplay(spawnObjectEnum);
+            UpdateViewStateDisplay(spawnObject);
         }
 
         //改变当前地块的显示状态，如果当前状态不匹配，更新所有的gameObject的显示状态
@@ -183,10 +183,8 @@ namespace WorldMap {
 
         //更新当前地块上所有gameObject的可见状态
         private void UpdateViewStateDisplay() {
-            for (int i = 0; i < (int)SpawnObjectEnum.NUM; i++) {
-                if (spawnObjects[i] != null) {
-                    UpdateViewStateDisplay((SpawnObjectEnum)i);
-                }
+            foreach (GameObject spawnObject in spawnObjects) {
+                UpdateViewStateDisplay(spawnObject);
             }
             //foreach (SpawnObjectEnum spawnObjectEnum in Enum.GetValues(typeof(SpawnObjectEnum))) {
             //    if (spawnObjects)
@@ -194,9 +192,9 @@ namespace WorldMap {
         }
 
         //设置当前地块其中一个gameObject的可见状态
-        private void UpdateViewStateDisplay(SpawnObjectEnum spawnObjectEnum) {
+        private void UpdateViewStateDisplay(GameObject spawnObject) {
             //获取所取类型地块的render
-            SpriteRenderer render = this.spawnObjects[(int)spawnObjectEnum].GetComponent<SpriteRenderer>();
+            SpriteRenderer render = spawnObject.GetComponent<SpriteRenderer>();
 
             //根据地块的可见状态设置地块的color
             switch (viewState) {
