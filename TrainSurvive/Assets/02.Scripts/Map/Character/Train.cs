@@ -56,7 +56,7 @@ namespace WorldMap
             //等于0时 positive = True
             if (positiveX = (roadVecter.x <= 0)) roadVecter.x = -roadVecter.x;
             if (positiveY = (roadVecter.y <= 0)) roadVecter.y = -roadVecter.y;
-            if (MathUtilsByXYS.ApproximatelyInView(roadVecter, Vector2.zero))
+            if (Utility.ApproximatelyInView(roadVecter, Vector2.zero))
             {
                 //到达目的地
                 Debug.Log("到达目的地");
@@ -75,7 +75,7 @@ namespace WorldMap
             if (IsMovePositive)
             {
                 //如果沿着轨道正方向移动，则x轴的优先度要高于y轴的优先度
-                if (!MathUtilsByXYS.ApproximatelyInView(roadVecter.x, 0))
+                if (!Utility.ApproximatelyInView(roadVecter.x, 0))
                     Approch(ref currentNext.x, Mathf.Min(deltaRoad, roadVecter.x), positiveX, blockCenter.x);
                 else
                     Approch(ref currentNext.y, Mathf.Min(deltaRoad, roadVecter.y), positiveY, blockCenter.y);
@@ -83,7 +83,7 @@ namespace WorldMap
             else
             {
                 //如果沿着轨道反方向移动，则y轴的优先度要高于x轴的优先度
-                if (!MathUtilsByXYS.ApproximatelyInView(roadVecter.y, 0))
+                if (!Utility.ApproximatelyInView(roadVecter.y, 0))
                     Approch(ref currentNext.y, Mathf.Min(deltaRoad, roadVecter.y), positiveY, blockCenter.y);
                 else
                     Approch(ref currentNext.x, Mathf.Min(deltaRoad, roadVecter.x), positiveX, blockCenter.x);
@@ -100,7 +100,7 @@ namespace WorldMap
         private void Approch(ref float current, float delta, bool positive, float blockCenter)
         {
             float currentNext = current + (positive ? delta : -delta);
-            if (ifTemporarilyStop && MathUtilsByXYS.IfBetweenInclude(current, currentNext, blockCenter))
+            if (ifTemporarilyStop && Utility.IfBetweenInclude(current, currentNext, blockCenter))
             {
                 Debug.Log("暂时停止");
                 current = blockCenter;

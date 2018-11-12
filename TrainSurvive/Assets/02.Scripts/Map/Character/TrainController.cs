@@ -113,7 +113,7 @@ namespace WorldMap
         /// <returns></returns>
         private Vector2 WorldPosToMapPos(Vector3 worldPosition)
         {
-            return MathUtilsByXYS.IgnoreY(worldPosition);
+            return Utility.IgnoreY(worldPosition);
         }
         /// <summary>
         /// 地图平面的2D世界坐标转化为3D世界坐标
@@ -122,7 +122,7 @@ namespace WorldMap
         /// <returns></returns>
         private Vector3 MapPosToWorldPos(Vector2 mapPosition)
         {
-            return MathUtilsByXYS.AcceptY(mapPosition, levelOfTrain);
+            return Utility.AcceptY(mapPosition, levelOfTrain);
         }
         /// <summary>
         /// 根据世界坐标计算地图坐标

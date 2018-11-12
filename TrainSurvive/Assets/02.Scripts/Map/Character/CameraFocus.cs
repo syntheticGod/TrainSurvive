@@ -43,8 +43,8 @@ namespace WorldMap
         private bool ifFocused(Vector3 foscus)
         {
             //忽略y轴
-            return MathUtilsByXYS.ApproximatelyInView(MathUtilsByXYS.IgnoreY
-                (transform.position), MathUtilsByXYS.IgnoreY
+            return Utility.ApproximatelyInView(Utility.IgnoreY
+                (transform.position), Utility.IgnoreY
                 (foscus));
         }
 
@@ -62,9 +62,11 @@ namespace WorldMap
                     targetPosition = targetTransform.position;
                 if (!ifFocused(targetPosition))
                 {
-                    transform.position = MathUtilsByXYS.goStraightSmoothlyXZ(
-                        position, targetPosition, smoothTime,
-                        ref xVelocity, ref zVelocity);
+                    position.x = Mathf.SmoothDamp(position.x,
+                            targetPosition.x, ref xVelocity, smoothTime);
+                    position.z = Mathf.SmoothDamp(position.z,
+                        targetPosition.z, ref zVelocity, smoothTime);
+                    transform.position = position;
                     //Debug.Log("move camera to " + transform.position + " from " + position);
                 }
                 else
