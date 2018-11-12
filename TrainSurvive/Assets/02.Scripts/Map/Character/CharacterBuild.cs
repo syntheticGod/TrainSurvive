@@ -9,10 +9,16 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace WorldMap
 {
+
     public class CharacterBuild : MonoBehaviour
     {
         //public int InitIndexForXTrain = 50;
         //public int InitIndexForZTrain = 46;
+        //列车的最大速度
+        public float maxSpeedForTrain = 1.0F;
+        //探险队的最大速度
+        public float maxSpeedForTeam = 0.7F;
+
         private Vector2Int initIndexForTrain;
         public GameObject mapBuild;
         public GameObject trainPrefab;
@@ -20,6 +26,9 @@ namespace WorldMap
         private GameObject trainObject;
         private GameObject characterObject;
         private TrainController trainController;
+        private Train train;
+        private Team team;
+
         public void Init(Vector2Int initIndex)
         {
             initIndexForTrain = initIndex;
@@ -31,7 +40,11 @@ namespace WorldMap
 
         void Update()
         {
-
+//测试代码，使得能够在Inspector中修改的值马上生效
+#if DEBUG
+            if(null != train)
+                train.MaxSpeed = maxSpeedForTrain;
+#endif
         }
         private void CreateModel()
         {
@@ -39,9 +52,11 @@ namespace WorldMap
             //列车
             trainObject = Instantiate(trainPrefab);
             trainController = trainObject.GetComponent<TrainController>();
-            trainController.init(mapBuild.GetComponent<MapGenerate>(), mapBuild.GetComponent<MapGenerate>().mapData, initIndexForTrain);
+            train = new Train(true, maxSpeedForTrain);
+            trainController.init(mapBuild.GetComponent<MapGenerate>(), mapBuild.GetComponent<MapGenerate>().mapData, initIndexForTrain, train);
             trainObject.transform.parent = characterObject.transform;
-            
+
+            team = new Team(10);
         }
     }
 }
