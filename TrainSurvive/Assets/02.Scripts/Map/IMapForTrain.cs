@@ -32,13 +32,34 @@ namespace WorldMap
         /// <param name="end">传出接入端的地图坐标</param>
         /// <returns>false：如果指定点不是铁轨则</returns>
         bool GetEachEndsOfRail(Vector2Int railPosition, out Vector2Int start, out Vector2Int end);
+        /// <summary>
+        /// 判断两座城市之间是否存在直接连通的铁轨。
+        /// 并返回铁轨生成顺序
+        /// </summary>
+        /// <param name="twon1Start">城市1，如果连通则返回起点</param>
+        /// <param name="twon2End">城市2，如果连通则返回终点</param>
+        /// <returns>
+        /// TRUE：两座城市之间存在直接连通的铁轨
+        /// FALSE：两座城市之间不能直接连通
+        /// </returns>
+        bool IfConnectedBetweenTowns(ref Vector2Int twon1Start, ref Vector2Int twon2End);
+        /// <summary>
+        /// 散开迷雾
+        /// </summary>
+        /// <param name="position">散开迷雾的点</param>
+        /// <returns>
+        /// TRUE：操作成功
+        /// FLASE：坐标点超出地图范围
+        /// </returns>
         bool MoveToThisSpawn(Vector2Int position);
-
         /// <summary>
         /// 判断地图坐标是不是处于可见状态
         /// </summary>
         /// <param name="position"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// TRUE：坐标处没有迷雾
+        /// FALSE：坐标处有迷雾
+        /// </returns>
         bool isSpawnVisible(Vector2Int position);
     }
 }
