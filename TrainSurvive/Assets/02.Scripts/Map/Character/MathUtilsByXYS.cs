@@ -97,8 +97,10 @@ namespace WorldMap
         {
             return Mathf.Abs(a - b) < EPSILON_IN_VIEW;
         }
-        public static bool ApproximatelyInView(Vector2 a, Vector2 b)
+        public static bool ApproximatelyInView(Vector2 a, Vector2 b, bool debug = false)
         {
+            if (debug)
+                Debug.Log("a.x=" + a.x + "b.x=" + b.x + "iF:" + ApproximatelyInView(a.x, b.x) + "a.y=" + a.y + "b.y=" + b.y + "iF:" + ApproximatelyInView(a.y, b.y));
             return ApproximatelyInView(a.x, b.x) && ApproximatelyInView(a.y, b.y);
         }
         public static Vector2 IgnoreY(Vector3 a)
@@ -117,6 +119,10 @@ namespace WorldMap
                 y = y,
                 z = a.y
             };
+        }
+        public static bool IfBetweenInclude(float head, float tail, float value)
+        {
+            return (value >= head && value <= tail) || (value >= tail && value <= head);
         }
     }
     public struct Matrix2x2Int

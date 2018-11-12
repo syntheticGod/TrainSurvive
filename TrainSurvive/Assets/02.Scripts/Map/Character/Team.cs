@@ -19,6 +19,8 @@ namespace WorldMap
         private int people;
         //小队状态
         private STATE state;
+        //最大运动速度
+        public float MaxSpeed { set; get; } = 1.0F;
 
         public Team(int people, int vitCapacity = 100, int spiritCapacity = 100)
         {
