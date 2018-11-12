@@ -186,9 +186,6 @@ namespace WorldMap {
             foreach (GameObject spawnObject in spawnObjects) {
                 UpdateViewStateDisplay(spawnObject);
             }
-            //foreach (SpawnObjectEnum spawnObjectEnum in Enum.GetValues(typeof(SpawnObjectEnum))) {
-            //    if (spawnObjects)
-            //}
         }
 
         //设置当前地块其中一个gameObject的可见状态

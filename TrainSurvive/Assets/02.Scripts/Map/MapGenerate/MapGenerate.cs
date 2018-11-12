@@ -78,10 +78,10 @@ namespace WorldMap {
 
             //对地图进行初始化处理
             mapData = new Map(mapWidth, mapHeight);
-            mapData.data = new SpawnPoint[mapWidth, mapHeight];
+            mapData.spowns = new SpawnPoint[mapWidth, mapHeight];
             for (int i = 0; i < mapWidth; i++) {
                 for (int j = 0; j < mapHeight; j++) {
-                    mapData.data[i, j] = new SpawnPoint();
+                    mapData.spowns[i, j] = new SpawnPoint();
                 }
             }
 
@@ -227,14 +227,14 @@ namespace WorldMap {
         private void PaintTerrain() {
             for (int i = 0; i < mapData.rowNum; i++) {
                 for (int j = 0; j < mapData.colNum; j++) {
-                    GameObject o = Instantiate(mapObject[(int)mapData.data[i, j].terrainType],
+                    GameObject o = Instantiate(mapObject[(int)mapData.spowns[i, j].terrainType],
                         orign + new Vector3(spawnOffsetX * i, 0, spawnOffsetZ * j),
                         Quaternion.identity);
                     o.transform.Rotate(90, 0, 0);
-                    o.transform.parent = mapParent[(int)mapData.data[i, j].terrainType].transform;
+                    o.transform.parent = mapParent[(int)mapData.spowns[i, j].terrainType].transform;
 
                     //绑定地块的gameObject
-                    mapData.data[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
+                    mapData.spowns[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
                 }
             }
         }

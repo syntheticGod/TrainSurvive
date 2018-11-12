@@ -40,7 +40,7 @@ namespace WorldMap
         /// <param name="twon2End">城市2，如果连通则返回终点</param>
         /// <returns>
         /// TRUE：两座城市之间存在直接连通的铁轨
-        /// FALSE：两座城市之间不能直接连通
+        /// FALSE：(超出地图范围，任意一个不是城镇)两座城市之间不能直接连通
         /// </returns>
         bool IfConnectedBetweenTowns(ref Vector2Int twon1Start, ref Vector2Int twon2End);
         /// <summary>

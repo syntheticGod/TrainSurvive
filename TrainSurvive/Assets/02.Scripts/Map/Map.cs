@@ -11,6 +11,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 
 namespace WorldMap {
@@ -21,7 +22,7 @@ namespace WorldMap {
         public int colNum { get; private set; }
 
         //地图中的每个块
-        public SpawnPoint[,] data;
+        public SpawnPoint[,] spowns;
 
         //城镇类
         public Town[,] towns;
@@ -44,9 +45,9 @@ namespace WorldMap {
 
             //写入普通地形的数据
             for (int i = 0; i < this.rowNum; i++) {
-                string row = ((int)data[i, 0].terrainType).ToString();
+                string row = ((int)spowns[i, 0].terrainType).ToString();
                 for (int j = 1; j < this.colNum; j++) {
-                    row += "," + (int)data[i, j].terrainType;
+                    row += "," + (int)spowns[i, j].terrainType;
                 }
                 sw.WriteLine(row);
             }
@@ -87,7 +88,7 @@ namespace WorldMap {
                 // 用“,”将每个字符分割开
                 string[] curLineData = lines[lineIndex++].Split(spliter, option);
                 for (int col = 0; col < this.colNum; col++) {
-                    data[lineCnt, col].SetTerrainEnum((SpawnPoint.TerrainEnum)int.Parse(curLineData[col]));
+                    spowns[lineCnt, col].SetTerrainEnum((SpawnPoint.TerrainEnum)int.Parse(curLineData[col]));
                 }
             }
 
@@ -125,9 +126,9 @@ namespace WorldMap {
                     if (IfInter(newPos)) {
                         //如果是玩家当前处于的位置，则它处于显示的状态，否则处于半显示状态
                         if (i == 0 && j == 0) {
-                            data[newPos.x, newPos.y].SetViewState(SpawnPoint.SpawnViewStateEnum.VISBLE);
+                            spowns[newPos.x, newPos.y].SetViewState(SpawnPoint.SpawnViewStateEnum.VISBLE);
                         } else {
-                            data[newPos.x, newPos.y].SetViewState(SpawnPoint.SpawnViewStateEnum.HALF_INVISIBLE);
+                            spowns[newPos.x, newPos.y].SetViewState(SpawnPoint.SpawnViewStateEnum.HALF_INVISIBLE);
                         }
                     }
                 }
@@ -153,7 +154,7 @@ namespace WorldMap {
         /// <returns></returns>
         public bool IfRail(Vector2Int position) {
             return IfInter(position) &&
-                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
+                spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace WorldMap {
         /// <returns></returns>
         public bool IfTown(Vector2Int position) {
             return IfInter(position) &&
-                data[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
+                spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
         }
 
         /// <summary>
@@ -175,7 +176,7 @@ namespace WorldMap {
             if (IfInter(position) == false) {
                 return false;
             }
-            return data[position.x, position.y].viewState != SpawnPoint.SpawnViewStateEnum.INVISIBLE;
+            return spowns[position.x, position.y].viewState != SpawnPoint.SpawnViewStateEnum.INVISIBLE;
         }
 
         /// <summary>
@@ -192,13 +193,48 @@ namespace WorldMap {
             if (IfRail(railPosition) == false) {
                 return false;
             } else {
-                Vector2Int startTownPos = data[railPosition.x, railPosition.y].startTownPos;
-                Vector2Int endTownPos = data[railPosition.x, railPosition.y].townPos;
+                Vector2Int startTownPos = spowns[railPosition.x, railPosition.y].startTownPos;
+                Vector2Int endTownPos = spowns[railPosition.x, railPosition.y].townPos;
 
                 start = towns[startTownPos.x, startTownPos.y].position;
                 end = towns[endTownPos.x, endTownPos.y].position;
                 return true;
             }
+        }
+
+        /// <summary>
+        /// 判断两座城市之间是否存在直接连通的铁轨。
+        /// 并返回铁轨生成顺序
+        /// </summary>
+        /// <param name="townStart">城市1，如果连通则返回起点</param>
+        /// <param name="townEnd">城市2，如果连通则返回终点</param>
+        /// <returns>
+        /// TRUE：两座城市之间存在直接连通的铁轨
+        /// FALSE：(超出地图范围，任意一个不是城镇)两座城市之间不能直接连通
+        /// </returns>
+        public bool IfConnectedBetweenTowns(ref Vector2Int townStart, ref Vector2Int townEnd) {
+            //如果这两个城镇有一个城镇不在地图内，返回false
+            if (IfInter(townStart) == false || IfInter(townEnd) == false) {
+                return false;
+            }
+
+            //如果这两个有一个不是城镇返回false
+            if (spowns[townStart.x, townStart.y].specialTerrainType != SpawnPoint.SpecialTerrainEnum.TOWN
+                || spowns[townEnd.x, townEnd.y].specialTerrainType != SpawnPoint.SpecialTerrainEnum.TOWN) {
+                return false;
+            }
+
+            Vector2Int startTownPos = spowns[townStart.x, townStart.y].townPos;
+            Vector2Int endTownPos = spowns[townEnd.x, townEnd.y].townPos;
+
+            //如果起始的坐标和终点坐标相反，则将其交换
+            if (startTownPos.x > endTownPos.x || startTownPos.y > endTownPos.y) {
+                Utility.Swap<Vector2Int>(ref startTownPos, ref endTownPos);
+                Utility.Swap<Vector2Int>(ref townStart, ref townEnd);
+            }
+
+            //返回这两个城镇是否相连
+            return towns[startTownPos.x, startTownPos.y].connectTowns.Contains(towns[endTownPos.x, endTownPos.y]);
         }
     }
 }
