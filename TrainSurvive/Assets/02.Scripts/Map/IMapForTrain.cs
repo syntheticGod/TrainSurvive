@@ -12,6 +12,12 @@ namespace WorldMap
     public interface IMapForTrain
     {
         /// <summary>
+        /// 判断点是否在地图内部
+        /// </summary>
+        /// <param name="position">地图坐标</param>
+        /// <returns>在内部返回真</returns>
+        bool IfInter(Vector2Int position);
+        /// <summary>
         /// 判断地图坐标是否是轨道
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
