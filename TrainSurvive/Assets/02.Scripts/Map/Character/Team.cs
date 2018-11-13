@@ -10,54 +10,29 @@ namespace WorldMap
     public class Team
     {
         //耐力、体力
-        private float outVitMax;
-        private float outVit;
+        private int vitCapacity;
+        private int vitCurrent;
         //精神、心情
-        private float outMoodMax;
-        private float outMood;
+        private int spiritCapacity;
+        private int spiritCurrent;
         //人数
         private int people;
-        //探险队的视野范围
-        private int distView;
         //小队状态
         private STATE state;
         //最大运动速度
         public float MaxSpeed { set; get; } = 1.0F;
-        //最小移动距离
-        public float MinDeltaStep { set; get; } = 0.01F;
-        public float SmoothTime { set; get; } = 0.3F;
-        private float velocity = 0.0F;
-        //行动状态
-        //探险队位置
-        public Vector2 PosTeam { private set; get; }
-        public void SetPosition(Vector2 position)
+
+        public Team(int people, int vitCapacity = 100, int spiritCapacity = 100)
         {
-            PosTeam = position;
-        }
-        //移动时下一临近块
-        private Vector2 nextStopPosition;
-        //外部引用
-        private Train train;
-        private IMapForTrain map;
-        public Team(IMapForTrain map, int people, float outVitMax = 100, float outMoodMax = 100, int distView = 1)
-        {
-            this.map = map;
-            this.outVitMax = outVitMax;
-            this.outMoodMax = outMoodMax;
+            this.vitCapacity = vitCapacity;
+            this.spiritCapacity = spiritCapacity;
             this.people = people;
-            this.distView = distView;
-            outVit = outVitMax;
-            outMood = outMoodMax;
-            state = STATE.NONE;
+            Init();
         }
-        public void Init(Train train)
+        public void Init()
         {
-            this.train = train;
-            PosTeam = train.PosTrain;
-        }
-        public void Action()
-        {
-            PosTeam = train.PosTrain;
+            vitCurrent = vitCapacity;
+            spiritCurrent = spiritCapacity;
         }
         /// <summary>
         /// 小队自我固定消耗函数
@@ -76,108 +51,36 @@ namespace WorldMap
         {
             return true;
         }
-        public bool GoTrain()
+        public bool IsGathering()
         {
-            if (StaticResource.BlockIndex(train.PosTrain) != StaticResource.BlockIndex(PosTeam))
-            {
-                Debug.Log("探险队不在列车上");
-                return false;
-            }
-
-            return true;
+            return state == STATE.GATHERING;
         }
         /// <summary>
         /// 移动到指定坐标
         /// </summary>
         /// <param name="position">地图坐标</param>
-        /// <returns></returns>
-        private bool WalkTo(Vector2Int target)
+        public void WalkTo(Vector2Int position)
         {
-            //判断目标坐标是否在地图内
-            if (!map.IfInter(target)) return false;
-            //判断目标是否正在移动
-            if (IsMoving) return false;
-            nextStopPosition = StaticResource.BlockCenter(target);
-            //Debug.Log("Position：当前位置：" + PosTeam + " 移动到：" + nextStopPosition);
-            //Debug.Log("Index：当前位置：" + StaticResource.BlockIndex(PosTeam) + " 移动到：" + target);
-            velocity = 0.0F;
-            state = STATE.MOVING;
+        }
+        public bool IsMoving()
+        {
+            return state == STATE.MOVING;
+        }
+        /// <summary>
+        /// 判断小队是否能够到达指定坐标
+        /// </summary>
+        /// <param name="position">地图坐标</param>
+        /// <returns>
+        /// TRUE：小队能够到达指定坐标
+        /// FALSE：小队不能到达指定坐标
+        /// </returns>
+        public bool CanReachable(Vector2Int position)
+        {
             return true;
-        }
-        public void MoveTop()
-        {
-            
-            Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
-            teamIndex.y++;
-            WalkTo(teamIndex);
-        }
-        public void MoveBottom()
-        {
-            Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
-            teamIndex.y--;
-            WalkTo(teamIndex);
-        }
-        public void MoveLeft()
-        {
-            Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
-            teamIndex.x--;
-            WalkTo(teamIndex);
-        }
-        public void MoveRight()
-        {
-            Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
-            teamIndex.x++;
-            WalkTo(teamIndex);
-        }
-        public bool Run(ref Vector2 current)
-        {
-            if (!IsMoving) return false;
-            Vector2 currentNext = current;
-            Vector2 direction = nextStopPosition - current;
-            if (Utility.ApproximatelyInView(direction, Vector2.zero))
-            {
-                //到达目的地
-                Debug.Log("到达目的地");
-                ArriveCallBack(PosTeam);
-                Stop();
-                return false;
-            }
-            float magnitude = direction.magnitude;
-            float delta = Mathf.Max(MinDeltaStep, magnitude - Mathf.SmoothDamp(magnitude, 0, ref velocity, SmoothTime));
-            if(delta >= magnitude)
-                currentNext = nextStopPosition;
-            else
-                currentNext += direction.normalized * delta;
-            current = PosTeam = currentNext;
-            return true;
-        }
-        public void ArriveCallBack(Vector2 position)
-        {
-            map.MoveToThisSpawn(StaticResource.BlockIndex(position));
-        }
-        private void Stop()
-        {
-            state = STATE.OUT_STOP;
-        }
-        public bool IsMoving
-        {
-            get
-            {
-                return state == STATE.MOVING;
-            }
-        }
-        public bool IsGathering
-        {
-            get
-            {
-                return state == STATE.GATHERING;
-            }
         }
         public enum STATE
         {
-            NONE,
-            IN_TRAIN,
-            OUT_STOP,
+            INTRAIN,
             MOVING,
             RELEXING,
             GATHERING,
