@@ -22,10 +22,13 @@ namespace WorldMap
         private Vector2Int initIndexForTrain;
         public GameObject mapBuild;
         public GameObject trainPrefab;
+        public GameObject teamPrefab;
 
         private GameObject trainObject;
+        private GameObject teamObject;
         private GameObject characterObject;
         private TrainController trainController;
+        private TeamController teamController;
         private Train train;
         private Team team;
 
@@ -44,19 +47,37 @@ namespace WorldMap
 #if DEBUG
             if(null != train)
                 train.MaxSpeed = maxSpeedForTrain;
+            if (null != team)
+                team.MaxSpeed = maxSpeedForTeam;
 #endif
         }
         private void CreateModel()
         {
             characterObject = new GameObject("Character");
+            IMapForTrainTemp mapForTrainTemp = mapBuild.GetComponent<MapGenerate>();
+            IMapForTrain map = mapBuild.GetComponent<MapGenerate>().mapData;
+            
+            //设置静态数据
+            StaticResource sr = StaticResource.Instance;
+            sr.BlockSize = mapForTrainTemp.GetBlockSize();
+            Debug.Assert(sr.BlockSize.x > 0.1 && sr.BlockSize.y > 0.1, "块大小设置的过小");
+            sr.MapOrigin = mapForTrainTemp.GetMapOrigin();
+            sr.MapOriginUnit = sr.MapOrigin / sr.BlockSize - new Vector2(0.5F, 0.5F);
+
             //列车
             trainObject = Instantiate(trainPrefab);
             trainController = trainObject.GetComponent<TrainController>();
-            train = new Train(true, maxSpeedForTrain);
-            trainController.init(mapBuild.GetComponent<MapGenerate>(), mapBuild.GetComponent<MapGenerate>().mapData, initIndexForTrain, train);
+            train = new Train(map, true, maxSpeedForTrain);
+            trainController.init(map, initIndexForTrain, train);
             trainObject.transform.parent = characterObject.transform;
 
-            team = new Team(10);
+            //探险队
+            teamObject = Instantiate(teamPrefab);
+            teamController = teamObject.GetComponent<TeamController>();
+            teamObject.SetActive(false);
+            team = new Team(map, 3);
+            teamController.Init(team, train, trainController);
+            teamObject.transform.parent = characterObject.transform;
         }
     }
 }
