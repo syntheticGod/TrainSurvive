@@ -9,20 +9,6 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace WorldMap
 {
-    public enum BUTTON_ID
-    {
-        //小队按键时间
-        TEAM_NONE,
-        TEAM_ACTION,//小队下车行动
-        TEAM_RETRUN,//小队回车
-        TEAM_NUM,
-
-        TRAIN_NONE,
-        TRAIN_RUN,
-        TRAIN_STOP,
-        TRAIN_NUM,
-        NUM
-    }
     public class ButtonHandler
     {
         private List<OnClickListener> listeners;
@@ -53,10 +39,20 @@ namespace WorldMap
                 listener.OnClick(buttonID);
             }
         }
+        /// <summary>
+        /// 是否需要TeamController来处理
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static bool IsTeam(BUTTON_ID id)
         {
             return id > BUTTON_ID.TEAM_NONE && id < BUTTON_ID.TEAM_NUM;
         }
+        /// <summary>
+        /// 是否需要TrainController来处理
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static bool IsTrain(BUTTON_ID id)
         {
             return id > BUTTON_ID.TRAIN_NONE && id < BUTTON_ID.TRAIN_NUM;

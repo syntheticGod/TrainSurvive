@@ -12,11 +12,25 @@ using UnityEngine.Events;
 
 namespace WorldMap
 {
+    public enum BUTTON_ID
+    {
+        //小队按键时间
+        TEAM_NONE,
+        TEAM_RETRUN,//小队回车
+        TEAM_NUM,
+
+        TRAIN_NONE,
+        TRAIN_RUN,
+        TRAIN_STOP,
+        TEAM_ACTION,//小队下车行动
+        TRAIN_NUM,
+        NUM
+    }
     public class ButtonIDBinder : MonoBehaviour
     {
         public static string[] BUTTON_NAMES =
-            { "NONE", "TeamActionBT", "TeamReturnBT", "NUM" ,
-            "NONE","TrainRunBT","TrainStopBT","NUM" };
+            { "NONE", "TeamReturnBT", "NUM" ,
+            "NONE","TrainRunBT","TrainStopBT", "TeamActionBT","NUM" };
         public static string GetButtonName(BUTTON_ID id)
         {
             return BUTTON_NAMES[(int)id];
@@ -25,7 +39,7 @@ namespace WorldMap
         void Start()
         {
             //绑定按钮的ID
-            for(int i = 0; i < (int)BUTTON_ID.NUM; i++)
+            for (int i = 0; i < (int)BUTTON_ID.NUM; i++)
             {
                 if (BUTTON_NAMES[i].Equals(name))
                     ButtonID = (BUTTON_ID)i;
@@ -33,7 +47,7 @@ namespace WorldMap
             Debug.Assert(0 != ButtonID, "未找到相应的ButtonID");
             Button button = GetComponent<Button>();
             Debug.Assert(null != button, "改脚本必须绑定在Button上");
-            button.onClick.AddListener(delegate()
+            button.onClick.AddListener(delegate ()
             {
                 ButtonHandler.Instance.OnClick(ButtonID);
             });
