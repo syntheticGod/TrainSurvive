@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: df894d170d5f44be293fae0ef08b055c
+guid: 0e13aab4586d8164a82fda963d2f47d4
 TextureImporter:
   fileIDToRecycleName:
-    21300000: npc_0
-    21300002: npc_1
-    21300004: npc_2
-    21300006: npc_3
-    21300008: npc_4
-    21300010: npc_5
-    21300012: npc_6
-    21300014: npc_7
-    21300016: npc_8
-    21300018: npc_9
-    21300020: npc_10
-    21300022: npc_11
+    21300000: person2_bottom
+    21300002: person2_left
+    21300004: person2_top
+    21300006: person3_bottom
+    21300008: person3_left
+    21300010: person3_top
+    21300012: persons_6
+    21300014: persons_7
+    21300016: persons_8
+    21300018: persons_9
+    21300020: persons_10
+    21300022: persons_11
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -43,7 +43,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: -1
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -52,12 +52,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
-  spriteExtrude: 0
+  spriteMode: 2
+  spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,10 +72,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -83,10 +83,10 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Standalone
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,13 +96,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: npc_0
+      name: person2_bottom
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 48
-        width: 16
-        height: 16
+        width: 10
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -110,19 +110,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87077ec394e33fb43b20349d37f00fe5
+      spriteID: 0b7e1b2c714c1ee48ad6022b07b144f2
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_1
+      name: person2_left
       rect:
         serializedVersion: 2
-        x: 16
+        x: 19
         y: 48
-        width: 16
-        height: 16
+        width: 11
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,19 +130,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f61017c7140a6e4cb3fbc853dde71c3
+      spriteID: 03c1c00f28c4c7840a53017cd8c2c269
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_2
+      name: person2_top
       rect:
         serializedVersion: 2
-        x: 32
+        x: 35
         y: 48
-        width: 16
-        height: 16
+        width: 10
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,18 +150,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3bb9fa508e1696f43832222305b97576
+      spriteID: a2cb228fca3ea924c896dd12714684ae
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_3
+      name: person3_bottom
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 32
-        width: 16
+        width: 10
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -170,18 +170,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 694e89a8bddca354ea60750e6480b9d1
+      spriteID: 91c58a40ee0664f46aa0f3bda2366cb3
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_4
+      name: person3_left
       rect:
         serializedVersion: 2
-        x: 16
+        x: 19
         y: 32
-        width: 16
+        width: 11
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -190,18 +190,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4a6cd2f9b72d8eb4ba51b0b5b4357f5a
+      spriteID: e0b60242ea73d5747bef214bea6c8184
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_5
+      name: person3_top
       rect:
         serializedVersion: 2
-        x: 32
+        x: 35
         y: 32
-        width: 16
+        width: 10
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -210,13 +210,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 487a6e4e7d24e514c8cef477fb89d4f8
+      spriteID: 78f70b062619a9443a84bae3b227ed14
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_6
+      name: persons_6
       rect:
         serializedVersion: 2
         x: 0
@@ -230,13 +230,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37718e00f82613e4db6b52be0f68817d
+      spriteID: 0286c1891bb420c428e80d39e891f159
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_7
+      name: persons_7
       rect:
         serializedVersion: 2
         x: 16
@@ -250,13 +250,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37ebd7bd9b5272845a6f97f539f1de1d
+      spriteID: 8ece33ffe25468246a9d8b09d8539784
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_8
+      name: persons_8
       rect:
         serializedVersion: 2
         x: 32
@@ -270,13 +270,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ee34d42b84641a6498cd179e02a99aa5
+      spriteID: b4cbf281774e13d458f8e4e6f762a893
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_9
+      name: persons_9
       rect:
         serializedVersion: 2
         x: 0
@@ -290,13 +290,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3dd9032a30df62347a8847d4a48a5276
+      spriteID: 49fbb0a4364b7e34fa9f7329ea9e2e2f
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_10
+      name: persons_10
       rect:
         serializedVersion: 2
         x: 16
@@ -310,13 +310,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 842e8fb0cc26b454a88606f8190cf747
+      spriteID: c4590af7fa7a0774e9270c54c3a528c4
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: npc_11
+      name: persons_11
       rect:
         serializedVersion: 2
         x: 32
@@ -330,7 +330,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6193869c59bf3bd498efdd04c1ee5c8a
+      spriteID: 73cc8c8c50c2d1746b584cdd982554df
       vertices: []
       indices: 
       edges: []
@@ -338,7 +338,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ec6d723312078484b9027381a977d5ea
     vertices: []
     indices: 
     edges: []
