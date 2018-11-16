@@ -40,7 +40,7 @@ public class Indicator : MonoBehaviour {
     public void ShowProgress(float min, float max, float start) {
         progressSlider.minValue = min;
         progressSlider.maxValue = max;
-        Progress = 0;
+        Progress = start;
         progressSlider.gameObject.SetActive(true);
     }
 

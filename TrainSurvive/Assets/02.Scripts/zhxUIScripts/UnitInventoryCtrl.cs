@@ -1,10 +1,4 @@
 /*
- * 描述：
- * 作者：����
- * 创建时间：2018/11/6 23:29:41
- * 版本：v0.1
- */
-/*
  * 描述：专门为只能嵌入一个物品的容器设计的附加类
  * 作者：张皓翔
  * 创建时间：2018/11/6 19:53:41
@@ -26,8 +20,8 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
-        //if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
-        //    return;
+        if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
+            return;
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
         
@@ -45,8 +39,12 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
     public void Clear()
     {
-        grid = null;
-        gridCtrl = null;
+        if (grid) {
+            gridCtrl.DestroyMySelf();
+            grid = null;
+            gridCtrl = null;
+        }
+        
     }
 
     private bool AddNum(int num)
@@ -61,7 +59,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
     public bool CanConsume(int consumeNum)
     {   //预判该物品是否足够量的消耗
-        if (gridCtrl.item.currPileNum - consumeNum < 0)
+        if (grid == null || gridCtrl.item.currPileNum - consumeNum < 0)
         {
             return false;
         }
@@ -69,6 +67,15 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         {
             return true;
         }
+    }
+
+    public bool CanGeneratorItem(int id, int num) {
+        if (grid != null) {
+            if (gridCtrl.item.id != id || gridCtrl.item.currPileNum + num > gridCtrl.item.maxPileNum) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public bool Consume(int consumeNum)
@@ -97,6 +104,8 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
             if(gridCtrl.item.id != id || gridCtrl.item.currPileNum + num > gridCtrl.item.maxPileNum)
             {
                 return false;
+            }else{
+                AddNum(num);
             }
         }
         else
@@ -110,5 +119,12 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
             grid.transform.SetParent(gameObject.transform);
         }
         return true;
+    }
+    
+    public Item GetItem() {
+        if (grid != null) {
+            return gridCtrl.item;
+        }
+        return null;
     }
 }

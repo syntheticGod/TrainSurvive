@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114599435592990926}
   - component: {fileID: 61784399079726054}
   m_Layer: 9
-  m_Name: TestFacility
+  m_Name: TEST_Facility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,6 +83,10 @@ MonoBehaviour:
     m_Bits: 256
   IndicatorPrefab: {fileID: 114699973544657306, guid: 87042105da9dd434599656b025391fc2,
     type: 2}
+  FacilityUIPrefab: {fileID: 1160699627112846, guid: bf9688378ddbdd84e98f3f6cedb038ad,
+    type: 2}
+  AcceptableRawFoods: 
+  AcceptableGas: 
 --- !u!212 &212771478093524012
 SpriteRenderer:
   m_ObjectHideFlags: 1

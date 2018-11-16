@@ -6,6 +6,8 @@
  */
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
+using System;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -16,6 +18,10 @@ public abstract class Facility : MonoBehaviour {
         /// 待建造
         /// </summary>
         NONE,
+        /// <summary>
+        /// 取消建造
+        /// </summary>
+        CANCLE,
         /// <summary>
         /// 建造中
         /// </summary>
@@ -34,11 +40,28 @@ public abstract class Facility : MonoBehaviour {
         REMOVING
     }
 
+    [Serializable]
+    public class Cost {
+        /// <summary>
+        /// 物品ID
+        /// </summary>
+        public int ItemID { get; set; }
+        /// <summary>
+        /// 耗材量，实际耗材量为耗材量 * 耗材量系数
+        /// </summary>
+        public int Count { get; set; }
+        /// <summary>
+        /// 耗材量系数
+        /// </summary>
+        public int Ratio { get; set; } = 1;
+    }
+
     [Tooltip("可以支持该设施的建筑平台类型。")]
     public LayerMask RequireLayers;
-    [Tooltip("状态指示器。")]
-    [SerializeField]
+    [Tooltip("状态指示器。")] [SerializeField]
     private Indicator IndicatorPrefab;
+    [Tooltip("设施UI Prefab。")] [SerializeField]
+    private GameObject FacilityUIPrefab;
 
     /// <summary>
     /// 状态指示器
@@ -52,6 +75,10 @@ public abstract class Facility : MonoBehaviour {
     /// 总建造工作量，实际工作量为总工作量 * 工作量系数
     /// </summary>
     public abstract float WorkAll { get; }
+    /// <summary>
+    /// 建造耗材
+    /// </summary>
+    public abstract Cost[] BuildCosts { get; }
     /// <summary>
     /// 鼠标移动上去时显示的高亮颜色
     /// </summary>
@@ -86,32 +113,69 @@ public abstract class Facility : MonoBehaviour {
                 contextMenu = null;
             }
             if (value == _FacilityState) return;
+            State previous = _FacilityState;
             _FacilityState = value;
             switch (value) {
                 case State.BUILDING: {
-                        StartCoroutine(building());
-                    }break;
+                    StartCoroutine(building());
+                }break;
                 case State.WORKING: {
-                        Indicator.ToggleStopIndicator(false);
-                        OnStart();
-                    }break;
+                    Indicator.ToggleStopIndicator(false);
+                    OnStart();
+                }break;
                 case State.STOPPED: {
-                        Indicator.ToggleStopIndicator(true);
-                        OnStop();
-                    }break;
+                    Indicator.ToggleStopIndicator(true);
+                    OnStop();
+                }break;
                 case State.REMOVING: {
-                        Indicator.ToggleStopIndicator(false);
-                        OnRemove();
-                        StopAllCoroutines();
-                        Destroy(gameObject);
-                    }break;
+                    Indicator.ToggleStopIndicator(false);
+                    if (previous != State.STOPPED) {
+                        OnStop();
+                    }
+                    OnRemove();
+                    StopAllCoroutines();
+                    Destroy(gameObject);
+                }break;
+                case State.CANCLE: {
+                    Indicator.HideProgress();
+                    StopAllCoroutines();
+                    Destroy(gameObject);
+                    returnCosts(1);
+                }break;
             }
         }
     }
     private State _FacilityState = State.NONE;
     
-    private SpriteRenderer spriteRenderer;
     private ContextMenu contextMenu;
+
+    private static UIManager _uiManager;
+    protected static UIManager uiManager {
+        get {
+            if (_uiManager == null) {
+                _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+            }
+            return _uiManager;
+        }
+    }
+
+    private GameObject _facilityUIObj;
+    protected GameObject facilityUIObj {
+        get {
+            if(_facilityUIObj == null)
+                _facilityUIObj = uiManager.CreateFacilityUI(FacilityUIPrefab);
+            return _facilityUIObj;
+        }
+    }
+
+    private SpriteRenderer _spriteRenderer;
+    private SpriteRenderer spriteRenderer {
+        get {
+            if (_spriteRenderer == null)
+                _spriteRenderer = GetComponent<SpriteRenderer>();
+            return _spriteRenderer;
+        }
+    }
 
     /// <summary>
     /// override的话务必base.Awake()一下。
@@ -127,19 +191,11 @@ public abstract class Facility : MonoBehaviour {
             Indicator = Instantiate(IndicatorPrefab, transform);
         }
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    /// <summary>
-    /// override的话务必base.OnMouseEnter()一下。
-    /// </summary>
-    protected virtual void OnMouseEnter() {
-        if (FacilityState == State.NONE) {
-            return;
+        if (FacilityUIPrefab == null) {
+            Debug.LogError("该Facility对象必须填写FacilityUIPrefab。", this);
         }
-        spriteRenderer.color = HighlightColor;
     }
-
+    
     /// <summary>
     /// override的话务必base.OnMouseExit()一下。
     /// </summary>
@@ -154,34 +210,56 @@ public abstract class Facility : MonoBehaviour {
     /// override的话务必base.OnMouseOver()一下。
     /// </summary>
     protected virtual void OnMouseOver() {
-        // 右键菜单
-        if (Input.GetMouseButtonUp(1)) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            contextMenu = new ContextMenu();
-            makeContextMenu(contextMenu);
-            contextMenu.Render(mousePos);
+        if (FacilityState != State.NONE) {
+            if (EventSystem.current.IsPointerOverGameObject()) {
+                spriteRenderer.color = Color.white;
+            } else {
+                spriteRenderer.color = HighlightColor;
+                // 右键菜单
+                if (Input.GetMouseButtonUp(1)) {
+                    // 关闭操作菜单
+                    uiManager.HideFacilityUI();
+                    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    contextMenu = new ContextMenu();
+                    makeContextMenu(contextMenu);
+                    contextMenu.Render(mousePos);
+                }
+            }
         }
     }
 
     /// <summary>
     /// 放置物体后的回调，如果override的话务必base.OnPlaced()一下。
     /// </summary>
-    public virtual void OnPlaced() {
-        FacilityState = State.BUILDING;
+    /// <returns>true放置成功，false放置失败。</returns>
+    public virtual bool OnPlaced() {
+        if (cost()) {
+            FacilityState = State.BUILDING;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /// <summary>
     /// 请求移除物体时的回调。
     /// </summary>
-    protected abstract void OnRemove();
+    protected virtual void OnRemove() {
+        returnCosts(0.8f);
+    }
+
     /// <summary>
     /// 当设施进入启动状态的回调。
     /// </summary>
     protected abstract void OnStart();
     /// <summary>
+    /// 当打开设施界面时。
+    /// </summary>
+    protected abstract void OnInitFacilityUI();
+    /// <summary>
     /// 当设施停止工作时的回调。
     /// </summary>
-    protected abstract void OnStop();
+    protected virtual void OnStop() { }
 
     /// <summary>
     /// 创建右键上下文菜单，主要根据FacilityState在菜单中添加按钮以及事件。
@@ -190,20 +268,15 @@ public abstract class Facility : MonoBehaviour {
     protected virtual void makeContextMenu(ContextMenu contextMenu) {
         switch (FacilityState) {
             case State.BUILDING:
-                contextMenu.PutButton("停止", () => {
-                    StopAllCoroutines();
-                    Destroy(gameObject);
-                });
+                contextMenu.PutButton("停止", 0, () => FacilityState = State.CANCLE);
                 break;
             case State.WORKING:
-                contextMenu.PutButton("查看", null);
-                contextMenu.PutButton("关闭", () => FacilityState = State.STOPPED);
-                contextMenu.PutButton("拆除", () => FacilityState = State.REMOVING);
-                break;
             case State.STOPPED:
-                contextMenu.PutButton("查看", null);
-                contextMenu.PutButton("开启", () => FacilityState = State.WORKING);
-                contextMenu.PutButton("拆除", () => FacilityState = State.REMOVING);
+                contextMenu.PutButton("查看", 0, () => {
+                    uiManager.ShowFaclityUI(facilityUIObj);
+                    OnInitFacilityUI();
+                });
+                contextMenu.PutButton("拆除", 1, () => FacilityState = State.REMOVING);
                 break;
             default:
                 break;
@@ -218,5 +291,14 @@ public abstract class Facility : MonoBehaviour {
         }
         Indicator.HideProgress();
         FacilityState = State.WORKING;
+    }
+
+    private bool cost() {
+        // TODO
+        return true;
+    }
+
+    private void returnCosts(float ratio) {
+        // TODO
     }
 }
