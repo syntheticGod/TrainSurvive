@@ -23,6 +23,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     public GameObject Prefab;
 
 
+
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
         //if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))

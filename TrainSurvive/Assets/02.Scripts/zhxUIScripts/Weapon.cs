@@ -42,6 +42,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private int _cur_pile_num;
 
         //  特有属性内层------------------
+        private PublicData.WeaponType _weapon_type;
         private float _range;
         private float _fac_atk;                                     //最终攻击力：测试时先用固定攻击力代替
         private float _fac_ats;
@@ -94,7 +95,13 @@ namespace Assets._02.Scripts.zhxUIScripts
                 return _mod_hit;
             }
         }
-
+        public PublicData.WeaponType weaponType
+        {
+            get
+            {
+                return _weapon_type;
+            }
+        }
         //  属性重写（外层）----------------
         public override int id {
             get
@@ -171,6 +178,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             belongGrid = null;
             _name = PublicMethod.GenerateRdString(Random.Range(3, 6));
             _rarity = (PublicData.Rarity)Random.Range(0, 5);
+            _weapon_type = (PublicData.WeaponType)Random.Range(0, 6);
             _size = Random.Range(1.0f, 10.0f);
             _sprite = Resources.Load<Sprite>("ZHXTemp/Weapon_img");
             _description = PublicMethod.GenerateRdString(Random.Range(10, 30));
@@ -193,7 +201,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         //重写方法  ------------------------------
         public override string ToString()
         {
-            string result = string.Format("ID:{0}\n名称：{1}\n攻击力：{2}\n攻击范围：{3}\n攻击速度：{4}\n暴击率:{5}\n暴击伤害：{6}\n减伤：{7}\n", id, name, facAtk, range, facAts, modCrc, modCrd, modHit);
+            string result = string.Format("ID:{0}\n名称：{1}\n武器类型：{8}\n攻击力：{2}\n攻击范围：{3}\n攻击速度：{4}\n暴击率:{5}\n暴击伤害：{6}\n减伤：{7}\n", id, name, facAtk, range, facAts, modCrc, modCrd, modHit, weaponType.ToString());
             return result;
         }
 

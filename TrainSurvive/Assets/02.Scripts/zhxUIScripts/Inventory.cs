@@ -73,37 +73,9 @@ namespace Assets._02.Scripts.zhxUIScripts
         }
         //  方法  ---------------------------------
 
-        public void Arrange()
-        {
-
-        }
-
         public void SetMaxSize(float size)
         {
             _max_size = size;
-        }
-
-        private Item ItemMapping(Item item)
-        {
-            Item mappingItem = null;
-            if (item.itemType == PublicData.ItemType.consumable)
-            {
-                Consumable tempMapping = PublicData.Copy<Item, Consumable>.Trans(item);
-                mappingItem = tempMapping;
-            }
-            if (item.itemType == PublicData.ItemType.material)
-            {
-                Material tempMapping = PublicData.Copy<Item, Material>.Trans(item);
-                mappingItem = tempMapping;
-            }
-            if (item.itemType == PublicData.ItemType.weapon)
-            {
-                Weapon tempMapping = PublicData.Copy<Item, Weapon>.Trans(item);
-                mappingItem = tempMapping;
-            }
-            Debug.Log("物品信息：" + mappingItem);
-            return mappingItem;
-
         }
 
         public void PushItemWithNoGrid(Item item)
@@ -128,7 +100,6 @@ namespace Assets._02.Scripts.zhxUIScripts
             {
                 allowNum = (int)(restSize / item.size);
                 restNum = itemPileNum - allowNum;
-                Debug.Log("物品放不下啦！");
             }
             _curr_size += item.size * allowNum;
             if(allowNum == 0)                               //一个物品都放不下就直接原路返回
@@ -136,7 +107,7 @@ namespace Assets._02.Scripts.zhxUIScripts
                 return restNum;
             }
 
-            for(int i=0; i<itemGridInst.Count; ++i)
+            for(int i=0; i<itemGridInst.Count; ++i)         //找出所有同物品所在实例Grid的下标
             {
                 if(itemGridInst[i].GetComponent<ItemGridCtrl>().item.id == item.id)
                 {
@@ -150,8 +121,7 @@ namespace Assets._02.Scripts.zhxUIScripts
                 if(items[index].maxPileNum - items[index].currPileNum >= allowNum)
                 {
                     items[index].currPileNum += allowNum;
-                    
-                    allowNum = 0;
+                    allowNum = 0;   //意为不用新建Grid存放多余物品
                     break;
                 }
                 else
@@ -184,7 +154,6 @@ namespace Assets._02.Scripts.zhxUIScripts
             {
                 allowNum = (int)(restSize / item.size);
                 restNum = item.currPileNum - allowNum;
-                Debug.Log("物品放不下啦！");
             }
             if(allowNum == 0)
             {

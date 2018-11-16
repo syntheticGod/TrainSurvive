@@ -67,7 +67,6 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
     public void BindController(InventoryCtrl ctrler)
     {
         belongController = ctrler;
-        belongCanvas = ctrler.belongCanvas;
         belongContainer = null;
     }
 
@@ -161,7 +160,6 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
             }
             else                                                    
             {   //同物品容器/不同ID -> 交换内核
-                Debug.Log("asdf");
                 Item temp = oriGridCtrl.item;
                 oriGridCtrl.item = item;
                 item = temp;
@@ -321,7 +319,7 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(eventData.button == PointerEventData.InputButton.Right && belongController != null)
+        if(eventData.button == PointerEventData.InputButton.Right && belongController != null && item.currPileNum > 1)
         {
             GameObject temp = Instantiate(splitPanel);
             temp.GetComponent<SplitPanelCtrl>().BindGrid(this);

@@ -21,7 +21,6 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     public Inventory coreInventory;
     public GameObject itemGrid;
-    public GameObject informPanel;
     public List<GameObject> itemGridInst;
     public Canvas belongCanvas;
     public Text sizeShow;
@@ -68,7 +67,6 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         GameObject tempGrid = Instantiate(itemGrid);
         tempGrid.GetComponent<ItemGridCtrl>().BindItem(item);
         tempGrid.GetComponent<ItemGridCtrl>().BindController(this);
-        //tempGrid.GetComponent<ItemGridCtrl>().BindContainer(gameObject);
         itemGridInst.Add(tempGrid);
         tempGrid.transform.SetParent(transform);
         tempGrid.transform.SetAsLastSibling();
