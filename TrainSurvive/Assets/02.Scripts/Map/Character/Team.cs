@@ -106,7 +106,6 @@ namespace WorldMap
         }
         public void MoveTop()
         {
-            
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.y++;
             WalkTo(teamIndex);

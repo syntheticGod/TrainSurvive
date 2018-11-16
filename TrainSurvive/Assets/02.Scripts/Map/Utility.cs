@@ -77,9 +77,19 @@ namespace WorldMap {
         /// TRUE：value在范围内
         /// FALSE：不在范围内
         /// </returns>
-        public static bool IfBetweenInclude(float edge1, float edge2, float value)
+        public static bool IfBetweenBoth(float edge1, float edge2, float value)
         {
-            return (value >= edge1 && value <= edge2) || (value >= edge2 && value <= edge1);
+            if (Mathf.Approximately(edge1, value) || Mathf.Approximately(edge2, value))
+                return true;
+            return (value > edge1 && value < edge2) || (value > edge2 && value < edge1);
+        }
+        public static bool IfBetweenLeft(float edge1, float edge2, float value)
+        {
+            if (Mathf.Approximately(edge1, value))
+                return true;
+            if (Mathf.Approximately(edge2, value))
+                return false;
+            return (value > edge1 && value < edge2) || (value > edge2 && value < edge1);
         }
     }
     public struct Matrix2x2Int
@@ -147,6 +157,11 @@ namespace WorldMap {
         /// </summary>
         /// <param name="vector"></param>
         public static void Roate180(ref Vector2Int vector)
+        {
+            vector.x = -vector.x;
+            vector.y = -vector.y;
+        }
+        public static void Roate180(ref Vector2 vector)
         {
             vector.x = -vector.x;
             vector.y = -vector.y;

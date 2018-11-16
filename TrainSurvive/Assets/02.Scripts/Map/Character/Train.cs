@@ -24,7 +24,7 @@ namespace WorldMap
         private Vector2 nextCityPosition;
         //列车运行时所在的铁轨
         private Rail railStandingOn;
-        public Vector2 PosTrain { private set;  get; }
+        public Vector2 PosTrain { private set; get; }
         //列车脚下的方块的中心位置
         private Vector2 blockCenterUnderTrain;
         // 是否暂时停止
@@ -34,9 +34,7 @@ namespace WorldMap
         public Train(IMapForTrain map, bool movable, float maxSpeed)
         {
             this.map = map;
-            railStandingOn = new Rail(Vector2Int.zero, Vector2Int.zero);
             IsMovable = movable;
-            state = STATE.STOPED;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
         }
@@ -120,8 +118,7 @@ namespace WorldMap
             }
             Debug.Log("点击处：" + clickIndex + "点击处铁轨的城市：" + clickedStart + "," + clickedEnd);
             //允许移动
-            railStandingOn.Start = StaticResource.BlockCenter(currentStart);
-            railStandingOn.End = StaticResource.BlockCenter(currentEnd);
+            railStandingOn = new Rail(StaticResource.BlockCenter(currentStart), StaticResource.BlockCenter(currentEnd));
             Debug.Log("目前位置：" + currentIndex + "点击处:" + clickIndex);
             //判断铁轨结尾方向与前往方向是否一致
             //先判断x轴方向是否一致，再判断z轴方向
@@ -138,68 +135,46 @@ namespace WorldMap
         /// </returns>
         public bool Run(ref Vector2 current)
         {
-            Vector2 currentNext = current;
-            //positive是x轴的正方向
-            bool positiveX = true;
-            bool positiveY = true;
-            //原点 - 目标
-            Vector2 roadVecter = currentNext - nextCityPosition;
-            //如果 (原点 - 目标) <= 0 为真 则 positive = True (目标 - 原点 > 0)
-            //如果 (原点 - 目标) <= 0 为假 则 positive = False (目标 - 原点 < 0)
-            //等于0时 positive = True
-            if (positiveX = (roadVecter.x <= 0)) roadVecter.x = -roadVecter.x;
-            if (positiveY = (roadVecter.y <= 0)) roadVecter.y = -roadVecter.y;
-            if (Utility.ApproximatelyInView(roadVecter, Vector2.zero))
-            {
-                //到达目的地
-                Debug.Log("到达目的地");
-                Stop();
+            //列车不允许移动 或者 列车停止了
+            if (!IsMovable || IsStoped)
                 return false;
-            }
-            float remainedRoad = roadVecter.x + roadVecter.y;
-            //remainedRoad一定是大于0的
-            float smoothDelta = Mathf.SmoothDamp(remainedRoad, 0, ref velocity, SmoothTime, MaxSpeed);
-            //限制列车的最小移动距离
-            float deltaRoad = Mathf.Max(remainedRoad - smoothDelta, MinDeltaStep);
-            //Debug.Log("direction:" + roadVecter);
-            //Debug.Log("remainedRoad:" + remainedRoad + "delta:" + deltaRoad+" smooth:"+ smoothDelta);
-            Vector2 blockCenter = StaticResource.FormatBlock(current);
-            if (IsMovePositive)
+            Vector2 currentNext = current;
+            float remanentRoad = railStandingOn.CalRemanentRoad(current, IsMovePositive);
+            float smoothDelta = Mathf.SmoothDamp(remanentRoad, 0, ref velocity, SmoothTime, MaxSpeed);
+            //限制列车的最小移动距离和最大移动距离
+            //最小移动距离（MinDeltaStep） <= deltaRoad  <= 剩余路程（remainRoad）
+            float deltaRoad = Mathf.Max(remanentRoad - smoothDelta, MinDeltaStep);
+            bool passCenterOfBlock = false;
+            bool arrived = false;
+            currentNext = railStandingOn.CalNextPosition(currentNext, ref deltaRoad, IsMovePositive, out passCenterOfBlock, out arrived);
+            //Debug.Log("运行日记：" + current + " => " + currentNext + " 剩余路程：" + remanentRoad);
+            //放在前面的原因是保证，如果达到终点时最后一定的状态一定时ARRIVED
+            if (passCenterOfBlock)
+                PassCenterCallBack(StaticResource.BlockIndex(current));
+            if (arrived)
             {
-                //如果沿着轨道正方向移动，则x轴的优先度要高于y轴的优先度
-                if (!Utility.ApproximatelyInView(roadVecter.x, 0))
-                    Approch(ref currentNext.x, Mathf.Min(deltaRoad, roadVecter.x), positiveX, blockCenter.x);
-                else
-                    Approch(ref currentNext.y, Mathf.Min(deltaRoad, roadVecter.y), positiveY, blockCenter.y);
-            }
-            else
-            {
-                //如果沿着轨道反方向移动，则y轴的优先度要高于x轴的优先度
-                if (!Utility.ApproximatelyInView(roadVecter.y, 0))
-                    Approch(ref currentNext.y, Mathf.Min(deltaRoad, roadVecter.y), positiveY, blockCenter.y);
-                else
-                    Approch(ref currentNext.x, Mathf.Min(deltaRoad, roadVecter.x), positiveX, blockCenter.x);
+                Debug.Log("到达目的地：" + current);
+                //到达目的地
+                state = STATE.ARRIVED;
             }
             current = PosTrain = currentNext;
             return true;
         }
         /// <summary>
-        /// 修改current的值
+        /// 列车经过一个方块的中心点时的回调函数，不包括起点。
+        /// 不会被重复调用。
         /// </summary>
-        /// <param name="current">当前值</param>
-        /// <param name="delta">正差值</param>
-        /// <param name="positive">增加还是减小</param>
-        private void Approch(ref float current, float delta, bool positive, float blockCenter)
+        /// <param name="center">块的地图坐标</param>
+        public void PassCenterCallBack(Vector2Int center)
         {
-            float currentNext = current + (positive ? delta : -delta);
-            if (ifTemporarilyStop && Utility.IfBetweenInclude(current, currentNext, blockCenter))
+            map.MoveToThisSpawn(center);
+            //暂时性停车
+            if (ifTemporarilyStop)
             {
-                Debug.Log("暂时性停止__结束");
-                current = blockCenter;
-                Stop();
-                return;
+                Debug.Log("暂时性停车__成功");
+                state = STATE.STOPED_TEMPORARILY;
+                ifTemporarilyStop = false;
             }
-            current = currentNext;
         }
         /// <summary>
         /// 启动列车，重新计算起止点。
@@ -216,9 +191,9 @@ namespace WorldMap
             if (!IsMovable || IsRunning || !CanReachableAndSet(clickedPosition))
                 return false;
             nextCityPosition = IsMovePositive ? railStandingOn.End : railStandingOn.Start;
+            Debug.Log("列车开始前往 城市坐标：" + nextCityPosition + " 总路程：" + railStandingOn.CalTotalRoad());
             velocity = 0.0F;
             state = STATE.RUNNING;
-            ifTemporarilyStop = false;
             return true;
         }
         /// <summary>
@@ -227,19 +202,18 @@ namespace WorldMap
         public bool ContinueRun()
         {
             //必须暂停才能继续运行
-            //只有中途停车后才能继续开车
             if (!IsStoped)
             {
                 Debug.Log("列车正在运行");
                 return false;
             }
-            if (!ifTemporarilyStop)
+            //只有中途停车后才能继续开车
+            if (!IsStopedTemporarily)
             {
-                Debug.Log("只用中途停车，才能开车");
+                Debug.Log("只能中途停车，才能开车");
                 return false;
             }
             state = STATE.RUNNING;
-            ifTemporarilyStop = false;
             return true;
         }
         /// <summary>
@@ -248,25 +222,35 @@ namespace WorldMap
         /// <param name="end">世界坐标</param>
         public bool StopTemporarily()
         {
+            if (IsStoped)
+            {
+                Debug.Log("列车已经停止");
+                return true;
+            }
+            //TODO:暂时性停车失效了
+            //TODO:添加列车经过每个方块的回调函数
             Debug.Log("暂时性停止__开始");
             state = STATE.STOPING;
             ifTemporarilyStop = true;
             return true;
         }
-        /// <summary>
-        /// 马上暂停列车运行
-        /// </summary>
-        public void Stop()
-        {
-            state = STATE.STOPED;
-            ifTemporarilyStop = false;
-        }
         //列车属性判断
-        public bool IsRunning {
+        public bool IsRunning
+        {
             get { return state == STATE.RUNNING; }
         }
-        public bool IsStoped {
-            get { return state == STATE.STOPED; }
+        //列车是否已经停稳
+        public bool IsStoped
+        {
+            get { return state == STATE.ARRIVED || state == STATE.STOPED_TEMPORARILY; }
+        }
+        public bool IsArrived
+        {
+            get { return state == STATE.ARRIVED; }
+        }
+        public bool IsStopedTemporarily
+        {
+            get { return state == STATE.STOPED_TEMPORARILY; }
         }
         public bool IsStoping
         {
@@ -286,9 +270,10 @@ namespace WorldMap
         public bool IsMovePositive { private set; get; }
         public enum STATE
         {
-            STOPED,
-            RUNNING,
-            STOPING//正在停止
+            ARRIVED,//列车出生在城镇中
+            STOPED_TEMPORARILY,//中途暂时性停车
+            RUNNING,//列车正在运行
+            STOPING//列车正在暂时性停车，但是还未停止
         }
     }
 }

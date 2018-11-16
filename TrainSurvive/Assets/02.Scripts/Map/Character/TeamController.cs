@@ -107,21 +107,25 @@ namespace WorldMap
         {
             if (Input.GetKeyUp(KeyCode.W))
             {
+                Debug.Log("探险队向上移动指令");
                 team.MoveTop();
                 return true;
             }
             else if (Input.GetKeyUp(KeyCode.S))
             {
+                Debug.Log("探险队向下移动指令");
                 team.MoveBottom();
                 return true;
             }
             else if (Input.GetKeyUp(KeyCode.A))
             {
+                Debug.Log("探险队向左移动指令");
                 team.MoveLeft();
                 return true;
             }
             else if (Input.GetKeyUp(KeyCode.D))
             {
+                Debug.Log("探险队向右移动指令");
                 team.MoveRight();
                 return true;
             }

@@ -89,18 +89,9 @@ namespace WorldMap
                     Debug.Log("列车行动失败");
                 }
             }
-            //列车允许移动 或者 列车没有停止（列车不一定只有 停止和运行 两个状态） 才能进入
-            if (train.IsMovable && !train.IsStoped)
-            {
-                Vector2 mapPosition = StaticResource.WorldPosToMapPos(transform.position);
-                if (train.Run(ref mapPosition))
-                {
-                    transform.position = StaticResource.MapPosToWorldPos(mapPosition, levelOfTrain);
-                    Vector2Int trainMapIndex = StaticResource.BlockIndex(mapPosition);
-                    //驱散迷雾
-                    map.MoveToThisSpawn(trainMapIndex);
-                }
-            }
+            Vector2 current = StaticResource.WorldPosToMapPos(transform.position);
+            if (train.Run(ref current))
+                transform.position = StaticResource.MapPosToWorldPos(current, levelOfTrain);
         }
         private bool ActiveTrain(bool active)
         {
