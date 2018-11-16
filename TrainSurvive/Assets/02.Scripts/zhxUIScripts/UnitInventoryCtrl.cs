@@ -25,8 +25,6 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
         
-        
-
         InventoryCtrl tempController = grid.GetComponent<ItemGridCtrl>().GetController();
         Debug.Log(tempController);
         tempController.coreInventory.PopItem(grid.GetComponent<ItemGridCtrl>().item);
@@ -40,7 +38,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     public void Clear()
     {
         if (grid) {
-            gridCtrl.DestroyMySelf();
+            gridCtrl.DestroyMyself();
             grid = null;
             gridCtrl = null;
         }
@@ -78,13 +76,9 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         return true;
     }
 
-    public bool Consume(int consumeNum)
-    {   //若剩余物品不够一次性扣除，则直接返回FALSE，否则返回TRUE，物品是否存在由外部判断
-        if(gridCtrl.item.currPileNum - consumeNum < 0)
-        {
-            return false;
-        }
-        else if(gridCtrl.item.currPileNum - consumeNum == 0)
+    public void Consume(int consumeNum)
+    {   
+        if(gridCtrl.item.currPileNum - consumeNum == 0)
         {
             Destroy(grid);
             grid = null;
@@ -94,18 +88,18 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         {
             gridCtrl.item.currPileNum -= consumeNum;
         }
-        return true;
     }
 
     public bool GeneratorItem(int id,int num)
     {
         if(grid != null)
         {
-            if(gridCtrl.item.id != id || gridCtrl.item.currPileNum + num > gridCtrl.item.maxPileNum)
+            if(gridCtrl.item.id == id)
             {
+                return AddNum(num);
+            }
+            else{
                 return false;
-            }else{
-                AddNum(num);
             }
         }
         else

@@ -140,8 +140,8 @@ namespace Assets._02.Scripts.zhxUIScripts
                     controller.AddGrid(mappingItem);                 //为前台添加物品
                 }
             }
-            controller.ReFreshShowGrid();
-            controller.ReFreshMaxSize();
+            controller.RefreshShowGrid();
+            controller.RefreshMaxSize();
             return restNum;
         }
 
@@ -170,7 +170,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             {
                 controller.AddGrid(mappingItem);                 //为前台添加物品
             }
-            controller.ReFreshMaxSize();
+            controller.RefreshMaxSize();
             return restNum;
         }
 

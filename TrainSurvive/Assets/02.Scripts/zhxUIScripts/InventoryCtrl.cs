@@ -16,14 +16,13 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     public Inventory coreInventory;
     public GameObject itemGrid;
     public List<GameObject> itemGridInst;
-    public Canvas belongCanvas;
     public Text sizeShow;
 
     private void Awake()
     { 
         coreInventory = new Inventory(300, this);              //测试临时MaxSize
         itemGridInst = new List<GameObject>();
-        ReFreshMaxSize();
+        RefreshMaxSize();
     }
 
     private void Update()
@@ -31,13 +30,13 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         //---------------------
     }
 
-    public void ReFreshMaxSize()                        //重新计算最大容量
+    public void RefreshMaxSize()                        //重新计算最大容量
     {
         sizeShow.text = string.Format("{0:f1}/{1:f0}", coreInventory.currSize, coreInventory.maxSize);
         //sizeShow.text = coreInventory.currSize.ToString("#.#") + "/" + coreInventory.maxSize.ToString("#.#");
     }
 
-    public void ReFreshShowGrid()                       //刷新/同步
+    public void RefreshShowGrid()                       //刷新/同步
     {
         foreach (GameObject grid in itemGridInst)
         {
@@ -45,7 +44,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         }
     }
 
-    public void ReFreshInvalidItem()
+    public void RefreshInvalidGrid()
     {
         for(int i=0; i<itemGridInst.Count; ++i)
         {

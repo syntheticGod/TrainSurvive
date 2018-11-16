@@ -25,7 +25,7 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
 {
 
     private Item _item;
-    public Sprite[] stateImg;
+    public Sprite[] stateSprite;
 
 
     public Item item
@@ -111,7 +111,7 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
             return;
         if(restNum == 0)
         {
-            DestroyMySelf();
+            DestroyMyself();
         }
         else
         {
@@ -120,7 +120,7 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         
     }
 
-    public void DestroyMySelf()
+    public void DestroyMyself()
     {
         if (belongController != null)
         {
@@ -210,10 +210,10 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
                 else
                 {   //非物品栏收到不同物品堆叠请求 -> 直接交换双方物品  （有些物品不能放在某些设备上，这个需要设备的脚本去把控）
                     //---------------------------------------------------------------------------------------------------------
-                    //if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
-                    //{
-                    //    return;
-                    //}
+                    if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
+                    {
+                        return;
+                    }
                     //----------------------------------------------------------------------------------------------------------
                     float restSize = oriGridCtrl.belongController.coreInventory.maxSize - oriGridCtrl.belongController.coreInventory.currSize;
                     float deltaSize = item.size * item.currPileNum - oriGridCtrl.item.size * oriGridCtrl.item.currPileNum;
@@ -273,7 +273,7 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         Destroy(GameObject.Find("tempDragImg"));
         if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
-            DestroyMySelf();
+            DestroyMyself();
         }
     }
 
