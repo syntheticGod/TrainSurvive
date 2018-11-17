@@ -8,22 +8,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class MenuScript : MonoBehaviour {
     TimeController rc;
+    public Text timeText;
 	// Use this for initialization
 	void Start () {
         rc = TimeController.getInstance();
-
     }
 	
 	// Update is called once per frame
 	void Update () {
-        
-
+        timeText.text = rc.getDisplayTime().ToString();
     }
-
+    public void saveGame(){
+        World.save();
+    }
     public void pauseGame()
     {
         rc.setGameSpeedRate(TimeController.speedRate.stop);
