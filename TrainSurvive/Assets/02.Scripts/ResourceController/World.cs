@@ -12,7 +12,7 @@ public class World {
     {
         if (instance == null)
         {
-            string path = PathManager.getInstance().getWorldPath();
+            string path = PathManager.getInstance().getWorldPath();           
             if (File.Exists(path))
             {
                 BinaryFormatter bf = new BinaryFormatter();
@@ -21,7 +21,7 @@ public class World {
                 file.Close();
             }
             else       
-                instance = new World();    
+                instance = new World();               
         }
         return instance;
     }
@@ -29,6 +29,8 @@ public class World {
     public static void save()
     {
         //重新校准时间
+        if (instance == null)
+            instance = new World();
         instance.game_time = TimeController.getInstance().getGameTime();
         string path = PathManager.getInstance().getWorldPath();
         BinaryFormatter bf = new BinaryFormatter();
@@ -36,9 +38,7 @@ public class World {
         {
             File.Delete(path);
         }
-        FileStream file = File.Create(path);
-        if (instance == null)
-            instance = new World();
+        FileStream file = File.Create(path);  
         bf.Serialize(file, instance);
         file.Close();
     }
@@ -75,7 +75,7 @@ public class World {
     public float outVitMax = 100;
     public float outMood = 0;
     public float outMoodMax = 100;
-
+    /*
     public Vector2 posTrain = new Vector2(0,0);
     public Vector2 posTeam = new Vector2(0, 0);
     public int distView=1;
@@ -86,7 +86,7 @@ public class World {
     public int numBuildInst = 101;
 
     public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
-    //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
+    public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
     public town[] towns=new town[100];
     List<weapon> weapons = new List<weapon>();
     List<person> persons = new List<person>();
@@ -95,7 +95,7 @@ public class World {
     public buildInst[] buildInstArray;
     public bool[] buildUnlock;
     public bool[] sciUnlock;
-    
+    */
     public int[] abiAllin;
     public int[] abiAllOut;
     public int numIn;

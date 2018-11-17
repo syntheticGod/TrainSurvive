@@ -16,12 +16,13 @@ public class PathManager {
        
         if (Application.platform == RuntimePlatform.OSXEditor)
         {
-            worldPath = Application.persistentDataPath + "/world.gd";
+            worldPath=Application.persistentDataPath + "/world.dat";
         }
-        else if (Application.platform == RuntimePlatform.WindowsEditor)
+        else if (Application.platform == RuntimePlatform.WindowsEditor|| Application.platform == RuntimePlatform.WindowsPlayer)
         {
-            worldPath = Application.streamingAssetsPath + "/world.gd";
+            worldPath = Application.dataPath + "/world.dat";
         }
+        
     }
 
     public static PathManager getInstance()
