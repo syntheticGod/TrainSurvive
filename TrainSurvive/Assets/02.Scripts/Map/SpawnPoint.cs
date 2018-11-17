@@ -137,7 +137,11 @@ namespace WorldMap {
             spawnObjects = new List<GameObject>((int)SpawnObjectEnum.NUM);
 
             //设置初始的地块为不可见的状态
-            viewState = SpawnViewStateEnum.INVISIBLE;
+            if (MapGenerate.isFogState == true) {
+                viewState = SpawnViewStateEnum.INVISIBLE;
+            } else {
+                viewState = SpawnViewStateEnum.HALF_INVISIBLE;
+            }
         }
 
         //设置当前地块的地形

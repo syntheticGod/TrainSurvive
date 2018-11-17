@@ -62,6 +62,9 @@ namespace WorldMap {
         //判定这是新游戏（生成地图）还是读取地图
         public bool isCreateMap = true;
 
+        //设置起始状态为迷雾状态还是明亮状态(测试)
+        public static bool isFogState = true;
+
         //构建地图
         private void Awake() {
             CreateModel();
@@ -69,6 +72,19 @@ namespace WorldMap {
             //测试，设置人物出生地点为第一个城镇
             CharacterBuild characterBuild = GameObject.Find("CharacterBuild").GetComponent<CharacterBuild>();
             characterBuild.Init(mapData.towns[0, 0].position);
+        }
+
+        //保存时间的时间间隔
+        public float SaveTimeInterval = 3.0f;
+        //当前的时间
+        private float curTime = 5.0f;
+        //测试，3s保存一次动态数据
+        private void Update() {
+            curTime -= Time.deltaTime;
+            if (curTime < 0) {
+                curTime = SaveTimeInterval;
+                SaveReadMap.SaveDynamicMapInfo(ref mapData);
+            }
         }
 
         //创建地图
@@ -109,7 +125,7 @@ namespace WorldMap {
                 BuildTerrain();
             } else {
                 //读取地图的信息
-                ReadMapInfo();
+                SaveReadMap.ReadMapInfo(ref mapData);
             }
 
             //对地形进行绘画
@@ -120,62 +136,9 @@ namespace WorldMap {
 
             //如果是第一次生成地图的静态数据，要将其保存
             if (isCreateMap) {
-                SaveMapInfo();
+                SaveReadMap.SaveStaticMapInfo(ref mapData);
             }
         }
-
-        //保存地图数据的文件
-        private const string FILE_NAME = "MAP_STATIC_INFO.txt";
-
-        /** 保存地图的静态信息
-         * 地图的地形信息
-         * 地图的城镇位置信息
-         */
-        private void SaveMapInfo() {
-            //文件流信息
-            StreamWriter sw;
-            FileInfo t = new FileInfo(Application.persistentDataPath + "//" + FILE_NAME);
-            if (!t.Exists) {
-                //如果此文件不存在则创建
-                sw = t.CreateText();
-            } else {
-                //如果此文件存在则打开
-                t.Delete();
-                sw = t.CreateText();
-            }
-
-            //通过map提供的方法存入地图数据
-            mapData.SaveMap(sw);
-
-            //关闭流
-            sw.Close();
-            //销毁流
-            sw.Dispose();
-        }
-
-        /** 读取地图的静态信息
-         */
-        private void ReadMapInfo() {
-            //使用流的形式读取
-            StreamReader sr = null;
-            try {
-                sr = File.OpenText(Application.persistentDataPath + "//" + FILE_NAME);
-            }
-            catch (Exception e) {
-                //路径与名称未找到文件则直接返回空
-                Debug.Log(e.ToString());
-                return;
-            }
-
-            //读取map的数据
-            mapData.ReadMap(sr.ReadToEnd());
-
-            //关闭流
-            sr.Close();
-            //销毁流
-            sr.Dispose();
-        }
-
 
         ////生成地形
         private void BuildTerrain() { }
