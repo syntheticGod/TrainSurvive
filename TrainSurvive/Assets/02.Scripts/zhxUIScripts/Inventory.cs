@@ -73,6 +73,22 @@ namespace Assets._02.Scripts.zhxUIScripts
         }
         //  方法  ---------------------------------
 
+        public bool BindController(InventoryCtrl _controller)       //绑定前端，比如探险队回来输出取得的物品时新建一个物品栏实体时用得到
+        {                                                           //绑定操作由本方负责，对方负责使用Inventory
+            if(controller != null)
+            {
+                return false;
+            }
+            controller = _controller;
+            for(int i=0; i<_items.Count; ++i)
+            {
+                controller.AddGrid(_items[i]);
+            }
+            controller.RefreshMaxSize();
+            controller.RefreshShowGrid();
+            return true;
+        }
+
         public void SetMaxSize(float size)
         {
             _max_size = size;
@@ -83,10 +99,61 @@ namespace Assets._02.Scripts.zhxUIScripts
             items.Add(item);
         }
 
+        private int PushItemWithNoController(Item item)         //该函数可以与PushItem集成，减少代码冗余，后续版本待优化
+        {
+            int itemId = item.id;
+            int itemPileNum = item.currPileNum;
+            float restSize = _max_size - _curr_size;
+            int restNum = 0;
+            int allowNum = itemPileNum;
+            int index;
+            if(restSize < item.size * itemPileNum)
+            {
+                allowNum = (int)(restSize / item.size);
+                if (allowNum == 0)
+                    return 0;
+                restNum = itemPileNum - allowNum;
+            }
+            _curr_size += item.size * allowNum;
+            List<int> existIndex = new List<int>();
+            for(int i=0; i<_items.Count; ++i)
+            {
+                if(itemId == _items[i].id)
+                {
+                    existIndex.Add(i);
+                }
+            }
+            for (int i = 0; i < existIndex.Count; ++i)
+            {
+                index = existIndex[i];
+                if (items[index].maxPileNum - items[index].currPileNum >= allowNum)
+                {
+                    items[index].currPileNum += allowNum;
+                    allowNum = 0;   
+                    break;
+                }
+                else
+                {
+                    allowNum -= (items[index].maxPileNum - items[index].currPileNum);
+                    items[index].currPileNum = items[index].maxPileNum;
+                }
+            }
+            if (allowNum != 0)
+            {
+                Item mappingItem = item.Clone();
+                mappingItem.currPileNum = allowNum;
+                PushItemWithNoGrid(mappingItem);
+            }
+            return restNum;
+        }
 
         public int PushItem(Item item)                      //增加物品、自动堆叠并返回放不下的该物品数
         {
-            
+            if (!controller)                                //在非绑定外壳的情况下进行增加物品
+            {
+                return PushItemWithNoController(item);
+                //throw new Exception("该内核无绑定的前端控制器");
+            }
             int itemId = item.id;
             int itemPileNum = item.currPileNum;
             float restSize = _max_size - _curr_size;
@@ -135,10 +202,8 @@ namespace Assets._02.Scripts.zhxUIScripts
                 mappingItem = item.Clone();                //复制的时候除了ID其他信息都丢失了，有待处理。
                 mappingItem.currPileNum = allowNum;
                 _items.Add(mappingItem);
-                if (controller != null)
-                {
-                    controller.AddGrid(mappingItem);                 //为前台添加物品
-                }
+                controller.AddGrid(mappingItem);                 //为前台添加物品
+                
             }
             controller.RefreshShowGrid();
             controller.RefreshMaxSize();
@@ -147,6 +212,10 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         public int PushItemToLast(Item item)//已同步
         {
+            if (!controller)
+            {
+                throw new Exception("该内核无绑定的前端控制器");
+            }
             float restSize = maxSize - currSize;
             int allowNum = item.currPileNum;
             int restNum = 0;
@@ -174,8 +243,6 @@ namespace Assets._02.Scripts.zhxUIScripts
             return restNum;
         }
 
-
-
         public void PopItem(Item item)                          //弹出所有物体
         {
             if (!_items.Remove(item))
@@ -193,5 +260,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             item.currPileNum -= num;
             _curr_size -= item.size * num;
         }
+
+        
     }
 }

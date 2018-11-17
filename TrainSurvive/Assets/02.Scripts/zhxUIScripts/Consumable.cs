@@ -142,7 +142,7 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         public override string ToString()
         {
-            string result = string.Format("ID:{0}\n名字：{1}\n类型：{2}\n消耗品类型：{3}\n占用空间：{4}\n", id, name, itemType, ConType, size);
+            string result = string.Format("ID:{0}\n名字：{1}\n类型：{2}\n消耗品类型：{3}\n占用空间：{4}\n", id, name, itemType, conType, size);
             return result;
         }
 

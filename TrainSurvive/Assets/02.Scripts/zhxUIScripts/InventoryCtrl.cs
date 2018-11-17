@@ -30,6 +30,11 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         //---------------------
     }
 
+    public void Arrange()
+    {
+
+    }
+
     public void RefreshMaxSize()                        //重新计算最大容量
     {
         sizeShow.text = string.Format("{0:f1}/{1:f0}", coreInventory.currSize, coreInventory.maxSize);
