@@ -62,6 +62,7 @@ namespace WorldMap
         void Start()
         {
             //初始化变量
+            mainCamera = Camera.main;
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
             transform.position = StaticResource.MapPosToWorldPos(initPosition, levelOfTrain);
             //驱散迷雾
