@@ -23,6 +23,7 @@ namespace WorldMap
         TRAIN_RUN,
         TRAIN_STOP,
         TEAM_ACTION,//小队下车行动
+        TRAIN_CHANGE,
         TRAIN_NUM,
         NUM
     }
@@ -30,7 +31,7 @@ namespace WorldMap
     {
         public static string[] BUTTON_NAMES =
             { "NONE", "TeamReturnBT", "NUM" ,
-            "NONE","TrainRunBT","TrainStopBT", "TeamActionBT","NUM" };
+            "NONE","TrainRunBT","TrainStopBT", "TeamActionBT","TrainChangeBT","NUM" };
         public static string GetButtonName(BUTTON_ID id)
         {
             return BUTTON_NAMES[(int)id];

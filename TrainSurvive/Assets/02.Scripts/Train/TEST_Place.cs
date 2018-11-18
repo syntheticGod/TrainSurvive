@@ -5,10 +5,15 @@
  * 版本：v0.1
  */
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TEST_Place : MonoBehaviour {
 
     public void Place(Facility facility) {
         PlaceFacility.Place(this, facility);
+    }
+
+    public void ChangeScene() {
+        SceneManager.LoadScene("MapScene");
     }
 }

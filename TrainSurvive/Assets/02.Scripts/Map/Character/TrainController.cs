@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace WorldMap
@@ -152,6 +153,9 @@ namespace WorldMap
                     }
                     ActiveBTs(false);
                     teamController.Active(train.PosTrain);
+                    break;
+                case BUTTON_ID.TRAIN_CHANGE:
+                    SceneManager.LoadScene("GCTestScene1");
                     break;
             }
         }
