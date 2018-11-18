@@ -26,12 +26,11 @@ public class World {
         return instance;
     }
 
-    public static void save()
+    public void save()
     {
-        //重新校准时间
-        if (instance == null)
-            instance = new World();
-        instance.game_time = TimeController.getInstance().getGameTime();
+        //调用保存委托
+        saveDelegateHandler();
+        //map.save()待补足
         string path = PathManager.getInstance().getWorldPath();
         BinaryFormatter bf = new BinaryFormatter();
         if (File.Exists(path))
@@ -39,10 +38,14 @@ public class World {
             File.Delete(path);
         }
         FileStream file = File.Create(path);  
-        bf.Serialize(file, instance);
+        bf.Serialize(file, this);
         file.Close();
     }
 
+    public delegate void saveDelegate();
+    public event saveDelegate saveDelegateHandler;
+
+    //基本资源
     private double game_time=0;
     public const int mapWidth = 300;
     public const int mapHeight = 300;
@@ -104,6 +107,10 @@ public class World {
     public double getGame_time()
     {
         return game_time;
+    }
+    public void setGame_time(double time)
+    {
+        game_time = time;
     }
     public uint getCoal()
     {

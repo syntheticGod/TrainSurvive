@@ -24,7 +24,7 @@ public class MenuScript : MonoBehaviour {
         timeText.text = rc.getDisplayTime().ToString();
     }
     public void saveGame(){
-        World.save();
+        World.getInstance().save();
     }
     public void pauseGame()
     {
