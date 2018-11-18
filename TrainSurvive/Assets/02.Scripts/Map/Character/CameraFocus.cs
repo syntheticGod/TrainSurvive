@@ -63,9 +63,9 @@ namespace WorldMap
                 if (!ifFocused(targetPosition))
                 {
                     position.x = Mathf.SmoothDamp(position.x,
-                            targetPosition.x, ref xVelocity, smoothTime);
+                            targetPosition.x, ref xVelocity, smoothTime,Mathf.Infinity,1.0F);
                     position.z = Mathf.SmoothDamp(position.z,
-                        targetPosition.z, ref zVelocity, smoothTime);
+                        targetPosition.z, ref zVelocity, smoothTime, Mathf.Infinity, 1.0F);
                     transform.position = position;
                     //Debug.Log("move camera to " + transform.position + " from " + position);
                 }
