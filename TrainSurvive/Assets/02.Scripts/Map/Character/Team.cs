@@ -142,8 +142,10 @@ namespace WorldMap
                 return false;
             }
             float magnitude = direction.magnitude;
-            float delta = Mathf.Max(MinDeltaStep, magnitude - Mathf.SmoothDamp(magnitude, 0, ref velocity, SmoothTime));
-            if(delta >= magnitude)
+            float delta = 0.0F;
+            if(!Mathf.Approximately(Time.deltaTime, 0.0F))
+                delta = Mathf.Max(MinDeltaStep, magnitude - Mathf.SmoothDamp(magnitude, 0, ref velocity, SmoothTime));
+            if (delta >= magnitude)
                 currentNext = nextStopPosition;
             else
                 currentNext += direction.normalized * delta;
