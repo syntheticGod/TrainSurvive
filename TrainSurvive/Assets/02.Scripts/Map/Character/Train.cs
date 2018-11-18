@@ -140,10 +140,12 @@ namespace WorldMap
                 return false;
             Vector2 currentNext = current;
             float remanentRoad = railStandingOn.CalRemanentRoad(current, IsMovePositive);
-            float smoothDelta = Mathf.SmoothDamp(remanentRoad, 0, ref velocity, SmoothTime, MaxSpeed);
+            float smoothDelta = Mathf.SmoothDamp(remanentRoad, 0, ref velocity, SmoothTime, MaxSpeed, Time.deltaTime);
             //限制列车的最小移动距离和最大移动距离
             //最小移动距离（MinDeltaStep） <= deltaRoad  <= 剩余路程（remainRoad）
-            float deltaRoad = Mathf.Max(remanentRoad - smoothDelta, MinDeltaStep);
+            float deltaRoad = 0.0F;
+            if (!Mathf.Approximately(smoothDelta, remanentRoad))
+                deltaRoad = Mathf.Max(remanentRoad - smoothDelta, MinDeltaStep);
             bool passCenterOfBlock = false;
             bool arrived = false;
             currentNext = railStandingOn.CalNextPosition(currentNext, ref deltaRoad, IsMovePositive, out passCenterOfBlock, out arrived);

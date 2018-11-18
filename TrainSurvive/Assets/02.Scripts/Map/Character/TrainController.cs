@@ -70,6 +70,7 @@ namespace WorldMap
             map.MoveToThisSpawn(StaticResource.BlockIndex(initPosition));
             //焦距自己
             cameraFocus.focusLock(transform);
+            Time.timeScale = 0;
         }
         void Update()
         {
