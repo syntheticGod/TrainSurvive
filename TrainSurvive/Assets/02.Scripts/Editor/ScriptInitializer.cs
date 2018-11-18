@@ -10,7 +10,9 @@
  * 创建时间：10/29/2018 2:15:41 PM
  * 版本：v0.1
  */
+using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 public class ScriptInitializer : UnityEditor.AssetModificationProcessor
 {
@@ -26,6 +28,17 @@ public class ScriptInitializer : UnityEditor.AssetModificationProcessor
     public static void OnWillCreateAsset(string path)
     {
         path = path.Replace(".meta", "");
+        IEnumerable<string> enumerable= File.ReadLines(path);
+        IEnumerator<string> enumerator = enumerable.GetEnumerator();
+        if (enumerator.MoveNext())
+        {
+            //如果注释已经存在
+            if (enumerator.Current.Trim().StartsWith("/*"))
+            {
+                Debug.Log("注释已存在，不再继续生成。" + path);
+                return;
+            }
+        }
         if (path.ToLower().EndsWith(".cs") || path.ToLower().EndsWith(".lua"))
         {
             if (author == null)
