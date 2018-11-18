@@ -109,6 +109,9 @@ namespace WorldMap {
 
         //地块的共有属性
         //---------------------------------------------------------------------------
+        //当前地块的气候
+        public ClimateEnum climateType { get; private set; }
+
         //当前地块属于四种地形
         public TerrainEnum terrainType { get; private set; }
 
@@ -130,8 +133,9 @@ namespace WorldMap {
 
         //地块的方法
         //---------------------------------------------------------------------------
-        //初始化当前地形为平原，不是特殊地带，当前城镇的id为-1
+        //初始化当前气候为热带，地形为平原，不是特殊地带，不初始化城镇
         public SpawnPoint() {
+            climateType = ClimateEnum.TROPIC;
             terrainType = TerrainEnum.PLAIN;
             specialTerrainType = SpecialTerrainEnum.NONE;
             spawnObjects = new List<GameObject>((int)SpawnObjectEnum.NUM);

@@ -1,7 +1,7 @@
 ﻿/*
  * 描述：这是一个地图类
  * 用来存放地图的地形，地图的宽高
- * 负责对地图数据进行存储和读取
+ * 负责对地图地形各种属性读取判断的操作
  * 
  * 作者：王安鑫
  * 创建时间：2018/11/1 18:19:50
@@ -17,14 +17,17 @@ using UnityEngine;
 namespace WorldMap {
     public class Map : IMapForTrain{
 
-        //大地图的宽高（rowNum为x轴的个数，colNum为z轴地块的个数）
+        //大地图的宽高（rowNum为x轴地块的个数，colNum为z轴地块的个数）
         public int rowNum { get; private set; }
         public int colNum { get; private set; }
+
+        //视野距离（默认为1，周围8个格子）
+        public int viewDist = 1;
 
         //地图中的每个块
         public SpawnPoint[,] spowns;
 
-        //城镇类
+        //地图上的城镇类
         public Town[,] towns;
 
         //对地图属性做初始化
@@ -32,20 +35,23 @@ namespace WorldMap {
             setRowColNum(rowNum, colNum);
         }
 
+        //设置地块的rowNum和colNum数量
         public void setRowColNum(int rowNum, int colNum) {
             this.rowNum = rowNum;
             this.colNum = colNum;
         }
 
-        //更新地图地块的移动显示
+        //移动到此地块，地块更新显示状态
+        //此地块处于明亮状态，周围viewDist范围内变为已探索状态
+        //如viewDist=1，周围8个格子变为已探索状态
         public bool MoveToThisSpawn(Vector2Int position) {
             if (IfInter(position) == false) {
                 return false;
             }
 
             //更新周围8个格子内的视野
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
+            for (int i = -viewDist; i <= viewDist; i++) {
+                for (int j = -viewDist; j <= viewDist; j++) {
                     Vector2Int newPos = position + new Vector2Int(i, j);
                     if (IfInter(newPos)) {
                         //如果是玩家当前处于的位置，则它处于显示的状态，否则处于半显示状态
@@ -75,7 +81,7 @@ namespace WorldMap {
         /// 判断地图坐标是否是轨道
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
-        /// <returns></returns>
+        /// <returns>是铁轨返回真</returns>
         public bool IfRail(Vector2Int position) {
             return IfInter(position) &&
                 spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL;
@@ -85,7 +91,7 @@ namespace WorldMap {
         /// 判断地图坐标是否是城镇
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>
-        /// <returns></returns>
+        /// <returns>是城镇返回真</returns>
         public bool IfTown(Vector2Int position) {
             return IfInter(position) &&
                 spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
@@ -95,7 +101,7 @@ namespace WorldMap {
         /// 判断地图坐标是不是处于可见状态
         /// </summary>
         /// <param name="position"></param>
-        /// <returns></returns>
+        /// <returns>如果处于可见状态</returns>
         public bool isSpawnVisible(Vector2Int position) {
             if (IfInter(position) == false) {
                 return false;

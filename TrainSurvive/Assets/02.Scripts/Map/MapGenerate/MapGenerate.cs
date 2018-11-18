@@ -57,13 +57,18 @@ namespace WorldMap {
         public Map mapData;
 
         //获取城镇生成类
-        TownsRailGenerate townsRailGenerate;
+        private TownsRailGenerate townsRailGenerate;
 
         //判定这是新游戏（生成地图）还是读取地图
         public bool isCreateMap = true;
 
         //设置起始状态为迷雾状态还是明亮状态(测试)
         public static bool isFogState = true;
+
+        //提供给外界Map类
+        public Map GetMap() {
+            return mapData;
+        }
 
         //构建地图
         private void Awake() {
