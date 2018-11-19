@@ -37,9 +37,9 @@ public class TestHelloWorld {
         Vector3 c = new Vector3(1, 1, 1);
         MyClass d = new MyClass(2);
         a(c, d);
-        Debug.Log(c.x + "my:" + d.a);
+        //Debug.Log(c.x + "my:" + d.a);
         b(ref c);
-        Debug.Log(c.x);
+        //Debug.Log(c.x);
     }
     private void a(Vector3 c, MyClass d)
     {

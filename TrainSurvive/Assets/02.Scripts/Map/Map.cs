@@ -17,6 +17,16 @@ using UnityEngine;
 namespace WorldMap {
     public class Map : IMapForTrain{
 
+        private static Map map = null;
+
+        //获取Map类的单例
+        public static Map GetIntanstance() {
+            if (map == null) {
+                map = new Map();
+            }
+            return map;
+        }
+
         //大地图的宽高（rowNum为x轴地块的个数，colNum为z轴地块的个数）
         public int rowNum { get; private set; }
         public int colNum { get; private set; }
@@ -30,15 +40,19 @@ namespace WorldMap {
         //地图上的城镇类
         public Town[,] towns;
 
-        //对地图属性做初始化
-        public Map(int rowNum, int colNum) {
-            setRowColNum(rowNum, colNum);
-        }
+        //设置单例模式
+        private Map() {}
 
         //设置地块的rowNum和colNum数量
-        public void setRowColNum(int rowNum, int colNum) {
+        public void initMap(int rowNum, int colNum) {
             this.rowNum = rowNum;
             this.colNum = colNum;
+            spowns = new SpawnPoint[rowNum, colNum];
+            for (int i = 0; i < rowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
+                    spowns[i, j] = new SpawnPoint();
+                }
+            }
         }
 
         //移动到此地块，地块更新显示状态

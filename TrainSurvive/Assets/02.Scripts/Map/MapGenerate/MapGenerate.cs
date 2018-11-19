@@ -65,11 +65,6 @@ namespace WorldMap {
         //设置起始状态为迷雾状态还是明亮状态(测试)
         public static bool isFogState = true;
 
-        //提供给外界Map类
-        public Map GetMap() {
-            return mapData;
-        }
-
         //构建地图
         private void Awake() {
             CreateModel();
@@ -98,14 +93,9 @@ namespace WorldMap {
             townsRailGenerate = GameObject.Find("townsRailGenerate").GetComponent<TownsRailGenerate>();
 
             //对地图进行初始化处理
-            mapData = new Map(mapWidth, mapHeight);
-            mapData.spowns = new SpawnPoint[mapWidth, mapHeight];
-            for (int i = 0; i < mapWidth; i++) {
-                for (int j = 0; j < mapHeight; j++) {
-                    mapData.spowns[i, j] = new SpawnPoint();
-                }
-            }
-
+            mapData = Map.GetIntanstance();
+            mapData.initMap(mapWidth, mapHeight);
+            
             //为每种地形赋予一个图标
             mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
             mapObject[(int)SpawnPoint.TerrainEnum.PLAIN] = plainObject;
@@ -207,14 +197,26 @@ namespace WorldMap {
             }
         }
 
+        /// <summary>
+        /// 获取地图的X轴方块个数，和Z轴的方块个数
+        /// </summary>
+        /// <returns>整数向量为（X轴个数, Z轴个数）</returns>
         public Vector2Int GetMapSize() {
             return new Vector2Int(mapWidth, mapHeight);
         }
 
+        /// <summary>
+        /// 获取第一块方块中心的世界坐标
+        /// </summary>
+        /// <returns>浮点向量为（X轴世界坐标，Z轴世界坐标）</returns>
         public Vector2 GetMapOrigin() {
             return new Vector2(orign.x, orign.z);
         }
 
+        /// <summary>
+        /// 获取一块的长和宽
+        /// </summary>
+        /// <returns>浮点向量为（X轴长度，Z轴长度）</returns>
         public Vector2 GetBlockSize() {
             return new Vector2(spawnOffsetX, spawnOffsetZ);
         }

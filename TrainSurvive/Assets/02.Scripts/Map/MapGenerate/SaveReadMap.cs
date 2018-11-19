@@ -171,7 +171,7 @@ namespace WorldMap {
             // 第一行地图的尺寸
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
-            map.setRowColNum(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
+            //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
 
             //获取地形数据
             for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
@@ -217,7 +217,7 @@ namespace WorldMap {
             // 第一行地图的尺寸
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
-            map.setRowColNum(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
+            //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
 
             //获取迷雾的数据
             for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
