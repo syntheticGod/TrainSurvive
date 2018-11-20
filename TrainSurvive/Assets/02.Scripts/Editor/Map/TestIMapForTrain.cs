@@ -17,7 +17,7 @@ using WorldMap;
 namespace TestWorldMap {
     [TestFixture]
     public class TestIMapForTrain {
-        
+
         private enum BLOCK_TYPE {
             NONE = -1,
             RAIL,
@@ -51,7 +51,7 @@ namespace TestWorldMap {
         private int townRowNum = 2;
         private int townColNum = 2;
         //城镇坐标设置（满足在各个大块范围内2x2）
-        private Vector2Int [,]town ={
+        private Vector2Int[,] town ={
             {
                 new Vector2Int(0, 1),
                 new Vector2Int(1, 5)
@@ -62,7 +62,7 @@ namespace TestWorldMap {
             } };
 
         //private Vector2Int rail1 = new Vector2Int(1, 2);
-        
+
         private Vector2Int outerPoint1 = new Vector2Int(-1, 5);
         private Vector2Int outerPoint2 = new Vector2Int(mapRowNum, 5);
         private Vector2Int outerPoint3 = new Vector2Int(1, -1);
@@ -148,20 +148,23 @@ namespace TestWorldMap {
         public void TestGetEachEndsOfRail() {
             for (int i = 0; i < mapRowNum; i++) {
                 for (int j = 0; j < mapColNum; j++) {
+                    Vector2Int town1 = new Vector2Int();
+                    Vector2Int town2 = new Vector2Int();
                     switch ((BLOCK_TYPE)mapDataTorTest[i, j]) {
                         case BLOCK_TYPE.RAIL:
+                            Assert.IsTrue(iMapForTrain.GetEachEndsOfRail(new Vector2Int(i, j), out town1, out town2));
+                            if (i < 4) {
+                                Assert.IsTrue(town1 == town[0, 0] && town2 == town[0, 1]);
+                            } else {
+                                Assert.IsTrue(town1 == town[1, 0] && town2 == town[1, 1]);
+                            }
                             break;
                     }
                 }
             }
         }
 
-        //测试城镇铁轨是否一致，铁轨生成算法是不是符合预期
-        //bool[,,,] isConnected = {
-        //    {
-        //        { { false }, { true } }
-        //    }
-        //};
+        //测试城镇铁轨是否连接，能否转换起始和终止点
         [Test]
         public void TestConnectedetweenTowns() {
             Vector2Int town1 = new Vector2Int();
@@ -171,12 +174,18 @@ namespace TestWorldMap {
 
                     for (int k = 0; k < townColNum; k++) {
                         for (int l = 0; l < townColNum; l++) {
-                            town1.x = i;
-                            town1.y = j;
-                            town2.x = k;
-                            town2.y = l;
-
-                            //Assert.IsTrue(iMapForTrain.IfConnectedBetweenTowns(ref town1, ref town2));
+                            town1 = town[i, j];
+                            town2 = town[k, l];
+                            if ((i == 0 && j == 0 && k == 0 && l == 1) ||
+                                (i == 1 && j == 0 && k == 1 && l == 1)) {
+                                Assert.IsTrue(iMapForTrain.IfConnectedBetweenTowns(ref town1, ref town2));
+                            } else if ((i == 0 && j == 1 && k == 0 && l == 0) ||
+                                        (i == 1 && j == 1 && k == 1 && l == 0)) {
+                                Assert.IsTrue(iMapForTrain.IfConnectedBetweenTowns(ref town1, ref town2));
+                                Assert.IsTrue(town1 == town[k, l] && town2 == town[i, j]);
+                            } else {
+                                Assert.IsFalse(iMapForTrain.IfConnectedBetweenTowns(ref town1, ref town2));
+                            }
                         }
                     }
 
