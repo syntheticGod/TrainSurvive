@@ -83,7 +83,7 @@ namespace WorldMap {
             curTime -= Time.deltaTime;
             if (curTime < 0) {
                 curTime = SaveTimeInterval;
-                SaveReadMap.SaveDynamicMapInfo(ref mapData);
+                SaveReadMap.SaveDynamicMapInfo();
             }
         }
 
@@ -120,7 +120,7 @@ namespace WorldMap {
                 BuildTerrain();
             } else {
                 //读取地图的信息
-                SaveReadMap.ReadMapInfo(ref mapData);
+                SaveReadMap.ReadMapInfo();
             }
 
             //对地形进行绘画
@@ -131,7 +131,7 @@ namespace WorldMap {
 
             //如果是第一次生成地图的静态数据，要将其保存
             if (isCreateMap) {
-                SaveReadMap.SaveStaticMapInfo(ref mapData);
+                SaveReadMap.SaveStaticMapInfo();
             }
         }
 
