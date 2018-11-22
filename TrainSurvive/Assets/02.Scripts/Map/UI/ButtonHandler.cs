@@ -36,26 +36,32 @@ namespace WorldMap
             Debug.Log(ButtonIDBinder.GetButtonName(buttonID) + " clicked");
             foreach(var listener in listeners)
             {
-                listener.OnClick(buttonID);
+                if(listener.IfAccepted(buttonID))
+                    listener.OnClick(buttonID);
             }
         }
-        /// <summary>
-        /// 是否需要TeamController来处理
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static bool IsTeam(BUTTON_ID id)
-        {
-            return id > BUTTON_ID.TEAM_NONE && id < BUTTON_ID.TEAM_NUM;
-        }
-        /// <summary>
-        /// 是否需要TrainController来处理
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static bool IsTrain(BUTTON_ID id)
-        {
-            return id > BUTTON_ID.TRAIN_NONE && id < BUTTON_ID.TRAIN_NUM;
-        }
+    }
+    public enum BUTTON_ID
+    {
+        NONE,
+        
+        TEAM_NONE,//小队模式显示的按键
+        TEAM_RETRUN,//小队回车
+        TEAM_NUM,
+
+        TRAIN_NONE,//列车模式显示的按钮
+        TRAIN_RUN,
+        TRAIN_STOP,
+        TRAIN_TEAM_ACTION,//小队下车行动
+        TRAIN_CHANGE,
+        TRAIN_NUM,
+
+        TOWN_NONE,//城镇界面显示的按钮
+        TOWN_TAVERN,//酒馆
+        TOWN_SCHOOL,//学校
+        TOWN_SHOP,//商店
+        TOWN_NUM,
+
+        NUM,
     }
 }

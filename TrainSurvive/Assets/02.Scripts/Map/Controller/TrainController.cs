@@ -5,12 +5,11 @@
  * 创建时间：2018/10/31 0:29:36
  * 版本：v0.1
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
+using WorldMap.Model;
 
 namespace WorldMap
 {
@@ -19,7 +18,6 @@ namespace WorldMap
         private const int levelOfTrain = 1;
 
         //私有信息
-        private Vector2 initPosition;
         private StaticResource staticResource;
         //列车
         private Train train;
@@ -30,6 +28,7 @@ namespace WorldMap
         //外部引用
         private IMapForTrain map;
         private TeamController teamController;
+        private TownController townController;
         /// <summary>
         /// 给TraiController设置TeamController
         /// </summary>
@@ -45,31 +44,34 @@ namespace WorldMap
         /// <param name="iMapT"></param>
         /// <param name="iMap"></param>
         /// <param name="initPosition">列车初始点</param>
-        public void init(IMapForTrain iMap, Vector2Int initIndex, Train train)
+        public void init()
         {
-            staticResource = StaticResource.Instance;
-            map = iMap;
-            initPosition = StaticResource.BlockCenter(initIndex);
+            staticResource = StaticResource.Instance();
+            map = Map.GetIntanstance();
+            train = Train.Instance;
             train.MinDeltaStep = 0.01F * staticResource.BlockSize.x;
-            this.train = train;
-            this.train.Init(initPosition);
+            //监听列车的所有状态
             ButtonHandler.Instance.AddListeners(this);
         }
         void Awake()
         {
             Debug.Log("TrainController Awake");
+            //因为TrainMode和TownViewer在启动时不一定是enable状态。所以通过Transform寻找
             trainModeBTs = GameObject.Find("/Canvas").transform.Find("TrainMode").gameObject;
+            townController = GameObject.Find("/Canvas").transform.Find("TownViewer").GetComponent<TownController>();
         }
         void Start()
         {
+            Debug.Log("TrainController Start");
             //初始化变量
             mainCamera = Camera.main;
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
-            transform.position = StaticResource.MapPosToWorldPos(initPosition, levelOfTrain);
-            //驱散迷雾
-            map.MoveToThisSpawn(StaticResource.BlockIndex(initPosition));
+            transform.position = StaticResource.MapPosToWorldPos(train.PosTrain, levelOfTrain);
             //焦距自己
             cameraFocus.focusLock(transform);
+            //驱散迷雾
+            map.MoveToThisSpawn(StaticResource.BlockIndex(train.PosTrain));
+            townController.TryShowTown();
         }
         void Update()
         {
@@ -84,10 +86,21 @@ namespace WorldMap
                 //因为摄像机的Projection 为 Orthographic，所以Ray的方向都是平行的
                 Debug.Log("origin of ray:" + ray.origin + " dire:" + ray.direction);
                 Debug.Log("mouse position " + Input.mousePosition);
-                if (!train.StartRun(StaticResource.WorldPosToMapPos(ray.origin)))
+                Vector2 clickedPosition = StaticResource.WorldPosToMapPos(ray.origin);
+                if (map.isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
                 {
-                    Debug.Log("列车行动失败");
+                    if (!train.StartRun(clickedPosition))
+                    {
+                        Debug.Log("列车行动失败");
+                        return;
+                    }
                 }
+                else
+                {
+                    Debug.Log("点击处被迷雾环绕");
+                    return;
+                }
+                
             }
             Vector2 current = StaticResource.WorldPosToMapPos(transform.position);
             if (train.Run(ref current))
@@ -118,14 +131,16 @@ namespace WorldMap
             ActiveBTs(true);
             cameraFocus.focusLock(transform);
         }
+        public bool IfAccepted(BUTTON_ID id)
+        {
+            return Utility.Between((int)BUTTON_ID.TRAIN_NONE, (int)BUTTON_ID.TRAIN_NUM, (int)id);
+        }
         /// <summary>
         /// UI按钮的点击事件，地图的鼠标事件在Update中处理。
         /// </summary>
         /// <param name="id">按钮的ID</param>
         public void OnClick(BUTTON_ID id)
         {
-            if (!ButtonHandler.IsTrain(id))
-                return;
             switch (id)
             {
                 case BUTTON_ID.TRAIN_RUN:
@@ -144,7 +159,7 @@ namespace WorldMap
                         break;
                     }
                     break;
-                case BUTTON_ID.TEAM_ACTION:
+                case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
                     if (!ActiveTrain(false))
                     {

@@ -7,6 +7,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using WorldMap.Model;
+
 namespace WorldMap
 {
     public class TeamController : MonoBehaviour, OnClickListener
@@ -20,11 +23,10 @@ namespace WorldMap
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-        public void Init(Team team,Train train, TrainController trainController)
+        public void Init(Team team, TrainController trainController)
         {
             ButtonHandler.Instance.AddListeners(this);
             this.team = team;
-            this.team.Init(train);
             this.trainController = trainController;
             trainController.SetTeamController(this);
         }
@@ -85,10 +87,12 @@ namespace WorldMap
             ActiveBTs(true);
             cameraFocus.focusLock(transform);
         }
+        public bool IfAccepted(BUTTON_ID id)
+        {
+            return Utility.Between((int)BUTTON_ID.TEAM_NONE, (int)BUTTON_ID.TEAM_NUM, (int)id);
+        }
         public void OnClick(BUTTON_ID id)
         {
-            if (!ButtonHandler.IsTeam(id))
-                return;
             switch (id)
             {
                 case BUTTON_ID.TEAM_RETRUN:

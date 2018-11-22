@@ -11,13 +11,10 @@ namespace WorldMap
     {
         private StaticResource() { }
         public static StaticResource staticResource;
-        public static StaticResource Instance
+        public static StaticResource Instance()
         {
-            get
-            {
-                if (staticResource == null) staticResource = new StaticResource();
-                return staticResource;
-            }
+            if (staticResource == null) staticResource = new StaticResource();
+            return staticResource;
         }
         //方块大小
         public Vector2 BlockSize

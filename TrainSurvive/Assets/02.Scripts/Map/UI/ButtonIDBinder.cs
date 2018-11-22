@@ -12,26 +12,31 @@ using UnityEngine.Events;
 
 namespace WorldMap
 {
-    public enum BUTTON_ID
-    {
-        //小队按键时间
-        TEAM_NONE,
-        TEAM_RETRUN,//小队回车
-        TEAM_NUM,
-
-        TRAIN_NONE,
-        TRAIN_RUN,
-        TRAIN_STOP,
-        TEAM_ACTION,//小队下车行动
-        TRAIN_CHANGE,
-        TRAIN_NUM,
-        NUM
-    }
     public class ButtonIDBinder : MonoBehaviour
     {
+
         public static string[] BUTTON_NAMES =
-            { "NONE", "TeamReturnBT", "NUM" ,
-            "NONE","TrainRunBT","TrainStopBT", "TeamActionBT","TrainChangeBT","NUM" };
+                {
+            "NONE",
+
+            "TEAM_NONE",
+            "TeamReturnBtn",
+            "TEAM_NUM",
+
+            "TRAIN_NONE",
+            "TrainRunBtn",
+            "TrainStopBtn",
+            "TrainTeamActionBtn",
+            "TrainChangeBtn",
+            "TRAIN_NUM",
+
+            "TOWN_NONE",
+            "TownTavernBtn",
+            "TownSchoolBtn",
+            "TownShopBtn",
+            "TOWN_NUM",
+
+            "NUM" };
         public static string GetButtonName(BUTTON_ID id)
         {
             return BUTTON_NAMES[(int)id];
@@ -39,19 +44,23 @@ namespace WorldMap
         public BUTTON_ID ButtonID { get; private set; }
         void Start()
         {
-            //绑定按钮的ID
-            for (int i = 0; i < (int)BUTTON_ID.NUM; i++)
-            {
-                if (BUTTON_NAMES[i].Equals(name))
-                    ButtonID = (BUTTON_ID)i;
-            }
-            Debug.Assert(0 != ButtonID, "未找到相应的ButtonID");
+            BindID();
             Button button = GetComponent<Button>();
             Debug.Assert(null != button, "改脚本必须绑定在Button上");
             button.onClick.AddListener(delegate ()
             {
                 ButtonHandler.Instance.OnClick(ButtonID);
             });
+        }
+        private void BindID()
+        {
+            //绑定按钮的ID
+            for (int i = (int)BUTTON_ID.NONE; i < (int)BUTTON_ID.NUM; i++)
+            {
+                if (BUTTON_NAMES[i].Equals(name))
+                    ButtonID = (BUTTON_ID)i;
+            }
+            Debug.Assert(BUTTON_ID.NONE != ButtonID, "未找到"+gameObject.name+"的ButtonID");
         }
     }
 }

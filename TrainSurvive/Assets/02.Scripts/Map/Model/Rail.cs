@@ -9,14 +9,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldMap
+namespace WorldMap.Model
 {
     public class Rail
     {
         public Vector2 Start { get { return inflectionPoints[0]; } }
         public Vector2 End { get { return inflectionPoints[inflectionPoints.Count - 1]; } }
+        /// <summary>
+        /// 铁轨拐点的个数，包括起点和终点
+        /// </summary>
+        public int Count { get { return inflectionPoints.Count; } }
         //拐点，从起点开始
-        public List<Vector2> inflectionPoints;
+        private List<Vector2> inflectionPoints;
+        public Vector2 GetInflection(int index)
+        {
+            return inflectionPoints[index];
+        }
         public Rail(Vector2 start, Vector2 end)
         {
             inflectionPoints = new List<Vector2>();
@@ -35,25 +43,27 @@ namespace WorldMap
             return sum;
         }
         /// <summary>
-        /// 计算点position到铁轨终点的距离
+        /// 精确计算点position到铁轨终点的距离
         /// </summary>
         /// <param name="position">坐标点</param>
         /// <param name="movePositive">正向移动</param>
+        /// <param name="remanentRoad">剩余路程</param>
         /// <returns>
-        /// 大于0：点在铁轨上
-        /// 0.0F：点不在铁轨上，或距离为0.0F
-        /// 返回值不会小于0
+        /// TRUE：点在铁轨上
+        /// FALSE：点不在铁轨上
         /// </returns>
-        public float CalRemanentRoad(Vector2 position, bool movePositive)
+        public bool CalRemanentRoad(Vector2 position, bool movePositive, ref float remanentRoad)
         {
-            float remanentRoad = 0.0F;
+            remanentRoad = 0.0F;
+            if (Utility.Approximately(position, movePositive ? End : Start))
+                return true;
             int start = 0, end = 0;
             if(!FindRailByPos(position, movePositive, ref start, ref end))
-                return remanentRoad;
+                return false;
             if (movePositive)
             {
-                int nloop = inflectionPoints.Count - 1;
                 remanentRoad += CalRailSegmentRoad(position, inflectionPoints[start + 1]);
+                int nloop = inflectionPoints.Count - 1;
                 for (int i = start + 1; i < nloop; ++i)
                     remanentRoad += CalRailSegmentRoad(inflectionPoints[i], inflectionPoints[i + 1]);
             }
@@ -63,7 +73,7 @@ namespace WorldMap
                 for (int i = start - 1; i > 0; --i)
                     remanentRoad += CalRailSegmentRoad(inflectionPoints[i], inflectionPoints[i - 1]);
             }
-            return remanentRoad;
+            return true;
         }
         /// <summary>
         /// 获得铁轨上距离position的路程为delta的点，positive选择正方向或者负方向
@@ -139,8 +149,7 @@ namespace WorldMap
             return nextStep;
         }
         /// <summary>
-        /// 只有start和end在水平线上或垂直线上才有意义。
-        /// 判断position是否在一条水平直线或垂直路段上
+        /// 精确判断position是否在Start与End组成
         /// 不包括终点
         /// </summary>
         /// <param name="start"></param>
@@ -179,7 +188,7 @@ namespace WorldMap
                 if (IfPosOnTheRail(inflectionPoints[start], inflectionPoints[end], position))
                     return true;
             }
-            Debug.LogWarning("未找到坐标A所在的指定铁轨路段，坐标A：" + position);
+            Debug.LogWarning("未在铁轨："+Start+"=>"+End+" 上找到坐标" + position);
             return false;
         }
         /// <summary>

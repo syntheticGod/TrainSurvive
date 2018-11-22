@@ -5,7 +5,7 @@
  * 版本：v0.1
  */
 using UnityEngine;
-namespace WorldMap
+namespace WorldMap.Model
 {
     public class Team
     {
@@ -39,9 +39,10 @@ namespace WorldMap
         //外部引用
         private Train train;
         private IMapForTrain map;
-        public Team(IMapForTrain map, int people, float outVitMax = 100, float outMoodMax = 100, int distView = 1)
+        public Team(int people, float outVitMax = 100, float outMoodMax = 100, int distView = 1)
         {
-            this.map = map;
+            map = Map.GetIntanstance();
+            train = Train.Instance;
             this.outVitMax = outVitMax;
             this.outMoodMax = outMoodMax;
             this.people = people;
@@ -49,10 +50,6 @@ namespace WorldMap
             outVit = outVitMax;
             outMood = outMoodMax;
             state = STATE.NONE;
-        }
-        public void Init(Train train)
-        {
-            this.train = train;
             PosTeam = train.PosTrain;
         }
         public void Action()
