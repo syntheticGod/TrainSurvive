@@ -168,13 +168,18 @@ public class TimeController : MonoBehaviour {
         }   
     }
     
-
+    public void saveGameTime()
+    {
+        world = World.getInstance();
+        world.setGame_time(game_time);
+    }
 
 
     private void Awake()
     {
         world = World.getInstance();
         game_time = world.getGame_time();
+        world.saveDelegateHandler += saveGameTime;
         is_paused_scene = false;
         game_speed = speedRate.normal;
         instance = this;
