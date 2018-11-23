@@ -37,7 +37,7 @@ namespace WorldMap.Model
         //列车所在的世界坐标
         public Vector2 PosTrain { private set; get; }
         //列车所在的地图坐标
-        public Vector2Int IndexTrain { get { return StaticResource.BlockIndex(PosTrain); } }
+        public Vector2Int MapPosTrain { get { return StaticResource.BlockIndex(PosTrain); } }
         //列车脚下的方块的中心位置
         private Vector2 blockCenterUnderTrain;
         // 是否暂时停止

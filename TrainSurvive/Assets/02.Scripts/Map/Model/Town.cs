@@ -4,19 +4,35 @@
  * 创建时间：2018/11/22 0:41:29
  * 版本：v0.1
  */
-using UnityEngine;
+
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 namespace WorldMap.Model
 {
+    [Serializable]
     public class Town
     {
-        public Town()
+        [NonSerialized]
+        const int MaxNPC = 3;
+        private Town()
         {
-            Name = "测试名字";
         }
-
+        public static Town Random()
+        {
+            Town ret = new Town();
+            ret.NPCInTavern = new List<NPC>(MaxNPC);
+            for (int i = 0; i < MaxNPC; ++i)
+            {
+                ret.NPCInTavern.Add(NPC.Random());
+            }
+            ret.Name = StaticResource.RandomName();
+            return ret;
+        }
+        //地图坐标
+        public int PosIndexX { get; set; }
+        public int PosIndexY { get; set; }
         //城镇名字
         public string Name { get; private set; }
         //商店等级
@@ -30,38 +46,18 @@ namespace WorldMap.Model
         //商品数组
         public List<Good> Goods { get; private set; }
         //酒馆角色
-        public List<Person> PersonsInTavern { get; private set; }
+        public List<NPC> NPCInTavern { get; private set; }
         //酒馆角色数量
-        public int PersonCnt { get { return PersonsInTavern.Count; } }
+        public int NPCCnt { get { return NPCInTavern.Count; } }
         //城镇简介
-        public string Info { get { return "城镇：" + Name + "\n信息"; } }
+        public string Info
+        {
+            get
+            {
+                return "城镇：" + Name + "\n" +
+                    "酒馆人数：" + NPCCnt;
+            }
+        }
 
-        //public void Random()
-        //{
-
-        //}
-
-        //public Serializable Serialize()
-        //{
-        //    TownSerializable serializable = new TownSerializable();
-        //    serializable.ID = 0;
-        //    serializable.position = position;
-        //    return serializable;
-        //}
-
-        //public void Deserialize(Serializable serializable)
-        //{
-        //    //必须是TownSerializable实例
-        //    Debug.Assert(serializable.GetType().IsAssignableFrom(typeof(TownSerializable)));
-        //    TownSerializable townSerializable = serializable as TownSerializable;
-        //    position = townSerializable.position;
-        //}
-        //TODO: 测试序列化代码
     }
-    //[Serializable]
-    //public class TownSerializable : Serializable
-    //{
-    //    public uint ID;
-    //    public Vector2Int position;
-    //}
 }

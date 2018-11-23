@@ -4,13 +4,12 @@
  * 创建时间：2018/11/22 0:03:26
  * 版本：v0.1
  */
+
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-using WorldMap.Model;
-
-namespace WorldMap
+namespace WorldMap.Model
 {
     public class DataPersistence
     {
@@ -42,7 +41,6 @@ namespace WorldMap
         {
             FileStream fileStream = new FileStream(filePath, FileMode.Create);
             BinaryFormatter bf = new BinaryFormatter();
-            ds.BeforeSerialize();
             bf.Serialize(fileStream, ds);
             fileStream.Close();
         }
@@ -53,7 +51,8 @@ namespace WorldMap
             {
                 fileStream = new FileStream(filePath, FileMode.Open);
                 BinaryFormatter bf = new BinaryFormatter();
-                ds.AfterDeserialize(bf.Deserialize(fileStream));
+                ds.Init(bf.Deserialize(fileStream) as DataSerialization);
+                fileStream.Close();
             }
             catch (FileNotFoundException e)
             {

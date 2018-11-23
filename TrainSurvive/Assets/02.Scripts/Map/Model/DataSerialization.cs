@@ -14,12 +14,14 @@ namespace WorldMap.Model
     [Serializable]
     public class DataSerialization
     {
-        private List<List<Serializable>> serializables;
+        public Town[] towns;
+        [NonSerialized]
+        public Dictionary<Vector2Int, Town> posToTown;
         [NonSerialized]
         private static DataSerialization instance;
         private DataSerialization()
         {
-            serializables = new List<List<Serializable>>();
+            posToTown = new Dictionary<Vector2Int, Town>();
         }
         public static DataSerialization Instance
         {
@@ -35,50 +37,39 @@ namespace WorldMap.Model
         /// <param name="towns"></param>
         public void Init(WorldMap.Town[,] towns)
         {
-            //int townNumOfX = towns.GetLength(0);
-            //int townNumOfZ = towns.GetLength(1);
-            //townModels = new Town[townNumOfX * townNumOfZ];
-            //int index = 0;
-            //for (int x = 0; x < townNumOfX; ++x)
-            //    for (int z = 0; z < townNumOfZ; ++z)
-            //        townModels[index++] = new Town(towns[x, z]);
+            
+            int townNumOfX = towns.GetLength(0);
+            int townNumOfZ = towns.GetLength(1);
+            this.towns = new Town[townNumOfX * townNumOfZ];
+            int index = 0;
+            for (int x = 0; x < townNumOfX; ++x)
+                for (int z = 0; z < townNumOfZ; ++z)
+                {
+                    Town town = Town.Random();
+                    town.PosIndexX = towns[x, z].position.x;
+                    town.PosIndexY = towns[x, z].position.y;
+                    if (posToTown.ContainsKey(towns[x, z].position))
+                        posToTown[towns[x, z].position] = town;
+                    else
+                        posToTown.Add(towns[x, z].position, town);
+                    this.towns[index++] = town;
+                }
         }
-        [NonSerialized]
-        public Town[] townModels;
-        [NonSerialized]
-        public Person[] personModels;
-        /// <summary>
-        /// 序列化所需要的数据
-        /// </summary>
-        public void BeforeSerialize()
+        public void Init(DataSerialization ds)
         {
-            //Debug.Assert(null != townModels, "DataSerialization未初始化，先Init");
-            //List<Serializable> towns = new List<Serializable>();
-            //for (int x = 0; x < townModels.Length; ++x)
-            //        towns.Add(townModels[x].Serialize());
-            //serializables.Add(towns);
-
-            //Debug.Assert(null != personModels, "DataSerialization未初始化，先Init");
-            //List<Serializable> persons = new List<Serializable>();
-            //for (int x = 0; x < personModels.Length; ++x)
-            //    persons.Add(personModels[x].Serialize());
-            //serializables.Add(persons);
+            instance = ds;
+            foreach(Town town in towns)
+            {
+                Vector2Int pos = new Vector2Int(town.PosIndexX, town.PosIndexY);
+                if (posToTown.ContainsKey(pos))
+                    posToTown[pos] = town;
+                else
+                    posToTown.Add(pos, town);
+            }
         }
-        /// <summary>
-        /// 将序列化数据加载到到相应对象
-        /// </summary>
-        public void AfterDeserialize(object serialization)
+        public bool Find(Vector2Int posIndex, out Town town)
         {
-            //instance = serialization as DataSerialization;
-            //List<Serializable> towns = serializables[0];
-            //townModels = new Town[towns.Count];
-            //for (int x = 0; x < towns.Count; ++x)
-            //    townModels[x].Deserialize(towns[x]);
-
-            //List<Serializable> persons = serializables[1];
-            //personModels = new Person[persons.Count];
-            //for (int x = 0; x < persons.Count; ++x)
-            //    personModels[x].Deserialize(persons[x]);
+            return posToTown.TryGetValue(posIndex, out town);
         }
     }
 }

@@ -6,9 +6,11 @@
  */
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace WorldMap.Model
 {
+    [Serializable]
     public class Good
     {
 

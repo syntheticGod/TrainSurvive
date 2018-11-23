@@ -5,6 +5,7 @@
  * 版本：v0.1
  */
 using UnityEngine;
+
 namespace WorldMap
 {
     public class StaticResource
@@ -88,6 +89,17 @@ namespace WorldMap
         public static Vector3 MapPosToWorldPos(Vector2 mapPosition, int level)
         {
             return Utility.AcceptY(mapPosition, level);
+        }
+
+        private static System.Random rand = new System.Random();
+        private static string[] TOWN_NAME = {
+            "香格里拉", "枫丹白露", "翡冷翠", "米兰", "墨尔本",
+            "爱丁堡", "普罗旺斯", "哥本哈根", "耶路撒冷", "柏林", "布达佩斯",
+            "都灵", "伯尔尼", "阿姆斯特布", "布里斯班", "达累斯萨拉姆",
+            "斯德哥尔摩", "赫尔辛基", "布依诺斯艾利斯", "凤凰城" };
+        public static string RandomName()
+        {
+            return TOWN_NAME[rand.Next(TOWN_NAME.Length)];
         }
     }
 }

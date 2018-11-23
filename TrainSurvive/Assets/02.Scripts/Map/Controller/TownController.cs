@@ -15,6 +15,8 @@ namespace WorldMap
 
         private Text townInfoText;
         private Town currentTown;
+        private Train train;
+        private DataSerialization ds;
         public bool IfAccepted(BUTTON_ID id)
         {
             return Utility.Between((int)BUTTON_ID.TOWN_NONE, (int)BUTTON_ID.TOWN_NUM, (int)id);
@@ -42,7 +44,9 @@ namespace WorldMap
             townInfoText = transform.Find("TownInfo").GetComponentInChildren<Text>();
             Debug.Assert(townInfoText != null);
             ButtonHandler.Instance.AddListeners(this);
-            Train.Instance.Attach(this);
+            train = Train.Instance;
+            train.Attach(this);
+            ds = DataSerialization.Instance;
         }
         void Start()
         {
@@ -54,7 +58,7 @@ namespace WorldMap
         }
         public bool TryShowTown()
         {
-            if (!Map.GetIntanstance().IfTown(Train.Instance.IndexTrain))
+            if (!Map.GetIntanstance().IfTown(Train.Instance.MapPosTrain))
             {
                 Debug.Log("当前列车位置不在城镇");
                 return false;
@@ -71,7 +75,11 @@ namespace WorldMap
             }
             gameObject.SetActive(true);
             Debug.Log("Town Show");
-            townInfoText.text = "测试";
+            Vector2Int currentMapPos = train.MapPosTrain;
+            Model.Town town;
+            if (!ds.Find(currentMapPos, out town))
+                Debug.Log("未找到坐标为"+currentMapPos+"的城镇");
+            townInfoText.text = town.Name;
         }
         private void Hide()
         {

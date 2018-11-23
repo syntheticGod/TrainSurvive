@@ -9,7 +9,6 @@ using WorldMap.Model;
 
 namespace WorldMap
 {
-
     public class CharacterBuild : MonoBehaviour
     {
         //public int InitIndexForXTrain = 50;
@@ -40,6 +39,7 @@ namespace WorldMap
         {
             Debug.Log("CharacterBuild Awake");
             mapGenerate = GameObject.Find("MapBuild").GetComponent<MapGenerate>();
+            FillMoreData();
             CreateModel();
         }
         void Start()
@@ -92,22 +92,21 @@ namespace WorldMap
         /// </summary>
         private void FillMoreData()
         {
-            ////城镇信息生成，因为信息与预设体无关，所以直接new
-            //DataPersistence dp = DataPersistence.Instance;
-            //if (mapGenerate.isCreateMap)
-            //{
-            //    TownsInfoGenerate townsInfoGenerate = new TownsInfoGenerate();
-            //    Model.Town[,] towns = townsInfoGenerate.Random(Map.GetIntanstance().towns);
-            //    Model.DataSerialization.Instance.Init(towns);
-            //    dp.Save();
-            //}
-            //else
-            //{
-            //    if (!dp.LoadData())
-            //    {
-            //        //TODO：文件损坏，退出游戏。
-            //    }
-            //}
+            //城镇信息生成，因为信息与预设体无关，所以直接new
+            DataPersistence dp = DataPersistence.Instance;
+            if (mapGenerate.isCreateMap)
+            {
+                TownsInfoGenerate townsInfoGenerate = new TownsInfoGenerate();
+                DataSerialization.Instance.Init(Map.GetIntanstance().towns);
+                dp.Save();
+            }
+            else
+            {
+                if (!dp.LoadData())
+                {
+                    //TODO：文件损坏，退出游戏。
+                }
+            }
         }
     }
 }
