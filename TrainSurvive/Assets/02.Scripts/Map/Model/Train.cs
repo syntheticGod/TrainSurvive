@@ -10,15 +10,23 @@ using WorldMap;
 
 namespace WorldMap.Model
 {
-    public class Train : Subject
+    public class Train : SubjectBase
     {
         //列车的最大移动速度
         public float MaxSpeed { set; get; }
         //列车的最小移动距离
         public float MinDeltaStep { set; get; } = 0.01F;
         public float SmoothTime { set; get; } = 0.3F;
-        //列车移动速度
-        private float velocity = 0.0F;
+        //列车所在的世界坐标
+        public Vector2 PosTrain { private set; get; }
+        //列车所在的地图坐标
+        public Vector2Int MapPosTrain
+        {
+            get
+            {
+                return StaticResource.BlockIndex(PosTrain);
+            }
+        }
         //列车状态
         private STATE state;
         private STATE State
@@ -30,38 +38,26 @@ namespace WorldMap.Model
                 this.Notify((int)state);
             }
         }
+
         //列车运行时下一目的地（城市位置）
         private Vector2 nextCityPosition;
         //列车运行时所在的铁轨
         private Rail railStandingOn;
-        //列车所在的世界坐标
-        public Vector2 PosTrain { private set; get; }
-        //列车所在的地图坐标
-        public Vector2Int MapPosTrain { get { return StaticResource.BlockIndex(PosTrain); } }
         //列车脚下的方块的中心位置
         private Vector2 blockCenterUnderTrain;
         // 是否暂时停止
         private bool ifTemporarilyStop;
+        //列车移动速度
+        private float velocity = 0.0F;
+
         //外部引用
         private IMapForTrain map;
-        //观察者列表
-        private List<Observer>[] observers;
-        public List<Observer>[] Observers
+        public override int MaxState()
         {
-            get { return observers; }
+            return (int)STATE.NUM;
         }
-        private static Train instance;
-        public static Train Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new Train();
-                return instance;
-            }
-        }
-        public int MaxState { get { return (int)STATE.NUM; } }
-        private Train()
+        public static Train Instance { get; } = new Train();
+        private Train() : base()
         {
             map = Map.GetIntanstance();
         }
@@ -71,11 +67,6 @@ namespace WorldMap.Model
             IsMovable = movable;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
-            observers = new List<Observer>[(int)STATE.NUM + 1];
-            for (int i = 0; i < observers.Length; ++i)
-            {
-                observers[i] = new List<Observer>();
-            }
         }
         /// <summary>
         /// 判断current和click之间是否连通
@@ -161,7 +152,7 @@ namespace WorldMap.Model
             return true;
         }
         /// <summary>
-        /// 列车在运行时，下一帧的坐标。
+        /// 列车沿着铁轨运动，下一帧的坐标。
         /// </summary>
         /// <param name="current">会被修改的世界坐标</param>
         /// <returns>
@@ -193,7 +184,7 @@ namespace WorldMap.Model
             {
                 Debug.Log("到达目的地：" + current);
                 //到达目的地
-                State = STATE.ARRIVED;
+                State = STATE.STOP_TOWN;
             }
             current = PosTrain = currentNext;
             return true;
@@ -210,7 +201,7 @@ namespace WorldMap.Model
             if (ifTemporarilyStop)
             {
                 Debug.Log("暂时性停车__成功");
-                State = STATE.STOPED_TEMPORARILY;
+                State = STATE.STOP_RAIL;
                 ifTemporarilyStop = false;
             }
         }
@@ -280,15 +271,15 @@ namespace WorldMap.Model
         //列车是否已经停稳
         public bool IsStoped
         {
-            get { return State == STATE.ARRIVED || State == STATE.STOPED_TEMPORARILY; }
+            get { return State == STATE.STOP_TOWN || State == STATE.STOP_RAIL; }
         }
         public bool IsArrived
         {
-            get { return State == STATE.ARRIVED; }
+            get { return State == STATE.STOP_TOWN; }
         }
         public bool IsStopedTemporarily
         {
-            get { return State == STATE.STOPED_TEMPORARILY; }
+            get { return State == STATE.STOP_RAIL; }
         }
         public bool IsStoping
         {
@@ -305,14 +296,16 @@ namespace WorldMap.Model
             IsMovable = movable;
             return true;
         }
-
         public bool IsMovePositive { private set; get; }
         public enum STATE
         {
-            ARRIVED,//列车出生在城镇中
-            STOPED_TEMPORARILY,//中途暂时性停车
-            RUNNING,//列车正在运行
+            NONE,
+            //已经停止
+            STOP_TOWN = 0,//列车停在城镇中
+            STOP_RAIL,//中途暂时性停车，停在铁轨上
+            //还在移动中
             STOPING,//列车正在暂时性停车，但是还未停止
+            RUNNING,//列车正在运行
             NUM
         }
     }

@@ -40,6 +40,7 @@ namespace WorldMap
         }
         void Start()
         {
+            Debug.Log("TeamController Start");
         }
         void Update()
         {
@@ -60,7 +61,6 @@ namespace WorldMap
             if (active)
             {
                 transform.position = StaticResource.MapPosToWorldPos(team.PosTeam, levelOfTeam);
-
             }
             else
             {
@@ -82,7 +82,7 @@ namespace WorldMap
         }
         public void Active(Vector2 position)
         {
-            team.SetPosition(position);
+            team.PosTeam = position;
             ActiveTeam(true);
             ActiveBTs(true);
             cameraFocus.focusLock(transform);

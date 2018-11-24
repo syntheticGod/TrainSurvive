@@ -4,19 +4,26 @@
  * 创建时间：2018/11/19 17:09:40
  * 版本：v0.1
  */
-using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
-public class TestStaticResource : MonoBehaviour {
+using WorldMap;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+namespace TestWorldMap
+{
+    [TestFixture]
+    public class TestStaticResource
+    {
+        [Test]
+        public void TestRandomInt()
+        {
+            int maxLoop = 100;
+            while (maxLoop-- > 0)
+            {
+                int random = StaticResource.RandomInt(10);
+                Assert.IsTrue(random < 10, "随机数大于10了");
+                Assert.IsTrue(random >= 0, "随机数小于0了");
+            }
+        }
+    }
 }

@@ -5,10 +5,32 @@
  * 版本：v0.1
  */
 using UnityEngine;
+using WorldMap;
 namespace WorldMap.Model
 {
-    public class Team
+    public class Team : SubjectBase
     {
+        //最大运动速度
+        public float MaxSpeed { set; get; } = 1.0F;
+        //最小移动距离
+        public float MinDeltaStep { set; get; } = 0.01F;
+        public float SmoothTime { set; get; } = 0.3F;
+        //探险队位置
+        public Vector2 PosTeam { set; get; }
+        public Vector2Int MapPosTeam {
+            get { return StaticResource.BlockIndex(PosTeam); }
+        }
+        //小队状态
+        private STATE state;
+        private STATE State
+        {
+            get { return state; }
+            set
+            {
+                state = value;
+                this.Notify((int)state);
+            }
+        }
         //耐力、体力
         private float outVitMax;
         private float outVit;
@@ -19,27 +41,23 @@ namespace WorldMap.Model
         private int people;
         //探险队的视野范围
         private int distView;
-        //小队状态
-        private STATE state;
-        //最大运动速度
-        public float MaxSpeed { set; get; } = 1.0F;
-        //最小移动距离
-        public float MinDeltaStep { set; get; } = 0.01F;
-        public float SmoothTime { set; get; } = 0.3F;
+        //探险队的移动速度
         private float velocity = 0.0F;
-        //行动状态
-        //探险队位置
-        public Vector2 PosTeam { private set; get; }
-        public void SetPosition(Vector2 position)
-        {
-            PosTeam = position;
-        }
         //移动时下一临近块
         private Vector2 nextStopPosition;
         //外部引用
         private Train train;
         private IMapForTrain map;
-        public Team(int people, float outVitMax = 100, float outMoodMax = 100, int distView = 1)
+        public override int MaxState()
+        {
+            return (int)STATE.NUM;
+        }
+        public static Team Instance { get; } = new Team();
+        private Team() : base()
+        {
+
+        }
+        public void Init(int people, float outVitMax = 100, float outMoodMax = 100, int distView = 1)
         {
             map = Map.GetIntanstance();
             train = Train.Instance;
@@ -51,6 +69,41 @@ namespace WorldMap.Model
             outMood = outMoodMax;
             state = STATE.NONE;
             PosTeam = train.PosTrain;
+        }
+        /// <summary>
+        /// 探险队是上下左右，四个方向移动
+        /// </summary>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        public bool Run(ref Vector2 current)
+        {
+            if (!IsMoving) return false;
+            Vector2 currentNext = current;
+            Vector2 direction = nextStopPosition - current;
+            if (Utility.ApproximatelyInView(direction, Vector2.zero))
+            {
+                //到达目的地
+                Debug.Log("到达目的地");
+                Vector2Int mapPosTeam = StaticResource.BlockIndex(PosTeam);
+                PassCenterCallBack(mapPosTeam);
+                State = map.IfTown(mapPosTeam) ? STATE.STOP_TOWN : STATE.STOP_OUT;
+                return false;
+            }
+            float magnitude = direction.magnitude;
+            float delta = 0.0F;
+            if (!Mathf.Approximately(Time.deltaTime, 0.0F))
+                delta = Mathf.Max(MinDeltaStep, magnitude - Mathf.SmoothDamp(magnitude, 0, ref velocity, SmoothTime));
+            if (delta >= magnitude)
+                currentNext = nextStopPosition;
+            else
+                currentNext += direction.normalized * delta;
+            current = PosTeam = currentNext;
+            return true;
+        }
+        public void PassCenterCallBack(Vector2Int position)
+        {
+            map.MoveToThisSpawn(StaticResource.BlockIndex(position));
+
         }
         public void Action()
         {
@@ -125,38 +178,6 @@ namespace WorldMap.Model
             teamIndex.x++;
             WalkTo(teamIndex);
         }
-        public bool Run(ref Vector2 current)
-        {
-            if (!IsMoving) return false;
-            Vector2 currentNext = current;
-            Vector2 direction = nextStopPosition - current;
-            if (Utility.ApproximatelyInView(direction, Vector2.zero))
-            {
-                //到达目的地
-                Debug.Log("到达目的地");
-                ArriveCallBack(PosTeam);
-                Stop();
-                return false;
-            }
-            float magnitude = direction.magnitude;
-            float delta = 0.0F;
-            if(!Mathf.Approximately(Time.deltaTime, 0.0F))
-                delta = Mathf.Max(MinDeltaStep, magnitude - Mathf.SmoothDamp(magnitude, 0, ref velocity, SmoothTime));
-            if (delta >= magnitude)
-                currentNext = nextStopPosition;
-            else
-                currentNext += direction.normalized * delta;
-            current = PosTeam = currentNext;
-            return true;
-        }
-        public void ArriveCallBack(Vector2 position)
-        {
-            map.MoveToThisSpawn(StaticResource.BlockIndex(position));
-        }
-        private void Stop()
-        {
-            state = STATE.OUT_STOP;
-        }
         public bool IsMoving
         {
             get
@@ -174,11 +195,14 @@ namespace WorldMap.Model
         public enum STATE
         {
             NONE,
-            IN_TRAIN,
-            OUT_STOP,
-            MOVING,
-            RELEXING,
-            GATHERING,
+            //相对静止
+            IN_TRAIN = 0, //在列车里面
+            STOP_OUT, //在外面停止
+            STOP_TOWN,//停在城镇
+            RELEXING,//休息
+            GATHERING,//采集
+            //相对运动
+            MOVING, //正在移动
             NUM
         }
     }

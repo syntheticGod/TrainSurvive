@@ -12,24 +12,29 @@ using System.Collections.Generic;
 namespace WorldMap.Model
 {
     [Serializable]
+    internal struct SerializableVector2Int
+    {
+        int x, y;
+        internal SerializableVector2Int(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        internal SerializableVector2Int(Vector2Int v)
+        {
+            this.x = v.x;
+            this.y = v.y;
+        }
+    }
+    [Serializable]
     public class DataSerialization
     {
-        public Town[] towns;
-        [NonSerialized]
-        public Dictionary<Vector2Int, Town> posToTown;
-        [NonSerialized]
-        private static DataSerialization instance;
+
+        private Town[] towns;
+        private Dictionary<SerializableVector2Int, Town> posToTown;
+        public static DataSerialization Instance { get; private set; } = new DataSerialization();
         private DataSerialization()
         {
-            posToTown = new Dictionary<Vector2Int, Town>();
-        }
-        public static DataSerialization Instance
-        {
-            get
-            {
-                if (instance == null) instance = new DataSerialization();
-                return instance;
-            }
         }
         /// <summary>
         /// 随机生成初始化入口
@@ -37,10 +42,10 @@ namespace WorldMap.Model
         /// <param name="towns"></param>
         public void Init(WorldMap.Town[,] towns)
         {
-            
             int townNumOfX = towns.GetLength(0);
             int townNumOfZ = towns.GetLength(1);
             this.towns = new Town[townNumOfX * townNumOfZ];
+            this.posToTown = new Dictionary<SerializableVector2Int, Town>();
             int index = 0;
             for (int x = 0; x < townNumOfX; ++x)
                 for (int z = 0; z < townNumOfZ; ++z)
@@ -48,28 +53,28 @@ namespace WorldMap.Model
                     Town town = Town.Random();
                     town.PosIndexX = towns[x, z].position.x;
                     town.PosIndexY = towns[x, z].position.y;
-                    if (posToTown.ContainsKey(towns[x, z].position))
-                        posToTown[towns[x, z].position] = town;
+                    SerializableVector2Int posKey = new SerializableVector2Int(town.PosIndexX, town.PosIndexY);
+                    if (posToTown.ContainsKey(posKey))
+                        posToTown[posKey] = town;
                     else
-                        posToTown.Add(towns[x, z].position, town);
+                        posToTown.Add(posKey, town);
                     this.towns[index++] = town;
                 }
         }
         public void Init(DataSerialization ds)
         {
-            instance = ds;
-            foreach(Town town in towns)
-            {
-                Vector2Int pos = new Vector2Int(town.PosIndexX, town.PosIndexY);
-                if (posToTown.ContainsKey(pos))
-                    posToTown[pos] = town;
-                else
-                    posToTown.Add(pos, town);
-            }
+            //不直接替代的原因是：防止加载数据之前的引用失效。
+            Instance.towns = ds.towns;
+            Instance.posToTown = ds.posToTown;
         }
         public bool Find(Vector2Int posIndex, out Town town)
         {
-            return posToTown.TryGetValue(posIndex, out town);
+            return posToTown.TryGetValue(new SerializableVector2Int(posIndex), out town);
+        }
+        public void Clean()
+        {
+            towns = null;
+            posToTown = null;
         }
     }
 }

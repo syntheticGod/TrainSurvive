@@ -59,6 +59,7 @@ namespace WorldMap
             //因为TrainMode和TownViewer在启动时不一定是enable状态。所以通过Transform寻找
             trainModeBTs = GameObject.Find("/Canvas").transform.Find("TrainMode").gameObject;
             townController = GameObject.Find("/Canvas").transform.Find("TownViewer").GetComponent<TownController>();
+            townController.Init();
         }
         void Start()
         {
@@ -70,8 +71,8 @@ namespace WorldMap
             //焦距自己
             cameraFocus.focusLock(transform);
             //驱散迷雾
-            map.MoveToThisSpawn(StaticResource.BlockIndex(train.PosTrain));
-            townController.TryShowTown();
+            map.MoveToThisSpawn(train.MapPosTrain);
+            townController.TryShowTown(train.MapPosTrain);
         }
         void Update()
         {
@@ -100,7 +101,6 @@ namespace WorldMap
                     Debug.Log("点击处被迷雾环绕");
                     return;
                 }
-                
             }
             Vector2 current = StaticResource.WorldPosToMapPos(transform.position);
             if (train.Run(ref current))

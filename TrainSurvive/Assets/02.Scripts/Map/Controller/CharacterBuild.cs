@@ -45,7 +45,6 @@ namespace WorldMap
         void Start()
         {
             Debug.Log("CharacterBuild Start");
-            //FillMoreData();
         }
 
         void Update()
@@ -79,7 +78,8 @@ namespace WorldMap
             trainObject.transform.parent = characterObject.transform;
 
             //探险队
-            team = new Team(3);
+            team = Team.Instance;
+            team.Init(3);
             teamObject = Instantiate(teamPrefab);
             teamController = teamObject.GetComponent<TeamController>();
             teamController.Init(team, trainController);

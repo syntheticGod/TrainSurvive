@@ -62,6 +62,10 @@ namespace WorldMap
         TOWN_SHOP,//商店
         TOWN_NUM,
 
+        TAVERN_NONE,//酒馆界面
+        TAVERN_RECRUIT,//招募NPC
+        TAVERN_NUM,
+
         NUM,
     }
 }

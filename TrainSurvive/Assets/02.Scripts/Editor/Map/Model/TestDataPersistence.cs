@@ -15,31 +15,34 @@ namespace TestWorldMap
     {
         DataSerialization ds;
         DataPersistence dp;
+        string fileName = "TEST_DATA_TOWN.dat";
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             ds = DataSerialization.Instance;
             WorldMap.Town[,] towns =
                 {
-                { new WorldMap.Town(new Vector2Int(1,2)), new WorldMap.Town(new Vector2Int(5,7))}, 
+                { new WorldMap.Town(new Vector2Int(1,2)), new WorldMap.Town(new Vector2Int(5,7))},
                 { new WorldMap.Town(new Vector2Int(1,10)), new WorldMap.Town(new Vector2Int(7,15))}
                 };
             ds.Init(towns);
             dp = DataPersistence.Instance;
+            dp.SetFileName(fileName);
+        }
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            dp.Clean();
         }
         [SetUp]
         public void SetUp()
         {
-
-        }
-        [Test]
-        public void TestSave()
-        {
-            dp.Save();
         }
         [Test]
         public void TestLoadData()
         {
+            dp.Save();
+            ds.Clean();
             Assert.IsTrue(dp.LoadData());
             Town town;
             Assert.IsTrue(ds.Find(new Vector2Int(1, 2), out town));

@@ -36,6 +36,10 @@ namespace WorldMap
             "TownShopBtn",
             "TOWN_NUM",
 
+            "TAVERN_NONE",
+            "TavernRecruitBtn",
+            "TAVERN_NUM",
+
             "NUM" };
         public static string GetButtonName(BUTTON_ID id)
         {

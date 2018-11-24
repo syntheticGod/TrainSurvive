@@ -27,7 +27,7 @@ namespace WorldMap.Model
             {
                 ret.NPCInTavern.Add(NPC.Random());
             }
-            ret.Name = StaticResource.RandomName();
+            ret.Name = StaticResource.RandomTownName();
             return ret;
         }
         //地图坐标

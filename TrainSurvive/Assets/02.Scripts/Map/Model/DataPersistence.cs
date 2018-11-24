@@ -13,21 +13,7 @@ namespace WorldMap.Model
 {
     public class DataPersistence
     {
-        private static DataPersistence instance;
-        public static DataPersistence Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new DataPersistence();
-                return instance;
-            }
-        }
-        private DataPersistence()
-        {
-            ds = DataSerialization.Instance;
-            filePath = StorageFloder + "/TOWN_PERSON_INFO.dat";
-        }
+        public static DataPersistence Instance { get; } = new DataPersistence();
         private string StorageFloder
         {
             get
@@ -37,6 +23,15 @@ namespace WorldMap.Model
         }
         private string filePath;
         private DataSerialization ds;
+        private DataPersistence()
+        {
+            ds = DataSerialization.Instance;
+            filePath = StorageFloder + "/TOWN_PERSON_INFO.dat";
+        }
+        public void SetFileName(string fileName)
+        {
+            filePath = StorageFloder +"/"+ fileName;
+        }
         public void Save()
         {
             FileStream fileStream = new FileStream(filePath, FileMode.Create);
@@ -61,9 +56,12 @@ namespace WorldMap.Model
             }
             return true;
         }
-    }
-    public class RandomData
-    {
-
+        public void Clean()
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
     }
 }
