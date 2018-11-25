@@ -4,11 +4,9 @@
  * 创建时间：2018/10/29 22:11:02
  * 版本：v0.1
  */
-using Assets._02.Scripts.zhxUIScripts;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TEST_Facility : Facility {
     public override string Name { get; } = "Bili";
@@ -65,6 +63,27 @@ public class TEST_Facility : Facility {
     
     protected override void OnInitFacilityUI() {
         uiManager.ToggleInventoryPanel(true);
+    }
+
+    public override object OnSave() {
+        return new {
+            Base = base.OnSave(),
+            Progress,
+            Gas = facilityUI.Gas.GetItem(),
+            RawFood = facilityUI.RawFood.GetItem(),
+            Food = facilityUI.Food.GetItem()
+        };
+    }
+
+    public override void OnLoad(dynamic obj) {
+        base.OnLoad(obj.Base as object);
+        Progress = obj.Progress;
+        if (obj.Gas != null)
+            facilityUI.Gas.GeneratorItem(obj.Gas.id, obj.Gas.currPileNum);
+        if (obj.RawFood != null)
+            facilityUI.RawFood.GeneratorItem(obj.RawFood.id, obj.RawFood.currPileNum);
+        if (obj.Food != null)
+            facilityUI.Food.GeneratorItem(obj.Food.id, obj.Food.currPileNum);
     }
 
     private IEnumerator run() {

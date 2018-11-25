@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class TEST_Place : MonoBehaviour {
 
-    public void Place(Facility facility) {
-        PlaceFacility.Place(this, facility);
+    public void Place(int facility) {
+        ConstructionManager.Instance.Place(facility);
     }
 
     public void ChangeScene() {

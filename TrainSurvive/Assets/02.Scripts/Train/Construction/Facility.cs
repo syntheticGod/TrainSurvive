@@ -64,6 +64,10 @@ public abstract class Facility : MonoBehaviour {
     private GameObject FacilityUIPrefab;
 
     /// <summary>
+    /// 在ConstructionManager里注册的ID，自动生成。
+    /// </summary>
+    public int ID { get; set; }
+    /// <summary>
     /// 状态指示器
     /// </summary>
     protected Indicator Indicator { get; private set; }
@@ -82,7 +86,7 @@ public abstract class Facility : MonoBehaviour {
     /// <summary>
     /// 鼠标移动上去时显示的高亮颜色
     /// </summary>
-    public virtual Color HighlightColor { get; } = new Color(1, 1, 1, 0.8f);
+    public Color HighlightColor { get; } = new Color(1, 1, 1, 0.8f);
     
     /// <summary>
     /// 总建造工作量系数
@@ -129,7 +133,7 @@ public abstract class Facility : MonoBehaviour {
                 }break;
                 case State.REMOVING: {
                     Indicator.ToggleStopIndicator(false);
-                    if (previous != State.STOPPED) {
+                    if (previous == State.WORKING) {
                         OnStop();
                     }
                     OnRemove();
@@ -233,12 +237,22 @@ public abstract class Facility : MonoBehaviour {
     /// </summary>
     /// <returns>true放置成功，false放置失败。</returns>
     public virtual bool OnPlaced() {
-        if (cost()) {
+        if (IsCostsAvailable()) {
+            cost();
             FacilityState = State.BUILDING;
             return true;
         } else {
             return false;
         }
+    }
+
+    /// <summary>
+    /// 判断当前建材是否充足。
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCostsAvailable() {
+        // TODO
+        return true;
     }
 
     /// <summary>
@@ -260,6 +274,24 @@ public abstract class Facility : MonoBehaviour {
     /// 当设施停止工作时的回调。
     /// </summary>
     protected virtual void OnStop() { }
+    /// <summary>
+    /// 当载入时的回调。
+    /// </summary>
+    public virtual void OnLoad(dynamic obj) {
+        WorkRatio = obj.WorkRatio;
+        WorkNow = obj.WorkNow;
+        FacilityState = obj.FacilityState;
+    }
+    /// <summary>
+    /// 当存档时的回调。
+    /// </summary>
+    public virtual object OnSave() {
+        return new {
+            WorkRatio,
+            WorkNow,
+            FacilityState
+        };
+    }
 
     /// <summary>
     /// 创建右键上下文菜单，主要根据FacilityState在菜单中添加按钮以及事件。
@@ -293,12 +325,13 @@ public abstract class Facility : MonoBehaviour {
         FacilityState = State.WORKING;
     }
 
-    private bool cost() {
+    private void cost() {
         // TODO
-        return true;
+        Debug.Log("TODO: COST!");
     }
 
     private void returnCosts(float ratio) {
         // TODO
+        Debug.Log("TODO: RETURN COST at: " + ratio);
     }
 }

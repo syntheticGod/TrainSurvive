@@ -6,12 +6,23 @@ using UnityEngine;
 
 [System.Serializable]
 public class World {
-    private World() { }
+    private World() {
+        //测试用
+        for(int i = 0; i < 7; i++)
+        {
+            Person p=Person.CreatePerson();
+            p.name = UnityEngine.Random.value.ToString();
+            p.vitality= UnityEngine.Random.Range(0,10);
+            persons.Add(p);
+        }
+
+    }
     private static World instance;
     public static World getInstance()
     {
         if (instance == null)
         {
+            /*
             string path = PathManager.getInstance().getWorldPath();           
             if (File.Exists(path))
             {
@@ -21,6 +32,7 @@ public class World {
                 file.Close();
             }
             else       
+            */
                 instance = new World();               
         }
         return instance;
@@ -78,9 +90,9 @@ public class World {
     public float outVitMax = 100;
     public float outMood = 0;
     public float outMoodMax = 100;
-    /*
-    public Vector2 posTrain = new Vector2(0,0);
-    public Vector2 posTeam = new Vector2(0, 0);
+    
+    //public Vector2 posTrain = new Vector2(0,0);
+    //public Vector2 posTeam = new Vector2(0, 0);
     public int distView=1;
 
     public int numWeapon = 101;
@@ -88,17 +100,17 @@ public class World {
     public int numPersonWolrd = 101;
     public int numBuildInst = 101;
 
-    public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
-    public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
+    //public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
+    //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
     public town[] towns=new town[100];
-    List<weapon> weapons = new List<weapon>();
-    List<person> persons = new List<person>();
+    public List<weapon> weapons = new List<weapon>();
+    public List<Person> persons = new List<Person>();
     public int[] personTeamIDArray;
 
-    public buildInst[] buildInstArray;
+    public ConstructionManager.BuildInst[] buildInstArray;
     public bool[] buildUnlock;
     public bool[] sciUnlock;
-    */
+    
     public int[] abiAllin;
     public int[] abiAllOut;
     public int numIn;
