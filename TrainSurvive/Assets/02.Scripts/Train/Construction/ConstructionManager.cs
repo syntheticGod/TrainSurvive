@@ -1,13 +1,18 @@
 /*
- * 描述：放置设施，通过调用Place(MonoBehaviour, Facility)方法唤起放置操作
+ * 描述：建造管理器
  * 作者：刘旭涛
- * 创建时间：2018/10/29 22:20:03
+ * 创建时间：2018/11/23 12:15:07
  * 版本：v0.1
  */
 using System.Collections;
 using UnityEngine;
 
-public class PlaceFacility {
+public class ConstructionManager : MonoBehaviour {
+    
+    public static ConstructionManager Instance { get; private set; }
+
+    [Tooltip("注册的设施Prefab")]
+    public Facility[] FacilityPrefabs;
 
     public enum State {
         /// <summary>
@@ -24,36 +29,86 @@ public class PlaceFacility {
         PLACED
     }
 
+    public struct BuildInst {
+        public int Prefab;
+        public Vector3 Position;
+        public object Others;
+    }
+
     /// <summary>
     /// 当前是否处于放置模式。
     /// </summary>
-    public static State PlaceState { get; private set; } = State.IDLE;
+    public State PlaceState { get; private set; } = State.IDLE;
 
-    private static Color originColor = new Color(1, 1, 1, 0.6f);
-    private static Color blockColor = new Color(1, 0, 0, 0.6f);
+    private Color OriginColor { get; } = new Color(1, 1, 1, 0.6f);
+    private Color BlockColor { get; } = new Color(1, 0, 0, 0.6f);
+
+    private void Awake() {
+        Instance = this;
+        for (int i = 0; i < FacilityPrefabs.Length; i++) {
+            FacilityPrefabs[i].ID = i;
+        }
+    }
+
+    private void OnEnable() {
+        World.getInstance().saveDelegateHandler += OnSave;
+        // TODO Call Onload use WOrld
+    }
+
+    private void OnDisable() {
+        World.getInstance().saveDelegateHandler -= OnSave;
+        OnSave();
+    }
 
     /// <summary>
     /// 调用该方法以开始放置一个物体，物体将跟随鼠标位置，左键放置，右键退出。
     /// 当设施与在ProjectSettings/Physics2D中设置的允许与Facility层碰撞的层发生碰撞时将自动标红并阻止放置。
     /// 采用NonAlloc优化GC，因此同时发生的碰撞不得超过缓冲大小（现在是50，大部分情况应该够用了）。
     /// </summary>
-    /// <param name="context">提供一个执行协程的上下文，必须是Active的。</param>
-    /// <param name="facility">要放置的物体。</param>
-    public static void Place(MonoBehaviour context, Facility prefab) {
+    /// <param name="facility">要放置的物体编号（见FacilityPrefabs）。</param>
+    public void Place(int prefab) {
         PlaceState = State.PLACING;
-        GameObject facilityGO = Object.Instantiate(prefab.gameObject);
+        GameObject facilityGO = Instantiate(FacilityPrefabs[prefab].gameObject);
         facilityGO.SetActive(false);
-        context.StartCoroutine(moveFacility(facilityGO));
+        StartCoroutine(moveFacility(facilityGO));
     }
 
     /// <summary>
     /// 停止当前的放置模式。
     /// </summary>
-    public static void StopPlacing() {
+    public void StopPlacing() {
         PlaceState = State.IDLE;
     }
+    
+    /// <summary>
+    /// 有存档，
+    /// </summary>
+    /// <returns>BuildInst数组直接序列化即可。</returns>
+    public void OnSave() {
+        Facility[] facilities = FindObjectsOfType<Facility>();
+        BuildInst[] buildInsts = new BuildInst[facilities.Length];
+        for (int i = 0; i < facilities.Length; i++) {
+            buildInsts[i] = new BuildInst {
+                Prefab = facilities[i].ID,
+                Position = facilities[i].gameObject.transform.position,
+                Others = facilities[i].OnSave()
+            };
+        }
+        // TODO Set WOrld
+    }
 
-    private static IEnumerator moveFacility(GameObject facilityGO) {
+    /// <summary>
+    /// 就有读档！
+    /// </summary>
+    /// <param name="buildInsts">buildInsts数组。</param>
+    public void OnLoad(BuildInst[] buildInsts) {
+        for (int i = 0; i < buildInsts.Length; i++) {
+            Facility facility = Instantiate(FacilityPrefabs[buildInsts[i].Prefab].gameObject, buildInsts[i].Position, Quaternion.identity).GetComponent<Facility>();
+            facility.OnLoad(buildInsts[i].Others);
+        }
+    }
+
+    private IEnumerator moveFacility(GameObject facilityGO) {
         Facility facility = facilityGO.GetComponent<Facility>();
         Transform fTransform = facilityGO.GetComponent<Transform>();
         SpriteRenderer fSpriteRenderer = facilityGO.GetComponent<SpriteRenderer>();
@@ -65,15 +120,15 @@ public class PlaceFacility {
             if (hit.HasValue) {
                 fTransform.SetPositionAndRotation(hit.Value.point, Quaternion.identity);
                 facilityGO.SetActive(true);
-                if (isCostsAvailable(facility)) {
+                if (facility.IsCostsAvailable()) {
                     isCollided = checkCollided(facilityGO, hit.Value);
                     if (isCollided) {
-                        fSpriteRenderer.color = blockColor;
+                        fSpriteRenderer.color = BlockColor;
                     } else {
-                        fSpriteRenderer.color = originColor;
+                        fSpriteRenderer.color = OriginColor;
                     }
                 } else {
-                    fSpriteRenderer.color = blockColor;
+                    fSpriteRenderer.color = BlockColor;
                 }
             } else {
                 facilityGO.SetActive(false);
@@ -91,7 +146,7 @@ public class PlaceFacility {
 
         if (PlaceState == State.IDLE) {
             facilityGO.SetActive(false);
-            Object.Destroy(facilityGO);
+            Destroy(facilityGO);
         } else {
             PlaceState = State.IDLE;
         }
@@ -110,9 +165,9 @@ public class PlaceFacility {
         return false;
     }
 
-    private static void place(Facility facility, SpriteRenderer spriteRenderer) {
+    private void place(Facility facility, SpriteRenderer spriteRenderer) {
         if (!facility.OnPlaced()) {
-            spriteRenderer.color = blockColor;
+            spriteRenderer.color = BlockColor;
             return;
         }
         spriteRenderer.color = facility.HighlightColor;
@@ -134,9 +189,5 @@ public class PlaceFacility {
             }
         }
         return result;
-    }
-
-    private static bool isCostsAvailable(Facility facility) {
-        return true;
     }
 }
