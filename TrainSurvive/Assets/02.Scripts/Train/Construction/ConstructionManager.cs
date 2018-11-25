@@ -50,14 +50,20 @@ public class ConstructionManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 加载对象时，注册事件，同时载入状态。
+    /// </summary>
     private void OnEnable() {
-        World.getInstance().saveDelegateHandler += OnSave;
-        // TODO Call Onload use WOrld
+        World.getInstance().saveDelegateHandler += Save;
+        Load();
     }
 
+    /// <summary>
+    /// 停止时自动保存内容到World，同时移除事件。
+    /// </summary>
     private void OnDisable() {
-        World.getInstance().saveDelegateHandler -= OnSave;
-        OnSave();
+        World.getInstance().saveDelegateHandler -= Save;
+        Save();
     }
 
     /// <summary>
@@ -83,8 +89,7 @@ public class ConstructionManager : MonoBehaviour {
     /// <summary>
     /// 有存档，
     /// </summary>
-    /// <returns>BuildInst数组直接序列化即可。</returns>
-    public void OnSave() {
+    public void Save() {
         Facility[] facilities = FindObjectsOfType<Facility>();
         BuildInst[] buildInsts = new BuildInst[facilities.Length];
         for (int i = 0; i < facilities.Length; i++) {
@@ -94,14 +99,16 @@ public class ConstructionManager : MonoBehaviour {
                 Others = facilities[i].OnSave()
             };
         }
-        // TODO Set WOrld
+        World.getInstance().buildInstArray = buildInsts;
     }
 
     /// <summary>
     /// 就有读档！
     /// </summary>
-    /// <param name="buildInsts">buildInsts数组。</param>
-    public void OnLoad(BuildInst[] buildInsts) {
+    public void Load() {
+        BuildInst[] buildInsts = World.getInstance().buildInstArray;
+        if (buildInsts == null)
+            return;
         for (int i = 0; i < buildInsts.Length; i++) {
             Facility facility = Instantiate(FacilityPrefabs[buildInsts[i].Prefab].gameObject, buildInsts[i].Position, Quaternion.identity).GetComponent<Facility>();
             facility.OnLoad(buildInsts[i].Others);

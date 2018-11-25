@@ -107,7 +107,7 @@ public class World {
     public List<Person> persons = new List<Person>();
     public int[] personTeamIDArray;
 
-    public buildInst[] buildInstArray;
+    public ConstructionManager.BuildInst[] buildInstArray;
     public bool[] buildUnlock;
     public bool[] sciUnlock;
     

@@ -86,7 +86,7 @@ public abstract class Facility : MonoBehaviour {
     /// <summary>
     /// 鼠标移动上去时显示的高亮颜色
     /// </summary>
-    public virtual Color HighlightColor { get; } = new Color(1, 1, 1, 0.8f);
+    public Color HighlightColor { get; } = new Color(1, 1, 1, 0.8f);
     
     /// <summary>
     /// 总建造工作量系数
@@ -327,9 +327,11 @@ public abstract class Facility : MonoBehaviour {
 
     private void cost() {
         // TODO
+        Debug.Log("TODO: COST!");
     }
 
     private void returnCosts(float ratio) {
         // TODO
+        Debug.Log("TODO: RETURN COST at: " + ratio);
     }
 }
