@@ -144,6 +144,10 @@ public class World {
     {
         return metal;
     }
+    public void setFoodOut(uint foodOut)
+    {
+        this.foodOut = foodOut;
+    }
     /// <summary>
     /// num可为负代表减少
     /// </summary>
