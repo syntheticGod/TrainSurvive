@@ -52,6 +52,8 @@ namespace WorldMap.Model
 
         //外部引用
         private IMapForTrain map;
+        private Team team;
+        public TrainController Controller { private set; get; }
         public override int MaxState()
         {
             return (int)STATE.NUM;
@@ -59,14 +61,17 @@ namespace WorldMap.Model
         public static Train Instance { get; } = new Train();
         private Train() : base()
         {
-            map = Map.GetIntanstance();
         }
-        public void Init(bool movable, float maxSpeed, Vector2Int initPosition)
+        public void Init(bool movable, float maxSpeed, Vector2Int initPosition, TrainController controller)
         {
+            map = Map.GetIntanstance();
+            team = Team.Instance;
             PosTrain = StaticResource.BlockCenter(initPosition);
             IsMovable = movable;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
+            Controller = controller;
+            Controller.init(this);
         }
         /// <summary>
         /// 判断current和click之间是否连通
@@ -277,7 +282,7 @@ namespace WorldMap.Model
         {
             get { return State == STATE.STOP_TOWN; }
         }
-        public bool IsStopedTemporarily
+        private bool IsStopedTemporarily
         {
             get { return State == STATE.STOP_RAIL; }
         }
@@ -296,7 +301,7 @@ namespace WorldMap.Model
             IsMovable = movable;
             return true;
         }
-        public bool IsMovePositive { private set; get; }
+        private bool IsMovePositive { set; get; }
         public enum STATE
         {
             NONE,

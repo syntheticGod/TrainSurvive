@@ -23,12 +23,11 @@ namespace WorldMap
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-        public void Init(Team team, TrainController trainController)
+        public void Init(Team team)
         {
             ButtonHandler.Instance.AddListeners(this);
             this.team = team;
-            this.trainController = trainController;
-            trainController.SetTeamController(this);
+            this.trainController = Train.Instance.Controller;
         }
         void Awake()
         {
@@ -80,9 +79,8 @@ namespace WorldMap
             teamModeBTs.SetActive(active);
             return true;
         }
-        public void Active(Vector2 position)
+        public void Active()
         {
-            team.PosTeam = position;
             ActiveTeam(true);
             ActiveBTs(true);
             cameraFocus.focusLock(transform);

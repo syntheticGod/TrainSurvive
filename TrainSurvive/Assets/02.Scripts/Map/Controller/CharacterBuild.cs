@@ -26,8 +26,6 @@ namespace WorldMap
         private GameObject trainObject;
         private GameObject teamObject;
         private GameObject characterObject;
-        private TrainController trainController;
-        private TeamController teamController;
         private Train train;
         private Team team;
         private MapGenerate mapGenerate;
@@ -71,18 +69,14 @@ namespace WorldMap
 
             //列车
             train = Train.Instance;
-            train.Init(true, maxSpeedForTrain, initIndexForTrain);
             trainObject = Instantiate(trainPrefab);
-            trainController = trainObject.GetComponent<TrainController>();
-            trainController.init();
+            train.Init(true, maxSpeedForTrain, initIndexForTrain, trainObject.GetComponent<TrainController>());
             trainObject.transform.parent = characterObject.transform;
 
             //探险队
             team = Team.Instance;
-            team.Init(3);
             teamObject = Instantiate(teamPrefab);
-            teamController = teamObject.GetComponent<TeamController>();
-            teamController.Init(team, trainController);
+            team.Init(teamObject.GetComponent<TeamController>());
             teamObject.SetActive(false);
             teamObject.transform.parent = characterObject.transform;
         }

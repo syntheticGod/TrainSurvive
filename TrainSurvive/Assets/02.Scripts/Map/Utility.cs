@@ -212,4 +212,9 @@ namespace WorldMap
             return vector;
         }
     }
+    public struct Pair<T1, T2>
+    {
+        public T1 one;
+        public T2 two;
+    }
 }

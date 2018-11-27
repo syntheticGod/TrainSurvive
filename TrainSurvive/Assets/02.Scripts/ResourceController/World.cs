@@ -7,15 +7,16 @@ using UnityEngine;
 [System.Serializable]
 public class World {
     private World() {
-        //测试用
-        for(int i = 0; i < 7; i++)
+        //测试用 xys
+        for(int i = 0; i < 14; i++)
         {
             Person p=Person.CreatePerson();
-            p.name = UnityEngine.Random.value.ToString();
-            p.vitality= UnityEngine.Random.Range(0,10);
+            p.name = WorldMap.StaticResource.RandomNPCName(true);
+            //p.vitality= UnityEngine.Random.Range(0,10);
             persons.Add(p);
         }
-
+        foodIn = (uint)foodInMax;
+        //----
     }
     private static World instance;
     public static World getInstance()
@@ -144,9 +145,15 @@ public class World {
     {
         return metal;
     }
-    public void setFoodOut(uint foodOut)
+    public bool setFoodOut(uint food)
     {
-        this.foodOut = foodOut;
+        if(food > foodOutMax)
+        {
+            foodOut = (uint)foodOutMax;
+            return false;
+        }
+        foodOut = food;
+        return true;
     }
     /// <summary>
     /// num可为负代表减少
