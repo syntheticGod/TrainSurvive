@@ -9,5 +9,6 @@ namespace WorldMap
     public interface OnClickListener
     {
         void OnClick(BUTTON_ID id);
+        bool IfAccepted(BUTTON_ID id);
     }
 }

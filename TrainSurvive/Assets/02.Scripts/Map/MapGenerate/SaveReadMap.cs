@@ -19,9 +19,9 @@ namespace WorldMap {
         private const string MAP_DYNAMIC_FILE_NAME = "MAP_DYNAMIC_INFO.txt";
 
         //保存地图信息的委托函数
-        public delegate void SaveMapDelegate(StreamWriter sw, ref Map map);
+        public delegate void SaveMapDelegate(StreamWriter sw);
         //读取地图信息的委托函数
-        public delegate void ReadMapDelegate(String mapData, ref Map map);
+        public delegate void ReadMapDelegate(String mapData);
 
         /** 保存地图的静态信息
          * 地图的地形信息
@@ -30,26 +30,26 @@ namespace WorldMap {
          * 地图的动态信息
          * 地图的迷雾状态
          */
-        public static void SaveStaticMapInfo(ref Map map) {
+        public static void SaveStaticMapInfo() {
             //保存地图的静态信息
-            SaveMapInfo(MAP_STATIC_FILE_NAME, ref map, new SaveMapDelegate(SaveStaticMap));
+            SaveMapInfo(MAP_STATIC_FILE_NAME, new SaveMapDelegate(SaveStaticMap));
         }
 
         /**地图的动态信息
          * 地图的迷雾状态
          */
-        public static void SaveDynamicMapInfo(ref Map map) {
+        public static void SaveDynamicMapInfo() {
             //保存地图的动态信息
-            SaveMapInfo(MAP_DYNAMIC_FILE_NAME, ref map, new SaveMapDelegate(SaveDynamicMap));
+            SaveMapInfo(MAP_DYNAMIC_FILE_NAME, new SaveMapDelegate(SaveDynamicMap));
         } 
 
         /** 读取地图的静态和动态信息
          */
-        public static void ReadMapInfo(ref Map map) {
+        public static void ReadMapInfo() {
             //保存地图的静态信息
-            ReadMapInfo(MAP_STATIC_FILE_NAME, ref map, new ReadMapDelegate(ReadStaticMap));
+            ReadMapInfo(MAP_STATIC_FILE_NAME, new ReadMapDelegate(ReadStaticMap));
             //保存地图的动态信息
-            ReadMapInfo(MAP_DYNAMIC_FILE_NAME, ref map, new ReadMapDelegate(ReadDynamicMap));
+            ReadMapInfo(MAP_DYNAMIC_FILE_NAME, new ReadMapDelegate(ReadDynamicMap));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace WorldMap {
         /// <param name="pathName">保存的文件名</param>
         /// <param name="map">地图</param>
         /// <param name="saveMap">保存静态数据或动态数据</param>
-        private static void SaveMapInfo(string pathName, ref Map map, SaveMapDelegate saveMap) {
+        private static void SaveMapInfo(string pathName, SaveMapDelegate saveMap) {
             //文件流信息
             StreamWriter sw;
             FileInfo t = new FileInfo(Application.persistentDataPath + "//" + pathName);
@@ -73,7 +73,7 @@ namespace WorldMap {
             }
 
             //通过map提供的方法存入地图数据
-            saveMap(sw, ref map);
+            saveMap(sw);
 
             //关闭流
             sw.Close();
@@ -82,7 +82,8 @@ namespace WorldMap {
         }
 
         //将地图数据保存成一系列字符串
-        private static void SaveStaticMap(StreamWriter sw, ref Map map) {
+        private static void SaveStaticMap(StreamWriter sw) {
+            Map map = Map.GetIntanstance();
             if (map.rowNum == 0 || map.colNum == 0) {
                 Debug.Log("地图保存失败！width或length为0");
                 return;
@@ -116,7 +117,8 @@ namespace WorldMap {
 
         //保存地图的动态信息
         //迷雾信息
-        private static void SaveDynamicMap(StreamWriter sw, ref Map map) {
+        private static void SaveDynamicMap(StreamWriter sw) {
+            Map map = Map.GetIntanstance();
             if (map.rowNum == 0 || map.colNum == 0) {
                 Debug.Log("地图保存失败！width或length为0");
                 return;
@@ -137,7 +139,7 @@ namespace WorldMap {
 
         /** 读取地图的静态信息
          */
-        private static void ReadMapInfo(string pathName, ref Map map, ReadMapDelegate readMap) {
+        private static void ReadMapInfo(string pathName, ReadMapDelegate readMap) {
             //使用流的形式读取
             StreamReader sr = null;
             try {
@@ -149,7 +151,7 @@ namespace WorldMap {
             }
 
             //读取map的数据
-            readMap(sr.ReadToEnd(), ref map);
+            readMap(sr.ReadToEnd());
 
             //关闭流
             sr.Close();
@@ -158,7 +160,8 @@ namespace WorldMap {
         }
 
         //读取地图的静态数据
-        private static void ReadStaticMap(string mapData, ref Map map) {
+        private static void ReadStaticMap(string mapData) {
+            Map map = Map.GetIntanstance();
             // 将空元素删除的选项
             System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
 
@@ -171,7 +174,7 @@ namespace WorldMap {
             // 第一行地图的尺寸
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
-            map.setRowColNum(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
+            //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
 
             //获取地形数据
             for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
@@ -204,7 +207,8 @@ namespace WorldMap {
         }
 
         //读取地图的动态数据
-        private static void ReadDynamicMap(string mapData, ref Map map) {
+        private static void ReadDynamicMap(string mapData) {
+            Map map = Map.GetIntanstance();
             // 将空元素删除的选项
             System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
 
@@ -217,7 +221,7 @@ namespace WorldMap {
             // 第一行地图的尺寸
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
-            map.setRowColNum(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
+            //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
 
             //获取迷雾的数据
             for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {

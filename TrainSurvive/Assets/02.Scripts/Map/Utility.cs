@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldMap {
+namespace WorldMap
+{
     //功能类函数
-    public static class Utility {
-        public static void Swap<T>(ref T my, ref T other) {
+    public static class Utility
+    {
+        public static void Swap<T>(ref T my, ref T other)
+        {
             T temp = my;
             my = other;
             other = temp;
@@ -13,6 +17,7 @@ namespace WorldMap {
         private const float EPSILON_IN_VIEW = 1.0E-4F;
         /// <summary>
         /// 判断两个值是否在视觉上接近
+        /// 差值在1.0x10^4以内的范围的视为相同
         /// </summary>
         /// <param name="a">向量1</param>
         /// <param name="b">向量2</param>
@@ -26,6 +31,7 @@ namespace WorldMap {
         }
         /// <summary>
         /// 判断两个向量是否在视觉上接近
+        /// x轴和y轴差值都在1.0x10^4以内的范围的视为相同
         /// </summary>
         /// <param name="a">向量1</param>
         /// <param name="b">向量2</param>
@@ -36,6 +42,10 @@ namespace WorldMap {
         public static bool ApproximatelyInView(Vector2 a, Vector2 b)
         {
             return ApproximatelyInView(a.x, b.x) && ApproximatelyInView(a.y, b.y);
+        }
+        public static bool Approximately(Vector2 a, Vector2 b)
+        {
+            return Mathf.Approximately(a.x - b.x, 0.0F) && Mathf.Approximately(a.y - b.y, 0.0F);
         }
         /// <summary>
         /// 忽略3维向量的y轴
@@ -91,6 +101,10 @@ namespace WorldMap {
                 return false;
             return (value > edge1 && value < edge2) || (value > edge2 && value < edge1);
         }
+        public static bool Between(int left, int right, int value)
+        {
+            return value >= left && value <= right;
+        }
     }
     public struct Matrix2x2Int
     {
@@ -99,19 +113,44 @@ namespace WorldMap {
         /// m10 m11
         /// </summary>
         private int m00, m01, m10, m11;
+
+        public Matrix2x2Int(int m00, int m01, int m10, int m11)
+        {
+            this.m00 = m00;
+            this.m01 = m01;
+            this.m10 = m10;
+            this.m11 = m11;
+        }
         /// <summary>
         /// 顺时针旋转90度
         ///  0 -1
         ///  1  0
         /// </summary>
-        private static Matrix2x2Int roate90Clockwise = new Matrix2x2Int { m01 = -1, m10 = 1 };
+        private static Matrix2x2Int roate90Clockwise = new Matrix2x2Int
+        {
+            m00 = 0, m01 = -1,
+            m10 = 1, m11 = 0
+        };
         /// <summary>
         /// 逆时针旋转90度
         ///  0  1
         /// -1  0
         /// </summary>
-        private static Matrix2x2Int roate90Anticlockwise = new Matrix2x2Int { m01 = 1, m10 = -1 };
-        private static Matrix2x2Int roate180 = new Matrix2x2Int { m00 = -1, m11 = -1 };
+        private static Matrix2x2Int roate90Anticlockwise = new Matrix2x2Int
+        {
+            m00 = 0, m01 = 1,
+            m10 = -1, m11 = 0
+        };
+        /// <summary>
+        /// 旋转180度
+        ///  -1   0
+        ///   0  -1
+        /// </summary>
+        private static Matrix2x2Int roate180 = new Matrix2x2Int
+        {
+            m00 = -1, m01 = 0,
+            m10 = 0, m11 = -1
+        };
         /// <summary>
         /// 矩阵右乘向量 
         /// vector = vector * matrix
@@ -124,7 +163,7 @@ namespace WorldMap {
             int x = vector.x;
             int y = vector.y;
             vector.x = x * m00 + y * m10;
-            vector.y = x * m10 + y * m11;
+            vector.y = x * m01 + y * m11;
         }
         /// <summary>
         ///矢量顺时针旋转90度
@@ -172,5 +211,10 @@ namespace WorldMap {
             vector.y = -vector.y;
             return vector;
         }
+    }
+    public struct Pair<T1, T2>
+    {
+        public T1 one;
+        public T2 two;
     }
 }
