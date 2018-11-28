@@ -28,23 +28,23 @@ public class TechTreeEditor : Editor {
 
     private List<List<int>> BuildLayer(TechTree techTree) {
         List<List<int>> layers = new List<List<int>>();
-        bool[] checks = new bool[techTree.Techs.Length];
+        bool[] checks = new bool[TechTree.Techs.Length];
 
         // Build layers, Max 100 layers.
         for (int layer = 0; layer < 100; layer++) {
             layers.Add(new List<int>());  // Add Layer.
 
-            for (int i = 0; i < techTree.TechDependencies.Length; i++) {
+            for (int i = 0; i < TechTree.Techs.Length; i++) {
                 if (checks[i]) {  // i已经被check过了
                     continue;
                 }
                 bool flag = true;
                 if (layer >= 1) {  // If Layer 1 - n
-                    for (int j = 0; j < techTree.TechDependencies[i].Length; j++) {
+                    for (int j = 0; j < TechTree.Techs[i].Dependencies.Length; j++) {
                         // Not Exists in last Layer.
                         bool bFlag = false;
                         for (int layerI = layers.Count - 2; layerI >= 0; layerI--) {
-                            if (layers[layerI].BinarySearch(techTree.TechDependencies[i][j]) >= 0) {
+                            if (layers[layerI].BinarySearch(TechTree.Techs[i].Dependencies[j]) >= 0) {
                                 bFlag = true;
                                 break;
                             }
@@ -56,7 +56,7 @@ public class TechTreeEditor : Editor {
                     }
                 } else {
                     // If Layer 0
-                    flag = techTree.TechDependencies[i].Length == 0; // 当i无依赖时，应当直接加入第一层。
+                    flag = TechTree.Techs[i].Dependencies.Length == 0; // 当i无依赖时，应当直接加入第一层。
                 }
                 if (flag) {
                     layers[layers.Count - 1].Add(i);
@@ -82,8 +82,8 @@ public class TechTreeEditor : Editor {
     }
 
     private void BuildTree(TechTree techTree) {
-        RectTransform tree = techTree.transform.Find("Viewport/Content/Tree").transform as RectTransform;
-        RectTransform lines = techTree.transform.Find("Viewport/Content/Lines").transform as RectTransform;
+        RectTransform tree = techTree.transform.Find("TreePanel/Viewport/Content/Tree").transform as RectTransform;
+        RectTransform lines = techTree.transform.Find("TreePanel/Viewport/Content/Lines").transform as RectTransform;
         DestroyChildren(tree);
         DestroyChildren(lines);
 
@@ -93,8 +93,8 @@ public class TechTreeEditor : Editor {
     }
 
     private void CreateContent(TechTree techTree, RectTransform tree, RectTransform lines, List<List<int>> layers) {
-        techTree.TechObjects = new GameObject[techTree.Techs.Length];
-        techTree.TechLines = new TechTree.Line[techTree.Techs.Length];
+        techTree.TechObjects = new ProgressButton[TechTree.Techs.Length];
+        techTree.TechLines = new TechTree.Line[TechTree.Techs.Length];
 
         for (int i = 0; i < layers.Count; i++) {
             RectTransform verticalGroup = Instantiate(techTree.VerticalGroup, tree).GetComponent<RectTransform>();
@@ -102,9 +102,9 @@ public class TechTreeEditor : Editor {
                 GameObject tech = Instantiate(techTree.TechPrefab, verticalGroup);
                 tech.GetComponentInChildren<Text>().text = layers[i][j] + "";
 
-                techTree.TechObjects[layers[i][j]] = tech;
+                techTree.TechObjects[layers[i][j]] = tech.GetComponent<ProgressButton>();
                 techTree.TechLines[layers[i][j]] = new TechTree.Line {
-                    Lines = new Image[techTree.TechDependencies[layers[i][j]].Length]
+                    Lines = new Image[TechTree.Techs[layers[i][j]].Dependencies.Length]
                 };
 
                 if (i == 0) {
@@ -118,7 +118,7 @@ public class TechTreeEditor : Editor {
                 float sy = -(horizontalLayoutGroup.padding.top + verticalLayoutGroup.padding.top + (techRect.rect.height + verticalLayoutGroup.spacing) * j + techRect.rect.height / 2);
                 Vector2 start = new Vector2(sx, sy);
 
-                int[] deps = techTree.TechDependencies[layers[i][j]];
+                int[] deps = TechTree.Techs[layers[i][j]].Dependencies;
                 for (int depi = 0; depi < deps.Length; depi++) {
                     int yIndex = 0, xIndex;
                     for (xIndex = i - 1; xIndex >= 0; xIndex--) {
@@ -143,7 +143,7 @@ public class TechTreeEditor : Editor {
         }
         
         // Set Content size.
-        RectTransform content = techTree.transform.Find("Viewport/Content").transform as RectTransform;
+        RectTransform content = techTree.transform.Find("TreePanel/Viewport/Content").transform as RectTransform;
         content.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tree.rect.width);
         content.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tree.rect.height);
     }
