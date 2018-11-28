@@ -15,8 +15,9 @@ namespace WorldMap
     public class TeamController : MonoBehaviour, OnClickListener
     {
         private int levelOfTeam = 2;
-        //小队数据结构
+        
         private Team team;
+        private Train train;
         private GameObject teamModeBTs;
         private TrainController trainController;
         //主摄像机
@@ -28,6 +29,7 @@ namespace WorldMap
             ButtonHandler.Instance.AddListeners(this);
             this.team = team;
             this.trainController = Train.Instance.Controller;
+            train = Train.Instance;
         }
         void Awake()
         {
@@ -63,7 +65,9 @@ namespace WorldMap
             }
             else
             {
-                if (!team.GoTrain())
+                if (!team.GoBackToTrain())
+                    return false;
+                if (!train.TeamComeBack())
                     return false;
             }
             gameObject.SetActive(active);

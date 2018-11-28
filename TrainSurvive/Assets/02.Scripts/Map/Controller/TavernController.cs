@@ -14,16 +14,29 @@ namespace WorldMap
 {
     public class TavernController : MonoBehaviour, OnClickListener, Observer
     {
-        private Text[] NPCTexts;
+        private GameObject[] NPCItems;
         private Model.Train train;
         private Model.Team team;
-        private const int MaxCountOfNPC = 3;
+        private const int MaxCountOfNPC = 5;
+        private int selected = -1;
+        private ImageButton[] imageButtons;
         private void Awake()
         {
-            NPCTexts = new Text[MaxCountOfNPC];
+            NPCItems = new GameObject[MaxCountOfNPC];
+            imageButtons = new ImageButton[MaxCountOfNPC];
             Transform NPCsInfo = gameObject.transform.Find("NPCsInfo");
             for (int i = 0; i < MaxCountOfNPC; ++i)
-                NPCTexts[i] = NPCsInfo.Find("NPCText" + (i + 1)).GetComponent<Text>();
+            {
+                NPCItems[i] = NPCsInfo.Find("InfoItem" + (i + 1)).gameObject;
+                imageButtons[i] = NPCItems[i].GetComponentInChildren<ImageButton>();
+                imageButtons[i].ID = i;
+                imageButtons[i].onClick = delegate (int id)
+                {
+                    if(selected != -1)
+                        imageButtons[selected].normal();
+                    selected = id;
+                };
+            }
             team = Model.Team.Instance;
             train = Model.Train.Instance;
             train.Attach(obs: this);
@@ -43,10 +56,11 @@ namespace WorldMap
                 return;
             }
             gameObject.SetActive(true);
-            for (int i = 0; i < NPCTexts.Length && i < npcs.Count; ++i)
+            for (int i = 0; i < NPCItems.Length && i < npcs.Count; ++i)
             {
-                NPCTexts[i].text = npcs[i].Info;
+                NPCItems[i].GetComponentInChildren<Text>().text = npcs[i].Info;
             }
+            Debug.Log("酒馆：我这里有"+npcs.Count+"人");
         }
         public void Hide()
         {

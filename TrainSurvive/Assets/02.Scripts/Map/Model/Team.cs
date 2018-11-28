@@ -37,6 +37,7 @@ namespace WorldMap.Model
         }
         //人数
         private List<Person> persons;
+        public int PersonCount { get { return persons.Count; } }
         //探险队的视野范围
         private int distView;
         //探险队的移动速度
@@ -67,20 +68,6 @@ namespace WorldMap.Model
             train = Train.Instance;
             Controller = controller;
             Controller.Init(this);
-        }
-        public void OutPrepare(Vector2 initPosition, int selectFood, List<Person> selectedPersons)
-        {
-            if (!world.setFoodOut((uint)selectFood))
-            {
-                Debug.LogWarning("探险队携带外出食物不正常");
-            }
-            if (world.addFoodIn(-selectFood) != 1)
-            {
-                Debug.LogWarning("探险队减少内部食物不正常");
-            }
-            PosTeam = initPosition;
-            persons = selectedPersons;
-            world.ifOuting = true;
         }
         /// <summary>
         /// 探险队是上下左右，四个方向移动
@@ -138,7 +125,31 @@ namespace WorldMap.Model
         {
             return true;
         }
-        public bool GoTrain()
+        /// <summary>
+        /// 探险队外出时，探险队该做的准备
+        /// </summary>
+        /// <param name="initPosition">出现的世界坐标</param>
+        /// <param name="selectedFood">外带的食物</param>
+        /// <param name="selectedPersons">选择的成员</param>
+        public void OutPrepare(Vector2 initPosition, int selectedFood, List<Person> selectedPersons)
+        {
+            if (!world.setFoodOut((uint)selectedFood))
+            {
+                Debug.LogWarning("探险队携带外出食物不正常！");
+            }
+            PosTeam = initPosition;
+            persons = selectedPersons;
+            world.numOut = selectedPersons.Count;
+            Debug.Log("探险队：我们（一共"+world.numOut+"人）外出了，带走了" + world.getFoodOut() + "点食物");
+        }
+        /// <summary>
+        /// 探险队回车数据处理函数
+        /// </summary>
+        /// <returns>
+        /// TRUE：探险队成功回车
+        /// FALSE：探险队不在列车上
+        /// </returns>
+        public bool GoBackToTrain()
         {
             if (StaticResource.BlockIndex(train.PosTrain) != StaticResource.BlockIndex(PosTeam))
             {
@@ -153,7 +164,8 @@ namespace WorldMap.Model
                 Debug.LogWarning("探险队增加内部食物不正常");
             }
             //TODO:将身上的物品返回
-            world.ifOuting = false;
+            world.numOut = 0;
+            Debug.Log("探险队：我们（人数："+persons.Count+"）回车了，带回食物：" + remain+"，列车现在有食物："+world.getFoodIn());
             return true;
         }
         /// <summary>

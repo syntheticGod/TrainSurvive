@@ -172,6 +172,9 @@ namespace WorldMap
 
         public void OK(TeamOutPrepareDialog dialog)
         {
+            //先列车准备
+            train.TeamOutPrepare(dialog.GetSelectedFood(), dialog.GetSelectedPerson());
+            //再探险队准备
             team.OutPrepare(train.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
             team.Controller.Active();
             ActiveBTs(false);
