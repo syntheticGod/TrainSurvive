@@ -65,9 +65,11 @@ namespace WorldMap
             }
             else
             {
-                if (!team.GoBackToTrain())
+                if (!team.CanTeamGoBack())
                     return false;
                 if (!train.TeamComeBack())
+                    return false;
+                if (!team.GoBackToTrain())
                     return false;
             }
             gameObject.SetActive(active);

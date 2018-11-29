@@ -37,7 +37,7 @@ namespace WorldMap.Model
         }
         //人数
         private List<Person> persons;
-        public int PersonCount { get { return persons.Count; } }
+        public int PersonCount { get { return persons==null?0:persons.Count; } }
         //探险队的视野范围
         private int distView;
         //探险队的移动速度
@@ -141,6 +141,23 @@ namespace WorldMap.Model
             persons = selectedPersons;
             world.numOut = selectedPersons.Count;
             Debug.Log("探险队：我们（一共"+world.numOut+"人）外出了，带走了" + world.getFoodOut() + "点食物");
+            State = IfInTown()? STATE.STOP_TOWN : STATE.STOP_OUT;
+        }
+        /// <summary>
+        /// 判断探险队是否能回车
+        /// </summary>
+        /// <returns>
+        /// TRUE：其他
+        /// FALSE：探险队不在列车方块上
+        /// </returns>
+        public bool CanTeamGoBack()
+        {
+            if (StaticResource.BlockIndex(train.PosTrain) != StaticResource.BlockIndex(PosTeam))
+            {
+                Debug.Log("探险队不在列车上");
+                return false;
+            }
+            return true;
         }
         /// <summary>
         /// 探险队回车数据处理函数
@@ -151,11 +168,6 @@ namespace WorldMap.Model
         /// </returns>
         public bool GoBackToTrain()
         {
-            if (StaticResource.BlockIndex(train.PosTrain) != StaticResource.BlockIndex(PosTeam))
-            {
-                Debug.Log("探险队不在列车上");
-                return false;
-            }
             //探险队放回食物
             int remain = (int)world.getFoodOut();
             world.setFoodOut(0);
@@ -166,7 +178,17 @@ namespace WorldMap.Model
             //TODO:将身上的物品返回
             world.numOut = 0;
             Debug.Log("探险队：我们（人数："+persons.Count+"）回车了，带回食物：" + remain+"，列车现在有食物："+world.getFoodIn());
+            State = STATE.IN_TRAIN;
+            persons = null;
             return true;
+        }
+        /// <summary>
+        /// 探险队招募到英雄的回调函数
+        /// </summary>
+        /// <param name="theOne"></param>
+        public void CallBackRecruit(Person theOne)
+        {
+            Debug.Log("探险队：招募到" + theOne.name);
         }
         /// <summary>
         /// 移动到指定坐标
@@ -223,6 +245,10 @@ namespace WorldMap.Model
             {
                 return state == STATE.GATHERING;
             }
+        }
+        private bool IfInTown()
+        {
+            return map.IfTown(StaticResource.BlockIndex(PosTeam));
         }
         public enum STATE
         {

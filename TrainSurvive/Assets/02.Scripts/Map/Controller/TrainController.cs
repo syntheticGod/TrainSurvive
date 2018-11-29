@@ -157,6 +157,7 @@ namespace WorldMap
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
+                    //弹出框之后不能再操作列车
                     if (!ActiveTrain(false))
                     {
                         Debug.Log("探险队行动失败");
@@ -182,7 +183,7 @@ namespace WorldMap
 
         public void Cancel()
         {
-            
+            ActiveTrain(true);
         }
     }
 }

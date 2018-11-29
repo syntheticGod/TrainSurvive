@@ -297,6 +297,14 @@ namespace WorldMap.Model
             Debug.Log("列车：探险队回车了");
             return true;
         }
+        /// <summary>
+        /// 列车招募到英雄的回调函数
+        /// </summary>
+        /// <param name="theOne"></param>
+        public void CallBackRecruit(Person theOne)
+        {
+            Debug.Log("列车：招募到" + theOne.name);
+        }
         //列车属性判断
         public bool IsRunning
         {
