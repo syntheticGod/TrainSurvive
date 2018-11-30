@@ -157,6 +157,7 @@ namespace WorldMap
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
+                    //弹出框之后不能再操作列车
                     if (!ActiveTrain(false))
                     {
                         Debug.Log("探险队行动失败");
@@ -172,6 +173,9 @@ namespace WorldMap
 
         public void OK(TeamOutPrepareDialog dialog)
         {
+            //先列车准备
+            train.TeamOutPrepare(dialog.GetSelectedFood(), dialog.GetSelectedPerson());
+            //再探险队准备
             team.OutPrepare(train.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
             team.Controller.Active();
             ActiveBTs(false);
@@ -179,7 +183,7 @@ namespace WorldMap
 
         public void Cancel()
         {
-            
+            ActiveTrain(true);
         }
     }
 }

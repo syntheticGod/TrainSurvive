@@ -29,6 +29,7 @@ namespace WorldMap
         private Train train;
         private Team team;
         private MapGenerate mapGenerate;
+        private WorldForMap world;
         public void Init(Vector2Int initIndex)
         {
             initIndexForTrain = initIndex;
@@ -86,21 +87,14 @@ namespace WorldMap
         /// </summary>
         private void FillMoreData()
         {
-            //城镇信息生成，因为信息与预设体无关，所以直接new
-            DataPersistence dp = DataPersistence.Instance;
+            world = WorldForMap.Instance;
+            //TEST：加载存储生成数据
             if (mapGenerate.isCreateMap)
             {
-                TownsInfoGenerate townsInfoGenerate = new TownsInfoGenerate();
-                DataSerialization.Instance.Init(Map.GetIntanstance().towns);
-                dp.Save();
+                world.RandomTownsInfo(Map.GetIntanstance().towns);
+                world.SaveGame();
             }
-            else
-            {
-                if (!dp.LoadData())
-                {
-                    //TODO：文件损坏，退出游戏。
-                }
-            }
+            world.PrepareData();
         }
     }
 }

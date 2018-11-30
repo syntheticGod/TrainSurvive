@@ -8,7 +8,7 @@ using UnityEngine;
 public class World {
     private World() {
         //测试用 xys
-        for(int i = 0; i < 14; i++)
+        for(int i = 0; i < 3; i++)
         {
             Person p=Person.CreatePerson();
             p.name = WorldMap.StaticResource.RandomNPCName(true);
@@ -22,8 +22,10 @@ public class World {
     public static World getInstance()
     {
         if (instance == null)
-        {          
-            string path = PathManager.getInstance().getWorldPath();           
+        {
+            //TEST：加载测试 xys
+            string path = PathManager.getInstance().getWorldPath();
+
             if (File.Exists(path))
             {
                 BinaryFormatter bf = new BinaryFormatter();
@@ -31,7 +33,7 @@ public class World {
                 instance = (World)bf.Deserialize(file);
                 file.Close();
             }
-            else                  
+            else                 
                 instance = new World();               
         }
         return instance;
@@ -41,7 +43,8 @@ public class World {
     {
         //调用保存委托
 
-            saveDelegateHandler?.Invoke();
+        saveDelegateHandler?.Invoke();
+
         //map.save()待补足
         /*
         if(TimeController.instance!=null)
@@ -107,19 +110,20 @@ public class World {
     public int numPersonWolrd = 101;
     public int numBuildInst = 101;
 
-    public List<Person> persons = new List<Person>();
+
     public ConstructionManager.BuildInst[] buildInstArray;
     //public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
     //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
-    /*
-    public town[] towns=new town[100];
-    public List<weapon> weapons = new List<weapon>();
-    
+
+
+    public WorldMap.Model.Town[] towns;
+    //public List<weapon> weapons = new List<weapon>();
+    public List<Person> persons = new List<Person>();
     public int[] personTeamIDArray;
     
 
     
-    */
+  
     public bool[] buildUnlock;
     public bool[] sciUnlock;
     

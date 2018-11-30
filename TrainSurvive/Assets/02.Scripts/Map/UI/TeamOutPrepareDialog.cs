@@ -50,11 +50,8 @@ namespace WorldMap.UI
         }
         void Start()
         {
-            personsForSelectUI.Init(world.persons, personProfile, this);
-            personsSelectedUI.Init(new List<Person>(), personProfile, this);
-            foodInTrain = (int)world.getFoodIn();
-            TryShowFood();
         }
+        
         void Update()
         {
 
@@ -65,6 +62,10 @@ namespace WorldMap.UI
             {
                 gameObject.SetActive(true);
             }
+            personsForSelectUI.Init(world.persons, personProfile, this);
+            personsSelectedUI.Init(new List<Person>(), personProfile, this);
+            foodInTrain = (int)world.getFoodIn();
+            TryShowFood();
         }
         private void Hide()
         {

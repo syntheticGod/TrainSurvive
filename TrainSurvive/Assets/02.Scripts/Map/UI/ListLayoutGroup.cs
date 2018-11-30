@@ -24,14 +24,30 @@ namespace WorldMap.UI
         }
         public void Init(List<Person> persons, GameObject personProfile, TeamOutPrepareDialog dialog)
         {
-            items = new List<Item>();
-            foreach (Person person in persons)
+            if(items == null)
+                items = new List<Item>();
+            int i;
+            for(i = 0; i < persons.Count; ++i)
             {
-                Item item = Instantiate(personProfile).AddComponent<Item>();
+                Item item ;
+                if (i >= items.Count)
+                {
+                    item = Instantiate(personProfile).AddComponent<Item>();
+                    Append(item);
+                }
+                else
+                    item = items[i];
+
                 item.SetDialog(dialog);
-                item.Person = person;
-                Append(item);
+                item.Person = persons[i];
             }
+            int removeStart = i;
+            int removeCount = items.Count  - removeStart;
+            for (; i < items.Count; ++i)
+            {
+                Destroy(items[i]);
+            }
+            items.RemoveRange(removeStart, removeCount);
         }
         public void Append(Item item)
         {
