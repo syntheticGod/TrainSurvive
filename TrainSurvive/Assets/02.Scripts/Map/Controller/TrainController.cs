@@ -9,11 +9,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-using WorldMap.Model;
+using System;
 
+using WorldMap.Model;
+using WorldMap.UI;
 namespace WorldMap
 {
-    public class TrainController : MonoBehaviour, OnClickListener
+    public class TrainController : MonoBehaviour, OnClickListener, DialogCallBack
     {
         private const int levelOfTrain = 1;
 
@@ -27,29 +29,19 @@ namespace WorldMap
         private ICameraFocus cameraFocus;
         //外部引用
         private IMapForTrain map;
-        private TeamController teamController;
+        private Team team;
         private TownController townController;
-        /// <summary>
-        /// 给TraiController设置TeamController
-        /// </summary>
-        /// <param name="tc"></param>
-        public void SetTeamController(TeamController tc)
-        {
-            teamController = tc;
-        }
         private GameObject trainModeBTs;
-        /// <summary>
-        /// 一些变量设置
-        /// </summary>
-        /// <param name="iMapT"></param>
-        /// <param name="iMap"></param>
-        /// <param name="initPosition">列车初始点</param>
-        public void init()
+        private TeamOutPrepareDialog teamOutDialog;
+        private World world;
+        public void init(Train train)
         {
             staticResource = StaticResource.Instance();
             map = Map.GetIntanstance();
-            train = Train.Instance;
+            this.train = train;
+            team = Team.Instance;
             train.MinDeltaStep = 0.01F * staticResource.BlockSize.x;
+            world = World.getInstance();
             //监听列车的所有状态
             ButtonHandler.Instance.AddListeners(this);
         }
@@ -57,9 +49,13 @@ namespace WorldMap
         {
             Debug.Log("TrainController Awake");
             //因为TrainMode和TownViewer在启动时不一定是enable状态。所以通过Transform寻找
-            trainModeBTs = GameObject.Find("/Canvas").transform.Find("TrainMode").gameObject;
-            townController = GameObject.Find("/Canvas").transform.Find("TownViewer").GetComponent<TownController>();
+            Transform canvas = GameObject.Find("/Canvas").transform;
+            trainModeBTs = canvas.Find("TrainMode").gameObject;
+            townController = canvas.Find("TownViewer").GetComponent<TownController>();
             townController.Init();
+            teamOutDialog = canvas.Find("TeamSelectDialog").GetComponent<TeamOutPrepareDialog>();
+            teamOutDialog.CallBack = this;
+            teamOutDialog.Init();
         }
         void Start()
         {
@@ -161,18 +157,33 @@ namespace WorldMap
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
+                    //弹出框之后不能再操作列车
                     if (!ActiveTrain(false))
                     {
                         Debug.Log("探险队行动失败");
                         break;
                     }
-                    ActiveBTs(false);
-                    teamController.Active(train.PosTrain);
+                    teamOutDialog.Show();
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
                     SceneManager.LoadScene("GCTestScene1");
                     break;
             }
+        }
+
+        public void OK(TeamOutPrepareDialog dialog)
+        {
+            //先列车准备
+            train.TeamOutPrepare(dialog.GetSelectedFood(), dialog.GetSelectedPerson());
+            //再探险队准备
+            team.OutPrepare(train.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
+            team.Controller.Active();
+            ActiveBTs(false);
+        }
+
+        public void Cancel()
+        {
+            ActiveTrain(true);
         }
     }
 }

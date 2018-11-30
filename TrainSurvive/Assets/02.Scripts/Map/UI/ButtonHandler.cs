@@ -66,6 +66,12 @@ namespace WorldMap
         TAVERN_RECRUIT,//招募NPC
         TAVERN_NUM,
 
+        TEAM_SELECT_DIALOG_NONE,//探险队选择框
+        TEAM_SELECT_FOOD_PLUS,//增加食物
+        TEAM_SELECT_FOOD_SUBTRCT,//减少食物
+        TEAM_SELECT_FOOD_OK,
+        TEAM_SELECT_FOOD_CANCEL,
+        TEAM_SELECT_DIALOG_NUM,
         NUM,
     }
 }

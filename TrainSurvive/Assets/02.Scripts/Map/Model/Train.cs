@@ -4,6 +4,7 @@
  * 创建时间：2018/11/9 20:42:50
  * 版本：v0.1
  */
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WorldMap;
@@ -52,6 +53,9 @@ namespace WorldMap.Model
 
         //外部引用
         private IMapForTrain map;
+        private Team team;
+        private World world;
+        public TrainController Controller { private set; get; }
         public override int MaxState()
         {
             return (int)STATE.NUM;
@@ -59,14 +63,18 @@ namespace WorldMap.Model
         public static Train Instance { get; } = new Train();
         private Train() : base()
         {
-            map = Map.GetIntanstance();
         }
-        public void Init(bool movable, float maxSpeed, Vector2Int initPosition)
+        public void Init(bool movable, float maxSpeed, Vector2Int initPosition, TrainController controller)
         {
+            map = Map.GetIntanstance();
+            team = Team.Instance;
+            world = World.getInstance();
             PosTrain = StaticResource.BlockCenter(initPosition);
             IsMovable = movable;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
+            Controller = controller;
+            Controller.init(this);
         }
         /// <summary>
         /// 判断current和click之间是否连通
@@ -263,6 +271,40 @@ namespace WorldMap.Model
             ifTemporarilyStop = true;
             return true;
         }
+        /// <summary>
+        /// 探险队外出时，列车该做的准备
+        /// </summary>
+        /// <param name="selectFood">外带的食物</param>
+        /// <param name="personsSelected">外出的人员</param>
+        public void TeamOutPrepare(int selectFood, List<Person> personsSelected)
+        {
+            if (world.addFoodIn(-selectFood) != 1)
+            {
+                Debug.LogWarning("列车食物减少不正常——探险队外出！");
+            }
+            world.numIn = world.persons.Count - personsSelected.Count;
+            world.ifOuting = true;
+            Debug.Log("列车：探险队外出了，剩下"+world.numIn+"人，剩下"+world.getFoodIn()+"食物");
+        }
+        /// <summary>
+        /// 探险队回车
+        /// </summary>
+        /// <returns></returns>
+        public bool TeamComeBack()
+        {
+            world.numIn += team.PersonCount;
+            world.ifOuting = false;
+            Debug.Log("列车：探险队回车了");
+            return true;
+        }
+        /// <summary>
+        /// 列车招募到英雄的回调函数
+        /// </summary>
+        /// <param name="theOne"></param>
+        public void CallBackRecruit(Person theOne)
+        {
+            Debug.Log("列车：招募到" + theOne.name);
+        }
         //列车属性判断
         public bool IsRunning
         {
@@ -277,7 +319,7 @@ namespace WorldMap.Model
         {
             get { return State == STATE.STOP_TOWN; }
         }
-        public bool IsStopedTemporarily
+        private bool IsStopedTemporarily
         {
             get { return State == STATE.STOP_RAIL; }
         }
@@ -296,7 +338,7 @@ namespace WorldMap.Model
             IsMovable = movable;
             return true;
         }
-        public bool IsMovePositive { private set; get; }
+        private bool IsMovePositive { set; get; }
         public enum STATE
         {
             NONE,

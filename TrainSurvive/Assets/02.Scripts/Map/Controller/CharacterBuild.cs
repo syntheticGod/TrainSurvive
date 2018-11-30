@@ -26,11 +26,10 @@ namespace WorldMap
         private GameObject trainObject;
         private GameObject teamObject;
         private GameObject characterObject;
-        private TrainController trainController;
-        private TeamController teamController;
         private Train train;
         private Team team;
         private MapGenerate mapGenerate;
+        private WorldForMap world;
         public void Init(Vector2Int initIndex)
         {
             initIndexForTrain = initIndex;
@@ -71,18 +70,14 @@ namespace WorldMap
 
             //列车
             train = Train.Instance;
-            train.Init(true, maxSpeedForTrain, initIndexForTrain);
             trainObject = Instantiate(trainPrefab);
-            trainController = trainObject.GetComponent<TrainController>();
-            trainController.init();
+            train.Init(true, maxSpeedForTrain, initIndexForTrain, trainObject.GetComponent<TrainController>());
             trainObject.transform.parent = characterObject.transform;
 
             //探险队
             team = Team.Instance;
-            team.Init(3);
             teamObject = Instantiate(teamPrefab);
-            teamController = teamObject.GetComponent<TeamController>();
-            teamController.Init(team, trainController);
+            team.Init(teamObject.GetComponent<TeamController>());
             teamObject.SetActive(false);
             teamObject.transform.parent = characterObject.transform;
         }
@@ -92,21 +87,14 @@ namespace WorldMap
         /// </summary>
         private void FillMoreData()
         {
-            //城镇信息生成，因为信息与预设体无关，所以直接new
-            DataPersistence dp = DataPersistence.Instance;
+            world = WorldForMap.Instance;
+            //TEST：加载存储生成数据
             if (mapGenerate.isCreateMap)
             {
-                TownsInfoGenerate townsInfoGenerate = new TownsInfoGenerate();
-                DataSerialization.Instance.Init(Map.GetIntanstance().towns);
-                dp.Save();
+                world.RandomTownsInfo(Map.GetIntanstance().towns);
+                world.SaveGame();
             }
-            else
-            {
-                if (!dp.LoadData())
-                {
-                    //TODO：文件损坏，退出游戏。
-                }
-            }
+            world.PrepareData();
         }
     }
 }

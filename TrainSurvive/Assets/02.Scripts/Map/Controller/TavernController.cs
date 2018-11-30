@@ -8,26 +8,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using WorldMap.Model;
-
 namespace WorldMap
 {
     public class TavernController : MonoBehaviour, OnClickListener, Observer
     {
-        private Text[] NPCTexts;
+        private const int UNSELECTED = -1;
+        private GameObject[] NPCItems;
         private Model.Train train;
         private Model.Team team;
-        private const int MaxCountOfNPC = 3;
+        private Model.Town town;
+        private WorldForMap world;
+        private const int MaxCountOfNPC = 5;
+        private int selectedIndex = UNSELECTED;
+        private Model.NPC selectedNPC = null;
+        private ImageButton[] imageButtons;
         private void Awake()
         {
-            NPCTexts = new Text[MaxCountOfNPC];
+            NPCItems = new GameObject[MaxCountOfNPC];
+            imageButtons = new ImageButton[MaxCountOfNPC];
             Transform NPCsInfo = gameObject.transform.Find("NPCsInfo");
             for (int i = 0; i < MaxCountOfNPC; ++i)
-                NPCTexts[i] = NPCsInfo.Find("NPCText" + (i + 1)).GetComponent<Text>();
+            {
+                NPCItems[i] = NPCsInfo.Find("InfoItem" + (i + 1)).gameObject;
+                imageButtons[i] = NPCItems[i].GetComponentInChildren<ImageButton>();
+                imageButtons[i].onClick = delegate (int id, object tag)
+                {
+                    if (selectedIndex != UNSELECTED)
+                        imageButtons[selectedIndex].normal();
+                    selectedIndex = id;
+                    selectedNPC = tag as Model.NPC;
+                };
+            }
+        }
+        public void Init()
+        {
             team = Model.Team.Instance;
             train = Model.Train.Instance;
+            world = WorldForMap.Instance;
             train.Attach(obs: this);
             team.Attach(obs: this);
+            ButtonHandler.Instance.AddListeners(this);
         }
         void Start()
         {
@@ -35,7 +55,7 @@ namespace WorldMap
         void Update()
         {
         }
-        public void ShowTavern(List<NPC> npcs)
+        public void ShowTavern(Model.Town town)
         {
             if (gameObject.activeInHierarchy)
             {
@@ -43,10 +63,19 @@ namespace WorldMap
                 return;
             }
             gameObject.SetActive(true);
-            for (int i = 0; i < NPCTexts.Length && i < npcs.Count; ++i)
+            //TODO：待优化，list点击列表
+            for (int i = 0; i < NPCItems.Length; ++i)
             {
-                NPCTexts[i].text = npcs[i].Info;
+                imageButtons[i].Clean();
             }
+            for (int i = 0; i < town.NPCCnt; ++i)
+            {
+                imageButtons[i].ShowText(town.NPCs[i].Info);
+                imageButtons[i].Tag = town.NPCs[i];
+                imageButtons[i].ID = i;
+            }
+            this.town = town;
+            Debug.Log("酒馆：我这里有" + town.NPCCnt + "人");
         }
         public void Hide()
         {
@@ -58,7 +87,22 @@ namespace WorldMap
             switch (id)
             {
                 case BUTTON_ID.TAVERN_RECRUIT:
-                    Debug.Log("招募");
+                    Debug.Log("玩家：招募指令");
+                    if (selectedIndex == UNSELECTED)
+                    {
+                        Debug.Log("系统：未选择任何NPC");
+                        break;
+                    }
+                    if (!town.RecruitNPC(selectedNPC))
+                    {
+                        Debug.Log("系统：招募NPC失败");
+                        break;
+                    }
+                    if (world.IfTeamOuting)
+                        team.CallBackRecruit(selectedNPC.PersonInfo);
+                    else
+                        train.CallBackRecruit(selectedNPC.PersonInfo);
+                    imageButtons[selectedIndex].Clean();
                     break;
             }
         }
@@ -70,7 +114,7 @@ namespace WorldMap
 
         public void ObserverUpdate(int state, int echo)
         {
-            if(state != (int)Train.STATE.STOP_TOWN || state != (int)Team.STATE.STOP_TOWN)
+            if (state != (int)Model.Train.STATE.STOP_TOWN || state != (int)Model.Team.STATE.STOP_TOWN)
             {
                 Hide();
             }
