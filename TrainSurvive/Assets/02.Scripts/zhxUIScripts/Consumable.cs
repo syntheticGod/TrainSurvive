@@ -3,9 +3,10 @@
  * 作者：张皓翔
  * 创建时间：2018/10/31 18:54:54
  * 版本：v0.1
+ * 暂时不用
  */
 
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private int _cur_pile_num;
 
         //--------  特有属性内层  ----------
-        private PublicData.ConsumableType _con_type;
+        //private PublicData.ConsumableType _con_type;
         private PublicData.VoidCallback itemDiscard;
         private PublicData.VoidCallback itemGain;
         private PublicData.VoidCallback onUse;
@@ -103,13 +104,13 @@ namespace Assets._02.Scripts.zhxUIScripts
         }
 
         //---------- 特有属性外层  ----------
-        public PublicData.ConsumableType conType
-        {
-            get
-            {
-                return _con_type;
-            }
-        }
+        //public PublicData.ConsumableType conType
+        //{
+        //    get
+        //    {
+        //        return _con_type;
+        //    }
+        //}
 
         //---------- 构造  ------------------
         public Consumable()
@@ -151,3 +152,4 @@ namespace Assets._02.Scripts.zhxUIScripts
 
     }
 }
+*/

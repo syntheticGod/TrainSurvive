@@ -76,17 +76,31 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         belongContainer = container;
     }
 
-    public void BindItem(Item item)
+    private void ChargeUIShow()
+    {
+        if (item.currPileNum == 1)
+            showPileNum.gameObject.SetActive(false);
+        else
+            showPileNum.gameObject.SetActive(true);
+        if (item.itemType == PublicData.ItemType.SpecialItem)
+        {
+            mark.gameObject.SetActive(false);
+        }
+        else
+        {
+            mark.gameObject.SetActive(true);
+        }
+    }
+
+    public void BindItem(Item item)                         //本函数要负责体现不同类型物品在表现上的不同，比如特殊物品不显示稀有度，武器不显示堆叠数
     {
         _item = item;
         _item.belongGrid = this;
         mark.color = markColors[(int)_item.rarity];
         itemSprite.sprite = _item.sprite;
         state.sprite = null;                                //临时不加
-        if (item.itemType == PublicData.ItemType.weapon)
-            showPileNum.gameObject.SetActive(false);
-        else
-            showPileNum.text = item.currPileNum.ToString();
+        showPileNum.text = item.currPileNum.ToString();
+        ChargeUIShow();
     }
 
     public void Refresh()
@@ -95,14 +109,8 @@ public class ItemGridCtrl : MonoBehaviour, IDropHandler, IBeginDragHandler, IDra
         mark.color = markColors[(int)_item.rarity];
         itemSprite.sprite = item.sprite;
         state.sprite = null;
-        if(item.itemType == PublicData.ItemType.weapon)
-        {
-            showPileNum.gameObject.SetActive(false);
-        }
-        else
-        {
-            showPileNum.gameObject.SetActive(true);
-        }
+        showPileNum.text = item.currPileNum.ToString();
+        ChargeUIShow();
     }
 
     public void SetRestNum(int restNum)

@@ -199,7 +199,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             }
             if(allowNum != 0)
             {
-                mappingItem = item.Clone();                //复制的时候除了ID其他信息都丢失了，有待处理。
+                mappingItem = item.Clone();               
                 mappingItem.currPileNum = allowNum;
                 _items.Add(mappingItem);
                 controller.AddGrid(mappingItem);                 //为前台添加物品
