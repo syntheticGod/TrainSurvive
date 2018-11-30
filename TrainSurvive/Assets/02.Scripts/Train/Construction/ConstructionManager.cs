@@ -66,6 +66,10 @@ public class ConstructionManager : MonoBehaviour {
         Save();
     }
 
+    private void OnDestroy() {
+        Instance = null;
+    }
+
     /// <summary>
     /// 调用该方法以开始放置一个物体，物体将跟随鼠标位置，左键放置，右键退出。
     /// 当设施与在ProjectSettings/Physics2D中设置的允许与Facility层碰撞的层发生碰撞时将自动标红并阻止放置。
