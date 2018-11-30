@@ -16,8 +16,4 @@ public class SceneManager_Innitialization : MonoBehaviour {
         SceneManager.LoadScene("GCTestScene1");
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
