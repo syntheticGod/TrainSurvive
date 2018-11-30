@@ -13,10 +13,14 @@ using Assets._02.Scripts.zhxUIScripts;
 public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     private GameObject grid;        //包含的物品格实例
     private ItemGridCtrl gridCtrl;
-    public PublicData.Charge ChargeIn;
+    public bool isEquipmentGrid = false;
+    public PublicData.Charge ChargeIn;  //需要玩家自己绑定准入函数
     public GameObject Prefab;
 
 
+    private void Awake()
+    {
+    }
 
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
@@ -26,7 +30,6 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
         
         InventoryCtrl tempController = grid.GetComponent<ItemGridCtrl>().GetController();
-        Debug.Log(tempController);
         tempController.coreInventory.PopItem(grid.GetComponent<ItemGridCtrl>().item);
         tempController.RemoveGrid(grid);
 
@@ -104,13 +107,20 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         }
         else
         {
-            Item demoItem = new Assets._02.Scripts.zhxUIScripts.Material(id);
+            Item item = PublicMethod.GenerateItem(id, num)[0];
             grid = Instantiate(Prefab);
             gridCtrl = grid.GetComponent<ItemGridCtrl>();
-            demoItem.belongGrid = gridCtrl;
+            item.belongGrid = gridCtrl;
             gridCtrl.BindContainer(gameObject);
-            gridCtrl.BindItem(demoItem);
+            gridCtrl.BindItem(item);
             grid.transform.SetParent(gameObject.transform);
+            //Item demoItem = new Assets._02.Scripts.zhxUIScripts.Material(id);
+            //grid = Instantiate(Prefab);
+            //gridCtrl = grid.GetComponent<ItemGridCtrl>();
+            //demoItem.belongGrid = gridCtrl;
+            //gridCtrl.BindContainer(gameObject);
+            //gridCtrl.BindItem(demoItem);
+            //grid.transform.SetParent(gameObject.transform);
         }
         return true;
     }

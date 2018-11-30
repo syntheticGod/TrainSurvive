@@ -103,23 +103,28 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     //  仅测试用代码  ---------------------------------------------------------
     public void AddWeapon()
     {
-        Item temp = new Weapon(Random.Range(0, 100));
-        coreInventory.PushItem(temp);
-
-    }
-
-    public void AddConsumable()
-    {
-        Item temp = new Consumable(Random.Range(100, 200));
+        Item temp = PublicMethod.GenerateItem(0,1)[0];
         coreInventory.PushItem(temp);
     }
+
+    //public void AddConsumable()
+    //{
+    //    Item temp = new Consumable(Random.Range(100, 200));
+    //    coreInventory.PushItem(temp);
+    //}
 
     public void AddMaterial()
     {
-        Item temp = new Assets._02.Scripts.zhxUIScripts.Material(Random.Range(200, 205));
-        coreInventory.PushItem(temp);
+        Item[] temp = PublicMethod.GenerateItem(231, 1);
+        for(int i=0; i<temp.Length; ++i)
+            coreInventory.PushItem(temp[i]);
 
     }
 
-    
+    public void AddSpecialItem()
+    {
+        Item[] temp = PublicMethod.GenerateItem(700, 3);
+        for (int i = 0; i < temp.Length; ++i)
+            coreInventory.PushItem(temp[i]);
+    }
 }
