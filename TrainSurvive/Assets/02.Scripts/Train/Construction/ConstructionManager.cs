@@ -90,7 +90,7 @@ public class ConstructionManager : MonoBehaviour {
     /// <summary>
     /// 读档！
     /// </summary>
-    public void Load() {
+    private void Load() {
         for (int i = 0; i < World.getInstance().buildInstArray.Count; i++) {
             Structure structure = World.getInstance().buildInstArray[i];
             Facility facility = Instantiate(FacilityPrefab.gameObject, structure.Position, Quaternion.identity).GetComponent<Facility>();

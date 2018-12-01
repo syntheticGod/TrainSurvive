@@ -16,4 +16,8 @@ public class TEST_Place : MonoBehaviour {
     public void ChangeScene() {
         SceneManager.LoadScene("MapScene");
     }
+
+    public void ChangeScene(string name) {
+        SceneManager.LoadScene(name);
+    }
 }
