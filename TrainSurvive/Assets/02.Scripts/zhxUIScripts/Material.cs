@@ -14,6 +14,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 using UnityEngine;
@@ -111,16 +112,24 @@ namespace Assets._02.Scripts.zhxUIScripts
         }
         public Material(int id)
         {
+            string xmlString = Resources.Load("xml/items").ToString();
+            string XPath = string.Format("./material[@id='{0:D3}']", id);
+            Debug.Log(XPath);
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+            XmlNode root = document.SelectSingleNode("items");
+            XmlNode aimNode = root.SelectSingleNode(XPath);
+
             _id = id;
             belongGrid = null;
-            _name = PublicMethod.GenerateRdString(Random.Range(2, 6));
-            _item_type = PublicData.ItemType.material;
-            _rarity = (PublicData.Rarity)Random.Range(0, 5);
-            _size = Random.Range(2.0f, 5.0f);
-            _description = PublicMethod.GenerateRdString(Random.Range(20, 30));
-            _sprite = Resources.Load<Sprite>("ZHXTemp/Material_img");
-            _max_pile_num = 5;
+            _name = aimNode.Attributes["name"].Value;
+            _item_type = PublicData.ItemType.Material;
+            _rarity = (PublicData.Rarity)int.Parse(aimNode.Attributes["rarity"].Value);
+            _size = float.Parse(aimNode.Attributes["size"].Value);
+            _max_pile_num = int.Parse(aimNode.Attributes["pilenum"].Value);
             _cur_pile_num = 1;
+            _description = aimNode.Attributes["description"].Value;
+            _sprite = Resources.Load<Sprite>(aimNode.Attributes["spritepath"].Value);
         }
 
         //  重写方法  --------------------------

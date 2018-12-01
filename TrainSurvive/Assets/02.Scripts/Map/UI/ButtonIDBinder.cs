@@ -40,6 +40,13 @@ namespace WorldMap
             "TavernRecruitBtn",
             "TAVERN_NUM",
 
+            "TEAM_SELECT_DIALOG_NONE",
+            "TeamSelectFoodPlusBtn",
+            "TeamSelectFoodSubtractBtn",
+            "TeamSelectFoodOkBtn",
+            "TeamSelectFoodCancelBtn",
+            "TEAM_SELECT_DIALOG_NUM",
+
             "NUM" };
         public static string GetButtonName(BUTTON_ID id)
         {

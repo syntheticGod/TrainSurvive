@@ -16,7 +16,7 @@ namespace WorldMap
         private Model.Town currentTown;
         private Model.Train train;
         private Model.Team team;
-        private Model.DataSerialization ds;
+        private WorldForMap world;
         private const int ECHO_CODE_TRAIN = 1;
         private const int ECHO_CODE_TEAM = 2;
         private TavernController tavernController;
@@ -26,7 +26,7 @@ namespace WorldMap
         }
         public void Init()
         {
-            ds = Model.DataSerialization.Instance;
+            world = WorldForMap.Instance;
             team = Model.Team.Instance;
             train = Model.Train.Instance;
         }
@@ -35,6 +35,7 @@ namespace WorldMap
             Debug.Log("TownController Awake");
             townInfoText = transform.Find("TownInfo").GetComponentInChildren<Text>();
             tavernController = GameObject.Find("/Canvas").transform.Find("TavernViewer").GetComponent<TavernController>();
+            tavernController.Init();
             Debug.Assert(townInfoText != null);
             ButtonHandler.Instance.AddListeners(this);
             train.Attach(obs: this, echo: ECHO_CODE_TRAIN);
@@ -52,7 +53,7 @@ namespace WorldMap
         public bool TryShowTown(Vector2Int mapPos)
         {
             Model.Town town;
-            if(!ds.Find(mapPos, out town))
+            if(!world.FindTown(mapPos, out town))
             {
                 Debug.Log("当前列车位置不在城镇");
                 return false;
@@ -96,7 +97,7 @@ namespace WorldMap
                 case Model.Train.STATE.STOP_TOWN:
                     Debug.Log("列车到达 城镇  通知显示城镇");
                     Model.Town town;
-                    if(!ds.Find(train.MapPosTrain, out town))
+                    if(!world.FindTown(train.MapPosTrain, out town))
                     {
                         Debug.LogWarning("列车所在位置不是城镇");
                         return;
@@ -115,7 +116,7 @@ namespace WorldMap
                 case Model.Team.STATE.STOP_TOWN:
                     Debug.Log("探险队到达 城镇  通知显示城镇");
                     Model.Town town;
-                    if (!ds.Find(team.MapPosTeam, out town))
+                    if (!world.FindTown(team.MapPosTeam, out town))
                     {
                         Debug.LogWarning("列车所在位置不是城镇");
                         return;
@@ -137,7 +138,7 @@ namespace WorldMap
             {
                 case BUTTON_ID.TOWN_TAVERN:
                     Debug.Log("酒馆");
-                    tavernController.ShowTavern(currentTown.NPCInTavern);
+                    tavernController.ShowTavern(currentTown);
                     break;
                 case BUTTON_ID.TOWN_SCHOOL:
                     Debug.Log("学校");

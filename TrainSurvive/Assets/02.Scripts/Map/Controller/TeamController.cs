@@ -15,20 +15,21 @@ namespace WorldMap
     public class TeamController : MonoBehaviour, OnClickListener
     {
         private int levelOfTeam = 2;
-        //小队数据结构
+        
         private Team team;
+        private Train train;
         private GameObject teamModeBTs;
         private TrainController trainController;
         //主摄像机
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-        public void Init(Team team, TrainController trainController)
+        public void Init(Team team)
         {
             ButtonHandler.Instance.AddListeners(this);
             this.team = team;
-            this.trainController = trainController;
-            trainController.SetTeamController(this);
+            this.trainController = Train.Instance.Controller;
+            train = Train.Instance;
         }
         void Awake()
         {
@@ -64,7 +65,11 @@ namespace WorldMap
             }
             else
             {
-                if (!team.GoTrain())
+                if (!team.CanTeamGoBack())
+                    return false;
+                if (!train.TeamComeBack())
+                    return false;
+                if (!team.GoBackToTrain())
                     return false;
             }
             gameObject.SetActive(active);
@@ -80,9 +85,8 @@ namespace WorldMap
             teamModeBTs.SetActive(active);
             return true;
         }
-        public void Active(Vector2 position)
+        public void Active()
         {
-            team.PosTeam = position;
             ActiveTeam(true);
             ActiveBTs(true);
             cameraFocus.focusLock(transform);

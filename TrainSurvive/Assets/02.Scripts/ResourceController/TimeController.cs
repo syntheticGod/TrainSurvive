@@ -20,7 +20,7 @@ public class TimeController : MonoBehaviour {
     }
 
     
-    private static TimeController instance;
+    public static TimeController instance=null;
     
     //管理所有的时间变动
     //private SerializableDictionary<Time_Resource_Loop_Key, Time_Resource_Loop_Value> Loop_Map;
@@ -39,7 +39,7 @@ public class TimeController : MonoBehaviour {
 
     private IEnumerator Time_PerSecond_Corutine()
     {
-
+       
         yield return new WaitForSeconds((float)(System.Math.Ceiling(game_time) - game_time));
         while (true)
         {      
@@ -67,7 +67,7 @@ public class TimeController : MonoBehaviour {
                 {
                     if (world.ifGather)
                     {
-                        world.gather();
+                        Gather.gather();
                     }
                     else
                         world.addOutMood(2);
@@ -168,23 +168,28 @@ public class TimeController : MonoBehaviour {
         }   
     }
     
-    public void saveGameTime()
+    public static void saveGameTime()
     {
-        world = World.getInstance();
-        world.setGame_time(game_time);
+        World wo = World.getInstance();
+        wo.setGame_time(TimeController.getInstance().getGameTime());
     }
 
 
     private void Awake()
     {
-        world = World.getInstance();
-        game_time = world.getGame_time();
-        world.saveDelegateHandler += saveGameTime;
-        is_paused_scene = false;
-        game_speed = speedRate.normal;
-        instance = this;
+        if (instance != null)
+            Destroy(this);
+        else
+        {
+            world = World.getInstance();
+            game_time = world.getGame_time();
+            world.saveDelegateHandler += saveGameTime;
+            is_paused_scene = false;
+            game_speed = speedRate.normal;
+            instance = this;
+            DontDestroyOnLoad(instance);
+        }
         
-        DontDestroyOnLoad(instance);
     }
     // Use this for initialization
     void Start () {
@@ -196,10 +201,10 @@ public class TimeController : MonoBehaviour {
         if (!is_paused_scene)
             instance.game_time += Time.deltaTime;
 
-        
-        //if((instance.game_time)%1<0.3)
-         //   Debug.Log("DisplayTime is" + instance.getDisplayTime());
-        
+        /*
+        if((instance.game_time)%1<0.3)
+            Debug.Log("DisplayTime is" + instance.getDisplayTime());
+        */
     }
 }
 

@@ -7,23 +7,25 @@ using UnityEngine;
 [System.Serializable]
 public class World {
     private World() {
-        //测试用
-        for(int i = 0; i < 7; i++)
+        //测试用 xys
+        for(int i = 0; i < 3; i++)
         {
             Person p=Person.CreatePerson();
-            p.name = UnityEngine.Random.value.ToString();
-            p.vitality= UnityEngine.Random.Range(0,10);
+            p.name = WorldMap.StaticResource.RandomNPCName(true);
+            //p.vitality= UnityEngine.Random.Range(0,10);
             persons.Add(p);
         }
-
+        foodIn = (uint)foodInMax;
+        //----
     }
     private static World instance;
     public static World getInstance()
     {
         if (instance == null)
         {
-            /*
-            string path = PathManager.getInstance().getWorldPath();           
+            //TEST：加载测试 xys
+            string path = PathManager.getInstance().getWorldPath();
+
             if (File.Exists(path))
             {
                 BinaryFormatter bf = new BinaryFormatter();
@@ -31,8 +33,7 @@ public class World {
                 instance = (World)bf.Deserialize(file);
                 file.Close();
             }
-            else       
-            */
+            else                 
                 instance = new World();               
         }
         return instance;
@@ -41,8 +42,14 @@ public class World {
     public void save()
     {
         //调用保存委托
-        saveDelegateHandler();
+
+        saveDelegateHandler?.Invoke();
+
         //map.save()待补足
+        /*
+        if(TimeController.instance!=null)
+            game_time = TimeController.getInstance().getGameTime();
+            */
         string path = PathManager.getInstance().getWorldPath();
         BinaryFormatter bf = new BinaryFormatter();
         if (File.Exists(path))
@@ -55,6 +62,7 @@ public class World {
     }
 
     public delegate void saveDelegate();
+
     public event saveDelegate saveDelegateHandler;
 
     //基本资源
@@ -76,7 +84,7 @@ public class World {
     public int coalMax = 1000;
     public int woodMax = 1000;
     public int metalMax = 1000;
-
+   
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt=1;
@@ -91,8 +99,10 @@ public class World {
     public float outMood = 0;
     public float outMoodMax = 100;
     
-    //public Vector2 posTrain = new Vector2(0,0);
-    //public Vector2 posTeam = new Vector2(0, 0);
+    public int posTrainX ;
+    public int posTrainY ;
+    public int posTeamX;
+    public int posTeamY;
     public int distView=1;
 
     public int numWeapon = 101;
@@ -100,12 +110,16 @@ public class World {
     public int numPersonWolrd = 101;
     public int numBuildInst = 101;
 
+
     //public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
     //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
-    public town[] towns=new town[100];
-    public List<weapon> weapons = new List<weapon>();
+
+
+    public WorldMap.Model.Town[] towns;
+    //public List<weapon> weapons = new List<weapon>();
     public List<Person> persons = new List<Person>();
     public int[] personTeamIDArray;
+    
 
     public List<Structure> buildInstArray = new List<Structure>();
     public bool[] buildUnlock;
@@ -144,9 +158,15 @@ public class World {
     {
         return metal;
     }
-    public void setFoodOut(uint foodOut)
+    public bool setFoodOut(uint food)
     {
-        this.foodOut = foodOut;
+        if(food > foodOutMax)
+        {
+            foodOut = (uint)foodOutMax;
+            return false;
+        }
+        foodOut = food;
+        return true;
     }
     /// <summary>
     /// num可为负代表减少
@@ -305,8 +325,9 @@ public class World {
     {
         return addFoodOut((int)-(foodConsumed_eachPerson * numOut));
     }
-    public void gather()
-    {
-        //待补充
+    
+
+
+    
     }
-}
+
