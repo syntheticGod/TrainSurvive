@@ -90,7 +90,7 @@ namespace WorldMap {
         //创建地图
         public void CreateModel() {
             //获取城镇铁轨脚本
-            townsRailGenerate = GameObject.Find("townsRailGenerate").GetComponent<TownsRailGenerate>();
+            townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
 
             //对地图进行初始化处理
             mapData = Map.GetIntanstance();

@@ -19,6 +19,9 @@ namespace WorldMap {
         public enum ClimateEnum {
             NONE = -1,
 
+            //温带
+            TEMPERATE,
+
             //热带
             TROPIC,
 
@@ -78,6 +81,9 @@ namespace WorldMap {
         //每个地块上可能拥有的gameObjects（气候，地块，特殊地块，城镇或铁轨）
         public enum SpawnObjectEnum {
             NONE = -1,
+
+            //气候
+            CLIMATE,
 
             //地形
             TERRAIN,
@@ -148,6 +154,11 @@ namespace WorldMap {
             }
         }
 
+        //设置当前地块的气候
+        public void SetClimateEnum(ClimateEnum climateType) {
+            this.climateType = climateType;
+        }
+
         //设置当前地块的地形
         public void SetTerrainEnum(TerrainEnum terrainType) {
             this.terrainType = terrainType;
@@ -176,7 +187,8 @@ namespace WorldMap {
         /// <param name="spawnObjectEnum">当前gameObject的类型</param>
         /// <param name="spawnObject">所要设置的gameObject</param>
         public void SetSpawnObject(SpawnObjectEnum spawnObjectEnum, GameObject spawnObject) {
-            this.spawnObjects.Insert((int)spawnObjectEnum, spawnObject);
+            spawnObjects[(int)spawnObjectEnum] = spawnObject;
+            //this.spawnObjects.Insert((int)spawnObjectEnum, spawnObject);
             //设置当前地块的可见状态
             UpdateViewStateDisplay(spawnObject);
         }
