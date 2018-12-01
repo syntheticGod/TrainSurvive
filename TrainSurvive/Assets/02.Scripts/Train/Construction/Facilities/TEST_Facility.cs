@@ -121,7 +121,7 @@ public class TEST_Facility : Structure {
                     OnRawUpdate?.Invoke();
                 }
                 if (Food == null) {
-                    Item food = new Assets._02.Scripts.zhxUIScripts.Material(0);
+                    Item food = new Assets._02.Scripts.zhxUIScripts.Material(200);
                     Food = food;
                     OnFoodUpdate?.Invoke(food);
                 } else {
