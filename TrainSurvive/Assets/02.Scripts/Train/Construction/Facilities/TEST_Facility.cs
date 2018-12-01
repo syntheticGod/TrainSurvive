@@ -43,9 +43,8 @@ public class TEST_Facility : Structure {
             _raw = OnAcquireRaw == null ? _raw : OnAcquireRaw.Invoke();
             return _raw;
         }
-        private set {
+        set {
             _raw = value;
-            OnRawUpdate?.Invoke(_raw);
         }
     }
     public Item Gas {
@@ -53,9 +52,8 @@ public class TEST_Facility : Structure {
             _gas = OnAcquireGas == null ? _gas : OnAcquireGas.Invoke();
             return _gas;
         }
-        private set {
+        set {
             _gas = value;
-            OnGasUpdate?.Invoke(_gas);
         }
     }
     public Item Food {
@@ -63,19 +61,18 @@ public class TEST_Facility : Structure {
             _food = OnAcquireFood == null ? _food : OnAcquireFood.Invoke();
             return _food;
         }
-        private set {
+        set {
             _food = value;
-            OnFoodUpdate?.Invoke(_food);
         }
     }
     
     public Action<Item> OnFoodUpdate;
     public Func<Item> OnAcquireFood;
 
-    public Action<Item> OnRawUpdate;
+    public Action OnRawUpdate;
     public Func<Item> OnAcquireRaw;
 
-    public Action<Item> OnGasUpdate;
+    public Action OnGasUpdate;
     public Func<Item> OnAcquireGas;
 
     private float _progress;
@@ -86,7 +83,7 @@ public class TEST_Facility : Structure {
     protected override void OnStart() {
         TimeController.getInstance().StartCoroutine(Run());
     }
-
+    
     public TEST_Facility() : base() { }
 
     public TEST_Facility(SerializationInfo info, StreamingContext context) : base(info, context) {
@@ -117,12 +114,16 @@ public class TEST_Facility : Structure {
                 Progress = 0;
                 if(--Gas.currPileNum == 0) {
                     Gas = null;
+                    OnGasUpdate?.Invoke();
                 }
                 if (--Raw.currPileNum == 0) {
                     Raw = null;
+                    OnRawUpdate?.Invoke();
                 }
                 if (Food == null) {
-                    Food = new Assets._02.Scripts.zhxUIScripts.Material(0);
+                    Item food = new Assets._02.Scripts.zhxUIScripts.Material(0);
+                    Food = food;
+                    OnFoodUpdate?.Invoke(food);
                 } else {
                     Food.currPileNum++;
                 }

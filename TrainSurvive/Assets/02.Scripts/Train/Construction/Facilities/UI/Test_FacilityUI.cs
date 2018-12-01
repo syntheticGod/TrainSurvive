@@ -5,24 +5,13 @@
  * 版本：v0.1
  */
 using Assets._02.Scripts.zhxUIScripts;
-using UnityEngine;
 
 public class Test_FacilityUI : FacilityUI {
     
     public UnitInventoryCtrl Raw;
     public UnitInventoryCtrl Gas;
     public UnitInventoryCtrl Food;
-
-    private UIManager _uiManager;
-    private UIManager UIManager {
-        get {
-            if (_uiManager == null) {
-                _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-            }
-            return _uiManager;
-        }
-    }
-
+    
     private new TEST_Facility Structure {
         get {
             return base.Structure as TEST_Facility;
@@ -30,33 +19,25 @@ public class Test_FacilityUI : FacilityUI {
     }
 
     private void Awake() {
-        Raw.ChargeIn = (item) => {
-            Debug.Log("Raw: " + item.currPileNum);
-            return true;
-        };
-        Gas.ChargeIn = (item) => {
-            Debug.Log("Gas: " + item.currPileNum);
-            return true;
-        };
-        Food.ChargeIn = (item) => { return false; };
+        Raw.ChargeIn = (item) => true;
+        Gas.ChargeIn = (item) => true;
+        Food.ChargeIn = (item) => false;
     }
 
     private void OnEnable() {
-        OnFoodUpdate(Structure.Food);
-        OnRawUpdate(Structure.Raw);
-        OnGasUpdate(Structure.Gas);
-
-        UIManager.ToggleInventoryPanel(true);
-
-        Structure.OnAcquireFood = OnAcquireFood;
+        UpdateUI();
+        Structure.OnAcquireFood = Food.GetItem;
         Structure.OnFoodUpdate = OnFoodUpdate;
-        Structure.OnAcquireGas = OnAcquireGas;
-        Structure.OnGasUpdate = OnGasUpdate;
-        Structure.OnAcquireRaw = OnAcquireRaw;
-        Structure.OnRawUpdate = OnRawUpdate;
+        Structure.OnAcquireGas = Gas.GetItem;
+        Structure.OnGasUpdate = Gas.Clear;
+        Structure.OnAcquireRaw = Raw.GetItem;
+        Structure.OnRawUpdate = Raw.Clear;
+
+        UIManager.Instance?.ToggleInventoryPanel(true);
     }
 
     private void OnDisable() {
+        UpdateStructure();
         Structure.OnAcquireFood = null;
         Structure.OnFoodUpdate = null;
         Structure.OnAcquireGas = null;
@@ -64,35 +45,26 @@ public class Test_FacilityUI : FacilityUI {
         Structure.OnAcquireRaw = null;
         Structure.OnRawUpdate = null;
     }
-    
-    private Item OnAcquireFood() {
-        return Food.GetItem();
+
+    private void UpdateUI() {
+        Food.Clear();
+        Raw.Clear();
+        Gas.Clear();
+        if (Structure.Food != null)
+            Food.GeneratorItem(Structure.Food.id, Structure.Food.currPileNum);
+        if (Structure.Raw != null)
+            Raw.GeneratorItem(Structure.Raw.id, Structure.Raw.currPileNum);
+        if (Structure.Gas != null)
+            Gas.GeneratorItem(Structure.Gas.id, Structure.Gas.currPileNum);
     }
-    private void OnFoodUpdate(Item item) {
-        if (item == null || item.currPileNum <= 0) {
-            Food.Clear();
-        } else {
-            Food.GeneratorItem(item.id, item.currPileNum);
-        }
+
+    private void UpdateStructure() {
+        Structure.Raw = Raw.GetItem();
+        Structure.Gas = Gas.GetItem();
+        Structure.Food = Food.GetItem();
     }
-    private Item OnAcquireRaw() {
-        return Raw.GetItem();
-    }
-    private void OnRawUpdate(Item item) {
-        if (item == null || item.currPileNum <= 0) {
-            Raw.Clear();
-        } else {
-            Raw.GeneratorItem(item.id, item.currPileNum);
-        }
-    }
-    private Item OnAcquireGas() {
-        return Gas.GetItem();
-    }
-    private void OnGasUpdate(Item item) {
-        if (item == null || item.currPileNum <= 0) {
-            Gas.Clear();
-        } else {
-            Gas.GeneratorItem(item.id, item.currPileNum);
-        }
+
+    private void OnFoodUpdate(Item food) {
+        Food.GeneratorItem(food.id, food.currPileNum);
     }
 }

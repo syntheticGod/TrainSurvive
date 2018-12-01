@@ -19,13 +19,9 @@ public class Facility : MonoBehaviour {
     /// </summary>
     public Structure Structure { get; set; }
     /// <summary>
-    /// UI Prefab
-    /// </summary>
-    public GameObject UIPrefab { get; set; }
-    /// <summary>
     /// UI
     /// </summary>
-    private FacilityUI UI { get; set; }
+    public FacilityUI UI { get; set; }
 
     private Indicator _indicator;
     private Indicator Indicator {
@@ -39,16 +35,6 @@ public class Facility : MonoBehaviour {
     }
 
     private ContextMenu contextMenu;
-
-    private UIManager _uiManager;
-    private UIManager uiManager {
-        get {
-            if (_uiManager == null) {
-                _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-            }
-            return _uiManager;
-        }
-    }
     
     private SpriteRenderer _spriteRenderer;
     private SpriteRenderer spriteRenderer {
@@ -94,10 +80,6 @@ public class Facility : MonoBehaviour {
 
     private void OnStateChange(Structure structure) {
         switch (Structure.FacilityState) {
-            case Structure.State.WORKING:
-                UI = uiManager.CreateFacilityUI<FacilityUI>(UIPrefab);
-                UI.Structure = Structure;
-                break;
             case Structure.State.REMOVING:
             case Structure.State.CANCLE:
                 Destroy(gameObject);
@@ -121,7 +103,7 @@ public class Facility : MonoBehaviour {
                 // 右键菜单
                 if (Input.GetMouseButtonUp(1)) {
                     // 关闭操作菜单
-                    uiManager.HideFacilityUI();
+                    UIManager.Instance?.HideFacilityUI();
                     Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     contextMenu = new ContextMenu();
                     MakeContextMenu(contextMenu);
@@ -140,7 +122,7 @@ public class Facility : MonoBehaviour {
                 contextMenu.PutButton("停止", 0, () => Structure.FacilityState = Structure.State.CANCLE);
                 break;
             case Structure.State.WORKING:
-                contextMenu.PutButton("查看", 0, () => uiManager.ShowFaclityUI(UI.gameObject));
+                contextMenu.PutButton("查看", 0, () => UIManager.Instance?.ShowFaclityUI(UI, Structure));
                 contextMenu.PutButton("拆除", 1, () => Structure.FacilityState = Structure.State.REMOVING);
                 break;
             default:

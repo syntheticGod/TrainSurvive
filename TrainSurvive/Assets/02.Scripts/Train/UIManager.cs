@@ -4,15 +4,13 @@
  * 创建时间：2018/11/7 13:20:29
  * 版本：v0.1
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Canvas))]
 public class UIManager : MonoBehaviour {
+    
+    public static UIManager Instance { get; private set; }
 
-    [Tooltip("FacilityUI子物体")] [SerializeField]
-    private RectTransform FacilityUI;
     [Tooltip("InventoryPanel子物体")] [SerializeField]
     private RectTransform InventoryPanel;
 
@@ -32,20 +30,21 @@ public class UIManager : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// 创建设施查看界面
-    /// </summary>
-    /// <param name="ui">UI Prefab</param>
-    public T CreateFacilityUI<T>(GameObject ui) {
-        return Instantiate(ui, FacilityUI).GetComponent<T>();
+    private void Awake() {
+        Instance = this;
+    }
+
+    private void OnDestroy() {
+        Instance = null;
     }
 
     /// <summary>
     /// 显示设施查看界面
     /// </summary>
     /// <param name="ui">UI实体</param>
-    public void ShowFaclityUI(GameObject ui) {
-        currentFacilityUI = ui;
+    public void ShowFaclityUI(FacilityUI ui, Structure structure) {
+        ui.Structure = structure;
+        currentFacilityUI = ui.gameObject;
     }
 
     /// <summary>

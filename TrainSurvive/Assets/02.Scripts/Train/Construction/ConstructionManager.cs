@@ -26,16 +26,18 @@ public class ConstructionManager : MonoBehaviour {
 
     public static ConstructionManager Instance { get; private set; }
 
-    [Tooltip("注册的设施Prefab")]
+    [Tooltip("原颜色")]
     [SerializeField]
     private Color OriginColor = new Color(1, 1, 1, 0.6f);
-    [Tooltip("注册的设施Prefab")]
+    [Tooltip("阻止建造的颜色")]
     [SerializeField]
     private Color BlockColor = new Color(1, 0, 0, 0.6f);
     [Tooltip("注册的设施Prefab")]
-    public Facility FacilityPrefab;
-    [Tooltip("注册的设施UI Prefab")]
-    public GameObject[] FacilityUIPrefabs;
+    [SerializeField]
+    private Facility FacilityPrefab;
+    [Tooltip("注册的设施UI，顺序需与Structures中的一致")]
+    [SerializeField]
+    private FacilityUI[] FacilityUIs;
 
     /// <summary>
     /// 编译时注册的结构
@@ -74,7 +76,7 @@ public class ConstructionManager : MonoBehaviour {
         PlaceState = State.PLACING;
         Facility facility = Instantiate(FacilityPrefab.gameObject).GetComponent<Facility>();
         facility.Structure = Structures[index].Instantiate();
-        facility.UIPrefab = FacilityUIPrefabs[index];
+        facility.UI = FacilityUIs[index];
         StartCoroutine(moveFacility(facility));
     }
 
@@ -95,10 +97,11 @@ public class ConstructionManager : MonoBehaviour {
             facility.Structure = structure;
             for(int j = 0; j < Structures.Length; j++) {
                 if (Structures[j].GetType() == structure.GetType()) {
-                    facility.UIPrefab = FacilityUIPrefabs[j];
+                    facility.UI = FacilityUIs[j];
                 }
             }
             structure.OnStateChange += OnStructureStateChange;
+            facility.gameObject.SetActive(true);
         }
     }
 
