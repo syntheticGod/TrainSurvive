@@ -83,16 +83,16 @@ namespace WorldMap {
             NONE = -1,
 
             //气候
-            CLIMATE,
+            CLIMATE = 0,
 
             //地形
-            TERRAIN,
+            TERRAIN = 1,
 
             //城镇
-            TOWN,
+            TOWN = 2,
 
             //铁轨（城镇和铁轨只会出现一个）
-            RAIL = 1,
+            RAIL = 2,
 
             NUM
         }
@@ -142,15 +142,18 @@ namespace WorldMap {
         //初始化当前气候为热带，地形为平原，不是特殊地带，不初始化城镇
         public SpawnPoint() {
             climateType = ClimateEnum.TROPIC;
-            terrainType = TerrainEnum.PLAIN;
+            terrainType = TerrainEnum.NONE;
             specialTerrainType = SpecialTerrainEnum.NONE;
             spawnObjects = new List<GameObject>((int)SpawnObjectEnum.NUM);
+            //for (int i = 0; i < (int)SpawnObjectEnum.NUM; i++) {
+            //    spawnObjects.Add(new GameObject("none"));
+            //}
 
             //设置初始的地块为不可见的状态
             if (MapGenerate.isFogState == true) {
                 viewState = SpawnViewStateEnum.INVISIBLE;
             } else {
-                viewState = SpawnViewStateEnum.HALF_INVISIBLE;
+                viewState = SpawnViewStateEnum.VISBLE;
             }
         }
 
@@ -187,8 +190,17 @@ namespace WorldMap {
         /// <param name="spawnObjectEnum">当前gameObject的类型</param>
         /// <param name="spawnObject">所要设置的gameObject</param>
         public void SetSpawnObject(SpawnObjectEnum spawnObjectEnum, GameObject spawnObject) {
-            spawnObjects[(int)spawnObjectEnum] = spawnObject;
-            //this.spawnObjects.Insert((int)spawnObjectEnum, spawnObject);
+            //spawnObjects[(int)spawnObjectEnum] = spawnObject;
+            int curSpawnIndex = (int)spawnObjectEnum;
+            if (spawnObjectEnum == SpawnObjectEnum.TOWN ||
+                spawnObjectEnum == SpawnObjectEnum.RAIL) {
+
+                //如果没有地形object，减一
+                if (terrainType == TerrainEnum.NONE) {
+                    curSpawnIndex--;
+                }
+            }
+            this.spawnObjects.Insert(curSpawnIndex, spawnObject);
             //设置当前地块的可见状态
             UpdateViewStateDisplay(spawnObject);
         }
@@ -210,6 +222,9 @@ namespace WorldMap {
 
         //设置当前地块其中一个gameObject的可见状态
         private void UpdateViewStateDisplay(GameObject spawnObject) {
+            //if (spawnObject.name == "none") {
+            //    return;
+            //}
             //获取所取类型地块的render
             SpriteRenderer render = spawnObject.GetComponent<SpriteRenderer>();
 

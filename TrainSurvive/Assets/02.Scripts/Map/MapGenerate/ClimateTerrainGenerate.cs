@@ -11,13 +11,17 @@ using UnityEngine;
 namespace WorldMap {
     public class ClimateTerrainGenerate : MonoBehaviour {
 
-        private int mapHeight = 300;
-        private int mapWidth = 300;
+        private int mapHeight;
+        private int mapWidth;
 
         //地块数量
-        public int blockNum = 900;
+        public int blockNum = 100;
         //根据地图尺寸和地块数量自适应地块尺寸的参数
-        public int sizeFac = 1;  
+        private int sizeFac = 1;
+        //气候地块的尺寸
+        public int climateSizeFac = 3;
+        //地形地块的尺寸
+        public int terrainSizeFac = 1;
 
         //地块数量加x，x最后会加到主地块上
         private int randTypeNum;
@@ -33,20 +37,43 @@ namespace WorldMap {
         private int[,] grid;
 
         //温带气候的颜色
-        public Color temperateColor;
+        public GameObject temperateGameObject;
         //热带气候的颜色
-        public Color tropicColor;
+        public GameObject tropicGameObject;
         //冻原气候的颜色
-        public Color tundraColor;
+        public GameObject tundraGameObject;
         //炎热气候的颜色
-        public Color heatColor;
+        public GameObject heatGameObject;
         //极寒气候的颜色
-        public Color coldColor;
+        public GameObject coldGameObject;
+
+        //四种地形的图标
+        public GameObject plainObject;
+        public GameObject hillObject;
+        public GameObject mountainObject;
+        public GameObject forestObject;
+        //将地形存放到同一object下
+        private GameObject[] terrainObject;
+        //地形在气候上方多大位置
+        public float terrainYPos = 0.01f;
+
+        //将气候存放到同一object下
+        private GameObject[] climateObject;
+
+        //将气候图标放到同一GameObject下
+        private GameObject climateParentObject;
+        //将地形图标放到同一GameObject下
+        private GameObject terrainParentObject;
+
+        //初始化grid的值
+        private int gridInit = -1;
 
         //开始生成
         public void StartGenerate() {
             //对各对象进行初始化
             mapGenerate = GameObject.Find("MapBuild").GetComponent<MapGenerate>();
+            climateParentObject = new GameObject("climates");
+            terrainParentObject = new GameObject("terrains");
 
             //获得地图类
             mapData = mapGenerate.mapData;
@@ -59,11 +86,11 @@ namespace WorldMap {
             if (mapGenerate.isCreateMap) {
                 generateClimateSpawn();
             }
-            //对城镇进行绘画
-            //PaintTowns();
+            //对气候进行绘画
+            paintClimate();
 
-            //生成铁轨
-            //BuildRails();
+            //对地块类型进行绘画
+            paintTerrain();
         }
 
         /** 
@@ -81,7 +108,15 @@ namespace WorldMap {
             //真实气候的数量
             realTypeNum = (int)SpawnPoint.ClimateEnum.NUM;
             //额外多余气候的数量（温带占2/(n+1)，其余的占1/(n+1)）
-            randTypeNum = realTypeNum + 1;
+            randTypeNum = realTypeNum;
+            //设置气候地块的大小
+            sizeFac = climateSizeFac;
+
+            //初始化grid
+            grid = new int[mapWidth, mapHeight];
+
+            //设置初始化为0，默认其余的为平原
+            gridInit = 0;
 
             //生成大地图的气候
             init();
@@ -103,6 +138,11 @@ namespace WorldMap {
             realTypeNum = (int)SpawnPoint.TerrainEnum.NUM;
             //额外多余类型的数量（平原占2/(n+1)，其余的占1/(n+1)）
             randTypeNum = realTypeNum + 1;
+            //设置地形地块的大小
+            sizeFac = terrainSizeFac;
+
+            //设置初始化为-1，默认没有
+            gridInit = -1;
 
             //生成大地图的地块（取消修正）
             init();
@@ -117,11 +157,66 @@ namespace WorldMap {
             }
         }
 
+        //对气候进行绘画
+        private void paintClimate() {
+            //将气候模型绑定
+            climateObject = new GameObject[(int)SpawnPoint.ClimateEnum.NUM];
+            climateObject[(int)SpawnPoint.ClimateEnum.TEMPERATE] = temperateGameObject;
+            climateObject[(int)SpawnPoint.ClimateEnum.TROPIC] = tropicGameObject;
+            climateObject[(int)SpawnPoint.ClimateEnum.TUNDRA] = tundraGameObject;
+            climateObject[(int)SpawnPoint.ClimateEnum.HEAT] = heatGameObject;
+            climateObject[(int)SpawnPoint.ClimateEnum.COLD] = coldGameObject;
+
+            for (int i = 0; i < mapData.rowNum; i++) {
+                for (int j = 0; j < mapData.colNum; j++) {
+                    if ((int)mapData.spowns[i, j].climateType < 0) {
+                        continue;
+                    }
+                    //生成指定气候的类型
+                    GameObject o = Instantiate(climateObject[(int)mapData.spowns[i,j].climateType],
+                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * i, 0, mapGenerate.spawnOffsetZ * j),
+                        Quaternion.identity);
+                    o.transform.Rotate(90, 0, 0);
+                    o.transform.parent = climateParentObject.transform;
+
+                    //绑定气候的gameObject
+                    mapData.spowns[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.CLIMATE, o);
+                }
+            }
+        }
+
+        //对地形进行绘画
+        private void paintTerrain() {
+            //将气候模型绑定
+            terrainObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
+            terrainObject[(int)SpawnPoint.TerrainEnum.PLAIN] = plainObject;
+            terrainObject[(int)SpawnPoint.TerrainEnum.HILL] = hillObject;
+            terrainObject[(int)SpawnPoint.TerrainEnum.FOREST] = forestObject;
+            terrainObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = mountainObject;
+
+            for (int i = 0; i < mapData.rowNum; i++) {
+                for (int j = 0; j < mapData.colNum; j++) {
+                    if ((int)mapData.spowns[i, j].terrainType < 0) {
+                        continue;
+                    }
+                    //生成指定气候的类型
+                    GameObject o = Instantiate(terrainObject[(int)mapData.spowns[i, j].terrainType],
+                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * i, terrainYPos, mapGenerate.spawnOffsetZ * j),
+                        Quaternion.identity);
+                    o.transform.Rotate(90, 0, 0);
+                    o.transform.parent = terrainParentObject.transform;
+
+                    //绑定气候的gameObject
+                    mapData.spowns[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
+                }
+            }
+        }
+
         //初始化 赋值0
         void init() {
             for (int i = 0; i < mapWidth; i++) { 
                 for (int j = 0; j < mapHeight; j++) {
-                    grid[i, j] = 0;
+                    grid[i, j] = gridInit;
                 }
             }
         }
@@ -219,7 +314,7 @@ namespace WorldMap {
         private void typeFix(int reType) {
             for (int i = 0; i < mapWidth; i++) {
                 for (int j = 0; j < mapHeight; j++) {
-                    if (grid[i, j] > reType)
+                    if (grid[i, j] >= reType)
                         grid[i, j] = 0;
                 }
             }
@@ -251,7 +346,7 @@ namespace WorldMap {
             int[] typeCount = new int[realTypeNum];
             for (int i = x - 1; i <= x + 1; i++) {
                 for (int j = y - 1; j <= y + 1; j++) {
-                    if (isValid(i, j)) {
+                    if (isValid(i, j) && grid[i, j] != -1) {
                         typeCount[grid[i, j]]++;
                     }
                 }

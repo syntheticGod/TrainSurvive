@@ -58,12 +58,14 @@ namespace WorldMap {
 
         //获取城镇生成类
         private TownsRailGenerate townsRailGenerate;
+        //获取气候地形生成类
+        private ClimateTerrainGenerate climateTerrainGenerate;
 
         //判定这是新游戏（生成地图）还是读取地图
         public bool isCreateMap = true;
 
         //设置起始状态为迷雾状态还是明亮状态(测试)
-        public static bool isFogState = true;
+        public static bool isFogState = false;
 
         //构建地图
         private void Awake() {
@@ -91,6 +93,8 @@ namespace WorldMap {
         public void CreateModel() {
             //获取城镇铁轨脚本
             townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
+            //获取气候地形生成脚本
+            climateTerrainGenerate = GameObject.Find("ClimateTerrainGenerate").GetComponent<ClimateTerrainGenerate>();
 
             //对地图进行初始化处理
             mapData = Map.GetIntanstance();
@@ -124,7 +128,10 @@ namespace WorldMap {
             }
 
             //对地形进行绘画
-            PaintTerrain();
+            //PaintTerrain();
+
+            //生成气候和地形
+            climateTerrainGenerate.StartGenerate();
 
             //生成城镇，并绘画出城镇和铁轨
             townsRailGenerate.StartGenerate();
@@ -182,20 +189,20 @@ namespace WorldMap {
         //}
 
         //绘制四种地形图标
-        private void PaintTerrain() {
-            for (int i = 0; i < mapData.rowNum; i++) {
-                for (int j = 0; j < mapData.colNum; j++) {
-                    GameObject o = Instantiate(mapObject[(int)mapData.spowns[i, j].terrainType],
-                        orign + new Vector3(spawnOffsetX * i, 0, spawnOffsetZ * j),
-                        Quaternion.identity);
-                    o.transform.Rotate(90, 0, 0);
-                    o.transform.parent = mapParent[(int)mapData.spowns[i, j].terrainType].transform;
+        //private void PaintTerrain() {
+        //    for (int i = 0; i < mapData.rowNum; i++) {
+        //        for (int j = 0; j < mapData.colNum; j++) {
+        //            GameObject o = Instantiate(mapObject[(int)mapData.spowns[i, j].terrainType],
+        //                orign + new Vector3(spawnOffsetX * i, 0, spawnOffsetZ * j),
+        //                Quaternion.identity);
+        //            o.transform.Rotate(90, 0, 0);
+        //            o.transform.parent = mapParent[(int)mapData.spowns[i, j].terrainType].transform;
 
-                    //绑定地块的gameObject
-                    mapData.spowns[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
-                }
-            }
-        }
+        //            //绑定地块的gameObject
+        //            mapData.spowns[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 获取地图的X轴方块个数，和Z轴的方块个数
