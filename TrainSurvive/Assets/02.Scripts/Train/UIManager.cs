@@ -36,10 +36,8 @@ public class UIManager : MonoBehaviour {
     /// 创建设施查看界面
     /// </summary>
     /// <param name="ui">UI Prefab</param>
-    public GameObject CreateFacilityUI(GameObject ui) {
-        GameObject uiObj = Instantiate(ui, FacilityUI);
-        uiObj.SetActive(false);
-        return uiObj;
+    public T CreateFacilityUI<T>(GameObject ui) {
+        return Instantiate(ui, FacilityUI).GetComponent<T>();
     }
 
     /// <summary>

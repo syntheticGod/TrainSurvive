@@ -8,11 +8,6 @@ using System.Collections;
 using UnityEngine;
 
 public class ConstructionManager : MonoBehaviour {
-    
-    public static ConstructionManager Instance { get; private set; }
-
-    [Tooltip("注册的设施Prefab")]
-    public Facility[] FacilityPrefabs;
 
     public enum State {
         /// <summary>
@@ -29,43 +24,42 @@ public class ConstructionManager : MonoBehaviour {
         PLACED
     }
 
-    public struct BuildInst {
-        public int Prefab;
-        public Vector3 Position;
-        public object Others;
-    }
+    public static ConstructionManager Instance { get; private set; }
+
+    [Tooltip("注册的设施Prefab")]
+    [SerializeField]
+    private Color OriginColor = new Color(1, 1, 1, 0.6f);
+    [Tooltip("注册的设施Prefab")]
+    [SerializeField]
+    private Color BlockColor = new Color(1, 0, 0, 0.6f);
+    [Tooltip("注册的设施Prefab")]
+    public Facility FacilityPrefab;
+    [Tooltip("注册的设施UI Prefab")]
+    public GameObject[] FacilityUIPrefabs;
+
+    /// <summary>
+    /// 编译时注册的结构
+    /// </summary>
+    public Structure[] Structures { get; } = {
+        new TEST_Facility()
+    };
 
     /// <summary>
     /// 当前是否处于放置模式。
     /// </summary>
     public State PlaceState { get; private set; } = State.IDLE;
-
-    private Color OriginColor { get; } = new Color(1, 1, 1, 0.6f);
-    private Color BlockColor { get; } = new Color(1, 0, 0, 0.6f);
-
+    
     private void Awake() {
         Instance = this;
-        for (int i = 0; i < FacilityPrefabs.Length; i++) {
-            FacilityPrefabs[i].ID = i;
-        }
     }
 
     /// <summary>
     /// 加载对象时，注册事件，同时载入状态。
     /// </summary>
     private void OnEnable() {
-        World.getInstance().saveDelegateHandler += Save;
         Load();
     }
-
-    /// <summary>
-    /// 停止时自动保存内容到World，同时移除事件。
-    /// </summary>
-    private void OnDisable() {
-        World.getInstance().saveDelegateHandler -= Save;
-        Save();
-    }
-
+    
     private void OnDestroy() {
         Instance = null;
     }
@@ -75,12 +69,13 @@ public class ConstructionManager : MonoBehaviour {
     /// 当设施与在ProjectSettings/Physics2D中设置的允许与Facility层碰撞的层发生碰撞时将自动标红并阻止放置。
     /// 采用NonAlloc优化GC，因此同时发生的碰撞不得超过缓冲大小（现在是50，大部分情况应该够用了）。
     /// </summary>
-    /// <param name="facility">要放置的物体编号（见FacilityPrefabs）。</param>
-    public void Place(int prefab) {
+    /// <param name="facility">要放置的物体编号（见Structures）。</param>
+    public void Place(int index) {
         PlaceState = State.PLACING;
-        GameObject facilityGO = Instantiate(FacilityPrefabs[prefab].gameObject);
-        facilityGO.SetActive(false);
-        StartCoroutine(moveFacility(facilityGO));
+        Facility facility = Instantiate(FacilityPrefab.gameObject).GetComponent<Facility>();
+        facility.Structure = Structures[index].Instantiate();
+        facility.UIPrefab = FacilityUIPrefabs[index];
+        StartCoroutine(moveFacility(facility));
     }
 
     /// <summary>
@@ -91,48 +86,35 @@ public class ConstructionManager : MonoBehaviour {
     }
     
     /// <summary>
-    /// 有存档，
-    /// </summary>
-    public void Save() {
-        Facility[] facilities = FindObjectsOfType<Facility>();
-        BuildInst[] buildInsts = new BuildInst[facilities.Length];
-        for (int i = 0; i < facilities.Length; i++) {
-            buildInsts[i] = new BuildInst {
-                Prefab = facilities[i].ID,
-                Position = facilities[i].gameObject.transform.position,
-                Others = facilities[i].OnSave()
-            };
-        }
-        World.getInstance().buildInstArray = buildInsts;
-    }
-
-    /// <summary>
-    /// 就有读档！
+    /// 读档！
     /// </summary>
     public void Load() {
-        BuildInst[] buildInsts = World.getInstance().buildInstArray;
-        if (buildInsts == null)
-            return;
-        for (int i = 0; i < buildInsts.Length; i++) {
-            Facility facility = Instantiate(FacilityPrefabs[buildInsts[i].Prefab].gameObject, buildInsts[i].Position, Quaternion.identity).GetComponent<Facility>();
-            facility.OnLoad(buildInsts[i].Others);
+        for (int i = 0; i < World.getInstance().buildInstArray.Count; i++) {
+            Structure structure = World.getInstance().buildInstArray[i];
+            Facility facility = Instantiate(FacilityPrefab.gameObject, structure.Position, Quaternion.identity).GetComponent<Facility>();
+            facility.Structure = structure;
+            for(int j = 0; j < Structures.Length; j++) {
+                if (Structures[j].GetType() == structure.GetType()) {
+                    facility.UIPrefab = FacilityUIPrefabs[j];
+                }
+            }
+            structure.OnStateChange += OnStructureStateChange;
         }
     }
 
-    private IEnumerator moveFacility(GameObject facilityGO) {
-        Facility facility = facilityGO.GetComponent<Facility>();
-        Transform fTransform = facilityGO.GetComponent<Transform>();
-        SpriteRenderer fSpriteRenderer = facilityGO.GetComponent<SpriteRenderer>();
+    private IEnumerator moveFacility(Facility facility) {
+        Transform fTransform = facility.GetComponent<Transform>();
+        SpriteRenderer fSpriteRenderer = facility.GetComponent<SpriteRenderer>();
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
         while (PlaceState == State.PLACING) {
-            RaycastHit2D? hit = getPlacablePointByMousePosition(facility.RequireLayers);
+            RaycastHit2D? hit = getPlacablePointByMousePosition(facility.Structure.Info.RequiredLayers);
             bool isCollided = false;
             if (hit.HasValue) {
                 fTransform.SetPositionAndRotation(hit.Value.point, Quaternion.identity);
-                facilityGO.SetActive(true);
-                if (facility.IsCostsAvailable()) {
-                    isCollided = checkCollided(facilityGO, hit.Value);
+                facility.gameObject.SetActive(true);
+                if (facility.Structure.IsCostsAvailable()) {
+                    isCollided = checkCollided(facility.gameObject, hit.Value);
                     if (isCollided) {
                         fSpriteRenderer.color = BlockColor;
                     } else {
@@ -142,22 +124,22 @@ public class ConstructionManager : MonoBehaviour {
                     fSpriteRenderer.color = BlockColor;
                 }
             } else {
-                facilityGO.SetActive(false);
+                facility.gameObject.SetActive(false);
             }
             // 按右键退出
             if (Input.GetMouseButton(1)) {
                 StopPlacing();
             }
             // 左键放置
-            if (Input.GetMouseButton(0) && facilityGO.activeSelf && !isCollided) {
-                place(facility, fSpriteRenderer);
+            if (Input.GetMouseButton(0) && facility.gameObject.activeSelf && !isCollided) {
+                place(facility, fTransform.position, fSpriteRenderer);
             }
             yield return wait;
         }
 
         if (PlaceState == State.IDLE) {
-            facilityGO.SetActive(false);
-            Destroy(facilityGO);
+            facility.gameObject.SetActive(false);
+            Destroy(facility.gameObject);
         } else {
             PlaceState = State.IDLE;
         }
@@ -176,13 +158,28 @@ public class ConstructionManager : MonoBehaviour {
         return false;
     }
 
-    private void place(Facility facility, SpriteRenderer spriteRenderer) {
-        if (!facility.OnPlaced()) {
+    private void place(Facility facility, Vector3 position, SpriteRenderer spriteRenderer) {
+        facility.Structure.OnStateChange += OnStructureStateChange;
+        if (!facility.Structure.Place(position)) {
+            facility.Structure.OnStateChange -= OnStructureStateChange;
             spriteRenderer.color = BlockColor;
             return;
         }
         spriteRenderer.color = facility.HighlightColor;
         PlaceState = State.PLACED;
+    }
+
+    private void OnStructureStateChange(Structure structure) {
+        switch (structure.FacilityState) {
+            case Structure.State.CANCLE:
+            case Structure.State.REMOVING:
+                World.getInstance().buildInstArray.Remove(structure);
+                structure.OnStateChange -= OnStructureStateChange;
+                break;
+            case Structure.State.BUILDING:
+                World.getInstance().buildInstArray.Add(structure);
+                break;
+        }
     }
 
     private static RaycastHit2D? getPlacablePointByMousePosition(LayerMask acceptableLayers) {

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9171e59f6f38cf14ba7357b23614d991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RawFood: {fileID: 114310167031201038}
+  Raw: {fileID: 114310167031201038}
   Gas: {fileID: 114547849988341574}
   Food: {fileID: 114506098875924372}
 --- !u!114 &114268811866316440

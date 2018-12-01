@@ -27,6 +27,10 @@ public abstract class Structure : ISerializable {
 
     public class FixedInfo {
         /// <summary>
+        /// 可以支持该设施的建筑平台的Layers名称。
+        /// </summary>
+        public string[] RequiredLayerNames { get; set; } = { "TrainGround" };
+        /// <summary>
         /// 可以支持该设施的建筑平台的Layers。
         /// </summary>
         public LayerMask RequiredLayers {
@@ -34,10 +38,6 @@ public abstract class Structure : ISerializable {
                 return LayerMask.GetMask(RequiredLayerNames);
             }
         }
-        /// <summary>
-        /// 可以支持该设施的建筑平台Layer名称。
-        /// </summary>
-        public string[] RequiredLayerNames { get; protected set; } = { "TrainGround" };
         /// <summary>
         /// 设施名字
         /// </summary>
@@ -55,9 +55,17 @@ public abstract class Structure : ISerializable {
         /// </summary>
         public Cost[] BuildCosts { get; set; }
         /// <summary>
+        /// Sprite path.
+        /// </summary>
+        public string SpritePath { get; set; }
+        /// <summary>
         /// Sprite
         /// </summary>
-        public Sprite Sprite { get; set; }
+        public Sprite Sprite {
+            get {
+                return ResourceLoader.GetResource<Sprite>(SpritePath);
+            }
+        }
     }
 
     public enum State {
@@ -95,7 +103,13 @@ public abstract class Structure : ISerializable {
     /// <summary>
     /// 当前建造工作量。
     /// </summary>
-    public float WorkNow { get; set; }
+    public float WorkNow {
+        get { return _workNow; }
+        set {
+            _workNow = value;
+            CallOnProgressChange(0, WorkRatio * Info.WorkAll, value);
+        }
+    }
     /// <summary>
     /// 设施状态。
     /// </summary>
@@ -123,6 +137,7 @@ public abstract class Structure : ISerializable {
                     ReturnCosts(true);
                     break;
             }
+            CallOnStateChange();
         }
     }
     /// <summary>
@@ -138,9 +153,13 @@ public abstract class Structure : ISerializable {
     /// </summary>
     public float[] CostReturnRatios { get; protected set; }
 
+    public event Action<Structure> OnStateChange;
+    public event Action<float, float, float> OnProgressChange;
+
     private Coroutine BuildingCoroutine { get; set; }
 
     private State _facilityState = State.NONE;
+    private float _workNow;
 
     /// <summary>
     /// 当设施进入启动状态的回调。
@@ -155,7 +174,7 @@ public abstract class Structure : ISerializable {
     }
 
     /// <summary>
-    /// 放置物体后的回调，如果override的话务必base.OnPlaced()一下。
+    /// 放置物体。
     /// </summary>
     /// <param name="position">安置位置</param>
     /// <returns>true放置成功，false放置失败。</returns>
@@ -200,13 +219,20 @@ public abstract class Structure : ISerializable {
         FacilityState = (State)info.GetValue("FacilityState", typeof(State));
     }
 
-    public void GetObjectData(SerializationInfo info, StreamingContext context) {
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context) {
         info.AddValue("WorkRatio", WorkRatio);
         info.AddValue("WorkNow", WorkNow);
         info.AddValue("FacilityState", FacilityState);
         info.AddValue("Position", Position);
         info.AddValue("BuildCostRatios", BuildCostRatios);
         info.AddValue("CostReturnRatios", CostReturnRatios);
+    }
+
+    protected void CallOnStateChange() {
+        OnStateChange?.Invoke(this);
+    }
+    protected void CallOnProgressChange(float min, float max, float value) {
+        OnProgressChange?.Invoke(min, max, value);
     }
 
     private void CostItems() {
