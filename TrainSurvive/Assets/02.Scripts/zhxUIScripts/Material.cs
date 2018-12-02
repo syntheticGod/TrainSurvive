@@ -10,7 +10,7 @@
  * 创建时间：2018/10/31 18:59:54
  * 版本：v0.1
  */
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +20,7 @@ using UnityEngine;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
+    [Serializable]
     public class Material : Item
     {
         //  重写属性内层----------------------
@@ -29,6 +30,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private PublicData.Rarity _rarity;
         private float _size;
         private string _description;
+        [NonSerialized]
         private Sprite _sprite;
         private int _max_pile_num;
         private int _cur_pile_num;
@@ -113,11 +115,11 @@ namespace Assets._02.Scripts.zhxUIScripts
         {
             _id = id;
             belongGrid = null;
-            _name = PublicMethod.GenerateRdString(Random.Range(2, 6));
+            _name = PublicMethod.GenerateRdString(UnityEngine.Random.Range(2, 6));
             _item_type = PublicData.ItemType.material;
-            _rarity = (PublicData.Rarity)Random.Range(0, 5);
-            _size = Random.Range(2.0f, 5.0f);
-            _description = PublicMethod.GenerateRdString(Random.Range(20, 30));
+            _rarity = (PublicData.Rarity)UnityEngine.Random.Range(0, 5);
+            _size = UnityEngine.Random.Range(2.0f, 5.0f);
+            _description = PublicMethod.GenerateRdString(UnityEngine.Random.Range(20, 30));
             _sprite = Resources.Load<Sprite>("ZHXTemp/Material_img");
             _max_pile_num = 5;
             _cur_pile_num = 1;

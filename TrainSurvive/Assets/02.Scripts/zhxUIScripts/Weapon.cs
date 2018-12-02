@@ -15,7 +15,7 @@
  * 
  */
 
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,10 +25,14 @@ using UnityEngine;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
+    [Serializable]
     public class Weapon : Item
     {
+        [NonSerialized]
         private PublicData.VoidCallback onEquip;                   //获得物品时执行的回调函数
+        [NonSerialized]
         private PublicData.VoidCallback onUnfix;                //丢弃物品时执行的回调函数
+        [NonSerialized]
         private PublicData.VoidCallback weaponEffect;               //武器被动技能的回调函数（测试时先不使用）
         //  重写属性内层--------------------
         private int _id;
@@ -36,6 +40,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private PublicData.Rarity _rarity;
         private PublicData.ItemType _item_type;
         private float _size;
+        [NonSerialized]
         private Sprite _sprite;
         private string _description;
         private int _max_pile_num;
@@ -176,19 +181,19 @@ namespace Assets._02.Scripts.zhxUIScripts
         {                                                           //武器被动技能可随机选择回调函数。
             _id = id;
             belongGrid = null;
-            _name = PublicMethod.GenerateRdString(Random.Range(3, 6));
-            _rarity = (PublicData.Rarity)Random.Range(0, 5);
-            _weapon_type = (PublicData.WeaponType)Random.Range(0, 6);
-            _size = Random.Range(1.0f, 10.0f);
+            _name = PublicMethod.GenerateRdString(UnityEngine.Random.Range(3, 6));
+            _rarity = (PublicData.Rarity)UnityEngine.Random.Range(0, 5);
+            _weapon_type = (PublicData.WeaponType)UnityEngine.Random.Range(0, 6);
+            _size = UnityEngine.Random.Range(1.0f, 10.0f);
             _sprite = Resources.Load<Sprite>("ZHXTemp/Weapon_img");
-            _description = PublicMethod.GenerateRdString(Random.Range(10, 30));
-            _range = Random.Range(0.2f, 10.0f);
-            _fac_ats = Random.Range(0.2f, 2.5f);
-            _mod_crc = Random.Range(0.0f, 0.8f);
-            _mod_crd = Random.Range(0.0f, 2.0f);
-            _mod_hit = Random.Range(-1.0f, 1.0f);
-            _base_atk = Random.Range(5f, 200f);
-            _fac_atk = _base_atk + _base_atk * Random.Range(-0.2f, 0.2f);
+            _description = PublicMethod.GenerateRdString(UnityEngine.Random.Range(10, 30));
+            _range = UnityEngine.Random.Range(0.2f, 10.0f);
+            _fac_ats = UnityEngine.Random.Range(0.2f, 2.5f);
+            _mod_crc = UnityEngine.Random.Range(0.0f, 0.8f);
+            _mod_crd = UnityEngine.Random.Range(0.0f, 2.0f);
+            _mod_hit = UnityEngine.Random.Range(-1.0f, 1.0f);
+            _base_atk = UnityEngine.Random.Range(5f, 200f);
+            _fac_atk = _base_atk + _base_atk * UnityEngine.Random.Range(-0.2f, 0.2f);
             _item_type = PublicData.ItemType.weapon;
             _max_pile_num = 1;
             _cur_pile_num = 1;

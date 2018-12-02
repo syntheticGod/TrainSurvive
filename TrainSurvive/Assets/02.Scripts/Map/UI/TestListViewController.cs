@@ -5,7 +5,7 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using WorldMap.UI;
 using UnityEngine.UI;
 
@@ -14,11 +14,19 @@ namespace TestWorldMap.UI
     public class TestListViewController : MonoBehaviour
     {
         private ListViewController listViewController;
+        private List<string> texts;
+        private const int textCnt = 3;
         void Awake()
         {
             listViewController = gameObject.GetComponent<ListViewController>();
             if (listViewController == null)
                 listViewController = gameObject.AddComponent<ListViewController>();
+            listViewController.onItemView = OnItemView;
+            texts = new List<string>();
+            for(int i = 0; i < textCnt; ++i)
+            {
+                texts.Add("hello" + i);
+            }
         }
         void Start()
         {
@@ -31,9 +39,12 @@ namespace TestWorldMap.UI
         }
         private void TestAppendItem()
         {
-            listViewController.AppendItem().GetComponent<Text>().text = "hello1";
-            listViewController.AppendItem().GetComponent<Text>().text = "hello2";
-            listViewController.AppendItem();
+            for(int i = 0; i < textCnt;i++)
+                listViewController.AppendItem();
+        }
+        private void OnItemView(ListViewItem item, int index)
+        {
+            item.GetComponentInChildren<Text>().text = texts[index];
         }
     }
 }

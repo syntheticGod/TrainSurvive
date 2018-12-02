@@ -14,7 +14,8 @@ using UnityEngine;
 
 namespace WorldMap {
     public class TownsRailGenerate : MonoBehaviour {
-
+        private const float levelOfRail = -0.5F;
+        private const float levelOfTown = -0.5F;
         //城镇的图标
         public GameObject townObject;
         //铁轨直线图标
@@ -116,7 +117,7 @@ namespace WorldMap {
                     Vector2Int mapPos = towns[i, j].position;
                     //对城镇图标进行绘画
                     GameObject o = Instantiate(townObject,
-                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * mapPos.x, 0, mapGenerate.spawnOffsetZ * mapPos.y),
+                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * mapPos.x, mapGenerate.spawnOffsetZ * mapPos.y, levelOfTown),
                         townObject.transform.rotation);
                     //将城镇图标放在同一gameObject下
                     o.transform.parent = townParentObject.transform;
@@ -278,7 +279,7 @@ namespace WorldMap {
                 if (curRailIndex < xRailNum) {
                     PaintSingleRail(posx, posz, true, new Vector3());
                 } else {
-                    PaintSingleRail(posx, posz, true, new Vector3(0, 90, 0));
+                    PaintSingleRail(posx, posz, true, new Vector3(0, 0, 90));
                 }
                 //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
             }
@@ -291,7 +292,7 @@ namespace WorldMap {
                 //设置铁轨属性
                 SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
-                PaintSingleRail(posx, posz, false, new Vector3(0, railTurnAngle, 0));
+                PaintSingleRail(posx, posz, false, new Vector3(0, 0, railTurnAngle));
             }
         }
 
@@ -325,7 +326,7 @@ namespace WorldMap {
 
             //对铁轨图标进行绘画
             GameObject o = Instantiate(railObject,
-                mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, 0, mapGenerate.spawnOffsetZ * posz),
+                mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, mapGenerate.spawnOffsetZ * posz, levelOfRail),
                 railObject.transform.rotation);
             //将铁轨图标放在同一gameObject下
             o.transform.parent = railParentObject.transform;

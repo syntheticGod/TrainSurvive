@@ -1,6 +1,6 @@
 /*
  * 描述：ListView控制器，使用起来非常方便，只需要在对象中添加该脚本即可简单使用。
- *          不过目前只支持水平的方向
+ *          其中块大小是固定的。
  *          Selectable属性 bool类型：如果启用，则点击Item之后会显示选中状态。
  *          Item Width属性 float类型：设置Item的宽度
  *          
@@ -27,19 +27,38 @@ namespace WorldMap.UI
 {
     public class ListViewController : MonoBehaviour
     {
+        public enum ScrollType
+        {
+            Horizontal,//水平滑动
+            Vertical,//垂直滑动
+            Both//四周滑动
+        }
         public delegate void OnItemClick(ListViewItem item, int index);
         public delegate void OnItemView(ListViewItem item, int index);
         public OnItemClick onItemClick { set; get; }
         public OnItemView onItemView { set; get; }
         
-        private GameObject content;
+        private RectTransform content;
+        private RectTransform viewport;
         private List<ListViewItem> items;
         private List<ListViewItem> recycal;
         private ListViewItem lastClickedItem;
 
+        public ScrollType m_scrollType = ScrollType.Horizontal;
         public GameObject m_itemContentPrefab;
         public bool m_selectable = true;
-        public float m_itemWidth = 100;
+        public Vector2 cellSize = new Vector2(100.0F, 100.0F);
+        /// <summary>
+        /// Horizontal：先水平填充，填充满一行后，再填充下一行
+        /// Vertical：先垂直填充，填充满一列后，再填充下一列
+        /// </summary>
+        public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
+        /// <summary>
+        /// 一行的长度
+        /// -1：自适应长度
+        /// </summary>
+        public int m_lengthOfLine = 1;
+
         private float viewPortHeight;
         public int ItemCount { get { return items.Count; } }
 
@@ -50,37 +69,72 @@ namespace WorldMap.UI
             if (scrollRect == null)
                 scrollRect = gameObject.AddComponent<ScrollRect>();
             //Viewport
-            RectTransform viewport = new GameObject("Viewport", typeof(Mask), typeof(Image)).GetComponent<RectTransform>();
-            SetParent(viewport, scrollRect.GetComponent<RectTransform>());
+
+            Transform viewportTransform = transform.Find("Viewport");
+            if(viewportTransform == null)
+            {
+                viewport = new GameObject("Viewport", typeof(Mask), typeof(Image)).GetComponent<RectTransform>();
+                viewport.GetComponent<Image>().color = new Color(0,0,0,0.1F);
+                SetParent(viewport, scrollRect.GetComponent<RectTransform>());
+            }
+            else
+            {
+                viewport = viewportTransform.GetComponent<RectTransform>();
+            }
             viewPortHeight = viewport.rect.height;
             //Content
-            content = new GameObject("Content", typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
-            HorizontalLayoutGroup hlg = content.GetComponent<HorizontalLayoutGroup>();
-            hlg.spacing = 6;
-            hlg.childControlHeight = hlg.childControlWidth = false;
-            hlg.childForceExpandWidth = hlg.childForceExpandHeight = false;
-            content.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            RectTransform contentRectTransform = content.GetComponent<RectTransform>();
-            SetParent(contentRectTransform, viewport);
+            Transform contentTransform = viewport.Find("Content");
+            if(contentTransform == null)
+            {
+                content = new GameObject("Content", typeof(GridLayoutGroup), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
+                content.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.MinSize;
+                content.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.MinSize;
+                SetParent(content, viewport);
+            }
+            else
+            {
+                content = contentTransform.GetComponent<RectTransform>();
+            }
             //Config ScrollRect
-            scrollRect.content = contentRectTransform;
+            scrollRect.content = content;
             scrollRect.viewport = viewport;
             scrollRect.scrollSensitivity = 30;
-            scrollRect.vertical = false;
-            scrollRect.horizontal = true;
+            //Config GridLayoutGroup
+            GridLayoutGroup gridLayout = content.GetComponent<GridLayoutGroup>();
+            gridLayout.startAxis = m_startAxis;
+            gridLayout.constraint = m_startAxis == GridLayoutGroup.Axis.Horizontal ? 
+                GridLayoutGroup.Constraint.FixedColumnCount : 
+                GridLayoutGroup.Constraint.FixedRowCount;
+            gridLayout.cellSize = cellSize;
+            gridLayout.constraintCount = m_lengthOfLine;
+            if (m_scrollType == ScrollType.Horizontal)
+            {
+                scrollRect.vertical = false;
+                scrollRect.horizontal = true;
+                if (m_lengthOfLine <= 0)
+                    gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.height / cellSize.y);
+            }
+            else if (m_scrollType == ScrollType.Vertical)
+            {
+                scrollRect.vertical = true;
+                scrollRect.horizontal = false;
+                if (m_lengthOfLine <= 0)
+                    gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.width / cellSize.x);
+            }
+            else
+            {
+                scrollRect.vertical = true;
+                scrollRect.horizontal = true;
+            }
 
             recycal = new List<ListViewItem>();
             items = new List<ListViewItem>();
         }
+        
         void Start()
-        {
-
-        }
-
+        { }
         void Update()
-        {
-
-        }
+        { }
         private ListViewItem CreateItem()
         {
             GameObject item;
@@ -103,7 +157,6 @@ namespace WorldMap.UI
         {
             RectTransform rectOfItem = item.GetComponent<RectTransform>();
             SetParent(rectOfItem, content.GetComponent<RectTransform>());
-            rectOfItem.sizeDelta = new Vector2(m_itemWidth, viewPortHeight);
             onItemView?.Invoke(item, index);
         }
         private void RecyleItem(int index)

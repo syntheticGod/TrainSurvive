@@ -12,7 +12,7 @@ namespace WorldMap
     {
         public float smoothTime = 0.3F;
         private float xVelocity = 0.0F;
-        private float zVelocity = 0.0F;
+        private float yVelocity = 0.0F;
 
         //开关摄像机焦聚
         private bool enableFocus = false;
@@ -43,8 +43,8 @@ namespace WorldMap
         private bool ifFocused(Vector3 foscus)
         {
             //忽略y轴
-            return Utility.ApproximatelyInView(Utility.IgnoreY
-                (transform.position), Utility.IgnoreY
+            return Utility.ApproximatelyInView(Utility.IgnoreZ
+                (transform.position), Utility.IgnoreZ
                 (foscus));
         }
 
@@ -64,8 +64,8 @@ namespace WorldMap
                 {
                     position.x = Mathf.SmoothDamp(position.x,
                             targetPosition.x, ref xVelocity, smoothTime,Mathf.Infinity,1.0F);
-                    position.z = Mathf.SmoothDamp(position.z,
-                        targetPosition.z, ref zVelocity, smoothTime, Mathf.Infinity, 1.0F);
+                    position.y = Mathf.SmoothDamp(position.y,
+                        targetPosition.y, ref yVelocity, smoothTime, Mathf.Infinity, 1.0F);
                     transform.position = position;
                     //Debug.Log("move camera to " + transform.position + " from " + position);
                 }

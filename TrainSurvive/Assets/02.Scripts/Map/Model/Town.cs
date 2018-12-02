@@ -15,7 +15,9 @@ namespace WorldMap.Model
     public class Town
     {
         [NonSerialized]
-        const int MaxNPC = 3;
+        const int MaxNPCCnt = 3;
+        [NonSerialized]
+        const int MaxGoodCnt = 3;
         private Town()
         {
             
@@ -34,10 +36,15 @@ namespace WorldMap.Model
         public static Town Random()
         {
             Town ret = new Town();
-            ret.NPCs = new List<NPC>(MaxNPC);
-            for (int i = 0; i < MaxNPC; ++i)
+            ret.NPCs = new List<NPC>(MaxNPCCnt);
+            ret.Goods = new List<Good>(MaxGoodCnt);
+            for (int i = 0; i < MaxNPCCnt; ++i)
             {
                 ret.NPCs.Add(NPC.Random());
+            }
+            for(int i = 0; i < MaxGoodCnt; ++i)
+            {
+                ret.Goods.Add(Good.Random());
             }
             ret.Name = StaticResource.RandomTownName();
             return ret;
@@ -74,8 +81,9 @@ namespace WorldMap.Model
         {
             get
             {
-                return "城镇：" + Name + "\n" +
-                    "酒馆人数：" + NPCCnt;
+                return "城镇名：" + Name + " " +
+                    "酒馆人数：" + NPCCnt + " "+
+                    "商品数：" + GoodsCnt + " ";
             }
         }
 

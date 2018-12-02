@@ -5,6 +5,7 @@
  * 版本：v0.1
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using UnityEngine;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
+    [Serializable]
     public class Consumable : Item
     {
         //--------  重写属性内层  ----------
@@ -22,15 +24,20 @@ namespace Assets._02.Scripts.zhxUIScripts
         private PublicData.ItemType _item_type;
         private PublicData.Rarity _rarity;
         private float _size;
+        [NonSerialized]
         private Sprite _sprite;
         private string _description;
         private int _max_pile_num;
         private int _cur_pile_num;
 
         //--------  特有属性内层  ----------
+        [NonSerialized]
         private PublicData.ConsumableType _con_type;
+        [NonSerialized]
         private PublicData.VoidCallback itemDiscard;
+        [NonSerialized]
         private PublicData.VoidCallback itemGain;
+        [NonSerialized]
         private PublicData.VoidCallback onUse;
 
         //--------  重写属性外层  ----------
@@ -120,13 +127,13 @@ namespace Assets._02.Scripts.zhxUIScripts
         {
             _id = id;
             belongGrid = null;
-            _name = PublicMethod.GenerateRdString(Random.Range(2, 5));
+            _name = PublicMethod.GenerateRdString(UnityEngine.Random.Range(2, 5));
             _item_type = PublicData.ItemType.consumable;
-            _rarity = (PublicData.Rarity)Random.Range(0, 5);
-            _size = Random.Range(0.1f, 0.5f);
+            _rarity = (PublicData.Rarity)UnityEngine.Random.Range(0, 5);
+            _size = UnityEngine.Random.Range(0.1f, 0.5f);
             _sprite = Resources.Load<Sprite>("ZHXTemp/Consumable_img");
-            _description = PublicMethod.GenerateRdString(Random.Range(10, 20));
-            _con_type = (PublicData.ConsumableType)Random.Range(0, 3);
+            _description = PublicMethod.GenerateRdString(UnityEngine.Random.Range(10, 20));
+            _con_type = (PublicData.ConsumableType)UnityEngine.Random.Range(0, 3);
             _max_pile_num = 5;
             _cur_pile_num = 1;
             itemDiscard = PublicMethod.Useless;

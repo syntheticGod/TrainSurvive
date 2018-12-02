@@ -186,9 +186,9 @@ namespace WorldMap {
             for (int i = 0; i < mapData.rowNum; i++) {
                 for (int j = 0; j < mapData.colNum; j++) {
                     GameObject o = Instantiate(mapObject[(int)mapData.spowns[i, j].terrainType],
-                        orign + new Vector3(spawnOffsetX * i, 0, spawnOffsetZ * j),
+                        orign + new Vector3(spawnOffsetX * i, spawnOffsetZ * j, 0),
                         Quaternion.identity);
-                    o.transform.Rotate(90, 0, 0);
+                    //o.transform.Rotate(90, 0, 0);
                     o.transform.parent = mapParent[(int)mapData.spowns[i, j].terrainType].transform;
 
                     //绑定地块的gameObject

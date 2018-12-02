@@ -17,7 +17,7 @@ namespace WorldMap
 {
     public class TrainController : MonoBehaviour, OnClickListener, DialogCallBack
     {
-        private const int levelOfTrain = 1;
+        private const int levelOfTrain = -1;
 
         //私有信息
         private StaticResource staticResource;

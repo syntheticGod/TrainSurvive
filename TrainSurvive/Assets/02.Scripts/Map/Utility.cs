@@ -61,6 +61,14 @@ namespace WorldMap
                 y = a.z
             };
         }
+        public static Vector2 IgnoreZ(Vector3 a)
+        {
+            return new Vector2
+            {
+                x = a.x,
+                y = a.y
+            };
+        }
         /// <summary>
         /// 添加y轴
         /// (x,z) => (x,y,z)
@@ -75,6 +83,15 @@ namespace WorldMap
                 x = a.x,
                 y = y,
                 z = a.y
+            };
+        }
+        public static Vector3 AcceptZ(Vector2 a, float z)
+        {
+            return new Vector3
+            {
+                x = a.x,
+                y = a.y,
+                z = z
             };
         }
         /// <summary>

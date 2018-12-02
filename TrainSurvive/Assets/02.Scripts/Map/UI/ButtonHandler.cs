@@ -64,6 +64,7 @@ namespace WorldMap
 
         TAVERN_NONE,//酒馆界面
         TAVERN_RECRUIT,//招募NPC
+        TAVERN_CANCEL,//招募NPC
         TAVERN_NUM,
 
         TEAM_SELECT_DIALOG_NONE,//探险队选择框

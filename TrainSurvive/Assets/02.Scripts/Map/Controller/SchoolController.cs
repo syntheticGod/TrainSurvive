@@ -56,7 +56,6 @@ namespace WorldMap
                 CallBackChooseHero(index);
             };
             moneyView = m_counterBoard.transform.Find("Money").GetComponent<Text>();
-            
         }
         void Start()
         {
@@ -71,12 +70,20 @@ namespace WorldMap
         }
         
         void Update()
-        {
-            
-        }
+        { }
         public void Show()
         {
-
+            if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(true);
+            }
+        }
+        private void Hide()
+        {
+            if (gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(false);
+            }
         }
         /// <summary>
         /// 点击英雄ListView时的回调函数
@@ -166,6 +173,10 @@ namespace WorldMap
             heroChoosed.intellgence += (int)deltaAttri[4];
             InitAttribute();
             ShowMoney();
+        }
+        public void OnCancelBtnClick()
+        {
+            Hide();
         }
     }
 }

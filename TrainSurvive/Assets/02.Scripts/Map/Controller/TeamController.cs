@@ -14,7 +14,7 @@ namespace WorldMap
 {
     public class TeamController : MonoBehaviour, OnClickListener
     {
-        private int levelOfTeam = 2;
+        private int levelOfTeam = -2;
         
         private Team team;
         private Train train;

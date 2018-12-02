@@ -38,6 +38,7 @@ namespace WorldMap
 
             "TAVERN_NONE",
             "TavernRecruitBtn",
+            "TavernCancelBtn",
             "TAVERN_NUM",
 
             "TEAM_SELECT_DIALOG_NONE",

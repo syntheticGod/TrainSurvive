@@ -77,7 +77,7 @@ namespace WorldMap
             this.town = town;
             Debug.Log("酒馆：我这里有" + town.NPCCnt + "人");
         }
-        public void Hide()
+        private void Hide()
         {
             if (gameObject.activeInHierarchy)
                 gameObject.SetActive(false);
@@ -103,6 +103,9 @@ namespace WorldMap
                     else
                         train.CallBackRecruit(selectedNPC.PersonInfo);
                     imageButtons[selectedIndex].Clean();
+                    break;
+                case BUTTON_ID.TAVERN_CANCEL:
+                    Hide();
                     break;
             }
         }
