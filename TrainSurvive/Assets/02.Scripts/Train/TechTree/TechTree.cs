@@ -150,8 +150,8 @@ public class TechTree : MonoBehaviour {
             UpdateColorState(i);
         }
         CurrentSelect = 0;
-        StartCoroutine(ResearchStateChange());
-        StartCoroutine(TreeStateChange());
+        StartCoroutine(ResearchStateChange()); // 打开面板时监听选中科技的状态，及时更新Info Panel里的ProgressButton。
+        StartCoroutine(TreeStateChange()); // 打开面板时监听正在工作的科技的状态，即使更新树的ProgressButton。
     }
 
     private void OnDisable() {
