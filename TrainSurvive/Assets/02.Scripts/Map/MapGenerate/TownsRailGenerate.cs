@@ -27,9 +27,9 @@ namespace WorldMap {
         public int townsNum = 49;
 
         //城镇图标在一个地块的偏移量
-        public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, 0.03f);
+        public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, -0.03f);
         //铁轨图标在一个地块的偏移量
-        public Vector3 railOffsetVec3 = new Vector3(0.0f, 0.0f, 0.02f);
+        public Vector3 railOffsetVec3 = new Vector3(0.0f, 0.0f, -0.02f);
 
         //设置城镇最近的距离
         public int minDist = 10;

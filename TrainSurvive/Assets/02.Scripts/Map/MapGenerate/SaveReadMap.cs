@@ -18,10 +18,24 @@ namespace WorldMap {
         //保存地图动态数据的文件
         //private const string MAP_DYNAMIC_FILE_NAME = "MAP_DYNAMIC_INFO.txt";
 
+        //当前是否要保存静态资源
+        public static bool isCreateMap = true;
+
         //保存地图信息的委托函数
         public delegate void SaveMapDelegate(StreamWriter sw);
         //读取地图信息的委托函数
         public delegate void ReadMapDelegate(String mapData);
+
+        //静态方法保存地图信息
+        public static void SaveMapInfo() {
+            //如果当前第一次保存地图
+            if (isCreateMap == true) {
+                //保存地图静态数据
+                SaveStaticMapInfo();
+            }
+            //保存地图动态数据
+            SaveDynamicMapInfo();
+        }
 
         /** 保存地图的静态信息
          * 地图的地形信息
@@ -158,20 +172,27 @@ namespace WorldMap {
             //使用流的形式读取
             StreamReader sr = null;
             try {
-                sr = File.OpenText(pathName);
+                //如果当前不存在静态文件，设置当前生成地图
+                if (File.Exists(pathName) == false) {
+                    isCreateMap = true;
+                } else {
+                    //当前为读档，读取文件
+                    isCreateMap = false;
+                    sr = File.OpenText(pathName);
+
+                    //读取map的数据
+                    readMap(sr.ReadToEnd());
+
+                    //关闭流
+                    sr.Close();
+                    //销毁流
+                    sr.Dispose();
+                }
             } catch (Exception e) {
                 //路径与名称未找到文件则直接返回空
                 Debug.Log(e.ToString());
                 return;
             }
-
-            //读取map的数据
-            readMap(sr.ReadToEnd());
-
-            //关闭流
-            sr.Close();
-            //销毁流
-            sr.Dispose();
         }
 
         //读取地图的静态数据
@@ -233,6 +254,7 @@ namespace WorldMap {
         //读取地图的动态数据
         private static void ReadDynamicMap(string mapData) {
             Map map = Map.GetIntanstance();
+            
             // 将空元素删除的选项
             System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using WorldMap;
 
 [System.Serializable]
 public class World {
@@ -46,6 +47,10 @@ public class World {
         saveDelegateHandler?.Invoke();
 
         //map.save()待补足
+
+        //地图保存
+        SaveReadMap.SaveMapInfo();
+
         /*
         if(TimeController.instance!=null)
             game_time = TimeController.getInstance().getGameTime();

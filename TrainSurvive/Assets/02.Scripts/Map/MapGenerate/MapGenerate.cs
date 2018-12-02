@@ -62,7 +62,7 @@ namespace WorldMap {
         private ClimateTerrainGenerate climateTerrainGenerate;
 
         //判定这是新游戏（生成地图）还是读取地图
-        public bool isCreateMap = true;
+        public bool isCreateMap;
 
         //设置起始状态为迷雾状态还是明亮状态(测试)
         public static bool isFogState = false;
@@ -99,7 +99,7 @@ namespace WorldMap {
             //对地图进行初始化处理
             mapData = Map.GetIntanstance();
             mapData.initMap(mapWidth, mapHeight);
-            
+
             //为每种地形赋予一个图标
             mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
             mapObject[(int)SpawnPoint.TerrainEnum.PLAIN] = plainObject;
@@ -118,14 +118,24 @@ namespace WorldMap {
                 mapParent[i].transform.parent = mapRootObject.transform;
             }
 
-            //判断是不是第一次生成地形
-            if (isCreateMap) {
+            //先读取地图的信息
+            SaveReadMap.ReadMapInfo();
+            //获取是否保存地图
+            isCreateMap = SaveReadMap.isCreateMap;
+
+            if (SaveReadMap.isCreateMap) {
                 //生成特殊地形的算法
                 BuildTerrain();
-            } else {
-                //读取地图的信息
-                SaveReadMap.ReadMapInfo();
             }
+
+            ////判断是不是第一次生成地形
+            //if (isCreateMap) {
+            //    //生成特殊地形的算法
+            //    BuildTerrain();
+            //} else {
+            //    //读取地图的信息
+            //    SaveReadMap.ReadMapInfo();
+            //}
 
             //对地形进行绘画
             //PaintTerrain();
@@ -137,9 +147,9 @@ namespace WorldMap {
             townsRailGenerate.StartGenerate();
 
             //如果是第一次生成地图的静态数据，要将其保存
-            if (isCreateMap) {
-                SaveReadMap.SaveStaticMapInfo();
-            }
+            //if (isCreateMap) {
+            //    SaveReadMap.SaveStaticMapInfo();
+            //}
         }
 
         ////生成地形
