@@ -58,12 +58,14 @@ namespace WorldMap {
 
         //获取城镇生成类
         private TownsRailGenerate townsRailGenerate;
+        //获取气候地形生成类
+        private ClimateTerrainGenerate climateTerrainGenerate;
 
         //判定这是新游戏（生成地图）还是读取地图
         public bool isCreateMap = true;
 
         //设置起始状态为迷雾状态还是明亮状态(测试)
-        public static bool isFogState = true;
+        public static bool isFogState = false;
 
         //构建地图
         private void Awake() {
@@ -90,7 +92,9 @@ namespace WorldMap {
         //创建地图
         public void CreateModel() {
             //获取城镇铁轨脚本
-            townsRailGenerate = GameObject.Find("townsRailGenerate").GetComponent<TownsRailGenerate>();
+            townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
+            //获取气候地形生成脚本
+            climateTerrainGenerate = GameObject.Find("ClimateTerrainGenerate").GetComponent<ClimateTerrainGenerate>();
 
             //对地图进行初始化处理
             mapData = Map.GetIntanstance();
@@ -124,7 +128,10 @@ namespace WorldMap {
             }
 
             //对地形进行绘画
-            PaintTerrain();
+            //PaintTerrain();
+
+            //生成气候和地形
+            climateTerrainGenerate.StartGenerate();
 
             //生成城镇，并绘画出城镇和铁轨
             townsRailGenerate.StartGenerate();

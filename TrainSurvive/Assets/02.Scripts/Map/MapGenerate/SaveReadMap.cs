@@ -92,6 +92,15 @@ namespace WorldMap {
             //先写大地图的宽高
             sw.WriteLine(map.rowNum + "," + map.colNum);
 
+            //写入普通气候的数据
+            for (int i = 0; i < map.rowNum; i++) {
+                string row = ((int)map.spowns[i, 0].terrainType).ToString();
+                for (int j = 1; j < map.colNum; j++) {
+                    row += "," + (int)map.spowns[i, j].climateType;
+                }
+                sw.WriteLine(row);
+            }
+
             //写入普通地形的数据
             for (int i = 0; i < map.rowNum; i++) {
                 string row = ((int)map.spowns[i, 0].terrainType).ToString();
@@ -175,6 +184,15 @@ namespace WorldMap {
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
             //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
+
+            //获取气候数据
+            for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
+                // 用“,”将每个字符分割开
+                string[] curLineData = lines[lineIndex++].Split(spliter, option);
+                for (int col = 0; col < map.colNum; col++) {
+                    map.spowns[lineCnt, col].SetClimateEnum((SpawnPoint.ClimateEnum)int.Parse(curLineData[col]));
+                }
+            }
 
             //获取地形数据
             for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
