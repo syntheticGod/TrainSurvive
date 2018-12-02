@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Assets._02.Scripts.zhxUIScripts;
 
 [System.Serializable]
 public class Person{
@@ -52,6 +53,9 @@ public class Person{
     /// 小数属性保留的位数
     /// </summary>
     private const int numsLeft=3;
+
+    [NonSerialized]
+    private int lastWeaponId = -1;
     private Person()
     {
         //保留以后用
@@ -95,7 +99,8 @@ public class Person{
         double apRec = 5 * (1 + 0.05 * intelligence);
         if (hasWeapon)
         {
-            //apRec=apRec*getweaponaprec
+            Weapon weapon = (Weapon)PublicMethod.GenerateItem(weaponId, 1)[0];
+            apRec = apRec * weapon.facArec;
         }
         return Math.Round(apRec, numsLeft);
     }

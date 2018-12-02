@@ -30,7 +30,11 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
             return;
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
-        
+
+        if (isEquipmentGrid)
+        {
+
+        }
         InventoryCtrl tempController = grid.GetComponent<ItemGridCtrl>().GetController();
         tempController.coreInventory.PopItem(grid.GetComponent<ItemGridCtrl>().item);
         tempController.RemoveGrid(grid);

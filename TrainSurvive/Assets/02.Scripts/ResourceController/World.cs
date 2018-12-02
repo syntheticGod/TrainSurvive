@@ -84,7 +84,7 @@ public class World {
     //public const int trainHeight = 5;
     private uint foodIn = 0;
     private uint foodOut = 0;
-    public uint foodConsumed_eachPerson = 100;
+    public uint foodConsumed_eachPerson = 20;
     private uint energy = 0;
     private uint coal = 0;
     private uint wood = 0;
