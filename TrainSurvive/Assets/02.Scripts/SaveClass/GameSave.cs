@@ -91,7 +91,7 @@ public class GameSave  {
         slotIsUsed[slotIndexUsedAtNow] = true;
         save();
         World world = World.getInstance();
-        world.save();
+        world.initSave();
     }
 
 

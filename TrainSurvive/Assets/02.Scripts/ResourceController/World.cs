@@ -50,11 +50,7 @@ public class World {
 
         //地图保存
         SaveReadMap.SaveMapInfo();
-
-        /*
-        if(TimeController.instance!=null)
-            game_time = TimeController.getInstance().getGameTime();
-            */
+        
         string path = PathManager.getInstance().getWorldPath();
         BinaryFormatter bf = new BinaryFormatter();
         if (File.Exists(path))
@@ -65,7 +61,19 @@ public class World {
         bf.Serialize(file, this);
         file.Close();
     }
-
+    public void initSave()
+    {
+        saveDelegateHandler?.Invoke();
+        string path = PathManager.getInstance().getWorldPath();
+        BinaryFormatter bf = new BinaryFormatter();
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        FileStream file = File.Create(path);
+        bf.Serialize(file, this);
+        file.Close();
+    }
     public delegate void saveDelegate();
 
     public event saveDelegate saveDelegateHandler;
