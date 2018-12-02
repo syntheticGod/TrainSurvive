@@ -169,4 +169,9 @@ public class Person{
         num = num * (1 + 0.03 * technique);
         return Math.Round(num, numsLeft);
     }
+    public void equipWeapon(Weapon weapon)
+    {
+        weaponId = weapon.id;
+        hasWeapon = true;
+    }
 }

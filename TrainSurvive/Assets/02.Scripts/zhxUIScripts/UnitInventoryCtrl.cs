@@ -26,14 +26,18 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
-        if (eventData.pointerDrag.GetComponent<ItemGridCtrl>().GetController() == null || !(ChargeIn?.Invoke(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item)??false))
-            return;
+        //if (eventData.pointerDrag.GetComponent<ItemGridCtrl>().GetController() == null || !(ChargeIn?.Invoke(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item)??false))
+        //    return;
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
 
         if (isEquipmentGrid)
         {
-
+        
+            int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
+            Person curPerson = World.getInstance().persons[personID];
+            curPerson.equipWeapon((Weapon)gridCtrl.item);
+            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
         }
         InventoryCtrl tempController = grid.GetComponent<ItemGridCtrl>().GetController();
         tempController.coreInventory.PopItem(grid.GetComponent<ItemGridCtrl>().item);
@@ -56,7 +60,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         
     }
 
-    private bool AddNum(int num)
+    private bool AddNum(int num)    
     {   //若增加这些物品后达超过堆叠上限，则直接返回FALSE，否则返回TRUE
         if(gridCtrl.item.currPileNum + num > gridCtrl.item.maxPileNum)
         {
