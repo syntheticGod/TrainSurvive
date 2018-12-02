@@ -211,11 +211,11 @@ namespace WorldMap {
                         if (from.y < to.y) {
                             railTurnAngle = 180;
                         } else {
-                            railTurnAngle = 90;
+                            railTurnAngle = 270;
                         }
                     } else {
                         if (from.y < to.y) {
-                            railTurnAngle = 270;
+                            railTurnAngle = 90;
                         } else {
                             railTurnAngle = 0;
                         }

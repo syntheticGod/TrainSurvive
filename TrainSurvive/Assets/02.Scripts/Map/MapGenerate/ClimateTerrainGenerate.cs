@@ -14,14 +14,19 @@ namespace WorldMap {
         private int mapHeight;
         private int mapWidth;
 
-        //地块数量
-        public int blockNum = 100;
+        //气候地块数量
+        public int climateBlockNum = 100;
+        //地形地块数量
+        public int terrainBlockNum = 100;
+        //grid地块数量
+        private int blockNum = 100;
+
         //根据地图尺寸和地块数量自适应地块尺寸的参数
-        private int sizeFac = 1;
+        private float sizeFac = 1;
         //气候地块的尺寸
-        public int climateSizeFac = 3;
+        public float climateSizeFac = 3;
         //地形地块的尺寸
-        public int terrainSizeFac = 1;
+        public float terrainSizeFac = 1;
 
         //地块数量加x，x最后会加到主地块上
         private int randTypeNum;
@@ -55,7 +60,7 @@ namespace WorldMap {
         //将地形存放到同一object下
         private GameObject[] terrainObject;
         //地形在气候上方多大位置
-        public float terrainYPos = 0.01f;
+        public Vector3 terrainPos = new Vector3(0, 0, -0.01f);
 
         //将气候存放到同一object下
         private GameObject[] climateObject;
@@ -111,6 +116,8 @@ namespace WorldMap {
             randTypeNum = realTypeNum;
             //设置气候地块的大小
             sizeFac = climateSizeFac;
+            //设置气候地块的数量
+            blockNum = climateBlockNum;
 
             //初始化grid
             grid = new int[mapWidth, mapHeight];
@@ -140,6 +147,8 @@ namespace WorldMap {
             randTypeNum = realTypeNum + 1;
             //设置地形地块的大小
             sizeFac = terrainSizeFac;
+            //设置地形地块的数量
+            blockNum = terrainBlockNum;
 
             //设置初始化为-1，默认没有
             gridInit = -1;
@@ -174,9 +183,9 @@ namespace WorldMap {
                     }
                     //生成指定气候的类型
                     GameObject o = Instantiate(climateObject[(int)mapData.spowns[i,j].climateType],
-                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * i, 0, mapGenerate.spawnOffsetZ * j),
+                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0),
                         Quaternion.identity);
-                    o.transform.Rotate(90, 0, 0);
+                    //o.transform.Rotate(90, 0, 0);
                     o.transform.parent = climateParentObject.transform;
 
                     //绑定气候的gameObject
@@ -201,9 +210,9 @@ namespace WorldMap {
                     }
                     //生成指定气候的类型
                     GameObject o = Instantiate(terrainObject[(int)mapData.spowns[i, j].terrainType],
-                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * i, terrainYPos, mapGenerate.spawnOffsetZ * j),
+                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0) + terrainPos,
                         Quaternion.identity);
-                    o.transform.Rotate(90, 0, 0);
+                    //o.transform.Rotate(90, 0, 0);
                     o.transform.parent = terrainParentObject.transform;
 
                     //绑定气候的gameObject
@@ -303,8 +312,8 @@ namespace WorldMap {
                 block(Random.Range(0, mapHeight),
                     Random.Range(0, mapWidth),
                     Random.Range(0, numType) + 1,
-                    sizeFac * mapHeight / sqrtTime,
-                    sizeFac * mapWidth / sqrtTime);
+                    (int)(sizeFac * mapHeight / sqrtTime),
+                    (int)(sizeFac * mapWidth / sqrtTime));
             }
         }
 
