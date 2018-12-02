@@ -123,6 +123,7 @@ namespace WorldMap.Model
         /// </returns>
         public bool Gather()
         {
+            
             return true;
         }
         /// <summary>

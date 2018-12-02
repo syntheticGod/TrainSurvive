@@ -25,6 +25,7 @@ namespace WorldMap
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
         private WorldForMap world;
+        private float lastSize = 0;
         public void Init(Team team)
         {
             ButtonHandler.Instance.AddListeners(this);
@@ -52,6 +53,11 @@ namespace WorldMap
             if (team.Run(ref current))
             {
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
+            }
+            if(!Mathf.Approximately(lastSize, team.Inventory.currSize))
+            {
+                Debug.Log("探险队背包变化：" + team.Inventory.currSize);
+                lastSize = team.Inventory.currSize;
             }
         }
         private bool ActiveTeam(bool active)
