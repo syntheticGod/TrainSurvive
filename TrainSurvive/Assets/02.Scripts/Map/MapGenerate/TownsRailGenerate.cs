@@ -27,9 +27,9 @@ namespace WorldMap {
         public int townsNum = 49;
 
         //城镇图标在一个地块的偏移量
-        public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.03f, 0.0f);
+        public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, 0.03f);
         //铁轨图标在一个地块的偏移量
-        public Vector3 railOffsetVec3 = new Vector3(0.0f, 0.02f, 0.0f);
+        public Vector3 railOffsetVec3 = new Vector3(0.0f, 0.0f, 0.02f);
 
         //设置城镇最近的距离
         public int minDist = 10;
@@ -117,7 +117,7 @@ namespace WorldMap {
                     Vector2Int mapPos = towns[i, j].position;
                     //对城镇图标进行绘画
                     GameObject o = Instantiate(townObject,
-                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * mapPos.x, mapGenerate.spawnOffsetZ * mapPos.y, levelOfTown),
+                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * mapPos.x, mapGenerate.spawnOffsetZ * mapPos.y, 0),
                         townObject.transform.rotation);
                     //将城镇图标放在同一gameObject下
                     o.transform.parent = townParentObject.transform;
@@ -326,7 +326,7 @@ namespace WorldMap {
 
             //对铁轨图标进行绘画
             GameObject o = Instantiate(railObject,
-                mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, mapGenerate.spawnOffsetZ * posz, levelOfRail),
+                mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, mapGenerate.spawnOffsetZ * posz, 0),
                 railObject.transform.rotation);
             //将铁轨图标放在同一gameObject下
             o.transform.parent = railParentObject.transform;

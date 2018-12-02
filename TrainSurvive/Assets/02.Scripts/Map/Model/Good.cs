@@ -19,26 +19,26 @@ namespace WorldMap.Model
         public static Good Random()
         {
             Good good = new Good();
-            good.item = RandomItem((PublicData.ItemType)StaticResource.RandomInt((int)PublicData.ItemType.num));
+            //good.item = RandomItem((PublicData.ItemType)StaticResource.RandomInt((int)PublicData.ItemType.num));
             good.Price = StaticResource.RandomInt(500) + 500;
             return good;
         }
         private static Item RandomItem(PublicData.ItemType itemType)
         {
-            Item item;
-            switch (itemType)
-            {
-                case PublicData.ItemType.weapon:
-                    item = new Weapon(1);
-                    break;
-                case PublicData.ItemType.consumable:
-                    item = new Consumable(1);
-                    break;
-                default:
-                case PublicData.ItemType.material:
-                    item = new Assets._02.Scripts.zhxUIScripts.Material(1);
-                    break;
-            }
+            Item item = new Weapon(1);
+            //switch (itemType)
+            //{
+            //    case PublicData.ItemType.weapon:
+            //        item = new Weapon(1);
+            //        break;
+            //    case PublicData.ItemType.consumable:
+            //        item = new Consumable(1);
+            //        break;
+            //    default:
+            //    case PublicData.ItemType.material:
+            //        item = new Assets._02.Scripts.zhxUIScripts.Material(1);
+            //        break;
+            //}
             return item;
         }
         public bool TryBuyOne()
