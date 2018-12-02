@@ -58,12 +58,14 @@ namespace WorldMap {
 
         //获取城镇生成类
         private TownsRailGenerate townsRailGenerate;
+        //获取气候地形生成类
+        private ClimateTerrainGenerate climateTerrainGenerate;
 
         //判定这是新游戏（生成地图）还是读取地图
-        public bool isCreateMap = true;
+        public bool isCreateMap;
 
         //设置起始状态为迷雾状态还是明亮状态(测试)
-        public static bool isFogState = true;
+        public static bool isFogState = false;
 
         //构建地图
         private void Awake() {
@@ -90,12 +92,14 @@ namespace WorldMap {
         //创建地图
         public void CreateModel() {
             //获取城镇铁轨脚本
-            townsRailGenerate = GameObject.Find("townsRailGenerate").GetComponent<TownsRailGenerate>();
+            townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
+            //获取气候地形生成脚本
+            climateTerrainGenerate = GameObject.Find("ClimateTerrainGenerate").GetComponent<ClimateTerrainGenerate>();
 
             //对地图进行初始化处理
             mapData = Map.GetIntanstance();
             mapData.initMap(mapWidth, mapHeight);
-            
+
             //为每种地形赋予一个图标
             mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
             mapObject[(int)SpawnPoint.TerrainEnum.PLAIN] = plainObject;
@@ -114,25 +118,38 @@ namespace WorldMap {
                 mapParent[i].transform.parent = mapRootObject.transform;
             }
 
-            //判断是不是第一次生成地形
-            if (isCreateMap) {
+            //先读取地图的信息
+            SaveReadMap.ReadMapInfo();
+            //获取是否保存地图
+            isCreateMap = SaveReadMap.isCreateMap;
+
+            if (SaveReadMap.isCreateMap) {
                 //生成特殊地形的算法
                 BuildTerrain();
-            } else {
-                //读取地图的信息
-                SaveReadMap.ReadMapInfo();
             }
 
+            ////判断是不是第一次生成地形
+            //if (isCreateMap) {
+            //    //生成特殊地形的算法
+            //    BuildTerrain();
+            //} else {
+            //    //读取地图的信息
+            //    SaveReadMap.ReadMapInfo();
+            //}
+
             //对地形进行绘画
-            PaintTerrain();
+            //PaintTerrain();
+
+            //生成气候和地形
+            climateTerrainGenerate.StartGenerate();
 
             //生成城镇，并绘画出城镇和铁轨
             townsRailGenerate.StartGenerate();
 
             //如果是第一次生成地图的静态数据，要将其保存
-            if (isCreateMap) {
-                SaveReadMap.SaveStaticMapInfo();
-            }
+            //if (isCreateMap) {
+            //    SaveReadMap.SaveStaticMapInfo();
+            //}
         }
 
         ////生成地形
@@ -186,9 +203,9 @@ namespace WorldMap {
             for (int i = 0; i < mapData.rowNum; i++) {
                 for (int j = 0; j < mapData.colNum; j++) {
                     GameObject o = Instantiate(mapObject[(int)mapData.spowns[i, j].terrainType],
-                        orign + new Vector3(spawnOffsetX * i, 0, spawnOffsetZ * j),
+                        orign + new Vector3(spawnOffsetX * i, spawnOffsetZ * j, 0),
                         Quaternion.identity);
-                    o.transform.Rotate(90, 0, 0);
+                    //o.transform.Rotate(90, 0, 0);
                     o.transform.parent = mapParent[(int)mapData.spowns[i, j].terrainType].transform;
 
                     //绑定地块的gameObject

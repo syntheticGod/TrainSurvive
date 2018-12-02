@@ -79,7 +79,7 @@ namespace WorldMap
         /// <returns></returns>
         public static Vector2 WorldPosToMapPos(Vector3 worldPosition)
         {
-            return Utility.IgnoreY(worldPosition);
+            return Utility.IgnoreZ(worldPosition);
         }
         /// <summary>
         /// 地图平面的2D世界坐标转化为3D世界坐标
@@ -88,7 +88,7 @@ namespace WorldMap
         /// <returns></returns>
         public static Vector3 MapPosToWorldPos(Vector2 mapPosition, int level)
         {
-            return Utility.AcceptY(mapPosition, level);
+            return Utility.AcceptZ(mapPosition, level);
         }
 
         private static System.Random rand = new System.Random();

@@ -53,7 +53,8 @@ public class TechTree : MonoBehaviour {
         new TEST_Tech3(),
         new TEST_Tech4(),
         new TEST_Tech5(),
-        new TEST_Tech6()
+        new TEST_Tech6(),
+        new TEST_Tech7()
     };
     
     /// <summary>
@@ -79,7 +80,7 @@ public class TechTree : MonoBehaviour {
     /// <summary>
     /// 当前研究项
     /// </summary>
-    public static int CurrentWorking {
+    public int CurrentWorking {
         get {
             return _currentWorking;
         }
@@ -93,7 +94,7 @@ public class TechTree : MonoBehaviour {
             _currentWorking = value;
         }
     }
-    private static int _currentWorking = -1;
+    private int _currentWorking = -1;
 
     private Text _title;
     private Text Title {
@@ -138,7 +139,14 @@ public class TechTree : MonoBehaviour {
     }
     
     private void OnEnable() {
+        // 载入存档
+        Techs = World.getInstance().techArray;
+
         for (int i = 0; i < Techs.Length; i++) {
+            if (Techs[i].TechState == Tech.State.WORKING) {
+                CurrentWorking = i;
+            }
+            TechObjects[i].Value = Techs[i].CurrentWorks;
             UpdateColorState(i);
         }
         CurrentSelect = 0;
@@ -219,7 +227,7 @@ public class TechTree : MonoBehaviour {
             CurrentWorking = CurrentSelect;
         }
     }
-
+    
     private IEnumerator ResearchStateChange() {
         while (true) {
             int prevSelect = CurrentSelect;

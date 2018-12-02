@@ -31,6 +31,10 @@ namespace WorldMap
         {
             get { return world.ifOuting; }
         }
+        public void DoGather()
+        {
+            world.ifGather = true;
+        }
         /// <summary>
         /// 在World中随机生成城镇信息
         /// </summary>

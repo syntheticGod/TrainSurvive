@@ -10,7 +10,6 @@ using System;
 using UnityEngine;
 using Assets._02.Scripts.zhxUIScripts;
 
-
 [System.Serializable]
 public class Person{
     /// <summary>
@@ -32,13 +31,16 @@ public class Person{
     /// <summary>
     /// 智力
     /// </summary>
-    public int intellgence=0;
+    public int intelligence = 0;
     /// <summary>
     /// 已训练次数
     /// </summary>
     public int trainCnt=0;
     public bool hasWeapon = false;
     public int weaponId=0;
+    /// <summary>
+    /// 是否外出，即是否在探险队里（探险队不一定处于出动状态）
+    /// </summary>
     public bool ifOuting = false;
     public string name="张三";
     /// <summary>
@@ -51,6 +53,9 @@ public class Person{
     /// 小数属性保留的位数
     /// </summary>
     private const int numsLeft=3;
+
+    [NonSerialized]
+    private int lastWeaponId = -1;
     private Person()
     {
         //保留以后用
@@ -82,7 +87,7 @@ public class Person{
     }
     public double getApMax()
     {
-        double apMax = 100 * (1 + 0.05 * intellgence);
+        double apMax = 100 * (1 + 0.05 * intelligence);
         return Math.Round(apMax, numsLeft);
     }
     public double getHpRec()
@@ -91,10 +96,11 @@ public class Person{
     }
     public double getApRec()
     {
-        double apRec = 5 * (1 + 0.05 * intellgence);
+        double apRec = 5 * (1 + 0.05 * intelligence);
         if (hasWeapon)
         {
-            //apRec=apRec*getweaponaprec
+            Weapon weapon = (Weapon)PublicMethod.GenerateItem(weaponId, 1)[0];
+            apRec = apRec * weapon.facArec;
         }
         return Math.Round(apRec, numsLeft);
     }
@@ -165,6 +171,7 @@ public class Person{
     }
     public void equipWeapon(Weapon weapon)
     {
-        //为记录额外属性加成的属性赋值。
+        weaponId = weapon.id;
+        hasWeapon = true;
     }
 }

@@ -6,74 +6,58 @@ using WorldMap.Model;
 using Assets._02.Scripts.zhxUIScripts;
 
 public class Gather {
-    private static int berryId = 1;
-    private static int wheatId = 11;
-    private static int breadId = 12;
-    private static int rawMeatId = 13;
-    private static int meatId = 14;
-    private static int coalId = 21;
-    private static int charcoalId = 22;//木炭
-    private static int woodId = 23;
-    private static int copperOre = 31;
-    private static int copperIngot = 32;
-    private static int ironOre = 33;
-    private static int ironIngot = 34;
-
-
+    private static int berryId = 201;
+    private static int wheatId = 211;
+    private static int breadId = 212;
+    private static int rawMeatId = 213;
+    private static int meatId =214;
+    private static int coalId = 221;
+    private static int charcoalId = 222;//木炭
+    private static int woodId = 223;
+    private static int copperOre = 231;
+    private static int copperIngot = 232;
+    private static int ironOre = 233;
+    private static int ironIngot = 234;
+    private Dictionary<int, int> possibilityMap = new Dictionary<int, int>();
+    private int totalWeight=0;
     /// <summary>
     /// 
     /// </summary>
     /// <param name="terranType"></param>
     /// <returns>物品id</returns>
-    public static int itemsFromGatherAtTerrain(SpawnPoint.TerrainEnum terranType)
+    public int itemsFromGatherAtTerrain(SpawnPoint.TerrainEnum terranType)
     {
-        int tempRate= Random.Range(0, 100);
         int result = -1;
+        //这里在地形判断物品生成时，今后会需要调用科技树中的内容，来控制一些物品概率的push
         switch (terranType)
         {
             case SpawnPoint.TerrainEnum.PLAIN:
-                if (tempRate < 60)
-                    result = wheatId;
-                else if(tempRate<80)
-                    result = rawMeatId;
-                else if (tempRate < 90)
-                    result = woodId;
-                else
-                    result = berryId;
+                pushPossibility(wheatId, 60);
+                pushPossibility(rawMeatId, 20);
+                pushPossibility(woodId, 10);
+                pushPossibility(berryId, 10);               
                 break;
             case SpawnPoint.TerrainEnum.HILL:
-                if (tempRate < 40)
-                    result = wheatId;
-                else if (tempRate < 60)
-                    result = woodId;
-                else if (tempRate < 80)
-                    result = berryId;
-                else if (tempRate < 95)
-                    result = copperOre;
-                else
-                    result = ironOre;
+                pushPossibility(wheatId, 40);
+                pushPossibility(woodId, 20);
+                pushPossibility(berryId, 20);
+                pushPossibility(copperOre, 15);
+                pushPossibility(ironOre, 5);
                 break;
             case SpawnPoint.TerrainEnum.FOREST:
-                if (tempRate < 45)
-                    result = woodId;
-                else if (tempRate < 70)
-                    result = berryId;
-                else if (tempRate < 90)
-                    result = rawMeatId;
-                else
-                    result = coalId;
+                pushPossibility(woodId, 45);
+                pushPossibility(berryId, 25);
+                pushPossibility(rawMeatId, 20);
+                pushPossibility(coalId, 10);
                 break;
             case SpawnPoint.TerrainEnum.MOUNTAIN:
-                if (tempRate < 45)
-                    result = copperOre;
-                else if (tempRate < 60)
-                    result = ironOre;
-                else if (tempRate < 80)
-                    result = coalId;
-                else 
-                    result = rawMeatId;
+                pushPossibility(copperOre, 45);
+                pushPossibility(ironOre, 15);
+                pushPossibility(coalId, 20);
+                pushPossibility(rawMeatId, 20);
                 break;
         }
+        result=calItem();
         return result; 
     }
 
@@ -92,7 +76,7 @@ public class Gather {
             case SpawnPoint.ClimateEnum.TUNDRA:
                 climateGatherRate = 0.8;
                 break;
-            case SpawnPoint.ClimateEnum.NONE:
+            case SpawnPoint.ClimateEnum.TEMPERATE:
                 climateGatherRate = 1;
                 break;
             case SpawnPoint.ClimateEnum.TROPIC:
@@ -118,7 +102,7 @@ public class Gather {
                 terranGatherRate = 0.7;
                 break;
         }
-        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut);
+        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut)*(1+World.getInstance().getTotalProperty(true)*0.01);
         double randomResult = Random.Range(Mathf.Floor((float)gatherRate), Mathf.Ceil((float)gatherRate));
         int itemNums = 0;
         if (randomResult < gatherRate)
@@ -126,12 +110,41 @@ public class Gather {
         else
             itemNums = (int)Mathf.Ceil((float)gatherRate);
         Team team = Team.Instance;
-        int itemId = itemsFromGatherAtTerrain(teamPlace.terrainType);
-        team.Inventory.PushItem(PublicMethod.GenerateItem(itemId, itemNums)[0]);
+        Gather g = new Gather();
+        int itemId = g.itemsFromGatherAtTerrain(teamPlace.terrainType);
+        Item[] items= PublicMethod.GenerateItem(itemId, itemNums);
+        for(int i=0;i< items.Length; i++)
+            team.Inventory.PushItem(items[i]);
+      
     }
-    /*
-    public void pushPossibility(int )
+    
+
+    private void pushPossibility(int itemId,int weight)
     {
-    以后可考虑使用权值式添加几率
-    }*/
+        possibilityMap.Add(itemId, weight);
+        totalWeight += weight;
+    }
+    /// <summary>
+    /// 返回物品类型id
+    /// </summary>
+    /// <returns></returns>
+    private int calItem()
+    {
+        int resultWeight=Random.Range(0,totalWeight);
+        int tempWeight = 0;
+        int resultItemId = -1;
+        foreach (KeyValuePair<int, int> pair in possibilityMap)
+        {
+            if (tempWeight > resultWeight)
+                break;
+            else
+            {
+                resultItemId = pair.Key;
+                tempWeight += pair.Value;
+            }
+        }
+        possibilityMap.Clear();
+        totalWeight = 0;
+        return resultItemId;
+    }
 }

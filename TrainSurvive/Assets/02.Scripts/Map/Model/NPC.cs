@@ -21,7 +21,7 @@ namespace WorldMap.Model
             PersonInfo.strength = StaticResource.RandomInt(10) + 1;
             PersonInfo.agile = StaticResource.RandomInt(10) + 1;
             PersonInfo.technique = StaticResource.RandomInt(10) + 1;
-            PersonInfo.intellgence = StaticResource.RandomInt(10) + 1;
+            PersonInfo.intelligence = StaticResource.RandomInt(10) + 1;
         }
         public static NPC Random()
         {
@@ -36,7 +36,7 @@ namespace WorldMap.Model
                     " 体力：" + PersonInfo.vitality + 
                     " 敏捷：" + PersonInfo.agile + 
                     "\n技巧：" + PersonInfo.technique + 
-                    " 智力：" + PersonInfo.intellgence;
+                    " 智力：" + PersonInfo.intelligence;
             }
         }
     }

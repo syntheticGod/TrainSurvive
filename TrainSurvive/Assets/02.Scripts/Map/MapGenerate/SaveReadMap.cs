@@ -14,14 +14,28 @@ namespace WorldMap {
     public class SaveReadMap : MonoBehaviour {
 
         //保存地图数据的文件
-        private const string MAP_STATIC_FILE_NAME = "MAP_STATIC_INFO.txt";
+        //private const string MAP_STATIC_FILE_NAME = "MAP_STATIC_INFO.txt";
         //保存地图动态数据的文件
-        private const string MAP_DYNAMIC_FILE_NAME = "MAP_DYNAMIC_INFO.txt";
+        //private const string MAP_DYNAMIC_FILE_NAME = "MAP_DYNAMIC_INFO.txt";
+
+        //当前是否要保存静态资源
+        public static bool isCreateMap = true;
 
         //保存地图信息的委托函数
         public delegate void SaveMapDelegate(StreamWriter sw);
         //读取地图信息的委托函数
         public delegate void ReadMapDelegate(String mapData);
+
+        //静态方法保存地图信息
+        public static void SaveMapInfo() {
+            //如果当前第一次保存地图
+            if (isCreateMap == true) {
+                //保存地图静态数据
+                SaveStaticMapInfo();
+            }
+            //保存地图动态数据
+            SaveDynamicMapInfo();
+        }
 
         /** 保存地图的静态信息
          * 地图的地形信息
@@ -32,7 +46,8 @@ namespace WorldMap {
          */
         public static void SaveStaticMapInfo() {
             //保存地图的静态信息
-            SaveMapInfo(MAP_STATIC_FILE_NAME, new SaveMapDelegate(SaveStaticMap));
+            //SaveMapInfo(MAP_STATIC_FILE_NAME, new SaveMapDelegate(SaveStaticMap));
+            SaveMapInfo(PathManager.getInstance().getStaticMapPath(), new SaveMapDelegate(SaveStaticMap));
         }
 
         /**地图的动态信息
@@ -40,16 +55,21 @@ namespace WorldMap {
          */
         public static void SaveDynamicMapInfo() {
             //保存地图的动态信息
-            SaveMapInfo(MAP_DYNAMIC_FILE_NAME, new SaveMapDelegate(SaveDynamicMap));
-        } 
+            //SaveMapInfo(MAP_DYNAMIC_FILE_NAME, new SaveMapDelegate(SaveDynamicMap));
+            SaveMapInfo(PathManager.getInstance().getDynamicMapPath(), new SaveMapDelegate(SaveDynamicMap));
+        }
 
         /** 读取地图的静态和动态信息
          */
         public static void ReadMapInfo() {
-            //保存地图的静态信息
-            ReadMapInfo(MAP_STATIC_FILE_NAME, new ReadMapDelegate(ReadStaticMap));
             //保存地图的动态信息
-            ReadMapInfo(MAP_DYNAMIC_FILE_NAME, new ReadMapDelegate(ReadDynamicMap));
+            //先读动态的数据，获取要不要读取动态数据
+            //ReadMapInfo(MAP_DYNAMIC_FILE_NAME, new ReadMapDelegate(ReadDynamicMap));
+            ReadMapInfo(PathManager.getInstance().getDynamicMapPath(), new ReadMapDelegate(ReadDynamicMap));
+
+            //保存地图的静态信息
+            //ReadMapInfo(MAP_STATIC_FILE_NAME, new ReadMapDelegate(ReadStaticMap));
+            ReadMapInfo(PathManager.getInstance().getStaticMapPath(), new ReadMapDelegate(ReadStaticMap));
         }
 
         /// <summary>
@@ -62,7 +82,7 @@ namespace WorldMap {
         private static void SaveMapInfo(string pathName, SaveMapDelegate saveMap) {
             //文件流信息
             StreamWriter sw;
-            FileInfo t = new FileInfo(Application.persistentDataPath + "//" + pathName);
+            FileInfo t = new FileInfo(pathName);
             if (!t.Exists) {
                 //如果此文件不存在则创建
                 sw = t.CreateText();
@@ -91,6 +111,15 @@ namespace WorldMap {
 
             //先写大地图的宽高
             sw.WriteLine(map.rowNum + "," + map.colNum);
+
+            //写入普通气候的数据
+            for (int i = 0; i < map.rowNum; i++) {
+                string row = ((int)map.spowns[i, 0].terrainType).ToString();
+                for (int j = 1; j < map.colNum; j++) {
+                    row += "," + (int)map.spowns[i, j].climateType;
+                }
+                sw.WriteLine(row);
+            }
 
             //写入普通地形的数据
             for (int i = 0; i < map.rowNum; i++) {
@@ -143,20 +172,27 @@ namespace WorldMap {
             //使用流的形式读取
             StreamReader sr = null;
             try {
-                sr = File.OpenText(Application.persistentDataPath + "//" + pathName);
+                //如果当前不存在静态文件，设置当前生成地图
+                if (File.Exists(pathName) == false) {
+                    isCreateMap = true;
+                } else {
+                    //当前为读档，读取文件
+                    isCreateMap = false;
+                    sr = File.OpenText(pathName);
+
+                    //读取map的数据
+                    readMap(sr.ReadToEnd());
+
+                    //关闭流
+                    sr.Close();
+                    //销毁流
+                    sr.Dispose();
+                }
             } catch (Exception e) {
                 //路径与名称未找到文件则直接返回空
                 Debug.Log(e.ToString());
                 return;
             }
-
-            //读取map的数据
-            readMap(sr.ReadToEnd());
-
-            //关闭流
-            sr.Close();
-            //销毁流
-            sr.Dispose();
         }
 
         //读取地图的静态数据
@@ -175,6 +211,15 @@ namespace WorldMap {
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
             //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
+
+            //获取气候数据
+            for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
+                // 用“,”将每个字符分割开
+                string[] curLineData = lines[lineIndex++].Split(spliter, option);
+                for (int col = 0; col < map.colNum; col++) {
+                    map.spowns[lineCnt, col].SetClimateEnum((SpawnPoint.ClimateEnum)int.Parse(curLineData[col]));
+                }
+            }
 
             //获取地形数据
             for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
@@ -209,6 +254,7 @@ namespace WorldMap {
         //读取地图的动态数据
         private static void ReadDynamicMap(string mapData) {
             Map map = Map.GetIntanstance();
+            
             // 将空元素删除的选项
             System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
 

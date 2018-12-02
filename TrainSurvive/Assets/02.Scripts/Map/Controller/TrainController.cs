@@ -17,7 +17,7 @@ namespace WorldMap
 {
     public class TrainController : MonoBehaviour, OnClickListener, DialogCallBack
     {
-        private const int levelOfTrain = 1;
+        private const int levelOfTrain = -1;
 
         //私有信息
         private StaticResource staticResource;
@@ -87,7 +87,7 @@ namespace WorldMap
                 if (map.isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
                 {
                     if (!train.StartRun(clickedPosition))
-                    {
+                    {   
                         Debug.Log("列车行动失败");
                         return;
                     }

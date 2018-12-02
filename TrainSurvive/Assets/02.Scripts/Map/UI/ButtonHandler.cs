@@ -47,6 +47,7 @@ namespace WorldMap
         
         TEAM_NONE,//小队模式显示的按键
         TEAM_RETRUN,//小队回车
+        TEAM_GATHER,//小队回车
         TEAM_NUM,
 
         TRAIN_NONE,//列车模式显示的按钮
@@ -64,6 +65,7 @@ namespace WorldMap
 
         TAVERN_NONE,//酒馆界面
         TAVERN_RECRUIT,//招募NPC
+        TAVERN_CANCEL,//招募NPC
         TAVERN_NUM,
 
         TEAM_SELECT_DIALOG_NONE,//探险队选择框

@@ -10,7 +10,7 @@
  * 创建时间：2018/10/31 18:59:54
  * 版本：v0.1
  */
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +21,7 @@ using UnityEngine;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
+    [Serializable]
     public class Material : Item
     {
         //  重写属性内层----------------------
@@ -30,6 +31,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private PublicData.Rarity _rarity;
         private float _size;
         private string _description;
+        [NonSerialized]
         private Sprite _sprite;
         private int _max_pile_num;
         private int _cur_pile_num;

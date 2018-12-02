@@ -20,6 +20,8 @@ namespace WorldMap
         private const int ECHO_CODE_TRAIN = 1;
         private const int ECHO_CODE_TEAM = 2;
         private TavernController tavernController;
+        private ShopController shopController;
+        private SchoolController schoolController;
         public TownController()
         {
             Debug.Log("TownController Construct");
@@ -34,8 +36,13 @@ namespace WorldMap
         {
             Debug.Log("TownController Awake");
             townInfoText = transform.Find("TownInfo").GetComponentInChildren<Text>();
-            tavernController = GameObject.Find("/Canvas").transform.Find("TavernViewer").GetComponent<TavernController>();
+            Transform canvas = GameObject.Find("/Canvas").transform;
+            tavernController = canvas.Find("TavernViewer").GetComponent<TavernController>();
             tavernController.Init();
+            shopController = canvas.Find("ShopViewer").GetComponent<ShopController>();
+            shopController.Init();
+            schoolController = canvas.Find("SchoolViewer").GetComponent<SchoolController>();
+            
             Debug.Assert(townInfoText != null);
             ButtonHandler.Instance.AddListeners(this);
             train.Attach(obs: this, echo: ECHO_CODE_TRAIN);
@@ -69,7 +76,7 @@ namespace WorldMap
                 return;
             }
             gameObject.SetActive(true);
-            Debug.Log("Town Show");
+            Debug.Log("城镇：" + town.Info);
             currentTown = town;
             townInfoText.text = town.Name;
         }
@@ -142,9 +149,11 @@ namespace WorldMap
                     break;
                 case BUTTON_ID.TOWN_SCHOOL:
                     Debug.Log("学校");
+                    schoolController.Show();
                     break;
                 case BUTTON_ID.TOWN_SHOP:
                     Debug.Log("商店");
+                    shopController.Show(currentTown);
                     break;
             }
         }

@@ -23,11 +23,13 @@ namespace WorldMap.UI
         private World world;
 
         private InputField foodEditUI;
-        private ListLayoutGroup personsSelectedUI;
-        private ListLayoutGroup personsForSelectUI;
+        private ListViewController herosChoosedLV;
+        private ListViewController herosGetReadyLV;
         private int foodInTrain;
         private int foodSelected = 1000;
         private const int deltaFood = 100;
+        private List<Person> herosChoosed = new List<Person>();
+        private List<Person> herosGetReady;
         public DialogCallBack CallBack { set; get; }
         public void Init()
         {
@@ -36,22 +38,51 @@ namespace WorldMap.UI
         }
         void Awake()
         {
-            personsSelectedUI = transform.Find("SelectedScroll").GetComponentInChildren<ListLayoutGroup>();
-            Debug.Assert(personsSelectedUI != null);
-            personsForSelectUI = transform.Find("ReadyForSelectScroll").GetComponentInChildren<ListLayoutGroup>();
-            Debug.Assert(personsForSelectUI != null);
-            foodEditUI = transform.Find("OperationUI").GetComponentInChildren<InputField>();
+            Transform topLayout = transform.Find("TopLayout");
+            foodEditUI = topLayout.Find("OperationUI").GetComponentInChildren<InputField>();
             Debug.Assert(foodEditUI != null);
+            herosChoosedLV = topLayout.Find("HerosSelected").GetComponent<ListViewController>();
+            Debug.Assert(herosChoosedLV != null);
+            herosGetReadyLV = transform.Find("MiddleLayout").Find("HerosReadyForSelect").GetComponent<ListViewController>();
+            Debug.Assert(herosGetReadyLV != null);
             foodEditUI.onEndEdit.AddListener(delegate
             {
                 Debug.Assert(int.TryParse(foodEditUI.text, out foodSelected));
                 TryShowFood();
             });
+            herosChoosedLV.onItemClick = delegate (ListViewItem item, int index)
+            {
+                Person person = herosChoosed[index];
+                herosChoosed.RemoveAt(index);
+                herosGetReady.Add(person);
+                herosChoosedLV.RemoveItem(index);
+                herosGetReadyLV.AppendItem();
+            };
+            herosGetReadyLV.onItemClick = delegate (ListViewItem item, int index)
+            {
+                Person person = herosGetReady[index];
+                herosGetReady.RemoveAt(index);
+                herosChoosed.Add(person);
+                herosGetReadyLV.RemoveItem(index);
+                herosChoosedLV.AppendItem();
+            };
+            //已选
+            herosChoosedLV.onItemView = delegate (ListViewItem item, int index)
+            {
+                item.GetComponentInChildren<Text>().text = herosChoosed[index].name;
+                item.Tag = herosChoosed[index];
+            };
+            //备选
+            herosGetReadyLV.onItemView = delegate (ListViewItem item, int index)
+            {
+                item.GetComponentInChildren<Text>().text = herosGetReady[index].name;
+                item.Tag = herosGetReady[index];
+            };
         }
         void Start()
         {
         }
-        
+
         void Update()
         {
 
@@ -62,50 +93,54 @@ namespace WorldMap.UI
             {
                 gameObject.SetActive(true);
             }
-            personsForSelectUI.Init(world.persons, personProfile, this);
-            personsSelectedUI.Init(new List<Person>(), personProfile, this);
+            herosGetReadyLV.RemoveAllItem();
+            herosGetReady = world.persons;
+            for (int i = 0; i < herosGetReady.Count; ++i)
+            {
+                ListViewItem item = herosGetReadyLV.AppendItem();
+            }
             foodInTrain = (int)world.getFoodIn();
             TryShowFood();
         }
-        private void Hide()
+        private void HideDialog()
         {
             if (gameObject.activeInHierarchy)
             {
                 gameObject.SetActive(false);
             }
         }
-        public void OnItemClick(Item item)
+        public void OnItemClick(object tag)
         {
-            if(item.transform.parent == personsForSelectUI.transform)
-            {
-                if(!personsForSelectUI.Detach(item))
-                {
-                    Debug.LogError("备选框中不存在Item:"+item.Person.name);
-                    return;
-                }
-                personsSelectedUI.Append(item);
-            }
-            else if(item.transform.parent == personsSelectedUI.transform)
-            {
-                if (!personsSelectedUI.Detach(item))
-                {
-                    Debug.LogError("已选框中不存在Item:" + item.Person.name);
-                    return;
-                }
-                personsForSelectUI.Append(item);
-            }
-            else
-            {
-                Debug.LogError("找不到Item的父类");
-            }
+            //if(item.transform.parent == personsForSelectUI.transform)
+            //{
+            //    if(!personsForSelectUI.Detach(item))
+            //    {
+            //        Debug.LogError("备选框中不存在Item:"+item.Person.name);
+            //        return;
+            //    }
+            //    personsSelectedUI.Append(item);
+            //}
+            //else if(item.transform.parent == personsSelectedUI.transform)
+            //{
+            //    if (!personsSelectedUI.Detach(item))
+            //    {
+            //        Debug.LogError("已选框中不存在Item:" + item.Person.name);
+            //        return;
+            //    }
+            //    personsForSelectUI.Append(item);
+            //}
+            //else
+            //{
+            //    Debug.LogError("找不到Item的父类");
+            //}
         }
         public List<Person> GetSelectedPerson()
         {
-            return personsSelectedUI.GetData();
+            return herosChoosed;
         }
         private int GetSelectedCount()
         {
-            return personsSelectedUI.GetData().Count;
+            return herosChoosed.Count;
         }
         public int GetSelectedFood()
         {
@@ -141,19 +176,19 @@ namespace WorldMap.UI
                         Debug.Log("未选择任何人");
                         break;
                     }
-                    if(foodSelected == 0)
+                    if (foodSelected == 0)
                     {
                         Debug.Log("请选择食物");
                         break;
                     }
                     if (CallBack != null)
                         CallBack.OK(this);
-                    Hide();
+                    HideDialog();
                     break;
                 case BUTTON_ID.TEAM_SELECT_FOOD_CANCEL:
                     if (CallBack != null)
                         CallBack.Cancel();
-                    Hide();
+                    HideDialog();
                     break;
             }
         }

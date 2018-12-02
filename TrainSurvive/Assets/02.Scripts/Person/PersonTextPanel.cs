@@ -19,15 +19,12 @@ public class PersonTextPanel : MonoBehaviour {
     public Text ap;
     public Text hpRec;
     public Text apRec;
+    private int indexOfpersonUsed=-1;
     // Use this for initialization
     void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+       
+    }
+
 
     public void updatePanel(int personIndex)
     {
@@ -37,10 +34,20 @@ public class PersonTextPanel : MonoBehaviour {
         str.text = "力量：" + p.strength;
         agl.text = "敏捷：" + p.agile;
         tec.text = "技巧：" + p.technique;
-        intl.text = "智力：" + p.intellgence;
+        intl.text = "智力：" + p.intelligence;
         hp.text = "hp：" + p.getApMax();
         ap.text = "ap：" + p.getApMax();
         hpRec.text = "hp恢复：" + p.getHpRec();
         apRec.text = "ap恢复：" + p.getApRec();
+        indexOfpersonUsed = personIndex;
+    }
+
+    /// <summary>
+    /// 返回-1代表当前没有任何人物被选中
+    /// </summary>
+    /// <returns></returns>
+    public int getIndexOfpersonUsed()
+    {
+        return indexOfpersonUsed;
     }
 }

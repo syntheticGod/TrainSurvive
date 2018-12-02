@@ -15,7 +15,7 @@
  * 
  */
 
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,10 +26,14 @@ using UnityEngine;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
+    [Serializable]
     public class Weapon : Item
     {
+        [NonSerialized]
         private PublicData.VoidCallback onEquip;                   //获得物品时执行的回调函数
+        [NonSerialized]
         private PublicData.VoidCallback onUnfix;                //丢弃物品时执行的回调函数
+        [NonSerialized]
         private PublicData.VoidCallback weaponEffect;               //武器被动技能的回调函数（测试时先不使用）
         //  重写属性内层--------------------
         private int _id;
@@ -37,6 +41,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private PublicData.Rarity _rarity;
         private PublicData.ItemType _item_type;
         private float _size;
+        [NonSerialized]
         private Sprite _sprite;
         private string _description;
         private int _max_pile_num;
@@ -48,6 +53,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         private float _fac_atk;                                     //最终攻击力：测试时先用固定攻击力代替
         private float _fac_ats;
         private float _fac_spd;
+        private float _fac_hrec;
         private float _fac_arec;
         private float _fac_sdmg;
         private float _mod_crc;
@@ -111,6 +117,13 @@ namespace Assets._02.Scripts.zhxUIScripts
             get
             {
                 return _fac_arec;
+            }
+        }
+        public float facHrec
+        {
+            get
+            {
+                return _fac_hrec;
             }
         }
         public float facSdmg
@@ -205,7 +218,6 @@ namespace Assets._02.Scripts.zhxUIScripts
         {                                                           //武器被动技能可随机选择回调函数。
             string xmlString = Resources.Load("xml/items").ToString();
             string XPath = string.Format("./weapon[@id='{0:D3}']", id);
-            Debug.Log(XPath);
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
             XmlNode root = document.SelectSingleNode("items");
@@ -227,6 +239,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             _mod_crc = float.Parse(aimNode.Attributes["crc"].Value);
             _mod_crd = float.Parse(aimNode.Attributes["crd"].Value);
             _mod_hit = float.Parse(aimNode.Attributes["hit"].Value);
+            _fac_hrec = float.Parse(aimNode.Attributes["hrec"].Value);
             _fac_arec = float.Parse(aimNode.Attributes["arec"].Value);
             _fac_sdmg = float.Parse(aimNode.Attributes["sdmg"].Value);
             _description = aimNode.Attributes["description"].Value;

@@ -14,7 +14,7 @@ namespace WorldMap
 {
     public class TeamController : MonoBehaviour, OnClickListener
     {
-        private int levelOfTeam = 2;
+        private int levelOfTeam = -2;
         
         private Team team;
         private Train train;
@@ -24,12 +24,15 @@ namespace WorldMap
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
+        private WorldForMap world;
+        private float lastSize = 0;
         public void Init(Team team)
         {
             ButtonHandler.Instance.AddListeners(this);
             this.team = team;
             this.trainController = Train.Instance.Controller;
             train = Train.Instance;
+            world = WorldForMap.Instance;
         }
         void Awake()
         {
@@ -50,6 +53,11 @@ namespace WorldMap
             if (team.Run(ref current))
             {
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
+            }
+            if(!Mathf.Approximately(lastSize, team.Inventory.currSize))
+            {
+                Debug.Log("探险队背包变化：" + team.Inventory.currSize);
+                lastSize = team.Inventory.currSize;
             }
         }
         private bool ActiveTeam(bool active)
@@ -108,6 +116,9 @@ namespace WorldMap
                     }
                     ActiveBTs(false);
                     trainController.Active();
+                    break;
+                case BUTTON_ID.TEAM_GATHER:
+                    world.DoGather();
                     break;
             }
         }

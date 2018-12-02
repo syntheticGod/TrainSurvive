@@ -44,7 +44,7 @@ public class TimeController : MonoBehaviour {
         while (true)
         {      
             int today_minutes = ((int)(game_time) * (int)game_time_scale) % 1440;
-            if ((today_minutes == 360) || (today_minutes == 720) || (today_minutes == 1080))
+            if (today_minutes%60==0)
             {
                 world.consumeFoodIn();
                 world.consumeFoodOut();
@@ -58,7 +58,7 @@ public class TimeController : MonoBehaviour {
                 }
                 else
                 {
-                    world.addCoal(-20);
+                    world.addEnergy(-20);
                 }
             }
             else

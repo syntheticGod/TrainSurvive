@@ -26,6 +26,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         public enum Rarity { Poor = 0, Common, Rare, Epic, Legendary };         //劣质、普通、优良、精巧、传奇
         public enum ItemType { Weapon = 0, Material, SpecialItem }               //武器、材料、特殊物品
         public enum WeaponType { Shield = 0, Sword, Spear, Dagger, Machinegun, SniperRifle, Twig, MagicBook};  //盾、剑、匕首、机枪、狙击步枪、魔杖、魔法书、长枪
+
         public delegate void VoidCallback();
         public delegate void ItemDiscard();
         public delegate void ItemGain();
