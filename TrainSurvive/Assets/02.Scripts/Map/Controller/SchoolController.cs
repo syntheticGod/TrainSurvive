@@ -133,7 +133,7 @@ namespace WorldMap
             heroAttribute[1] = heroChoosed.strength;
             heroAttribute[2] = heroChoosed.agile;
             heroAttribute[3] = heroChoosed.technique;
-            heroAttribute[4] = heroChoosed.intellgence;
+            heroAttribute[4] = heroChoosed.intelligence;
             for (int i = 0; i < m_attributeCount; i++)
             {
                 deltaAttri[i] = 0;
@@ -170,7 +170,7 @@ namespace WorldMap
             heroChoosed.strength += (int)deltaAttri[1];
             heroChoosed.agile += (int)deltaAttri[2];
             heroChoosed.technique += (int)deltaAttri[3];
-            heroChoosed.intellgence += (int)deltaAttri[4];
+            heroChoosed.intelligence += (int)deltaAttri[4];
             InitAttribute();
             ShowMoney();
         }

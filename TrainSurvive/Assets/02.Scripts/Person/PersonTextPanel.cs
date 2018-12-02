@@ -35,7 +35,7 @@ public class PersonTextPanel : MonoBehaviour {
         str.text = "力量：" + p.strength;
         agl.text = "敏捷：" + p.agile;
         tec.text = "技巧：" + p.technique;
-        intl.text = "智力：" + p.intellgence;
+        intl.text = "智力：" + p.intelligence;
         hp.text = "hp：" + p.getApMax();
         ap.text = "ap：" + p.getApMax();
         hpRec.text = "hp恢复：" + p.getHpRec();

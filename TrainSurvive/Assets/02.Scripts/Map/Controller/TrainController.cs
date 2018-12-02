@@ -87,7 +87,7 @@ namespace WorldMap
                 if (map.isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
                 {
                     if (!train.StartRun(clickedPosition))
-                    {
+                    {   
                         Debug.Log("列车行动失败");
                         return;
                     }

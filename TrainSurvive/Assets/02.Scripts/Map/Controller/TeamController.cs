@@ -24,12 +24,14 @@ namespace WorldMap
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
+        private WorldForMap world;
         public void Init(Team team)
         {
             ButtonHandler.Instance.AddListeners(this);
             this.team = team;
             this.trainController = Train.Instance.Controller;
             train = Train.Instance;
+            world = WorldForMap.Instance;
         }
         void Awake()
         {
@@ -108,6 +110,9 @@ namespace WorldMap
                     }
                     ActiveBTs(false);
                     trainController.Active();
+                    break;
+                case BUTTON_ID.TEAM_GATHER:
+                    world.DoGather();
                     break;
             }
         }
