@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3387,7 +3387,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14453033d7b239049b4fbe1b295056c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockNum: 100
+  climateBlockNum: 100
+  terrainBlockNum: 100
   climateSizeFac: 1
   terrainSizeFac: 1
   temperateGameObject: {fileID: 1839051554412184, guid: b9c1d13fa94f1214e81fadc9e3e6d405,
@@ -3407,7 +3408,7 @@ MonoBehaviour:
     type: 2}
   forestObject: {fileID: 1612312143669666, guid: ce641ae6faaea0945a9e04b6f36184fd,
     type: 2}
-  terrainYPos: 0.01
+  terrainPos: {x: 0, y: 0, z: -0.01}
 --- !u!1 &648099959
 GameObject:
   m_ObjectHideFlags: 0
@@ -5174,8 +5175,8 @@ MonoBehaviour:
   railTurnObject: {fileID: 1926940916425474, guid: 35802968785354e478a814d7624c638b,
     type: 2}
   townsNum: 49
-  townOffsetVec3: {x: 0, y: 0.02, z: 0}
-  railOffsetVec3: {x: 0, y: 0.01, z: 0}
+  townOffsetVec3: {x: 0, y: 0, z: -0.03}
+  railOffsetVec3: {x: 0, y: 0, z: -0.02}
   minDist: 10
 --- !u!1 &1074988015
 GameObject:
@@ -5489,7 +5490,7 @@ MonoBehaviour:
   mountainSize: 3
   waterSize: 3
   treeSize: 3
-  isCreateMap: 0
+  isCreateMap: 1
   SaveTimeInterval: 3
 --- !u!4 &1108445042
 Transform:
