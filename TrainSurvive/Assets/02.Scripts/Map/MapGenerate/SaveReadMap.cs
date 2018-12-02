@@ -14,9 +14,9 @@ namespace WorldMap {
     public class SaveReadMap : MonoBehaviour {
 
         //保存地图数据的文件
-        private const string MAP_STATIC_FILE_NAME = "MAP_STATIC_INFO.txt";
+        //private const string MAP_STATIC_FILE_NAME = "MAP_STATIC_INFO.txt";
         //保存地图动态数据的文件
-        private const string MAP_DYNAMIC_FILE_NAME = "MAP_DYNAMIC_INFO.txt";
+        //private const string MAP_DYNAMIC_FILE_NAME = "MAP_DYNAMIC_INFO.txt";
 
         //保存地图信息的委托函数
         public delegate void SaveMapDelegate(StreamWriter sw);
@@ -32,7 +32,8 @@ namespace WorldMap {
          */
         public static void SaveStaticMapInfo() {
             //保存地图的静态信息
-            SaveMapInfo(MAP_STATIC_FILE_NAME, new SaveMapDelegate(SaveStaticMap));
+            //SaveMapInfo(MAP_STATIC_FILE_NAME, new SaveMapDelegate(SaveStaticMap));
+            SaveMapInfo(PathManager.getInstance().getStaticMapPath(), new SaveMapDelegate(SaveStaticMap));
         }
 
         /**地图的动态信息
@@ -40,16 +41,21 @@ namespace WorldMap {
          */
         public static void SaveDynamicMapInfo() {
             //保存地图的动态信息
-            SaveMapInfo(MAP_DYNAMIC_FILE_NAME, new SaveMapDelegate(SaveDynamicMap));
-        } 
+            //SaveMapInfo(MAP_DYNAMIC_FILE_NAME, new SaveMapDelegate(SaveDynamicMap));
+            SaveMapInfo(PathManager.getInstance().getDynamicMapPath(), new SaveMapDelegate(SaveDynamicMap));
+        }
 
         /** 读取地图的静态和动态信息
          */
         public static void ReadMapInfo() {
-            //保存地图的静态信息
-            ReadMapInfo(MAP_STATIC_FILE_NAME, new ReadMapDelegate(ReadStaticMap));
             //保存地图的动态信息
-            ReadMapInfo(MAP_DYNAMIC_FILE_NAME, new ReadMapDelegate(ReadDynamicMap));
+            //先读动态的数据，获取要不要读取动态数据
+            //ReadMapInfo(MAP_DYNAMIC_FILE_NAME, new ReadMapDelegate(ReadDynamicMap));
+            ReadMapInfo(PathManager.getInstance().getDynamicMapPath(), new ReadMapDelegate(ReadDynamicMap));
+
+            //保存地图的静态信息
+            //ReadMapInfo(MAP_STATIC_FILE_NAME, new ReadMapDelegate(ReadStaticMap));
+            ReadMapInfo(PathManager.getInstance().getStaticMapPath(), new ReadMapDelegate(ReadStaticMap));
         }
 
         /// <summary>
@@ -62,7 +68,7 @@ namespace WorldMap {
         private static void SaveMapInfo(string pathName, SaveMapDelegate saveMap) {
             //文件流信息
             StreamWriter sw;
-            FileInfo t = new FileInfo(Application.persistentDataPath + "//" + pathName);
+            FileInfo t = new FileInfo(pathName);
             if (!t.Exists) {
                 //如果此文件不存在则创建
                 sw = t.CreateText();
@@ -152,7 +158,7 @@ namespace WorldMap {
             //使用流的形式读取
             StreamReader sr = null;
             try {
-                sr = File.OpenText(Application.persistentDataPath + "//" + pathName);
+                sr = File.OpenText(pathName);
             } catch (Exception e) {
                 //路径与名称未找到文件则直接返回空
                 Debug.Log(e.ToString());

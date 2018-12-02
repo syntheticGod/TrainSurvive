@@ -210,11 +210,11 @@ namespace WorldMap {
                         if (from.y < to.y) {
                             railTurnAngle = 180;
                         } else {
-                            railTurnAngle = 90;
+                            railTurnAngle = 270;
                         }
                     } else {
                         if (from.y < to.y) {
-                            railTurnAngle = 270;
+                            railTurnAngle = 90;
                         } else {
                             railTurnAngle = 0;
                         }
@@ -278,7 +278,7 @@ namespace WorldMap {
                 if (curRailIndex < xRailNum) {
                     PaintSingleRail(posx, posz, true, new Vector3());
                 } else {
-                    PaintSingleRail(posx, posz, true, new Vector3(0, 90, 0));
+                    PaintSingleRail(posx, posz, true, new Vector3(0, 0, 90));
                 }
                 //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
             }
@@ -291,7 +291,7 @@ namespace WorldMap {
                 //设置铁轨属性
                 SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
-                PaintSingleRail(posx, posz, false, new Vector3(0, railTurnAngle, 0));
+                PaintSingleRail(posx, posz, false, new Vector3(0, 0, railTurnAngle));
             }
         }
 
