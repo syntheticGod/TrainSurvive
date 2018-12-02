@@ -26,6 +26,10 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     {
         if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
             return;
+        if (isEquipmentGrid)
+        {   //需要通知对应人物类：武器改变了，需要更新，需要有个地方能知道现在选择的是哪个人物
+
+        }
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
         

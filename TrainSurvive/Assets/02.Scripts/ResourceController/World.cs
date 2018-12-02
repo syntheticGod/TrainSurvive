@@ -84,7 +84,10 @@ public class World {
     public int coalMax = 1000;
     public int woodMax = 1000;
     public int metalMax = 1000;
-   
+
+    public List<int> itemIDs;
+    public List<int> itemNums;
+
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt=1;

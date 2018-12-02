@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114685869019359096}
   - component: {fileID: 114939895062311574}
   m_Layer: 5
-  m_Name: UnitInventory 1
+  m_Name: WeaponGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEquipmentGrid: 0
+  isEquipmentGrid: 1
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &114939895062311574
 MonoBehaviour:

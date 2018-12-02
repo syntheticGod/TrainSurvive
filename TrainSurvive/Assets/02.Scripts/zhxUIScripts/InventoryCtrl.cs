@@ -17,6 +17,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     public GameObject itemGrid;
     public List<GameObject> itemGridInst;
     public Text sizeShow;
+    
 
     private void Awake()
     { 

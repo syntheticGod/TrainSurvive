@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Assets._02.Scripts.zhxUIScripts;
+
 
 [System.Serializable]
 public class Person{
@@ -160,5 +162,9 @@ public class Person{
         }
         num = num * (1 + 0.03 * technique);
         return Math.Round(num, numsLeft);
+    }
+    public void equipWeapon(Weapon weapon)
+    {
+        //为记录额外属性加成的属性赋值。
     }
 }
