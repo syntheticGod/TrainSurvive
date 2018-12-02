@@ -9,10 +9,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Assets._02.Scripts.zhxUIScripts;
+using System;
 
 public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     private GameObject grid;        //包含的物品格实例
     private ItemGridCtrl gridCtrl;
+    public Action<Item> OnItemIn;
     public bool isEquipmentGrid = false;
     public PublicData.Charge ChargeIn;  //需要玩家自己绑定准入函数
     public GameObject Prefab;
@@ -24,7 +26,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
-        if (!ChargeIn(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item))
+        if (eventData.pointerDrag.GetComponent<ItemGridCtrl>().GetController() == null || !(ChargeIn?.Invoke(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item)??false))
             return;
         grid = eventData.pointerDrag;
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
@@ -36,6 +38,8 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         grid.GetComponent<ItemGridCtrl>().BindContainer(gameObject);
         grid.transform.SetParent(gameObject.transform);
         //grid.GetComponent<RectTransform>().position = Vector2.zero;
+
+        OnItemIn?.Invoke(gridCtrl.item);
     }
 
     public void Clear()
@@ -97,13 +101,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     {
         if(grid != null)
         {
-            if(gridCtrl.item.id == id)
-            {
-                return AddNum(num);
-            }
-            else{
-                return false;
-            }
+            return false;
         }
         else
         {
@@ -121,6 +119,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
             //gridCtrl.BindContainer(gameObject);
             //gridCtrl.BindItem(demoItem);
             //grid.transform.SetParent(gameObject.transform);
+            //gridCtrl.item.currPileNum = num;
         }
         return true;
     }

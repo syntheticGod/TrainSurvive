@@ -136,8 +136,19 @@ public class ProgressButton : MonoBehaviour {
         }
     }
 
-    private Color MaskTransactionColor { get; set; }
-
+    private Color? _maskTransactionColor;
+    private Color MaskTransactionColor {
+        get {
+            if (_maskTransactionColor == null) {
+                _maskTransactionColor = Button.colors.normalColor;
+            }
+            return _maskTransactionColor.Value;
+        }
+        set {
+            _maskTransactionColor = value;
+        }
+    }
+    
     public void OnClick() {
         Action?.Invoke();
     }

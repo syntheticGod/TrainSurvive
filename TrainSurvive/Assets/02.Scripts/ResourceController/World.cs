@@ -124,7 +124,6 @@ public class World {
     public int numBuildInst = 101;
 
 
-    public ConstructionManager.BuildInst[] buildInstArray;
     //public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
     //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
 
@@ -135,11 +134,10 @@ public class World {
     public int[] personTeamIDArray;
     
 
-    
-  
+    public List<Structure> buildInstArray = new List<Structure>();
     public bool[] buildUnlock;
-    public bool[] sciUnlock;
-    
+    public Tech[] techArray = TechTree.Techs;
+
     public int[] abiAllin;
     public int[] abiAllOut;
     public int numIn;

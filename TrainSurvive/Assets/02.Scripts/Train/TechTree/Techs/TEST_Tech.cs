@@ -5,8 +5,10 @@
  * 版本：v0.1
  */
 
+using System;
 using UnityEngine;
 
+[Serializable]
 public class TEST_Tech0 : Tech {
     public override int[] Dependencies { get; } = { };
     public override string Name { get; } = "T0";
@@ -16,6 +18,7 @@ public class TEST_Tech0 : Tech {
         Debug.Log(Name);
     }
 }
+[Serializable]
 public class TEST_Tech1 : Tech {
     public override int[] Dependencies { get; } = { 0 };
     public override string Name { get; } = "T1";
@@ -25,6 +28,7 @@ public class TEST_Tech1 : Tech {
         Debug.Log(Name);
     }
 }
+[Serializable]
 public class TEST_Tech2 : Tech {
     public override int[] Dependencies { get; } = { 1 };
     public override string Name { get; } = "T2";
@@ -34,6 +38,7 @@ public class TEST_Tech2 : Tech {
         Debug.Log(Name);
     }
 }
+[Serializable]
 public class TEST_Tech3 : Tech {
     public override int[] Dependencies { get; } = { 0 };
     public override string Name { get; } = "T3";
@@ -43,6 +48,7 @@ public class TEST_Tech3 : Tech {
         Debug.Log(Name);
     }
 }
+[Serializable]
 public class TEST_Tech4 : Tech {
     public override int[] Dependencies { get; } = { 2, 3 };
     public override string Name { get; } = "T4";
@@ -52,6 +58,7 @@ public class TEST_Tech4 : Tech {
         Debug.Log(Name);
     }
 }
+[Serializable]
 public class TEST_Tech5 : Tech {
     public override int[] Dependencies { get; } = { 0 };
     public override string Name { get; } = "T5";
@@ -61,10 +68,21 @@ public class TEST_Tech5 : Tech {
         Debug.Log(Name);
     }
 }
+[Serializable]
 public class TEST_Tech6 : Tech {
     public override int[] Dependencies { get; } = { 1, 5 };
     public override string Name { get; } = "T6";
     public override string Description { get; } = "BLA6";
+    public override float TotalWorks { get; } = 1;
+    public override void OnCompleted() {
+        Debug.Log(Name);
+    }
+}
+[Serializable]
+public class TEST_Tech7 : Tech {
+    public override int[] Dependencies { get; } = { };
+    public override string Name { get; } = "T7";
+    public override string Description { get; } = "BLA7";
     public override float TotalWorks { get; } = 1;
     public override void OnCompleted() {
         Debug.Log(Name);

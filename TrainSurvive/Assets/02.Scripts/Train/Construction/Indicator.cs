@@ -18,7 +18,7 @@ public class Indicator : MonoBehaviour {
     [SerializeField]
     [Tooltip("停止指示Sprite图标")]
     private GameObject stopIndicator;
-
+    
     /// <summary>
     /// 获取或设置进度值，先调用ShowProgress启用进度条。
     /// </summary>
@@ -41,7 +41,8 @@ public class Indicator : MonoBehaviour {
         progressSlider.minValue = min;
         progressSlider.maxValue = max;
         Progress = start;
-        progressSlider.gameObject.SetActive(true);
+        if (!progressSlider.gameObject.activeSelf)
+            progressSlider.gameObject.SetActive(true);
     }
 
     /// <summary>
