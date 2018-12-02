@@ -46,8 +46,6 @@ public class World {
 
         saveDelegateHandler?.Invoke();
 
-        //map.save()待补足
-
         //地图保存
         SaveReadMap.SaveMapInfo();
         
@@ -87,7 +85,7 @@ public class World {
     private uint foodIn = 0;
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 100;
-    public int energy = 0;
+    private uint energy = 0;
     private uint coal = 0;
     private uint wood = 0;
     private uint metal = 0;
@@ -226,6 +224,26 @@ public class World {
     /// </summary>
     /// <param name="num"></param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
+    public int addEnergy(int num)
+    {
+        if ((energy + num) < 0)
+        {
+            energy = 0;
+            return 0;
+        }
+        if ((energy + num) > energyMax)
+        {
+            energy = (uint)energyMax;
+            return 2;
+        }
+        energy = (uint)(energy + num);
+        return 1;
+    }
+    /// <summary>
+    /// num可为负代表减少
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addCoal(int num)
     {
         if ((coal + num) < 0)
@@ -338,8 +356,27 @@ public class World {
     {
         return addFoodOut((int)-(foodConsumed_eachPerson * numOut));
     }
-    
-
+    /// <summary>
+    /// 获取队伍的总属性（基本五属性和）
+    /// </summary>
+    /// <param name="isOuting">true即获取探险队的总属性,false即列车内人员的总属性</param>
+    /// <returns></returns>
+    public int getTotalProperty(bool isOuting)
+    {
+        int totalProperty = 0;
+        foreach(Person p in persons)
+        {
+            if (p.ifOuting == isOuting)
+            {
+                totalProperty += p.intelligence;
+                totalProperty += p.vitality;
+                totalProperty += p.strength;
+                totalProperty += p.technique;
+                totalProperty += p.agile;
+            }              
+        }
+            return totalProperty;
+    }
 
     
     }

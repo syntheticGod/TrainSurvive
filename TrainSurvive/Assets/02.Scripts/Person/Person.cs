@@ -30,13 +30,16 @@ public class Person{
     /// <summary>
     /// 智力
     /// </summary>
-    public int intellgence=0;
+    public int intelligence = 0;
     /// <summary>
     /// 已训练次数
     /// </summary>
     public int trainCnt=0;
     public bool hasWeapon = false;
     public int weaponId=0;
+    /// <summary>
+    /// 是否外出，即是否在探险队里（探险队不一定处于出动状态）
+    /// </summary>
     public bool ifOuting = false;
     public string name="张三";
     /// <summary>
@@ -80,7 +83,7 @@ public class Person{
     }
     public double getApMax()
     {
-        double apMax = 100 * (1 + 0.05 * intellgence);
+        double apMax = 100 * (1 + 0.05 * intelligence);
         return Math.Round(apMax, numsLeft);
     }
     public double getHpRec()
@@ -89,7 +92,7 @@ public class Person{
     }
     public double getApRec()
     {
-        double apRec = 5 * (1 + 0.05 * intellgence);
+        double apRec = 5 * (1 + 0.05 * intelligence);
         if (hasWeapon)
         {
             //apRec=apRec*getweaponaprec

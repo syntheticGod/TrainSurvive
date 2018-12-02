@@ -58,7 +58,7 @@ public class TimeController : MonoBehaviour {
                 }
                 else
                 {
-                    world.addCoal(-20);
+                    world.addEnergy(-20);
                 }
             }
             else
