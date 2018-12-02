@@ -14,13 +14,25 @@ namespace WorldMap.Model
     [Serializable]
     public class Good
     {
+        const int materialIDBase = 200;
+        const int weaponIDBase = 0;
         public int Price { private set; get; }
         public Item item { private set; get; }
-        public static Good Random()
+        public static Good RandomMaterial()
         {
             Good good = new Good();
-            //good.item = RandomItem((PublicData.ItemType)StaticResource.RandomInt((int)PublicData.ItemType.num));
+            int randomID = StaticResource.RandomRange(231, 235);
+            int randomNum = StaticResource.RandomRange(1, 5);
+            good.item = PublicMethod.GenerateItem(randomID, randomNum)[0];
             good.Price = StaticResource.RandomInt(500) + 500;
+            return good;
+        }
+        public static Good RandomWeapon()
+        {
+            Good good = new Good();
+            int randomID = weaponIDBase + StaticResource.RandomInt(1);
+            good.item = PublicMethod.GenerateItem(randomID, 1)[0];
+            good.Price = StaticResource.RandomRange(1000, 2001);
             return good;
         }
         private static Item RandomItem(PublicData.ItemType itemType)

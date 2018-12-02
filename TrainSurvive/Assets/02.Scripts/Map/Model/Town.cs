@@ -17,7 +17,9 @@ namespace WorldMap.Model
         [NonSerialized]
         const int MaxNPCCnt = 3;
         [NonSerialized]
-        const int MaxGoodCnt = 3;
+        const int MaxGoodMaterialCnt = 3;
+        [NonSerialized]
+        const int MaxGoodWeaponCnt = 2;
         private Town()
         {
             
@@ -37,14 +39,18 @@ namespace WorldMap.Model
         {
             Town ret = new Town();
             ret.NPCs = new List<NPC>(MaxNPCCnt);
-            ret.Goods = new List<Good>(MaxGoodCnt);
+            ret.Goods = new List<Good>(MaxGoodWeaponCnt+MaxGoodMaterialCnt);
             for (int i = 0; i < MaxNPCCnt; ++i)
             {
                 ret.NPCs.Add(NPC.Random());
             }
-            for(int i = 0; i < MaxGoodCnt; ++i)
+            for(int i = 0; i < MaxGoodWeaponCnt; ++i)
             {
-                ret.Goods.Add(Good.Random());
+                ret.Goods.Add(Good.RandomWeapon());
+            }
+            for(int i = 0; i < MaxGoodMaterialCnt; ++i)
+            {
+                ret.Goods.Add(Good.RandomMaterial());
             }
             ret.Name = StaticResource.RandomTownName();
             return ret;

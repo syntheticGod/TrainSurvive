@@ -117,13 +117,26 @@ namespace WorldMap
                 return NPC_NAME_WOMAN[rand.Next(NPC_NAME_WOMAN.Length)];
         }
         /// <summary>
-        /// 生成 [0,maxValue-1] 范围内的整数
+        /// 生成 [0,maxValue) 范围内的整数
         /// </summary>
         /// <param name="maxValue"></param>
         /// <returns></returns>
         public static int RandomInt(int maxValue)
         {
             return rand.Next(maxValue);
+        }
+        /// <summary>
+        /// 生成[minValue,maxValue)范围的整数
+        /// 如果minValue等于maxValue，则返回minValue
+        /// maxValue必须大于等于minValue
+        /// 否则异常 ArgumentOutOfRangeException
+        /// </summary>
+        /// <param name="minValue"></param>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
+        public static int RandomRange(int minValue, int maxValue)
+        {
+            return rand.Next(minValue, maxValue);
         }
     }
 }
