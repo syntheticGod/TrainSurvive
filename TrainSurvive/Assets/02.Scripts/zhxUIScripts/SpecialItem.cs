@@ -1,16 +1,10 @@
 /*
  * 描述：
  * 作者：����
- * 创建时间：2018/11/6 23:29:41
+ * 创建时间：2018/11/21 19:48:43
  * 版本：v0.1
  */
-/*
- * 描述：材料类
- * 作者：张皓翔
- * 创建时间：2018/10/31 18:59:54
- * 版本：v0.1
- */
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +12,9 @@ using System.Xml;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 using UnityEngine;
-
 namespace Assets._02.Scripts.zhxUIScripts
 {
-    [Serializable]
-    public class Material : Item
+    class SpecialItem : Item
     {
         //  重写属性内层----------------------
         private int _id;
@@ -31,7 +23,6 @@ namespace Assets._02.Scripts.zhxUIScripts
         private PublicData.Rarity _rarity;
         private float _size;
         private string _description;
-        [NonSerialized]
         private Sprite _sprite;
         private int _max_pile_num;
         private int _cur_pile_num;
@@ -102,20 +93,20 @@ namespace Assets._02.Scripts.zhxUIScripts
             set
             {
                 _cur_pile_num = value;
-                if(belongGrid != null)
+                if (belongGrid != null)
                     belongGrid.Refresh();
             }
         }
 
         //  构造------------------------------
-        public Material()
+        public SpecialItem()
         {
 
         }
-        public Material(int id)
+        public SpecialItem(int id)
         {
             string xmlString = Resources.Load("xml/items").ToString();
-            string XPath = string.Format("./material[@id='{0:D3}']", id);
+            string XPath = string.Format("./special[@id='{0:D3}']", id);
             Debug.Log(XPath);
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
@@ -125,9 +116,9 @@ namespace Assets._02.Scripts.zhxUIScripts
             _id = id;
             belongGrid = null;
             _name = aimNode.Attributes["name"].Value;
-            _item_type = PublicData.ItemType.Material;
+            _item_type = PublicData.ItemType.SpecialItem;
             _rarity = (PublicData.Rarity)int.Parse(aimNode.Attributes["rarity"].Value);
-            _size = float.Parse(aimNode.Attributes["size"].Value);
+            _size = 0;
             _max_pile_num = int.Parse(aimNode.Attributes["pilenum"].Value);
             _cur_pile_num = 1;
             _description = aimNode.Attributes["description"].Value;
