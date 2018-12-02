@@ -18,7 +18,7 @@ public class Gather {
     private static int copperIngot = 232;
     private static int ironOre = 233;
     private static int ironIngot = 234;
-    private Dictionary<int, int> possibilityMap;
+    private Dictionary<int, int> possibilityMap = new Dictionary<int, int>();
     private int totalWeight=0;
     /// <summary>
     /// 
