@@ -82,8 +82,8 @@ public class TechTreeEditor : Editor {
     }
 
     private void BuildTree(TechTree techTree) {
-        RectTransform tree = techTree.transform.Find("TreePanel/Viewport/Content/Tree").transform as RectTransform;
-        RectTransform lines = techTree.transform.Find("TreePanel/Viewport/Content/Lines").transform as RectTransform;
+        RectTransform tree = techTree.TreeUI.Find("TreePanel/Viewport/Content/Tree").transform as RectTransform;
+        RectTransform lines = techTree.TreeUI.Find("TreePanel/Viewport/Content/Lines").transform as RectTransform;
         DestroyChildren(tree);
         DestroyChildren(lines);
 
@@ -100,7 +100,7 @@ public class TechTreeEditor : Editor {
             RectTransform verticalGroup = Instantiate(techTree.VerticalGroup, tree).GetComponent<RectTransform>();
             for (int j = 0; j < layers[i].Count; j++) {
                 GameObject tech = Instantiate(techTree.TechPrefab, verticalGroup);
-                tech.GetComponentInChildren<Text>().text = layers[i][j] + "";
+                tech.GetComponentInChildren<Text>().text = TechTree.Techs[layers[i][j]].Name;
 
                 techTree.TechObjects[layers[i][j]] = tech.GetComponent<ProgressButton>();
                 techTree.TechLines[layers[i][j]] = new TechTree.Line {
@@ -143,7 +143,7 @@ public class TechTreeEditor : Editor {
         }
         
         // Set Content size.
-        RectTransform content = techTree.transform.Find("TreePanel/Viewport/Content").transform as RectTransform;
+        RectTransform content = techTree.TreeUI.Find("TreePanel/Viewport/Content").transform as RectTransform;
         content.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tree.rect.width);
         content.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tree.rect.height);
     }

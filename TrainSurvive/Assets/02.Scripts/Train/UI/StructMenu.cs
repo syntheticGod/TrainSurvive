@@ -49,6 +49,8 @@ public class StructMenu : MonoBehaviour {
         }
     }
 
+    private GameObject[] Structures { get; set; }
+
     private int _activeGroup;
 
     private void Awake() {
@@ -59,10 +61,14 @@ public class StructMenu : MonoBehaviour {
             buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Classes[index];
             VerticalGroups[index] = Instantiate(VerticalGroupPrefab, StructureContent);
             buttonGO.GetComponent<Button>().onClick.AddListener(() => {
+                for (int j = 0; j < ConstructionManager.StructureUnlocks.Length; j++) {
+                    Structures[j].SetActive(ConstructionManager.StructureUnlocks[j]);
+                }
                 ActiveGroup = index;
                 StructuresScrollRect.SetActive(true);
             });
         }
+        Structures = new GameObject[ConstructionManager.Structures.Length];
         for (int i = 0; i < ConstructionManager.Structures.Length; i++) {
             int index = i;
             GameObject buttonGO = Instantiate(ButtonPrefab, VerticalGroups[ConstructionManager.Structures[index].Info.Class].transform);
@@ -72,7 +78,7 @@ public class StructMenu : MonoBehaviour {
                 ConstructionObject.SetActive(false);
             });
             buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Structures[index].Info.Name;
+            Structures[i] = buttonGO;
         }
     }
-
 }

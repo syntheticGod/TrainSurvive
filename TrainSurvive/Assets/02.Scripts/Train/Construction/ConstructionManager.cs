@@ -35,23 +35,32 @@ public class ConstructionManager : MonoBehaviour {
     [Tooltip("注册的设施Prefab")]
     [SerializeField]
     private Facility FacilityPrefab;
-    [Tooltip("注册的设施UI，顺序需与Structures中的一致")]
-    [SerializeField]
-    private FacilityUI[] FacilityUIs;
 
     /// <summary>
     /// 分类名称
     /// </summary>
     public static string[] Classes { get; } = {
-        "基本"
+        "能源", "研究", "家具", "加工", "农业"
     };
 
     /// <summary>
     /// 编译时注册的结构
     /// </summary>
     public static Structure[] Structures { get; } = {
-        new TEST_Facility()
+        new HeatCoreStructure()
     };
+
+    /// <summary>
+    /// 建筑解锁情况，与world同步。
+    /// </summary>
+    public static bool[] StructureUnlocks {
+        get {
+            if (World.getInstance().buildUnlock == null) {
+                World.getInstance().buildUnlock = new bool[Structures.Length];
+            }
+            return World.getInstance().buildUnlock;
+        }
+    }
 
     /// <summary>
     /// 当前是否处于放置模式。
@@ -60,12 +69,8 @@ public class ConstructionManager : MonoBehaviour {
     
     private void Awake() {
         Instance = this;
-    }
-
-    /// <summary>
-    /// 加载对象时，注册事件，同时载入状态。
-    /// </summary>
-    private void OnEnable() {
+        
+        // 载入建筑
         Load();
     }
     
@@ -83,7 +88,6 @@ public class ConstructionManager : MonoBehaviour {
         PlaceState = State.PLACING;
         Facility facility = Instantiate(FacilityPrefab.gameObject).GetComponent<Facility>();
         facility.Structure = Structures[index].Instantiate();
-        facility.UI = FacilityUIs[index];
         StartCoroutine(moveFacility(facility));
     }
 
@@ -102,11 +106,6 @@ public class ConstructionManager : MonoBehaviour {
             Structure structure = World.getInstance().buildInstArray[i];
             Facility facility = Instantiate(FacilityPrefab.gameObject, structure.Position, Quaternion.identity).GetComponent<Facility>();
             facility.Structure = structure;
-            for(int j = 0; j < Structures.Length; j++) {
-                if (Structures[j].GetType() == structure.GetType()) {
-                    facility.UI = FacilityUIs[j];
-                }
-            }
             structure.OnStateChange += OnStructureStateChange;
             facility.gameObject.SetActive(true);
         }

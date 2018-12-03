@@ -30,6 +30,8 @@ public class TechTree : MonoBehaviour {
     public Color LockedColor;
     [Tooltip("已修颜色")]
     public Color CompletedColor;
+    [Tooltip("科技树UI")]
+    public RectTransform TreeUI;
 
     /// <summary>
     /// 记录科技点实例
@@ -44,19 +46,25 @@ public class TechTree : MonoBehaviour {
     public Line[] TechLines;
 
     /// <summary>
-    /// 登记科技列表
+    /// 登记科技列表，与world同步。
     /// </summary>
-    public static Tech[] Techs { get; private set; } = {
-        new TEST_Tech0(),
-        new TEST_Tech1(),
-        new TEST_Tech2(),
-        new TEST_Tech3(),
-        new TEST_Tech4(),
-        new TEST_Tech5(),
-        new TEST_Tech6(),
-        new TEST_Tech7()
+    public static Tech[] Techs {
+        get {
+            if (World.getInstance().techArray == null) {
+                World.getInstance().techArray = _techs;
+            }
+            return World.getInstance().techArray;
+        }
+    }
+    private static Tech[] _techs = {
+        /* 0 */ new TrainBasicTech(),
+        /* 1 */ new TrainExpand0Tech(),
+        /* 2 */ new Science0Tech(),
+        /* 3 */ new Carpentry0Tech(),
+        /* 4 */ new Carpentry1Tech(),
+        /* 5 */ new Carpentry2Tech()
     };
-    
+
     /// <summary>
     /// 当前选中项
     /// </summary>
@@ -100,7 +108,7 @@ public class TechTree : MonoBehaviour {
     private Text Title {
         get {
             if (_title == null) {
-                _title = transform.Find("InfoPanel/OperatePanel/Text").GetComponent<Text>();
+                _title = TreeUI.Find("InfoPanel/OperatePanel/Text").GetComponent<Text>();
             }
             return _title;
         }
@@ -110,7 +118,7 @@ public class TechTree : MonoBehaviour {
     private Text Description {
         get {
             if (_description == null) {
-                _description = transform.Find("InfoPanel/Info/Viewport/Content").GetComponent<Text>();
+                _description = TreeUI.Find("InfoPanel/Info/Viewport/Content").GetComponent<Text>();
             }
             return _description;
         }
@@ -120,7 +128,7 @@ public class TechTree : MonoBehaviour {
     private ProgressButton ResearchButton {
         get {
             if (_researchButton == null) {
-                _researchButton = transform.Find("InfoPanel/OperatePanel/ProgressButton").GetComponent<ProgressButton>();
+                _researchButton = TreeUI.Find("InfoPanel/OperatePanel/ProgressButton").GetComponent<ProgressButton>();
             }
             return _researchButton;
         }
@@ -128,6 +136,12 @@ public class TechTree : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
+
+        // 初始化默认启用科技
+        if (Techs[0].TechState == Tech.State.UNLOCKED)
+            Techs[0].StartWorking();
+
+        // 初始化各种ProgressButton
         for (int i = 0; i < TechObjects.Length; i++) {
             int index = i;
             TechObjects[index].Action = () => {
@@ -139,9 +153,6 @@ public class TechTree : MonoBehaviour {
     }
     
     private void OnEnable() {
-        // 载入存档
-        Techs = World.getInstance().techArray;
-
         for (int i = 0; i < Techs.Length; i++) {
             if (Techs[i].TechState == Tech.State.WORKING) {
                 CurrentWorking = i;
@@ -149,7 +160,7 @@ public class TechTree : MonoBehaviour {
             TechObjects[i].Value = Techs[i].CurrentWorks;
             UpdateColorState(i);
         }
-        CurrentSelect = 0;
+        CurrentSelect = CurrentWorking == -1 ? 0 : CurrentWorking;
         StartCoroutine(ResearchStateChange()); // 打开面板时监听选中科技的状态，及时更新Info Panel里的ProgressButton。
         StartCoroutine(TreeStateChange()); // 打开面板时监听正在工作的科技的状态，即使更新树的ProgressButton。
     }

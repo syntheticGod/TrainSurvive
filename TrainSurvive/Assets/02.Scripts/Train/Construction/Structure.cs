@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public abstract class Structure : ISerializable {
@@ -70,6 +71,14 @@ public abstract class Structure : ISerializable {
         /// 所属类型
         /// </summary>
         public int Class { get; set; }
+        /// <summary>
+        /// 决定了Onstart方法是每次载入都调用还是只有建筑完成时会调用一次
+        /// </summary>
+        public bool IsOnceFunction { get; set; }
+        /// <summary>
+        /// 菜单按钮名称和事件
+        /// </summary>
+        public SortedDictionary<string, Action<Structure>> Actions { get; set; }
     }
 
     public enum State {
@@ -220,7 +229,12 @@ public abstract class Structure : ISerializable {
         Position = (Vector3)info.GetValue("Position", typeof(Vector3));
         BuildCostRatios = (float[])info.GetValue("BuildCostRatios", typeof(float[]));
         CostReturnRatios = (float[])info.GetValue("CostReturnRatios", typeof(float[]));
-        FacilityState = (State)info.GetValue("FacilityState", typeof(State));
+        State state = (State)info.GetValue("FacilityState", typeof(State));
+        if (state != State.WORKING || !Info.IsOnceFunction) {
+            FacilityState = state;
+        } else {
+            _facilityState = state;
+        }
     }
 
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context) {

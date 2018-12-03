@@ -91,7 +91,7 @@ public class World {
     private uint metal = 0;
     public int foodInMax = 1000;
     public int foodOutMax = 1000;
-    public int energyMax = 1000;
+    public int energyMax = 0;
     public int coalMax = 1000;
     public int woodMax = 1000;
     public int metalMax = 1000;
@@ -137,7 +137,7 @@ public class World {
 
     public List<Structure> buildInstArray = new List<Structure>();
     public bool[] buildUnlock;
-    public Tech[] techArray = TechTree.Techs;
+    public Tech[] techArray;
 
     public int[] abiAllin;
     public int[] abiAllOut;

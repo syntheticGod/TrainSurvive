@@ -25,6 +25,8 @@ public class SceneZoomer : MonoBehaviour {
     [SerializeField]
     private float MoveSpeed;
 
+    private bool CanDrag { get; set; }
+
     private void Update() {
         if (!EventSystem.current.IsPointerOverGameObject()) {
             if (Input.mouseScrollDelta != Vector2.zero) {
@@ -37,7 +39,10 @@ public class SceneZoomer : MonoBehaviour {
                 }
                 Camera.main.orthographicSize = value;
             }
-            if (Input.GetMouseButton(0)) {
+            if (Input.GetMouseButtonDown(0)) {
+                CanDrag = true;
+            }
+            if (Input.GetMouseButton(0) && CanDrag) {
                 float h = Input.GetAxis("Mouse X") * MoveSpeed * Time.unscaledDeltaTime;
                 float v = Input.GetAxis("Mouse Y") * MoveSpeed * Time.unscaledDeltaTime;
                 Vector3 newPos = transform.position - new Vector3(h, v, 0);
@@ -46,6 +51,9 @@ public class SceneZoomer : MonoBehaviour {
                 }
                 transform.Translate(-h, 0, 0, Space.World);
             }
+        }
+        if (Input.GetMouseButtonUp(0)) {
+            CanDrag = false;
         }
     }
 }

@@ -4,7 +4,10 @@
  * 创建时间：2018/10/29 22:08:00
  * 版本：v0.1
  */
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(BoxCollider2D))]
@@ -18,10 +21,6 @@ public class Facility : MonoBehaviour {
     /// 建筑实体
     /// </summary>
     public Structure Structure { get; set; }
-    /// <summary>
-    /// UI
-    /// </summary>
-    public FacilityUI UI { get; set; }
 
     private Indicator _indicator;
     private Indicator Indicator {
@@ -122,8 +121,10 @@ public class Facility : MonoBehaviour {
                 contextMenu.PutButton("停止", 0, () => Structure.FacilityState = Structure.State.CANCLE);
                 break;
             case Structure.State.WORKING:
-                contextMenu.PutButton("查看", 0, () => UIManager.Instance?.ShowFaclityUI(UI, Structure));
-                contextMenu.PutButton("拆除", 1, () => Structure.FacilityState = Structure.State.REMOVING);
+                int index = 0;
+                foreach (KeyValuePair<string, Action<Structure>> pair in Structure.Info.Actions) {
+                    contextMenu.PutButton(pair.Key, index++, () => pair.Value(Structure));
+                }
                 break;
             default:
                 break;
