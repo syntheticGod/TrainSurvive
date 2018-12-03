@@ -23,6 +23,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections;
+
 namespace WorldMap.UI
 {
     public class ListViewController : MonoBehaviour
@@ -37,17 +39,20 @@ namespace WorldMap.UI
         public delegate void OnItemView(ListViewItem item, int index);
         public OnItemClick onItemClick { set; get; }
         public OnItemView onItemView { set; get; }
-        
+
         private RectTransform content;
         private RectTransform viewport;
         private List<ListViewItem> items;
         private List<ListViewItem> recycal;
         private ListViewItem lastClickedItem;
+        private System.Type contentComponentType;
+        private GridLayoutGroup gridLayout;
 
         public ScrollType m_scrollType = ScrollType.Horizontal;
         public GameObject m_itemContentPrefab;
         public bool m_selectable = true;
-        public Vector2 cellSize = new Vector2(100.0F, 100.0F);
+        public Vector2 defualtCellSize = new Vector2(100.0F, 100.0F);
+        public float defaultScrollRectSensitivity = 15F;
         /// <summary>
         /// Horizontal：先水平填充，填充满一行后，再填充下一行
         /// Vertical：先垂直填充，填充满一列后，再填充下一列
@@ -71,10 +76,10 @@ namespace WorldMap.UI
             //Viewport
 
             Transform viewportTransform = transform.Find("Viewport");
-            if(viewportTransform == null)
+            if (viewportTransform == null)
             {
                 viewport = new GameObject("Viewport", typeof(Mask), typeof(Image)).GetComponent<RectTransform>();
-                viewport.GetComponent<Image>().color = new Color(0,0,0,0.1F);
+                viewport.GetComponent<Image>().color = new Color(0, 0, 0, 0.1F);
                 SetParent(viewport, scrollRect.GetComponent<RectTransform>());
             }
             else
@@ -84,7 +89,7 @@ namespace WorldMap.UI
             viewPortHeight = viewport.rect.height;
             //Content
             Transform contentTransform = viewport.Find("Content");
-            if(contentTransform == null)
+            if (contentTransform == null)
             {
                 content = new GameObject("Content", typeof(GridLayoutGroup), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
                 content.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.MinSize;
@@ -98,65 +103,68 @@ namespace WorldMap.UI
             //Config ScrollRect
             scrollRect.content = content;
             scrollRect.viewport = viewport;
-            scrollRect.scrollSensitivity = 30;
+            scrollRect.scrollSensitivity = defaultScrollRectSensitivity;
             //Config GridLayoutGroup
-            GridLayoutGroup gridLayout = content.GetComponent<GridLayoutGroup>();
+            gridLayout = content.GetComponent<GridLayoutGroup>();
             gridLayout.startAxis = m_startAxis;
-            gridLayout.constraint = m_startAxis == GridLayoutGroup.Axis.Horizontal ? 
-                GridLayoutGroup.Constraint.FixedColumnCount : 
+            gridLayout.constraint = m_startAxis == GridLayoutGroup.Axis.Horizontal ?
+                GridLayoutGroup.Constraint.FixedColumnCount :
                 GridLayoutGroup.Constraint.FixedRowCount;
-            gridLayout.cellSize = cellSize;
             gridLayout.constraintCount = m_lengthOfLine;
+            scrollRect.vertical = m_scrollType != ScrollType.Horizontal;
+            scrollRect.horizontal = m_scrollType != ScrollType.Vertical;
+            SetCellSize(defualtCellSize);
+            recycal = new List<ListViewItem>();
+            items = new List<ListViewItem>();
+        }
+
+        void Start()
+        { }
+        void Update()
+        { }
+        public void SetContent(System.Type comp)
+        {
+            contentComponentType = comp;
+        }
+        public void SetCellSize(Vector2 cellSize)
+        {
+            gridLayout.cellSize = cellSize;
             if (m_scrollType == ScrollType.Horizontal)
             {
-                scrollRect.vertical = false;
-                scrollRect.horizontal = true;
                 if (m_lengthOfLine <= 0)
                     gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.height / cellSize.y);
             }
             else if (m_scrollType == ScrollType.Vertical)
             {
-                scrollRect.vertical = true;
-                scrollRect.horizontal = false;
                 if (m_lengthOfLine <= 0)
                     gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.width / cellSize.x);
             }
-            else
-            {
-                scrollRect.vertical = true;
-                scrollRect.horizontal = true;
-            }
-
-            recycal = new List<ListViewItem>();
-            items = new List<ListViewItem>();
         }
-        
-        void Start()
-        { }
-        void Update()
-        { }
         private ListViewItem CreateItem()
         {
-            GameObject item;
-            item = new GameObject("Item", typeof(RectTransform));
+            RectTransform rectOfItem = new GameObject("Item", typeof(RectTransform)).GetComponent<RectTransform>();
+            GameObject contentGameObject;
             if (m_itemContentPrefab != null)
             {
-                GameObject contentGameObject = Instantiate(m_itemContentPrefab);
-                contentGameObject.name = "Content";
+                contentGameObject = Instantiate(m_itemContentPrefab);
                 RectTransform rectContent = contentGameObject.GetComponent<RectTransform>();
                 if (rectContent == null)
                     rectContent = contentGameObject.AddComponent<RectTransform>();
-                SetParent(rectContent, item.GetComponent<RectTransform>());
             }
-            ListViewItem listViewItem = item.GetComponent<ListViewItem>();
+            else
+                contentGameObject = new GameObject("Content", typeof(RectTransform));
+            contentGameObject.name = "Content";
+            if (contentComponentType != null)
+                contentGameObject.AddComponent(contentComponentType);
+            SetParent(contentGameObject.GetComponent<RectTransform>(), rectOfItem);
+            ListViewItem listViewItem = rectOfItem.GetComponent<ListViewItem>();
             if (listViewItem == null)
-                listViewItem = item.AddComponent<ListViewItem>();
+                listViewItem = rectOfItem.gameObject.AddComponent<ListViewItem>();
+            SetParent(rectOfItem, content.GetComponent<RectTransform>());
             return listViewItem;
         }
         private void ShowItem(ListViewItem item, int index)
         {
-            RectTransform rectOfItem = item.GetComponent<RectTransform>();
-            SetParent(rectOfItem, content.GetComponent<RectTransform>());
             onItemView?.Invoke(item, index);
         }
         private void RecyleItem(int index)
@@ -187,7 +195,7 @@ namespace WorldMap.UI
             }
             itemView.Controller = this;
             items.Add(itemView);
-            ShowItem(itemView, items.Count-1);
+            ShowItem(itemView, items.Count - 1);
             return itemView;
         }
         public bool RemoveItem(int index)
@@ -201,7 +209,7 @@ namespace WorldMap.UI
         public void RemoveAllItem()
         {
             int CountOfItem = items.Count;
-            for (int i = CountOfItem - 1; i >=0 ; --i)
+            for (int i = CountOfItem - 1; i >= 0; --i)
             {
                 RecyleItem(i);
             }
@@ -235,11 +243,11 @@ namespace WorldMap.UI
             }
             lastClickedItem = item;
         }
-        private void SetParent(RectTransform child,RectTransform parent)
+        private void SetParent(RectTransform child, RectTransform parent)
         {
             child.SetParent(parent);
-            child.anchorMin = new Vector2(0, 0);
-            child.anchorMax = new Vector2(1, 1);
+            child.anchorMin = Vector2.zero;
+            child.anchorMax = Vector2.one;
             //默认左上
             child.pivot = new Vector2(0, 1);
             child.localEulerAngles = Vector3.zero;
@@ -249,7 +257,7 @@ namespace WorldMap.UI
             child.offsetMax = Vector2.zero;
         }
     }
-    public class ListViewItem : Image, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+    public class ListViewItem : Image, IPointerClickHandler
     {
         private static int IncreaseingID = 0;
         public static int GetNewIDUnsafely()
@@ -282,16 +290,7 @@ namespace WorldMap.UI
             Controller = null;
             Tag = null;
         }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            //Debug.Log("条款PointerUp");
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            //Debug.Log("条款PointerDown");
-        }
+        
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log("条款被点击了");

@@ -14,19 +14,32 @@ namespace WorldMap
     public class ShopController : MonoBehaviour
     {
         private ListViewController goodsInShopLV;
-        private ListViewController goodInPackLV;
+        private ListViewController goodsInPackLV;
         private List<Model.Good> goodsInShop;
         private List<Model.Good> goodsInPack;
+        //private InventoryCtrl goodsInShopIC;
+        //private InventoryCtrl goodsInPackIC;
         private WorldForMap world;
         void Awake()
         {
             ListViewController[] ls = GetComponentsInChildren<ListViewController>();
             goodsInShopLV = ls[0];
-            goodInPackLV = ls[1];
+            goodsInShopLV.SetContent(typeof(GoodsItem));
+            goodsInPackLV = ls[1];
+            goodsInPackLV.SetContent(typeof(GoodsItem));
             goodsInShopLV.onItemView = delegate (ListViewItem item, int index)
             {
-                item.GetComponentInChildren<ItemGridCtrl>().BindItem(goodsInShop[index].item);
+                Model.Good data = goodsInShop[index];
+                GoodsItem view = item.GetComponentInChildren<GoodsItem>();
+                view.SetTargetByName("Weapon_img");
+                view.SetNumber(data.item.currPileNum);
+                view.SetPrice(data.Price);
             };
+            goodsInPackLV.onItemView = delegate (ListViewItem item, int index)
+            {
+
+            };
+            goodsInPack = new List<Model.Good>();
         }
         void Start()
         {
@@ -49,15 +62,15 @@ namespace WorldMap
             goodsInShopLV.RemoveAllItem();
             for (int i = 0; i < goodsInShop.Count; ++i)
                 goodsInShopLV.AppendItem();
-            //探险队访问商店
-            if (world.IfTeamOuting)
-            {
-            }
-            //列车访问商店
-            else
-            {
+            ////探险队访问商店
+            //if (world.IfTeamOuting)
+            //{
+            //}
+            ////列车访问商店
+            //else
+            //{
 
-            }
+            //}
         }
         private void Hide()
         {

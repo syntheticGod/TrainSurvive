@@ -177,10 +177,12 @@ namespace WorldMap.Model
                 Debug.LogWarning("探险队增加内部食物不正常");
             }
             //TODO:将身上的物品返回
+            
             world.numOut = 0;
             Debug.Log("探险队：我们（人数："+persons.Count+"）回车了，带回食物：" + remain+"，列车现在有食物："+world.getFoodIn());
             State = STATE.IN_TRAIN;
             persons = null;
+
             return true;
         }
         /// <summary>

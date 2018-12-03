@@ -20,7 +20,8 @@ public class TEST_Facility : Structure {
         BuildCosts = new Cost[]{
             new Cost{ ItemID = 0, Value = 0 }
         },
-        SpritePath = "Sprite/map/building-inn"
+        SpritePath = "Sprite/map/building-inn",
+        Class = 0
     };
 
     public override FixedInfo Info { get; } = _info;

@@ -66,6 +66,10 @@ public abstract class Structure : ISerializable {
                 return ResourceLoader.GetResource<Sprite>(SpritePath);
             }
         }
+        /// <summary>
+        /// 所属类型
+        /// </summary>
+        public int Class { get; set; }
     }
 
     public enum State {

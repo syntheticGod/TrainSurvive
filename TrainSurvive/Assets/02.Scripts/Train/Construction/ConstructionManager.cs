@@ -40,9 +40,16 @@ public class ConstructionManager : MonoBehaviour {
     private FacilityUI[] FacilityUIs;
 
     /// <summary>
+    /// 分类名称
+    /// </summary>
+    public static string[] Classes { get; } = {
+        "基本"
+    };
+
+    /// <summary>
     /// 编译时注册的结构
     /// </summary>
-    public Structure[] Structures { get; } = {
+    public static Structure[] Structures { get; } = {
         new TEST_Facility()
     };
 
