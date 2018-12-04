@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <items>
   <weapon id="000" name="隔壁老王的示范剑" type="1" rarity="4" size="13" range="1" atk="56" ats="1.2" spd="1" crc="0.15" crd="1.5" hit="1" hrec ="1" arec="1.5" sdmg="1" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
+  <weapon id="001" name="破败的铁剑" type="1" rarity="1" size="6" range="1" atk="13" ats="1" spd="1" crc="0" crd="0" hit="1" hrec ="1" arec="0.2" sdmg="1" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
   
   <material id="200" name="隔壁老王遗落的裤头们" rarity="3" size="0.7" pilenum="5" description="传说中的隔壁老王匆忙离去后忘记带走的絮状织物" spritepath="ItemSprite/Material_img" />
   <material id="201" name="浆果" rarity="0" size="0.1" pilenum="20" description="放心吧，它没毒" spritepath="ItemSprite/Material_img" />
