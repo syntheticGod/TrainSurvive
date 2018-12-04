@@ -1,0 +1,32 @@
+/*
+ * 描述：四级研究台
+ * 作者：刘旭涛
+ * 创建时间：2018/12/4 18:25:02
+ * 版本：v0.1
+ */
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using UnityEngine;
+
+public class ResearchBench4Structure : ResearchBench2Structure {
+
+    public ResearchBench4Structure() : base() { }
+    protected ResearchBench4Structure(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+    private static FixedInfo _info = new FixedInfo {
+        Name = "4级研究台",
+        Description = "研究台",
+        WorkAll = 7 * 6,
+        BuildCosts = new Cost[] { },
+        SpritePath = "Sprite/map/building-inn",
+        Class = 1,
+        IsOnceFunction = true,
+        Actions = new ButtonAction[]{
+            new ButtonAction{ Name = "拆除", Action = (structure) => structure.FacilityState = State.REMOVING }
+        }
+    };
+    public override FixedInfo Info { get; } = _info;
+
+    protected override float Ratio { get; } = 1.8f;
+}

@@ -22,5 +22,7 @@ public class TrainBasicTech : Tech {
 
     public override void OnCompleted() {
         ConstructionManager.StructureUnlocks[0] = true;
+        ConstructionManager.StructureUnlocks[1] = true;
+        ConstructionManager.StructureUnlocks[7] = true;
     }
 }

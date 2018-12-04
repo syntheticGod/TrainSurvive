@@ -27,7 +27,7 @@ public class Facility : MonoBehaviour {
         get {
             if (_indicator == null) {
                 _indicator = GetComponentInChildren<Indicator>();
-                _indicator.GetComponent<RectTransform>().localPosition = new Vector3(0, Structure.Info.Sprite.bounds.size.y, 0);
+                _indicator.GetComponent<RectTransform>().localPosition = new Vector3(0, Structure.Info.Sprite.bounds.size.y - Structure.Info.Sprite.pivot.y / Structure.Info.Sprite.pixelsPerUnit, 0);
             }
             return _indicator;
         }
@@ -121,9 +121,10 @@ public class Facility : MonoBehaviour {
                 contextMenu.PutButton("停止", 0, () => Structure.FacilityState = Structure.State.CANCLE);
                 break;
             case Structure.State.WORKING:
-                int index = 0;
-                foreach (KeyValuePair<string, Action<Structure>> pair in Structure.Info.Actions) {
-                    contextMenu.PutButton(pair.Key, index++, () => pair.Value(Structure));
+                Structure.ButtonAction[] actions = Structure.GetActions();
+                for (int i = 0; i < actions.Length; i++) {
+                    int index = i;
+                    contextMenu.PutButton(actions[index].Name, index, () => actions[index].Action(Structure));
                 }
                 break;
             default:

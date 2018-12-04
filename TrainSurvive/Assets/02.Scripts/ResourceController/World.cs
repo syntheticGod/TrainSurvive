@@ -85,7 +85,7 @@ public class World {
     private uint foodIn = 0;
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
-    private uint energy = 0;
+    public uint energy = 0;
     private uint coal = 0;
     private uint wood = 0;
     private uint metal = 0;
@@ -138,6 +138,7 @@ public class World {
     public List<Structure> buildInstArray = new List<Structure>();
     public bool[] buildUnlock;
     public Tech[] techArray;
+    public int techUnlock;
 
     public int[] abiAllin;
     public int[] abiAllOut;

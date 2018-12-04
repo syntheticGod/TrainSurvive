@@ -19,6 +19,6 @@ public class Science0Tech : Tech {
     public override float TotalWorks { get; } = 1 * 6;
 
     public override void OnCompleted() {
-
+        ConstructionManager.StructureUnlocks[8] = true;
     }
 }

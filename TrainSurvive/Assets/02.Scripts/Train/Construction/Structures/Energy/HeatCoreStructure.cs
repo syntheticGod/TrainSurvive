@@ -12,7 +12,7 @@ using UnityEngine;
 
 [Serializable]
 public class HeatCoreStructure : Structure {
-
+    
     public HeatCoreStructure() : base() { }
     protected HeatCoreStructure(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
@@ -24,14 +24,18 @@ public class HeatCoreStructure : Structure {
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = true,
-        Actions = new SortedDictionary<string, Action<Structure>>{
-            {"查看", (structure) => UIManager.Instance?.ShowFaclityUI("HeatCore", structure) },
-            {"拆除", (structure) => structure.FacilityState = State.REMOVING }
+        Actions = new ButtonAction[]{
+            new ButtonAction{Name = "拆除", Action = (structure) => structure.FacilityState = State.REMOVING }
         }
     };
     public override FixedInfo Info { get; } = _info;
 
     protected override void OnStart() {
         World.getInstance().energyMax += 2000;
+    }
+
+    protected override void OnRemoving() {
+        base.OnRemoving();
+        World.getInstance().energyMax -= 2000;
     }
 }

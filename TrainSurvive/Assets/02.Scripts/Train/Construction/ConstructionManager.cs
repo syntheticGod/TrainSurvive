@@ -47,7 +47,18 @@ public class ConstructionManager : MonoBehaviour {
     /// 编译时注册的结构
     /// </summary>
     public static Structure[] Structures { get; } = {
-        new HeatCoreStructure()
+        /* 0 */ new HeatCoreStructure(),
+        /* 1 */ new SteamEngineStructure(),
+        /* 2 */ new GasEngineStructure(),
+        /* 3 */ new BatteryStructure(),
+        /* 4 */ new GeneratorStructure(),
+        /* 5 */ new BigGeneratorStructure(),
+        /* 6 */ new MagicCoreStructure(),
+        /* 7 */ new ResearchBenchStructure(),
+        /* 8 */ new ResearchBench2Structure(),
+        /* 9 */ new ResearchBench3Structure(),
+        /* 10 */ new ResearchBench4Structure(),
+        /* 11 */ new ResearchBench5Structure()
     };
 
     /// <summary>
@@ -117,7 +128,7 @@ public class ConstructionManager : MonoBehaviour {
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
         while (PlaceState == State.PLACING) {
-            RaycastHit2D? hit = getPlacablePointByMousePosition(facility.Structure.Info.RequiredLayers);
+            RaycastHit2D? hit = getPlacablePointByMousePosition(facility.Structure.Info.RequiredLayers, facility.Structure.Info.LayerOrientation);
             bool isCollided = false;
             if (hit.HasValue) {
                 fTransform.SetPositionAndRotation(hit.Value.point, Quaternion.identity);
@@ -191,13 +202,13 @@ public class ConstructionManager : MonoBehaviour {
         }
     }
 
-    private static RaycastHit2D? getPlacablePointByMousePosition(LayerMask acceptableLayers) {
+    private static RaycastHit2D? getPlacablePointByMousePosition(LayerMask acceptableLayers, Vector2 orientation) {
         Vector3 _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 mousePos = new Vector2(_mousePos.x, _mousePos.y);
         float minDistance = float.MaxValue;
         RaycastHit2D? result = null;
         RaycastHit2D[] hits = new RaycastHit2D[50];
-        int length = Physics2D.RaycastNonAlloc(mousePos, Vector2.down, hits, float.MaxValue, acceptableLayers.value);
+        int length = Physics2D.RaycastNonAlloc(mousePos, orientation, hits, float.MaxValue, acceptableLayers.value);
         for (int i = 0; i < length; i++) {
             RaycastHit2D hit = hits[i];
             if (hit.collider && hit.distance < minDistance && hit.distance > 0) {
