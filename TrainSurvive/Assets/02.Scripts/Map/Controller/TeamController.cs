@@ -50,11 +50,13 @@ namespace WorldMap.Controller
             {
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
             }
-            if(!Mathf.Approximately(lastSize, team.Inventory.currSize))
+            //FOR TEST
+            if(!Mathf.Approximately(lastSize, team.Inventory.GetWeight()))
             {
-                Debug.Log("探险队背包变化：" + team.Inventory.currSize);
-                lastSize = team.Inventory.currSize;
+                Debug.Log("探险队背包变化：" + team.Inventory.GetWeight());
+                lastSize = team.Inventory.GetWeight();
             }
+            //---
         }
         public bool IfAccepted(BUTTON_ID id)
         {

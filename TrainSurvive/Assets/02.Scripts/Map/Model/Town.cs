@@ -20,21 +20,10 @@ namespace WorldMap.Model
         const int MaxGoodMaterialCnt = 3;
         [NonSerialized]
         const int MaxGoodWeaponCnt = 2;
+        [NonSerialized]
+        const int MaxGoodSpecailCnt = 1;
         private Town()
-        {
-            
-        }
-        //public Town(Town town)
-        //{
-        //    PosIndexX = town.PosIndexX;
-        //    PosIndexY = town.PosIndexY;
-        //    Name = town.Name;
-        //    LevelShop = town.LevelShop;
-        //    LevelTavern = town.LevelTavern;
-        //    LevelSchool = town.LevelSchool;
-        //    Goods = town.Goods;
-        //    NPCs = town.NPCs;
-        //}
+        { }
         public static Town Random()
         {
             Town ret = new Town();
@@ -51,6 +40,10 @@ namespace WorldMap.Model
             for(int i = 0; i < MaxGoodMaterialCnt; ++i)
             {
                 ret.Goods.Add(Good.RandomMaterial());
+            }
+            for(int i = 0; i < MaxGoodSpecailCnt; ++i)
+            {
+                ret.Goods.Add(Good.RandomSpecail());
             }
             ret.Name = StaticResource.RandomTownName();
             return ret;

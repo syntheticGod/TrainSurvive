@@ -5,10 +5,10 @@
  * 版本：v0.1
  */
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using WorldMap.UI;
 using WorldMap.Model;
-using UnityEngine.UI;
 
 namespace WorldMap.Controller
 {
@@ -59,10 +59,10 @@ namespace WorldMap.Controller
         protected override void AfterShowWindow()
         {
             goodsInShopLV.Datas = new List<Good>(currentTown.Goods);
-            goodsInPackLV.Datas = new List<Good>();
-            foreach(Item item in Team.Instance.Inventory.items){
-
-            }
+            if(world.IfTeamOuting)
+                goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTeam());
+            else
+                goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTrain());
         }
         public void SetTown(Model.Town town)
         {
@@ -70,35 +70,31 @@ namespace WorldMap.Controller
         }
         public void CallBackGoodsBuy(Good good)
         {
-            if (!world.Pay(good.Price))
+            //FOR TEST全部买下
+            int numberBuy = good.Number;
+            if (!world.Pay(good.Price * numberBuy))
             {
                 Debug.Log("商店：金额不足，滚");
                 return;
             }
+            if(numberBuy > good.Number)
+            {
+                Debug.Log("商店：物品数量不足，另寻他处");
+                return;
+            }
             if (world.IfTeamOuting)
             {
-                int originNumber = good.Number;
-                int remain = Team.Instance.Inventory.PushItem(good.item);
-                if (originNumber == remain)
+                InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
+                if (!inventoryForTeam.CanPushItemToPack(good, numberBuy))
                 {
-                    Debug.Log("探险队：我的背包已满");
+                    Debug.Log("系统：购买物品失败");
                     return;
                 }
-                else if(remain > 0)
-                {
-                    Debug.Log("探险队：我的背包快满，只能购买了一部分 数量：" + (originNumber - remain));
-                    //买下部分
-                    if (!currentTown.BuyGoods(good, originNumber- remain))
-                    {
-                        Debug.Log("系统：物品购买失败");
-                    }
-                    good.item.currPileNum = remain;
-                    return;
-                }
+                inventoryForTeam.PushItemFromShop(good, numberBuy);
             }
             else
             {
-                if (!world.PushItemToTrain(good.item))
+                if (!world.PushItemToTrain(good, numberBuy))
                 {
                     Debug.Log("列车：仓库已满");
                     return;

@@ -7,6 +7,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets._02.Scripts.zhxUIScripts;
+using WorldMap.Model;
 
 namespace WorldMap
 {
@@ -34,10 +35,27 @@ namespace WorldMap
         {
             world.money += money;
         }
-        public bool PushItemToTrain(Item item)
+        public bool PushItemToTrain(Good good, int numberBuy)
         {
-            Debug.LogError("列车购买，待完善");
-            return false;
+            good = good.Clone();
+            good.SetNumber(numberBuy);
+            world.goodsInTrain.Add(good);
+            return true;
+        }
+        public bool PushGoodsToTeam(Good good, int numberBuy)
+        {
+            good = good.Clone();
+            good.SetNumber(numberBuy);
+            world.goodsInTeam.Add(good);
+            return true;
+        }
+        public List<Good> GetGoodsInTeam()
+        {
+            return world.goodsInTeam;
+        }
+        public List<Good> GetGoodsInTrain()
+        {
+            return world.goodsInTrain;
         }
         public int Money
         {

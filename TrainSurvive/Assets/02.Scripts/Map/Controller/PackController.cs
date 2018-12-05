@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using WorldMap.UI;
 using Assets._02.Scripts.zhxUIScripts;
 using Material = Assets._02.Scripts.zhxUIScripts.Material;
+using WorldMap.Model;
 
 namespace WorldMap.Controller
 {
@@ -125,8 +126,11 @@ namespace WorldMap.Controller
             //items[1].currPileNum = 100;
             //items[2].currPileNum = 999;
             //items[3].currPileNum = 555;
-            //TODO：动态更新背包
-            items = Model.Team.Instance.Inventory.items;
+            items = new List<Item>();
+            foreach(Good goods in world.GetGoodsInTeam())
+            {
+                items.Add(goods.item);
+            }
             return true;
         }
         protected override void AfterShowWindow()

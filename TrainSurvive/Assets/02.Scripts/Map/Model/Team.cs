@@ -61,7 +61,7 @@ namespace WorldMap.Model
         //移动时下一临近块
         private Vector2 nextStopPosition;
         //背包
-        public Inventory Inventory { private set; get; }
+        public InventoryForTeam Inventory { private set; get; }
         //外部引用
         private Train train;
         private IMapForTrain map;
@@ -74,7 +74,7 @@ namespace WorldMap.Model
         private Team() : base()
         {
             state = STATE.NONE;
-            Inventory = new Inventory(float.MaxValue);
+            Inventory = new InventoryForTeam(float.MaxValue);
             world = WorldForMap.Instance;
         }
         /// <summary>

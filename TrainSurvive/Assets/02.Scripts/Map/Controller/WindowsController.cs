@@ -101,6 +101,8 @@ namespace WorldMap.Controller
                 Debug.Log("窗口拒绝被焦距，导致拒绝显示窗口");
                 return false;
             }
+            //ShowWindow可能会在Awake之前调用
+            world = WorldForMap.Instance;
             if (!PrepareDataBeforeShowWindow())
             {
                 Debug.Log("窗口数据未准备好，拒绝显示");
