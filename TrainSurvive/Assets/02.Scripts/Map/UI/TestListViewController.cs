@@ -8,25 +8,20 @@ using UnityEngine;
 using System.Collections.Generic;
 using WorldMap.UI;
 using UnityEngine.UI;
+using WorldMap.Model;
 
 namespace TestWorldMap.UI
 {
     public class TestListViewController : MonoBehaviour
     {
-        private ListViewController listViewController;
-        private List<string> texts;
+        private HeroListView listViewController;
         private const int textCnt = 3;
         void Awake()
         {
-            listViewController = gameObject.GetComponent<ListViewController>();
+            listViewController = gameObject.GetComponent<HeroListView>();
             if (listViewController == null)
-                listViewController = gameObject.AddComponent<ListViewController>();
-            listViewController.onItemView = OnItemView;
-            texts = new List<string>();
-            for(int i = 0; i < textCnt; ++i)
-            {
-                texts.Add("hello" + i);
-            }
+                listViewController = gameObject.AddComponent<HeroListView>();
+            listViewController.Datas = new List<Person>();
         }
         void Start()
         {
@@ -39,12 +34,10 @@ namespace TestWorldMap.UI
         }
         private void TestAppendItem()
         {
-            for(int i = 0; i < textCnt;i++)
-                listViewController.AppendItem();
-        }
-        private void OnItemView(ListViewItem item, int index)
-        {
-            item.GetComponentInChildren<Text>().text = texts[index];
+            listViewController.AddItem(NPC.Random().PersonInfo);
+            listViewController.AddItem(NPC.Random().PersonInfo);
+            listViewController.AddItem(NPC.Random().PersonInfo);
+            listViewController.AddItem(NPC.Random().PersonInfo);
         }
     }
 }

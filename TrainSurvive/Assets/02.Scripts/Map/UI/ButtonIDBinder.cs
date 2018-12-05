@@ -22,6 +22,7 @@ namespace WorldMap
             "TEAM_NONE",
             "TeamReturnBtn",
             "TeamGatherBtn",
+            "TeamPackBtn",
             "TEAM_NUM",
 
             "TRAIN_NONE",

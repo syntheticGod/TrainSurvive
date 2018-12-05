@@ -6,7 +6,7 @@
  */
 using UnityEngine;
 using WorldMap.Model;
-
+using WorldMap.Controller;
 namespace WorldMap
 {
     public class CharacterBuild : MonoBehaviour
@@ -60,26 +60,31 @@ namespace WorldMap
         {
             characterObject = new GameObject("Character");
             IMapForTrainTemp mapForTrainTemp = mapBuild.GetComponent<MapGenerate>();
-            
+
             //设置静态数据
-            StaticResource sr = StaticResource.Instance();
-            sr.BlockSize = mapForTrainTemp.GetBlockSize();
-            Debug.Assert(sr.BlockSize.x > 0.1 && sr.BlockSize.y > 0.1, "块大小设置的过小");
-            sr.MapOrigin = mapForTrainTemp.GetMapOrigin();
-            sr.MapOriginUnit = sr.MapOrigin / sr.BlockSize - new Vector2(0.5F, 0.5F);
+            StaticResource.BlockSize = mapForTrainTemp.GetBlockSize();
+            Debug.Assert(StaticResource.BlockSize.x > 0.1 && StaticResource.BlockSize.y > 0.1, "块大小设置的过小");
+            StaticResource.MapOrigin = mapForTrainTemp.GetMapOrigin();
+            StaticResource.MapOriginUnit = StaticResource.MapOrigin / StaticResource.BlockSize - new Vector2(0.5F, 0.5F);
 
             //列车
             train = Train.Instance;
             trainObject = Instantiate(trainPrefab);
-            train.Init(true, maxSpeedForTrain, initIndexForTrain, trainObject.GetComponent<TrainController>());
+            trainObject.name = "Train";
+            train.Init(world.TrainMapPos(), movable: true,maxSpeed: maxSpeedForTrain);
+            trainObject.GetComponent<TrainController>().init();
             trainObject.transform.parent = characterObject.transform;
 
             //探险队
             team = Team.Instance;
             teamObject = Instantiate(teamPrefab);
-            team.Init(teamObject.GetComponent<TeamController>());
-            teamObject.SetActive(false);
+            teamObject.name = "Team";
+            team.Init(world.TeamMapPos());
+            teamObject.GetComponent<TeamController>().Init();
             teamObject.transform.parent = characterObject.transform;
+            
+            trainObject.SetActive(!world.IfTeamOuting);
+            teamObject.SetActive(world.IfTeamOuting);
         }
 
         /// <summary>
@@ -88,9 +93,9 @@ namespace WorldMap
         private void FillMoreData()
         {
             world = WorldForMap.Instance;
-            //TEST：加载存储生成数据
             if (mapGenerate.isCreateMap)
             {
+                world.TrainSetMapPos(initIndexForTrain);
                 world.RandomTownsInfo(Map.GetIntanstance().towns);
                 world.SaveGame();
             }
