@@ -4,11 +4,13 @@
  * 创建时间：2018/12/4 18:25:02
  * 版本：v0.1
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class ResearchBench5Structure : ResearchBench2Structure {
 
     public ResearchBench5Structure() : base() { }

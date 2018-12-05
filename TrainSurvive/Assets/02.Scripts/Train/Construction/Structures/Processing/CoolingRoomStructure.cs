@@ -1,7 +1,7 @@
 /*
- * 描述：魔法核心
+ * 描述：
  * 作者：刘旭涛
- * 创建时间：2018/12/4 16:52:52
+ * 创建时间：2018/12/5 15:07:31
  * 版本：v0.1
  */
 using System;
@@ -11,22 +11,23 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 [Serializable]
-public class MagicCoreStructure : Structure {
+public class CoolingRoomStructure : Structure {
 
-    public MagicCoreStructure() : base() { }
-    protected MagicCoreStructure(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    public CoolingRoomStructure() : base() { }
+    protected CoolingRoomStructure(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
     private static FixedInfo _info = new FixedInfo {
-        Name = "魔法核心",
-        Description = "魔法核心",
+        Name = "冷藏室",
+        Description = "冷藏室",
         WorkAll = 0,
         BuildCosts = new Cost[] { },
         SpritePath = "Sprite/map/building-inn",
-        Class = 0,
-        IsOnceFunction = true,
+        Class = 3,
+        IsOnceFunction = false,
         Actions = new ButtonAction[]{
             new ButtonAction{Name = "拆除", Action = (structure) => structure.FacilityState = State.REMOVING }
         }
     };
     public override FixedInfo Info { get; } = _info;
+
 }

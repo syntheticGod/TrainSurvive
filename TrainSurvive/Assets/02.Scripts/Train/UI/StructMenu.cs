@@ -60,6 +60,7 @@ public class StructMenu : MonoBehaviour {
             GameObject buttonGO = Instantiate(ButtonPrefab, ClassContent);
             buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Classes[index];
             VerticalGroups[index] = Instantiate(VerticalGroupPrefab, StructureContent);
+            VerticalGroups[index].SetActive(false);
             buttonGO.GetComponent<Button>().onClick.AddListener(() => {
                 for (int j = 0; j < ConstructionManager.StructureUnlocks.Length; j++) {
                     Structures[j].SetActive(ConstructionManager.StructureUnlocks[j]);

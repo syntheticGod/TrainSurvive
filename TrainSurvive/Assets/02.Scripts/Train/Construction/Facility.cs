@@ -53,6 +53,10 @@ public class Facility : MonoBehaviour {
         }
     }
 
+    private void Awake() {
+        gameObject.layer = Structure.Info.Layer;
+    }
+
     private void Start() {
         spriteRenderer.sprite = Structure.Info.Sprite;
         BoxCollider.offset = Structure.Info.Sprite.bounds.center;

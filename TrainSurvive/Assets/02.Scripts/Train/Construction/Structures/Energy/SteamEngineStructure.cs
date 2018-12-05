@@ -14,12 +14,21 @@ using UnityEngine;
 [Serializable]
 public class SteamEngineStructure : Structure {
 
+    public struct Conversion {
+        public float ProcessTime { get; set; }
+        public int Produce { get; set; }
+        public Conversion(float processTime, int produce) {
+            ProcessTime = processTime;
+            Produce = produce;
+        }
+    }
+
     public SteamEngineStructure() : base() { }
     protected SteamEngineStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
         Progress = (float)info.GetValue("Progress", typeof(float));
         Gas = (Item)info.GetValue("Gas", typeof(Item));
         ConversionRatio = (float)info.GetValue("ConversionRatio", typeof(float));
-        ProcessRatio = (float)info.GetValue("ProcessRatio", typeof(float));
+        ProcessSpeedRatio = (float)info.GetValue("ProcessSpeedRatio", typeof(float));
     }
 
     private static FixedInfo _info = new FixedInfo {
@@ -40,24 +49,19 @@ public class SteamEngineStructure : Structure {
     /// <summary>
     /// 可接受可燃物及默认转化率
     /// </summary>
-    public virtual Dictionary<int, int> AcceptableGas { get; } = new Dictionary<int, int> {
-        {231, 10 }
+    public virtual Dictionary<int, Conversion> AcceptableGas { get; } = new Dictionary<int, Conversion> {
+        {231, new Conversion(3, 10) }
     };
-
-    /// <summary>
-    /// 处理时间
-    /// </summary>
-    public virtual float ProcessTime { get; } = 3;
-
+    
     /// <summary>
     /// 转化率
     /// </summary>
-    public float ConversionRatio { get; set; } = 1;
+    public virtual float ConversionRatio { get; set; } = 1;
 
     /// <summary>
-    /// 处理时间比例
+    /// 处理速度比例
     /// </summary>
-    public float ProcessRatio { get; set; } = 1;
+    public virtual float ProcessSpeedRatio { get; set; } = 1;
 
     public float Progress {
         get {
@@ -65,7 +69,11 @@ public class SteamEngineStructure : Structure {
         }
         private set {
             _progress = value;
-            CallOnProgressChange(0, ProcessTime, value);
+            if (Gas == null) {
+                CallOnProgressChange(0, 0, value);
+            } else {
+                CallOnProgressChange(0, AcceptableGas[Gas.id].ProcessTime, value);
+            }
         }
     }
    
@@ -94,7 +102,7 @@ public class SteamEngineStructure : Structure {
         info.AddValue("Progress", Progress);
         info.AddValue("Gas", Gas);
         info.AddValue("ConversionRatio", ConversionRatio);
-        info.AddValue("ProcessRatio", ProcessRatio);
+        info.AddValue("ProcessSpeedRatio", ProcessSpeedRatio);
     }
 
     private IEnumerator Run() {
@@ -104,13 +112,11 @@ public class SteamEngineStructure : Structure {
                 Progress = 0;
                 yield return wait;
             }
-            if (Progress < ProcessTime) {
-                Progress += Time.deltaTime;
+            if (Progress < AcceptableGas[Gas.id].ProcessTime) {
+                Progress += Time.deltaTime * ProcessSpeedRatio;
             } else {
                 Progress = 0;
-                World.getInstance().addEnergy((int)(AcceptableGas[Gas.id] * ConversionRatio));
-                Debug.Log("Max: " + World.getInstance().energyMax);
-                Debug.Log("Energy: " + World.getInstance().energy);
+                World.getInstance().addEnergy((int)(AcceptableGas[Gas.id].Produce * ConversionRatio));
                 if (--Gas.currPileNum == 0) {
                     Gas = null;
                     OnGasUpdate?.Invoke();

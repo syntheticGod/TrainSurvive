@@ -37,9 +37,21 @@ public abstract class Structure : ISerializable {
         /// </summary>
         public string[] RequiredLayerNames { get; set; } = { "TrainGround" };
         /// <summary>
-        /// 可以支持该设施的建筑平台的Layers名称。
+        /// 物体放置方向，默认向下
         /// </summary>
         public Vector2 LayerOrientation { get; set; } = Vector2.down;
+        /// <summary>
+        /// 物体所属Layer名称。
+        /// </summary>
+        public string LayerName { get; set; } = "Facility";
+        /// <summary>
+        /// 物体所属Layer。
+        /// </summary>
+        public LayerMask Layer {
+            get {
+                return LayerMask.NameToLayer(LayerName);
+            }
+        }
         /// <summary>
         /// 可以支持该设施的建筑平台的Layers。
         /// </summary>

@@ -47,7 +47,7 @@ public class ConstructionManager : MonoBehaviour {
     /// 编译时注册的结构
     /// </summary>
     public static Structure[] Structures { get; } = {
-        /* 0 */ new HeatCoreStructure(),
+        /* 0 */ new EnergyCoreStructure(),
         /* 1 */ new SteamEngineStructure(),
         /* 2 */ new GasEngineStructure(),
         /* 3 */ new BatteryStructure(),
@@ -58,7 +58,22 @@ public class ConstructionManager : MonoBehaviour {
         /* 8 */ new ResearchBench2Structure(),
         /* 9 */ new ResearchBench3Structure(),
         /* 10 */ new ResearchBench4Structure(),
-        /* 11 */ new ResearchBench5Structure()
+        /* 11 */ new ResearchBench5Structure(),
+        /* 12 */ new BedStructure(),
+        /* 13 */ new Bed2Structure(),
+        /* 14 */ new Bed3Structure(),
+        /* 15 */ new WoodTableStructure(),
+        /* 16 */ new WoodChairStructure(),
+        /* 17 */ new WoodBoxStructure(),
+        /* 18 */ new TorchStructure(),
+        /* 19 */ new KeroseneLampStructure(),
+        /* 20 */ new DropLightStructure(),
+        /* 21 */ new TableLampStructure(),
+        /* 22 */ new HeatingRoomStructure(),
+        /* 23 */ new CoolingRoomStructure(),
+        /* 24 */ new SmallWoodStructure(),
+        /* 25 */ new MediumWoodStructure(),
+        /* 26 */ new BigWoodStructure()
     };
 
     /// <summary>

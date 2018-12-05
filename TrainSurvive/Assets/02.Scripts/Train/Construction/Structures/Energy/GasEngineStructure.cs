@@ -28,17 +28,9 @@ public class GasEngineStructure : SteamEngineStructure {
         }
     };
     public override FixedInfo Info { get; } = _info;
-
-    /// <summary>
-    /// 可接受可燃物及默认转化率
-    /// </summary>
-    public override Dictionary<int, int> AcceptableGas { get; } = new Dictionary<int, int> {
-        {231, 20 }
+    
+    public override Dictionary<int, Conversion> AcceptableGas { get; } = new Dictionary<int, Conversion> {
+        {231, new Conversion(3, 20) }
     };
-
-    /// <summary>
-    /// 处理时间
-    /// </summary>
-    public override float ProcessTime { get; } = 3;
     
 }

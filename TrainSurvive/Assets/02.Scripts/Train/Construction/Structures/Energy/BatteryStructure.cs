@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class BatteryStructure : Structure {
 
     public BatteryStructure() : base() { }

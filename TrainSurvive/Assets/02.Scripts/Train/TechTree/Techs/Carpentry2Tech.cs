@@ -19,6 +19,7 @@ public class Carpentry2Tech : Tech {
     public override float TotalWorks { get; } = 5 * 6;
 
     public override void OnCompleted() {
-
+        ConstructionManager.StructureUnlocks[14] = true;
+        ConstructionManager.StructureUnlocks[26] = true;
     }
 }

@@ -4,11 +4,13 @@
  * 创建时间：2018/12/4 16:41:28
  * 版本：v0.1
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class BigGeneratorStructure : GeneratorStructure {
 
     public BigGeneratorStructure() : base() { }
