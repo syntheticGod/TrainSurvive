@@ -10,46 +10,42 @@ using UnityEngine;
 
 using WorldMap.Model;
 
-namespace WorldMap
+namespace WorldMap.Controller
 {
-    public class TeamController : MonoBehaviour, OnClickListener
+    public class TeamController : BaseController, OnClickListener
     {
         private int levelOfTeam = -2;
         
-        private Team team;
-        private Train train;
         private GameObject teamModeBTs;
         private TrainController trainController;
         //主摄像机
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-        private WorldForMap world;
         private float lastSize = 0;
-        public void Init(Team team)
+        public void Init()
         {
             ButtonHandler.Instance.AddListeners(this);
-            this.team = team;
-            this.trainController = Train.Instance.Controller;
-            train = Train.Instance;
-            world = WorldForMap.Instance;
         }
-        void Awake()
+        protected override void CreateModel()
         {
-            Debug.Log("TeamController Awake");
-            teamModeBTs = GameObject.Find("/Canvas").transform.Find("TeamMode").gameObject;
+            Transform canvas = GameObject.Find("/Canvas").transform;
+            teamModeBTs = canvas.Find("TeamMode").gameObject;
             mainCamera = Camera.main;
             Debug.Assert(null != mainCamera, "需要将主摄像机的Tag改为MainCamera");
             cameraFocus = mainCamera.GetComponent<ICameraFocus>();
         }
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             Debug.Log("TeamController Start");
         }
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             KeyEventDetecter();
             Vector2 current = StaticResource.WorldPosToMapPos(transform.position);
+            Team team = Team.Instance;
             if (team.Run(ref current))
             {
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
@@ -59,45 +55,6 @@ namespace WorldMap
                 Debug.Log("探险队背包变化：" + team.Inventory.currSize);
                 lastSize = team.Inventory.currSize;
             }
-        }
-        private bool ActiveTeam(bool active)
-        {
-            if (gameObject.activeSelf == active)
-            {
-                Debug.Log("重复操作，无效");
-                return false;
-            }
-            if (active)
-            {
-                transform.position = StaticResource.MapPosToWorldPos(team.PosTeam, levelOfTeam);
-            }
-            else
-            {
-                if (!team.CanTeamGoBack())
-                    return false;
-                if (!train.TeamComeBack())
-                    return false;
-                if (!team.GoBackToTrain())
-                    return false;
-            }
-            gameObject.SetActive(active);
-            return true;
-        }
-        private bool ActiveBTs(bool active)
-        {
-            if (teamModeBTs.activeSelf == active)
-            {
-                Debug.Log("重复操作，无效");
-                return false;
-            }
-            teamModeBTs.SetActive(active);
-            return true;
-        }
-        public void Active()
-        {
-            ActiveTeam(true);
-            ActiveBTs(true);
-            cameraFocus.focusLock(transform);
         }
         public bool IfAccepted(BUTTON_ID id)
         {
@@ -115,15 +72,21 @@ namespace WorldMap
                         return;
                     }
                     ActiveBTs(false);
-                    trainController.Active();
+                    ControllerManager.FocusController("Train", "Character");
                     break;
                 case BUTTON_ID.TEAM_GATHER:
+                    Debug.Log("采集指令");
                     world.DoGather();
+                    break;
+                case BUTTON_ID.TEAM_PACK:
+                    Debug.Log("背包指令");
+                    ControllerManager.ShowWindow<PackController>("PackViewer");
                     break;
             }
         }
         private bool KeyEventDetecter()
         {
+            Team team = Team.Instance;
             if (Input.GetKeyUp(KeyCode.W))
             {
                 Debug.Log("探险队向上移动指令");
@@ -149,6 +112,45 @@ namespace WorldMap
                 return true;
             }
             return false;
+        }
+        private bool ActiveTeam(bool active)
+        {
+            if (gameObject.activeSelf == active)
+            {
+                Debug.Log("重复操作，无效");
+                return false;
+            }
+            Team team = Team.Instance;
+            if (active)
+            {
+                transform.position = StaticResource.MapPosToWorldPos(team.PosTeam, levelOfTeam);
+            }
+            else
+            {
+                if (!team.CanTeamGoBack())
+                    return false;
+                if (!team.GoBackToTrain())
+                    return false;
+            }
+            gameObject.SetActive(active);
+            return true;
+        }
+        private bool ActiveBTs(bool active)
+        {
+            if (teamModeBTs.activeInHierarchy == active)
+                return false;
+            teamModeBTs.SetActive(active);
+            return true;
+        }
+        protected override bool FocusBehaviour()
+        {
+            ActiveTeam(true);
+            ActiveBTs(true);
+            cameraFocus.focusLock(transform);
+            return true;
+        }
+        protected override void UnfocusBehaviour()
+        {
         }
     }
 }

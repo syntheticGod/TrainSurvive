@@ -86,7 +86,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             return items;
         }
 
-        public static Item[] GenerateItem(int id, int num)                  //当传入num大于堆叠数量时，会将多个实例装入数组返回
+        public static Item[] GenerateItem(int id, int num = 1)                  //当传入num大于堆叠数量时，会将多个实例装入数组返回
         {
             List<Item> items = new List<Item>();
             if(id >= 0 && id <= 199)

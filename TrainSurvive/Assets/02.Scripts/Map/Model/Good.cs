@@ -18,6 +18,16 @@ namespace WorldMap.Model
         const int weaponIDBase = 0;
         public int Price { private set; get; }
         public Item item { private set; get; }
+        public int Number
+        {
+            get { return item.currPileNum; }
+        }
+        public bool DecreaseNumber(int number)
+        {
+            if (item.currPileNum < number) return false;
+            item.currPileNum -= number;
+            return true;
+        }
         public static Good RandomMaterial()
         {
             Good good = new Good();
@@ -52,10 +62,6 @@ namespace WorldMap.Model
             //        break;
             //}
             return item;
-        }
-        public bool TryBuyOne()
-        {
-            return true;
         }
     }
 }

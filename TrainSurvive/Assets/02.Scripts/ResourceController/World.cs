@@ -17,6 +17,7 @@ public class World {
             persons.Add(p);
         }
         foodIn = (uint)foodInMax;
+        money = 9999;//9,999
         //----
     }
     private static World instance;
@@ -24,7 +25,6 @@ public class World {
     {
         if (instance == null)
         {
-            //TEST：加载测试 xys
             string path = PathManager.getInstance().getWorldPath();
 
             if (File.Exists(path))
@@ -95,7 +95,11 @@ public class World {
     public int coalMax = 1000;
     public int woodMax = 1000;
     public int metalMax = 1000;
-   
+    public int money;
+
+    public List<int> itemIDs;
+    public List<int> itemNums;
+
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt=1;

@@ -26,7 +26,7 @@ namespace Assets._02.Scripts.zhxUIScripts
     public abstract class Item
     {
         [NonSerialized]
-        public ItemGridCtrl belongGrid;
+        public ItemController belongGrid;
         
         public abstract PublicData.ItemType itemType
         {

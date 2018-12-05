@@ -11,20 +11,14 @@ namespace WorldMap
     public class StaticResource
     {
         private StaticResource() { }
-        public static StaticResource staticResource;
-        public static StaticResource Instance()
-        {
-            if (staticResource == null) staticResource = new StaticResource();
-            return staticResource;
-        }
         //方块大小
-        public Vector2 BlockSize
+        public static Vector2 BlockSize
         {
             set;
             get;
         }
         //地图第一块的中心坐标
-        public Vector2 MapOrigin
+        public static Vector2 MapOrigin
         {
             set;
             get;
@@ -33,7 +27,7 @@ namespace WorldMap
         ///方便块索引计算的 常量
         ///(position - (o - b / 2)) / blockSize;
         /// </summary>
-        public Vector2 MapOriginUnit
+        public static Vector2 MapOriginUnit
         {
             set;
             get;
@@ -49,7 +43,7 @@ namespace WorldMap
             //(position - (o - b / 2)) / blockSize;
             //公式优化如下
             //position / blockSize - ((mapOrigin - blockSize/2)/blockSize)
-            Vector2 index2F = position / staticResource.BlockSize - staticResource.MapOriginUnit;
+            Vector2 index2F = position / BlockSize - MapOriginUnit;
             return new Vector2Int(Mathf.FloorToInt(index2F.x), Mathf.FloorToInt(index2F.y));
         }
         /// <summary>
@@ -61,7 +55,7 @@ namespace WorldMap
         {
             //索引 * 块大小 = 原点到块中心的向量
             //再加上 原块的中心坐标 就是世界坐标
-            return index2d * staticResource.BlockSize + staticResource.MapOrigin;
+            return index2d * BlockSize + MapOrigin;
         }
         /// <summary>
         /// 获取当前坐标所在块的中心坐标
