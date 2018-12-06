@@ -27,50 +27,83 @@ using System.Collections;
 
 namespace WorldMap.UI
 {
-    public class ListViewController : MonoBehaviour
+    public enum ScrollType
     {
-        public enum ScrollType
-        {
-            Horizontal,//水平滑动
-            Vertical,//垂直滑动
-            Both//四周滑动
-        }
-        public delegate void OnItemClick(ListViewItem item, int index);
-        public delegate void OnItemView(ListViewItem item, int index);
-        public OnItemClick onItemClick { set; get; }
-        public OnItemView onItemView { set; get; }
+        Horizontal,//水平滑动
+        Vertical,//垂直滑动
+        Both//四周滑动
+    }
+    public abstract class ListViewController<D> : MonoBehaviour
+    {
+        public delegate void ItemClick(ListViewItem item, D data);
+        public delegate bool ItemFilter(D data);
+        public ItemClick onItemClick { set; get; }
+        public ItemFilter onItemFilter { set; get; }
 
         private RectTransform content;
         private RectTransform viewport;
         private List<ListViewItem> items;
         private List<ListViewItem> recycal;
         private ListViewItem lastClickedItem;
-        private System.Type contentComponentType;
         private GridLayoutGroup gridLayout;
+        private ScrollRect scrollRect;
 
         public ScrollType m_scrollType = ScrollType.Horizontal;
+        public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
         public GameObject m_itemContentPrefab;
         public bool m_selectable = true;
         public Vector2 defualtCellSize = new Vector2(100.0F, 100.0F);
         public float defaultScrollRectSensitivity = 15F;
         /// <summary>
-        /// Horizontal：先水平填充，填充满一行后，再填充下一行
-        /// Vertical：先垂直填充，填充满一列后，再填充下一列
-        /// </summary>
-        public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
-        /// <summary>
         /// 一行的长度
         /// -1：自适应长度
         /// </summary>
-        public int m_lengthOfLine = 1;
+        public int m_lengthOfLine = -1;
 
         private float viewPortHeight;
+        private List<D> m_datas;
+        public List<D> Datas { set { m_datas = value;Refresh(); } get { return m_datas;} }
+
+        public ScrollType ScrollDirection
+        {
+            set
+            {
+                m_scrollType = value;
+                if(scrollRect != null)
+                {
+                    scrollRect.vertical = m_scrollType != ScrollType.Horizontal;
+                    scrollRect.horizontal = m_scrollType != ScrollType.Vertical;
+                }
+            }
+        }
+        /// <summary>
+        /// Horizontal：先水平填充，填充满一行后，再填充下一行
+        /// Vertical：先垂直填充，填充满一列后，再填充下一列
+        /// </summary>
+        public GridLayoutGroup.Axis StartAxis
+        {
+            set
+            {
+                m_startAxis = value;
+                if (gridLayout != null)
+                {
+                    gridLayout.startAxis = m_startAxis;
+                    gridLayout.constraint = m_startAxis == GridLayoutGroup.Axis.Horizontal ?
+                        GridLayoutGroup.Constraint.FixedColumnCount :
+                        GridLayoutGroup.Constraint.FixedRowCount;
+                }
+            }
+            get
+            {
+                return m_startAxis;
+            }
+        }
         public int ItemCount { get { return items.Count; } }
 
-        void Awake()
+        protected virtual void Awake()
         {
             //ScrollRect
-            ScrollRect scrollRect = gameObject.GetComponent<ScrollRect>();
+            scrollRect = gameObject.GetComponent<ScrollRect>();
             if (scrollRect == null)
                 scrollRect = gameObject.AddComponent<ScrollRect>();
             //Viewport
@@ -104,119 +137,70 @@ namespace WorldMap.UI
             scrollRect.content = content;
             scrollRect.viewport = viewport;
             scrollRect.scrollSensitivity = defaultScrollRectSensitivity;
+            ScrollDirection = m_scrollType;
             //Config GridLayoutGroup
             gridLayout = content.GetComponent<GridLayoutGroup>();
-            gridLayout.startAxis = m_startAxis;
-            gridLayout.constraint = m_startAxis == GridLayoutGroup.Axis.Horizontal ?
-                GridLayoutGroup.Constraint.FixedColumnCount :
-                GridLayoutGroup.Constraint.FixedRowCount;
+            StartAxis = m_startAxis;
             gridLayout.constraintCount = m_lengthOfLine;
-            scrollRect.vertical = m_scrollType != ScrollType.Horizontal;
-            scrollRect.horizontal = m_scrollType != ScrollType.Vertical;
             SetCellSize(defualtCellSize);
             recycal = new List<ListViewItem>();
             items = new List<ListViewItem>();
         }
-
         void Start()
         { }
         void Update()
         { }
-        public void SetContent(System.Type comp)
-        {
-            contentComponentType = comp;
-        }
         public void SetCellSize(Vector2 cellSize)
         {
             gridLayout.cellSize = cellSize;
-            if (m_scrollType == ScrollType.Horizontal)
-            {
-                if (m_lengthOfLine <= 0)
-                    gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.height / cellSize.y);
-            }
-            else if (m_scrollType == ScrollType.Vertical)
+            if (m_startAxis == GridLayoutGroup.Axis.Horizontal)
             {
                 if (m_lengthOfLine <= 0)
                     gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.width / cellSize.x);
             }
-        }
-        private ListViewItem CreateItem()
-        {
-            RectTransform rectOfItem = new GameObject("Item", typeof(RectTransform)).GetComponent<RectTransform>();
-            GameObject contentGameObject;
-            if (m_itemContentPrefab != null)
+            else if (m_startAxis == GridLayoutGroup.Axis.Vertical)
             {
-                contentGameObject = Instantiate(m_itemContentPrefab);
-                RectTransform rectContent = contentGameObject.GetComponent<RectTransform>();
-                if (rectContent == null)
-                    rectContent = contentGameObject.AddComponent<RectTransform>();
+                if (m_lengthOfLine <= 0)
+                    gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.height / cellSize.y);
             }
-            else
-                contentGameObject = new GameObject("Content", typeof(RectTransform));
-            contentGameObject.name = "Content";
-            if (contentComponentType != null)
-                contentGameObject.AddComponent(contentComponentType);
-            SetParent(contentGameObject.GetComponent<RectTransform>(), rectOfItem);
-            ListViewItem listViewItem = rectOfItem.GetComponent<ListViewItem>();
-            if (listViewItem == null)
-                listViewItem = rectOfItem.gameObject.AddComponent<ListViewItem>();
-            SetParent(rectOfItem, content.GetComponent<RectTransform>());
-            return listViewItem;
         }
-        private void ShowItem(ListViewItem item, int index)
+        public void SetBackgroudColor(Color color)
         {
-            onItemView?.Invoke(item, index);
+            Utility.ForceGetComponent<Image>(gameObject).color = color;
         }
-        private void RecyleItem(int index)
+        public void Refresh()
         {
-            if (index >= items.Count)
+            RemoveAllItem();
+            for (int i = 0; i < Datas.Count; i++)
             {
-                Debug.LogWarning("回收的Item不存在");
-                return;
+                if(onItemFilter == null || !onItemFilter(Datas[i]))
+                    OnItemView(AppendItem(), Datas[i]);
             }
-            ListViewItem item = items[index];
-            items.RemoveAt(index);
-            item.Recycle();
-            item.gameObject.SetActive(false);
-            recycal.Add(item);
         }
-        public ListViewItem AppendItem()
+        public void AddItem(D data)
         {
-            ListViewItem itemView;
-            if (recycal.Count == 0)
-            {
-                itemView = CreateItem();
-            }
-            else
-            {
-                itemView = recycal[0];
-                recycal.RemoveAt(0);
-                itemView.gameObject.SetActive(true);
-            }
-            itemView.Controller = this;
-            items.Add(itemView);
-            ShowItem(itemView, items.Count - 1);
-            return itemView;
+            Datas.Add(data);
+            if (onItemFilter == null || !onItemFilter(data))
+                OnItemView(AppendItem(), data);
         }
-        public bool RemoveItem(int index)
+        public bool RemoveItem(D data)
         {
-            if (index >= items.Count) return false;
-            if (lastClickedItem == items[index])
-                lastClickedItem = null;
-            RecyleItem(index);
+            if (!Datas.Remove(data))
+                return false;
+            RemoveAllItem();
+            Refresh();
             return true;
         }
         public void RemoveAllItem()
         {
-            int CountOfItem = items.Count;
-            for (int i = CountOfItem - 1; i >= 0; --i)
+            for (int i = 0; i < items.Count; ++i)
             {
-                RecyleItem(i);
+                ListViewItem item = items[i];
+                item.Recycle();
+                item.gameObject.SetActive(false);
+                recycal.Add(item);
             }
-        }
-        public ListViewItem GetItem(int index)
-        {
-            return items[index];
+            items.Clear();
         }
         /// <summary>
         /// 代码逻辑点击Item，适用于默认显示指定item
@@ -234,7 +218,7 @@ namespace WorldMap.UI
         }
         public void CallbackItemClick(ListViewItem item)
         {
-            onItemClick?.Invoke(item, items.IndexOf(item));
+            onItemClick?.Invoke(item, Datas[items.IndexOf(item)]);
             if (m_selectable)
             {
                 if (lastClickedItem != null && item != lastClickedItem)
@@ -256,21 +240,58 @@ namespace WorldMap.UI
             child.offsetMin = Vector2.zero;
             child.offsetMax = Vector2.zero;
         }
+
+        private ListViewItem AppendItem()
+        {
+            ListViewItem itemView;
+            if (recycal.Count == 0)
+            {
+                itemView = CreateItem();
+                itemView.callBackItemClick = CallbackItemClick;
+            }
+            else
+            {
+                itemView = recycal[0];
+                recycal.RemoveAt(0);
+                itemView.gameObject.SetActive(true);
+            }
+            items.Add(itemView);
+            return itemView;
+        }
+        private ListViewItem CreateItem()
+        {
+            RectTransform rectOfItem = new GameObject("Item", typeof(RectTransform)).GetComponent<RectTransform>();
+            if (m_itemContentPrefab != null)
+            {
+                GameObject contentGameObject = Instantiate(m_itemContentPrefab);
+                RectTransform rectContent = contentGameObject.GetComponent<RectTransform>();
+                if (rectContent == null)
+                    rectContent = contentGameObject.AddComponent<RectTransform>();
+                SetParent(contentGameObject.GetComponent<RectTransform>(), rectOfItem);
+            }
+            ListViewItem listViewItem = rectOfItem.GetComponent<ListViewItem>();
+            if (listViewItem == null)
+                listViewItem = rectOfItem.gameObject.AddComponent<ListViewItem>();
+            SetParent(rectOfItem, content.GetComponent<RectTransform>());
+            return listViewItem;
+        }
+        protected abstract void OnItemView(ListViewItem item, D data);
     }
     public class ListViewItem : Image, IPointerClickHandler
     {
+        public delegate void CallBackItemClick(ListViewItem item);
         private static int IncreaseingID = 0;
         public static int GetNewIDUnsafely()
         {
             return IncreaseingID++;
         }
         private const int UNSET = -1;
-        public Color BaseColor { set; get; } = Color.clear;
+        public CallBackItemClick callBackItemClick;
+        public Color BaseColor { set; get; } = new Color(1F, 1F, 1F, 1F);
         public Color SelectedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F, 0.5F);
-        public Color ClickedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F);
+        public Color ClickedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F, 0.5F);
         public object Tag { set; get; }
         public int ID { private set; get; }
-        public ListViewController Controller { set; get; }
         public ListViewItem()
         {
             ID = GetNewIDUnsafely();
@@ -287,16 +308,15 @@ namespace WorldMap.UI
         {
             color = BaseColor;
             ID = UNSET;
-            Controller = null;
             Tag = null;
         }
-        
+
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log("条款被点击了");
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                Controller.CallbackItemClick(this);
+                callBackItemClick?.Invoke(this);
             }
         }
     }

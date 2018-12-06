@@ -6,6 +6,7 @@
  */
 using UnityEngine;
 using UnityEngine.UI;
+using WorldMap.Controller;
 
 namespace WorldMap
 {
@@ -20,8 +21,6 @@ namespace WorldMap
         private const int ECHO_CODE_TRAIN = 1;
         private const int ECHO_CODE_TEAM = 2;
         private TavernController tavernController;
-        private ShopController shopController;
-        private SchoolController schoolController;
         public TownController()
         {
             Debug.Log("TownController Construct");
@@ -39,9 +38,6 @@ namespace WorldMap
             Transform canvas = GameObject.Find("/Canvas").transform;
             tavernController = canvas.Find("TavernViewer").GetComponent<TavernController>();
             tavernController.Init();
-            shopController = canvas.Find("ShopViewer").GetComponent<ShopController>();
-            shopController.Init();
-            schoolController = canvas.Find("SchoolViewer").GetComponent<SchoolController>();
             
             Debug.Assert(townInfoText != null);
             ButtonHandler.Instance.AddListeners(this);
@@ -149,11 +145,13 @@ namespace WorldMap
                     break;
                 case BUTTON_ID.TOWN_SCHOOL:
                     Debug.Log("学校");
-                    schoolController.Show();
+                    ControllerManager.ShowWindow<SchoolController>("SchoolViewer");
                     break;
                 case BUTTON_ID.TOWN_SHOP:
                     Debug.Log("商店");
-                    shopController.Show(currentTown);
+                    ShopController shopController = ControllerManager.GetWindow<ShopController>("ShopController");
+                    shopController.SetTown(currentTown);
+                    shopController.ShowWindow();
                     break;
             }
         }

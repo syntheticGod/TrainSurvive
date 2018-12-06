@@ -124,6 +124,10 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         else
         {
             item.currPileNum = restNum;
+            if (belongController != null)
+            {
+                belongController.DataSynchronization();
+            }
         }
         
     }
@@ -134,6 +138,15 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         {
             belongController.RemoveGrid(gameObject);
             belongController.coreInventory.PopItem(item);
+            belongController.DataSynchronization();
+    
+        }
+        else if(belongContainer != null && belongContainer.name == "WeaponGrid")            //卸载装备需要做的信息更新
+        {
+            int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
+            Person curPerson = World.getInstance().persons[personID];
+            curPerson.unequipWeapon();
+            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
         }
         Destroy(gameObject);
     }
@@ -158,7 +171,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
             {   //同物品容器/同ID ->  堆叠
                 allowNum = item.maxPileNum - item.currPileNum >= allowNum ? allowNum : item.maxPileNum - item.currPileNum;
                 restNum = oriGridCtrl.item.currPileNum - allowNum;
-                item.currPileNum += allowNum;
+                item.currPileNum += allowNum;//++
                 restNum = oriGridCtrl.item.currPileNum - allowNum;
                 oriGrid.SendMessage("SetRestNum", restNum);
             }
@@ -243,11 +256,23 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
 
                         Refresh();
                         oriGridCtrl.Refresh();
+                        if (belongContainer.name == "WeaponGrid")            //更换装备需要做的信息更新
+                        {
+                            int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
+                            Person curPerson = World.getInstance().persons[personID];
+                            curPerson.unequipWeapon();
+                            curPerson.equipWeapon((Weapon)item);
+                            Debug.Log("更换装备");
+                            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
+                        }
                     }
                 }
             }
         }
-            
+        if(belongController != null)
+        {
+            belongController.DataSynchronization();
+        }    
         
         
     }
@@ -281,7 +306,9 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         Destroy(GameObject.Find("tempDragImg"));
         if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
+
             DestroyMyself();
+
         }
     }
 

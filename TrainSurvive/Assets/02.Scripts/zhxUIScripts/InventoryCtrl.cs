@@ -20,10 +20,15 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     
 
     private void Awake()
-    { 
+    {
         coreInventory = new Inventory(300, this);              //测试临时MaxSize
         itemGridInst = new List<GameObject>();
         RefreshMaxSize();
+        //jiazai item
+        for(int i=0; i<World.getInstance().itemDataInTrain.Count; ++i)
+        {
+            coreInventory.PushItemToLast(World.getInstance().itemDataInTrain[i].item.Clone());
+        }
     }
 
     private void Update()
@@ -81,9 +86,11 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
             if(itemGridInst[i] == grid)
             {
                 itemGridInst.RemoveAt(i);
+                DataSynchronization();
                 return;
             }
         }
+        
         Debug.Log("找不到对应Grid，无法剔除");
         return;
     }
@@ -104,7 +111,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     //  仅测试用代码  ---------------------------------------------------------
     public void AddWeapon()
     {
-        Item temp = PublicMethod.GenerateItem(0,1)[0];
+        Item temp = PublicMethod.GenerateItem(Random.Range(0,2),1)[0];
         coreInventory.PushItem(temp);
     }
 
@@ -127,5 +134,23 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         Item[] temp = PublicMethod.GenerateItem(700, 3);
         for (int i = 0; i < temp.Length; ++i)
             coreInventory.PushItem(temp[i]);
+    }
+
+    public void DataSynchronization()
+    {
+        World.getInstance().itemDataInTrain.Clear();
+        for (int i = 0; i < itemGridInst.Count; ++i)
+        {
+            ItemData temp = new ItemData(itemGridInst[i].GetComponent<ItemGridCtrl>().item.id,
+                itemGridInst[i].GetComponent<ItemGridCtrl>().item.currPileNum);
+            World.getInstance().itemDataInTrain.Add(temp);
+        }
+        Debug.Log("========================================================");
+        for(int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
+        {
+            Debug.Log(World.getInstance().itemDataInTrain[i].id + "  " + World.getInstance().itemDataInTrain[i].num);
+        }
+        Debug.Log("========================================================");
+
     }
 }

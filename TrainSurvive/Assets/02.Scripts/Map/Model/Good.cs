@@ -14,48 +14,90 @@ namespace WorldMap.Model
     [Serializable]
     public class Good
     {
-        const int materialIDBase = 200;
-        const int weaponIDBase = 0;
+        static int[] materialIDPool = new int[] { 201, 211, 212, 213, 214, 221, 222, 223, 231, 232, 233, 234 };
+        static int[] weaponIDPool = new int[] { 0 };
+        static int[] specailIDPool = new int[] { 700 };
         public int Price { private set; get; }
-        public Item item { private set; get; }
+        public int ItemID { private set; get; }
+        public int Number { private set; get; }
+        /// <summary>
+        /// 第一次获取时，动态加载。
+        /// </summary>
+        [NonSerialized]
+        private Item m_item;
+        public Item item
+        {
+            get
+            {
+                if (m_item == null)
+                {
+                    Item[] items = PublicMethod.GenerateItem(ItemID, Number);
+                    m_item = items[0];
+                    if (items.Length > 1)
+                        Number = m_item.currPileNum;
+                }
+                return m_item;
+            }
+        }
+        public bool DecreaseNumber(int number)
+        {
+            if (Number < number) return false;
+            item.currPileNum -= number;
+            Number = item.currPileNum;
+            return true;
+        }
+        /// <summary>
+        /// 如果number大于最大上限，则会设成最大值。
+        /// </summary>
+        /// <param name="number"></param>
+        public void SetNumber(int number)
+        {
+            if (number > item.maxPileNum)
+                number = item.maxPileNum;
+            Number = item.currPileNum = number;
+        }
+        public Good Clone()
+        {
+            Good good = new Good();
+            good.Price = Price;
+            good.ItemID = ItemID;
+            good.Number = Number;
+            good.m_item = m_item;
+            return good;
+        }
+        public static Good RandomByItem(Item item)
+        {
+            Good good = new Good();
+            good.m_item = item;
+            good.ItemID = item.id;
+            good.Number = item.currPileNum;
+            good.Price = StaticResource.RandomInt(500) + 500;
+            return good;
+        }
         public static Good RandomMaterial()
         {
             Good good = new Good();
-            int randomID = StaticResource.RandomRange(231, 235);
-            int randomNum = StaticResource.RandomRange(1, 5);
-            good.item = PublicMethod.GenerateItem(randomID, randomNum)[0];
+            good.ItemID = materialIDPool[StaticResource.RandomInt(materialIDPool.Length)];
+            //这里随机数量，在最后生成Item的时候，会工具最大数量裁剪
+            good.Number = StaticResource.RandomRange(1, 5);
             good.Price = StaticResource.RandomInt(500) + 500;
             return good;
         }
         public static Good RandomWeapon()
         {
             Good good = new Good();
-            int randomID = weaponIDBase + StaticResource.RandomInt(1);
-            good.item = PublicMethod.GenerateItem(randomID, 1)[0];
+            good.ItemID = weaponIDPool[StaticResource.RandomInt(weaponIDPool.Length)];
+            good.Number = 1;
             good.Price = StaticResource.RandomRange(1000, 2001);
             return good;
         }
-        private static Item RandomItem(PublicData.ItemType itemType)
+        public static Good RandomSpecail()
         {
-            Item item = new Weapon(1);
-            //switch (itemType)
-            //{
-            //    case PublicData.ItemType.weapon:
-            //        item = new Weapon(1);
-            //        break;
-            //    case PublicData.ItemType.consumable:
-            //        item = new Consumable(1);
-            //        break;
-            //    default:
-            //    case PublicData.ItemType.material:
-            //        item = new Assets._02.Scripts.zhxUIScripts.Material(1);
-            //        break;
-            //}
-            return item;
-        }
-        public bool TryBuyOne()
-        {
-            return true;
+            Good good = new Good();
+            good.ItemID = specailIDPool[StaticResource.RandomInt(specailIDPool.Length)];
+            good.Number = 1;
+            good.Price = StaticResource.RandomRange(10000, 20001);
+            return good;
         }
     }
 }

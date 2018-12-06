@@ -29,7 +29,7 @@ public class PersonTextPanel : MonoBehaviour {
     public void updatePanel(int personIndex)
     {
         Person p = World.getInstance().persons[personIndex];
-        Weapon w = (Weapon)PublicMethod.GenerateItem(p.weaponId)[0];
+        //Weapon w = (Weapon)PublicMethod.GenerateItem(p.weaponId)[0];  
         vit.text = "体力：" + p.vitality;
         str.text = "力量：" + p.strength;
         agl.text = "敏捷：" + p.agile;

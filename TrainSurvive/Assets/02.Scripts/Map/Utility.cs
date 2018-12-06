@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace WorldMap
 {
@@ -121,6 +122,204 @@ namespace WorldMap
         public static bool Between(int left, int right, int value)
         {
             return value >= left && value <= right;
+        }
+        public static T ForceGetComponent<T>(GameObject gameo)
+            where T : Component
+        {
+            T t = gameo.GetComponent<T>();
+            return t == null ? gameo.AddComponent<T>() : t;
+        }
+        public static T ForceGetComponent<T>(Component component)
+            where T : Component
+        {
+            T t = component.GetComponent<T>();
+            if (t == null)
+                t = component.gameObject.AddComponent<T>();
+            return t;
+        }
+        public static T ForceGetComponent<T, N>(Component component)
+            where T : Component
+            where N : T
+        {
+            T t = component.GetComponent<T>();
+            return t == null ? component.gameObject.AddComponent<N>() as T : t;
+        }
+        public static T ForceGetComponentInChildren<T>(GameObject gameo, string name, bool active = true)
+            where T : Component
+        {
+            Transform transform = gameo.transform.Find(name);
+            T t;
+            if(transform == null)
+            {
+                RectTransform child = new GameObject(name).AddComponent<RectTransform>();
+                child.gameObject.SetActive(active);
+                child.SetParent(gameo.GetComponent<Transform>());
+                FullFillRectTransform(child, Vector2.zero, Vector2.zero);
+                t = child.gameObject.AddComponent<T>();
+            }
+            else
+            {
+                t = transform.GetComponent<T>();
+                if (t == null) t = transform.gameObject.AddComponent<T>();
+            }
+            return t;
+        }
+        public static T ForceGetComponentInChildren<T>(Component comp, string name, bool active = true)
+            where T : Component
+        {
+            T t = comp.GetComponentInChildren<T>();
+            if (t == null)
+            {
+                RectTransform child = new GameObject(name).AddComponent<RectTransform>();
+                child.gameObject.SetActive(active);
+                child.SetParent(comp.GetComponent<Transform>());
+                FullFillRectTransform(child, Vector2.zero, Vector2.zero);
+                t = child.gameObject.AddComponent<T>();
+            }
+            return t;
+        }
+        public static void Anchor(Component comp, Vector2 anchorMin, Vector2 anchorMax)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+        }
+        public static void Anchor(Component comp, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = offsetMin;
+            rect.offsetMax = offsetMax;
+        }
+        public static void FullFillRectTransform(Component comp, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = offsetMin;
+            rect.offsetMax = offsetMax;
+        }
+        public static Button CreateBtn(string name, string content, Transform parent)
+        {
+            Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();
+            SetParent(btn, parent);
+            Image image = btn.GetComponent<Image>();
+            //image.sprite = Resources.Load<Sprite>("unity_builtin_extra/UISprite");
+            btn.targetGraphic = image;
+            Text text = CreateText("Text");
+            text.text = content;
+            SetParent(text, btn);
+            FullFillRectTransform(text, Vector2.zero, Vector2.zero);
+            return btn;
+        }
+        public static Button CreateBtn(string name, string content)
+        {
+            Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();
+            Image image = btn.GetComponent<Image>();
+            //image.sprite = Resources.Load<Sprite>("unity_builtin_extra/UISprite");
+            btn.targetGraphic = image;
+            Text text = CreateText("Text");
+            text.text = content;
+            SetParent(text, btn);
+            FullFillRectTransform(text, Vector2.zero, Vector2.zero);
+            return btn;
+        }
+        public static void SetBtnContent(Button btn, string content)
+        {
+            btn.transform.Find("Text").GetComponent<Text>().text = content;
+        }
+        public static Image CreateImage(string name)
+        {
+            return new GameObject(name, typeof(Image)).GetComponent<Image>();
+        }
+        public static Text CreateText(string name)
+        {
+            Text text = new GameObject(name, typeof(Text)).GetComponent<Text>();
+            text.color = Color.black;
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 20;
+            text.alignment = TextAnchor.MiddleCenter;
+            return text;
+        }
+        public static void SetParent(Component child, Component parent)
+        {
+            child.transform.SetParent(parent.transform);
+            child.transform.localPosition = Vector2.zero;
+        }
+        public static void CenterAt(Component comp, Vector2 anchor, Vector2 size)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5F, 0.5F);
+            rect.anchorMin = anchor;
+            rect.anchorMax = anchor;
+            rect.offsetMax = size/2;
+            rect.offsetMin = -rect.offsetMax;
+        }
+        public static void CenterAt(Component comp, Vector2 anchor, Vector2 size, Vector2 vector)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5F, 0.5F);
+            rect.anchorMin = anchor;
+            rect.anchorMax = anchor;
+            rect.offsetMin = vector - size / 2;
+            rect.offsetMax = vector +size / 2;
+        }
+        public static void HLineAt(Component comp, float anchor, float height)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5F, 0.5F);
+            rect.anchorMin = new Vector2(0, anchor);
+            rect.anchorMax = new Vector2(1, anchor);
+            rect.offsetMax = new Vector2(0, height/2);
+            rect.offsetMin = -rect.offsetMax;
+        }
+        public static void VLineAt(Component comp, float anchor, float top, float bottom, float width)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5F, 0.5F);
+            rect.anchorMax = new Vector2(anchor, top);
+            rect.anchorMin = new Vector2(anchor, bottom);
+            rect.offsetMax = new Vector2(width/2, 0);
+            rect.offsetMin = -rect.offsetMax;
+        }
+        public static void RightTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = pivot;
+            rect.anchorMin = Vector2.one;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = vector + (size * -pivot);
+            rect.offsetMax = rect.offsetMin + size;
+        }
+        public static void RightCenter(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = pivot;
+            rect.anchorMin = new Vector2(1F, 0.5F);
+            rect.anchorMax = rect.anchorMin;
+            rect.offsetMin = vector + (size * -pivot);
+            rect.offsetMax = rect.offsetMin + size;
+        }
+        public static void RightBottom(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = pivot;
+            rect.anchorMin = new Vector2(1, 0);
+            rect.anchorMax = new Vector2(1, 0);
+            rect.offsetMin = vector  + (size * -pivot);
+            rect.offsetMax = rect.offsetMin + size;
+        }
+        public static void TopLeft(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = pivot;
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(0, 1);
+            rect.offsetMin = vector + (size * -pivot);
+            rect.offsetMax = rect.offsetMin + size;
         }
     }
     public struct Matrix2x2Int
