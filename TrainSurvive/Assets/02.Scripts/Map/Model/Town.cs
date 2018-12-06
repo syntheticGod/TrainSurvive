@@ -110,10 +110,9 @@ namespace WorldMap.Model
         /// 向商店售卖
         /// </summary>
         /// <param name="goods"></param>
-        /// <param name="number"></param>
-        public void SellGoods(Good goods, int number)
+        public void SellGoods(Good goods)
         {
-            
+            Goods.Add(goods);
         }
         //城镇简介
         public string Info

@@ -6,18 +6,18 @@
  */
 using UnityEngine;
 using System.Collections;
-using Assets._02.Scripts.zhxUIScripts;
+using WorldMap.Model;
 
 namespace WorldMap.UI
 {
-    public class ItemListView : ListViewController<Item>
+    public class TeamPackListView : MergableListView<Good>
     {
-        protected override void OnItemView(ListViewItem item, Item data)
+        protected override void OnItemView(ListViewItem item, Good data)
         {
             TeamPackItem view = Utility.ForceGetComponentInChildren<TeamPackItem>(item, "PackItem");
-            view.SetNumber(data.currPileNum);
-            view.SetTarget(data);
-            view.SetMarkLevel((int)data.rarity);
+            view.SetNumber(data.Number);
+            view.SetTarget(data.item);
+            view.SetMarkLevel((int)data.item.rarity);
         }
     }
 }

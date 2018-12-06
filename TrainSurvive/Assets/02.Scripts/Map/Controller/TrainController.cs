@@ -13,12 +13,16 @@ using System;
 
 using WorldMap.Model;
 using WorldMap.UI;
+using UnityEngine.UI;
+
 namespace WorldMap.Controller
 {
-    public class TrainController : BaseController, OnClickListener, DialogCallBack
+    public class TrainController : BaseController, OnClickListener, DialogCallBack, Observer
     {
         private const int levelOfTrain = -1;
-        
+        //列车状态映射显示信息
+        private static string[] trainActionBtnStrs = { "开车","开车", "停车中..." ,"停车"};
+        private const int ECHO_FROM_TRAIN = 1;
         //主摄像机
         private Camera mainCamera;
         //主摄像机焦点控制器
@@ -26,18 +30,24 @@ namespace WorldMap.Controller
         //外部引用
         private IMapForTrain map;
         private GameObject trainModeBTs;
+        private Text trainActionBtn;
         private TownController townController;
         private TeamOutPrepareDialog teamOutDialog;
         public void init()
         {
+            Debug.Log("TrainController init");
             map = Map.GetIntanstance();
             //监听列车的所有状态
             ButtonHandler.Instance.AddListeners(this);
+            Train.Instance.Attach(this, ECHO_FROM_TRAIN);
         }
         protected override void CreateModel()
         {
+            Debug.Log("TrainController CreateModel");
             Transform canvas = GameObject.Find("/Canvas").transform;
             trainModeBTs = canvas.Find("TrainMode").gameObject;
+            trainActionBtn = trainModeBTs.transform.Find("TrainRunOrStopBtn").Find("Text").GetComponent<Text>();
+
             townController = canvas.Find("TownViewer").GetComponent<TownController>();
             townController.Init();
 
@@ -50,12 +60,11 @@ namespace WorldMap.Controller
         }
         protected override void Start()
         {
+            Debug.Log("TrainController Start");
             base.Start();
             Train train = Train.Instance;
             transform.position = StaticResource.MapPosToWorldPos(train.PosTrain, levelOfTrain);
             map.MoveToThisSpawn(train.MapPosTrain);
-            townController.TryShowTown(train.MapPosTrain);
-            Debug.Log("TrainController Start");
         }
         protected override void Update()
         {
@@ -106,29 +115,46 @@ namespace WorldMap.Controller
             Train train = Train.Instance;
             switch (id)
             {
-                case BUTTON_ID.TRAIN_RUN:
-                    Debug.Log("开车指令");
-                    if (!train.ContinueRun())
+                case BUTTON_ID.TRAIN_RUN_OR_STOP:
+                    if (train.IsRunning)
                     {
-                        Debug.Log("开车指令失败");
-                        break;
+                        Debug.Log("停车指令");
+                        if (!train.StopTemporarily())
+                        {
+                            Debug.Log("开车指令失败");
+                            break;
+                        }
+                        //trainActionBtn.text = trainActionBtnStrs[0];
+                    }
+                    else
+                    {
+                        Debug.Log("开车指令");
+                        if (!train.ContinueRun())
+                        {
+                            Debug.Log("开车指令失败");
+                            break;
+                        }
+                        //trainActionBtn.text = trainActionBtnStrs[1];
                     }
                     break;
-                case BUTTON_ID.TRAIN_STOP:
-                    Debug.Log("停车指令");
-                    if (!train.StopTemporarily())
-                    {
-                        Debug.Log("开车指令失败");
-                        break;
-                    }
+                case BUTTON_ID.TRAIN_ENTRY_AREA:
+                    Debug.Log("进入区域指令");
+                    //TODO：目前只有城镇
+                    if(townController!=null)
+                        townController.TryShowTown(train.MapPosTrain);
+                    else
+                        Debug.Log("TeamOutDialog is null");
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
                     //弹出框之后不能再操作列车
-                    teamOutDialog.Show();
+                    if (teamOutDialog != null)
+                        teamOutDialog.Show();
+                    else
+                        Debug.Log("TeamOutDialog is null");
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
-                    SceneManager.LoadScene("GCTestScene1");
+                    SceneManager.LoadScene("TrainScene");
                     break;
             }
         }
@@ -143,8 +169,7 @@ namespace WorldMap.Controller
         }
 
         public void Cancel()
-        {
-        }
+        { }
         private void ActiveTrain(bool active)
         {
             Train.Instance.SetMovable(active);
@@ -169,6 +194,19 @@ namespace WorldMap.Controller
 
         protected override void UnfocusBehaviour()
         {
+        }
+
+        public void ObserverUpdate(int state, int echo)
+        {
+            switch (echo)
+            {
+                case ECHO_FROM_TRAIN:
+                    if(state < trainActionBtnStrs.Length)
+                        trainActionBtn.text = trainActionBtnStrs[state];
+                    else
+                        Debug.LogError("系统：该列车状态无对应的显示信息");
+                    break;
+            }
         }
     }
 }

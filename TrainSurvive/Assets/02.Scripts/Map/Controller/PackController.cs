@@ -17,8 +17,8 @@ namespace WorldMap.Controller
 {
     public class PackController : WindowsController
     {
-        private ItemListView packLV;
-        private List<Item> items;
+        private TeamPackListView packLV;
+        private List<Good> items;
         private string[] rightUpBtnsName = { "AllItem", "Equipments", "Materials", "Specials" };
         private string[] rightUpBtnsContent = { "全部", "装备", "材料", "特殊" };
         private Button[] rightTopBtns;
@@ -36,7 +36,7 @@ namespace WorldMap.Controller
         {
             base.CreateModel();
             //PackListView
-            packLV = Utility.ForceGetComponentInChildren<ItemListView>(gameObject, "PackListViewLayout");
+            packLV = Utility.ForceGetComponentInChildren<TeamPackListView>(gameObject, "PackListViewLayout");
             packLV.SetBackgroudColor(containerColor);
             packLV.ScrollDirection = ScrollType.Vertical;
             packLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
@@ -92,13 +92,13 @@ namespace WorldMap.Controller
                     packLV.onItemFilter = null;
                     break;
                 case 1:
-                    packLV.onItemFilter = (Item item) => { return item.itemType != PublicData.ItemType.Weapon; };
+                    packLV.onItemFilter = (Good item) => { return item.ItemType != PublicData.ItemType.Weapon; };
                     break;
                 case 2:
-                    packLV.onItemFilter = (Item item) => { return item.itemType != PublicData.ItemType.Material; };
+                    packLV.onItemFilter = (Good item) => { return item.ItemType != PublicData.ItemType.Material; };
                     break;
                 case 3:
-                    packLV.onItemFilter = (Item item) => { return item.itemType != PublicData.ItemType.SpecialItem; };
+                    packLV.onItemFilter = (Good item) => { return item.ItemType != PublicData.ItemType.SpecialItem; };
                     break;
             }
             packLV.Refresh();
@@ -126,11 +126,7 @@ namespace WorldMap.Controller
             //items[1].currPileNum = 100;
             //items[2].currPileNum = 999;
             //items[3].currPileNum = 555;
-            items = new List<Item>();
-            foreach(Good goods in world.GetGoodsInTeam())
-            {
-                items.Add(goods.item);
-            }
+            items = new List<Good>(world.GetGoodsInTeam());
             return true;
         }
         protected override void AfterShowWindow()

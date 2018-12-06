@@ -30,19 +30,19 @@ namespace WorldMap
             world = WorldForMap.Instance;
             team = Model.Team.Instance;
             train = Model.Train.Instance;
+            ButtonHandler.Instance.AddListeners(this);
+            train.Attach(obs: this, echo: ECHO_CODE_TRAIN);
+            team.Attach(obs: this, echo: ECHO_CODE_TEAM);
         }
         void Awake()
         {
-            Debug.Log("TownController Awake");
             townInfoText = transform.Find("TownInfo").GetComponentInChildren<Text>();
+            Debug.Assert(townInfoText != null);
+
             Transform canvas = GameObject.Find("/Canvas").transform;
             tavernController = canvas.Find("TavernViewer").GetComponent<TavernController>();
             tavernController.Init();
             
-            Debug.Assert(townInfoText != null);
-            ButtonHandler.Instance.AddListeners(this);
-            train.Attach(obs: this, echo: ECHO_CODE_TRAIN);
-            team.Attach(obs: this, echo: ECHO_CODE_TEAM);
         }
         void Start()
         {
@@ -50,9 +50,7 @@ namespace WorldMap
         }
 
         void Update()
-        {
-
-        }
+        { }
         public bool TryShowTown(Vector2Int mapPos)
         {
             Model.Town town;
@@ -98,14 +96,14 @@ namespace WorldMap
             switch (state)
             {
                 case Model.Train.STATE.STOP_TOWN:
-                    Debug.Log("列车到达 城镇  通知显示城镇");
-                    Model.Town town;
-                    if(!world.FindTown(train.MapPosTrain, out town))
-                    {
-                        Debug.LogWarning("列车所在位置不是城镇");
-                        return;
-                    }
-                    ShowTwon(town);
+                    //Debug.Log("列车到达 城镇  通知显示城镇");
+                    //Model.Town town;
+                    //if(!world.FindTown(train.MapPosTrain, out town))
+                    //{
+                    //    Debug.LogWarning("列车所在位置不是城镇");
+                    //    return;
+                    //}
+                    //ShowTwon(town);
                     break;
                 default:
                     Hide();
@@ -117,14 +115,14 @@ namespace WorldMap
             switch (state)
             {
                 case Model.Team.STATE.STOP_TOWN:
-                    Debug.Log("探险队到达 城镇  通知显示城镇");
-                    Model.Town town;
-                    if (!world.FindTown(team.MapPosTeam, out town))
-                    {
-                        Debug.LogWarning("列车所在位置不是城镇");
-                        return;
-                    }
-                    ShowTwon(town);
+                    //Debug.Log("探险队到达 城镇  通知显示城镇");
+                    //Model.Town town;
+                    //if (!world.FindTown(team.MapPosTeam, out town))
+                    //{
+                    //    Debug.LogWarning("列车所在位置不是城镇");
+                    //    return;
+                    //}
+                    //ShowTwon(town);
                     break;
                 default:
                     Hide();

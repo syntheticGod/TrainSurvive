@@ -22,6 +22,7 @@ using UnityEngine;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
+    [Serializable]
     public abstract class Item
     {
         public ItemController belongGrid;
