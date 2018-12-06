@@ -33,7 +33,6 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
 
         if (isEquipmentGrid)
         {
-        
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
             Person curPerson = World.getInstance().persons[personID];
             curPerson.equipWeapon((Weapon)gridCtrl.item);

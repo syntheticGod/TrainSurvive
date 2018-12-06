@@ -96,10 +96,10 @@ public class World {
     public int woodMax = 1000;
     public int metalMax = 1000;
     public int money;
-
-    public List<WorldMap.Model.Good> goodsInTrain = new List<WorldMap.Model.Good>();
-    public List<WorldMap.Model.Good> goodsInTeam = new List<WorldMap.Model.Good>();
-
+    
+    public List<ItemData> itemDataInTrain = new List<ItemData>();
+    public List<ItemData> itemDataInTeam = new List<ItemData>();
+    
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt=1;

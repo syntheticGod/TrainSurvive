@@ -39,23 +39,25 @@ namespace WorldMap
         {
             good = good.Clone();
             good.SetNumber(numberBuy);
-            world.goodsInTrain.Add(good);
+            //world.goodsInTrain.Add(good);
             return true;
         }
         public bool PushGoodsToTeam(Good good, int numberBuy)
         {
             good = good.Clone();
             good.SetNumber(numberBuy);
-            world.goodsInTeam.Add(good);
+            //world.goodsInTeam.Add(good);
             return true;
         }
         public List<Good> GetGoodsInTeam()
         {
-            return world.goodsInTeam;
+            //return world.goodsInTeam;
+            return null;
         }
         public List<Good> GetGoodsInTrain()
         {
-            return world.goodsInTrain;
+            //return world.goodsInTrain;
+            return null;
         }
         public int Money
         {
