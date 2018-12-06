@@ -18,6 +18,9 @@ public class UIManager : MonoBehaviour {
     [Tooltip("Facility UI子物体")]
     [SerializeField]
     private RectTransform FacilityUI;
+    [Tooltip("InfoPanel子物体")]
+    [SerializeField]
+    private InfoPanel InfoPanel;
 
     private GameObject _currentFacilityUI;
     private GameObject currentFacilityUI {
@@ -73,5 +76,21 @@ public class UIManager : MonoBehaviour {
     /// <param name="show">true显示，false隐藏</param>
     public void ToggleInventoryPanel(bool show) {
         InventoryPanel.gameObject.SetActive(show);
+    }
+
+    /// <summary>
+    /// 显示消息界面
+    /// </summary>
+    public void ShowInfoPanel(string title, string content) {
+        InfoPanel.TitleText = title;
+        InfoPanel.ContentText = content;
+        InfoPanel.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// 隐藏消息界面
+    /// </summary>
+    public void HideInfoPanel() {
+        InfoPanel.gameObject.SetActive(false);
     }
 }

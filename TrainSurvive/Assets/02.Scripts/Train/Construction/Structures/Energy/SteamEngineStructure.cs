@@ -31,7 +31,7 @@ public class SteamEngineStructure : Structure {
         ProcessSpeedRatio = (float)info.GetValue("ProcessSpeedRatio", typeof(float));
     }
 
-    private static FixedInfo _info = new FixedInfo {
+    private static readonly FixedInfo _info = new FixedInfo {
         Name = "蒸汽机",
         Description = "燃烧各种可燃物（木炭/煤炭、各种有机物等），转化为热能",
         WorkAll = 0.01f,

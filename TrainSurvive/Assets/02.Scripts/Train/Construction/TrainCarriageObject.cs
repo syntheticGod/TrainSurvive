@@ -65,6 +65,7 @@ public class TrainCarriageObject : MonoBehaviour {
     }
 
     private void OnStateChange(TrainCarriage carriage) {
+        contextMenu?.Close();
         switch (TrainCarriage.CarriageState) {
             case TrainCarriage.State.CANCLE:
                 Destroy(gameObject);
