@@ -19,7 +19,7 @@ public class WoodBoxStructure : Structure {
     private static FixedInfo _info = new FixedInfo {
         Name = "木箱",
         Description = "仓库容量上限增加",
-        WorkAll = 0,
+        WorkAll = 0.01f,
         BuildCosts = new Cost[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,

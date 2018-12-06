@@ -136,7 +136,9 @@ public class World {
     
 
     public List<Structure> buildInstArray = new List<Structure>();
+    public List<TrainCarriage> carriageInstArray = new List<TrainCarriage>();
     public bool[] buildUnlock;
+    public bool[] carriageUnlock;
     public Tech[] techArray;
     public int techUnlock;
 

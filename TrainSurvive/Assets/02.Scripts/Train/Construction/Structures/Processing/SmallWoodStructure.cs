@@ -38,7 +38,7 @@ public class SmallWoodStructure : Structure {
     private static FixedInfo _info = new FixedInfo {
         Name = "小型制木机",
         Description = "将原木处理成木材，1原木=5木材",
-        WorkAll = 0,
+        WorkAll = 0.01f,
         BuildCosts = new Cost[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 3,

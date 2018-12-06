@@ -21,6 +21,6 @@ public class TrainExpand0Tech : Tech {
     public override float TotalWorks { get; } = 2 * 6;
 
     public override void OnCompleted() {
-
+        ConstructionManager.CarriageUnlocks[0] = true;
     }
 }

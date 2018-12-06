@@ -20,7 +20,7 @@ public class WoodTableStructure : Structure {
         Name = "木桌",
         Description = "可摆放小物品",
         LayerName = "Table",
-        WorkAll = 0,
+        WorkAll = 0.01f,
         BuildCosts = new Cost[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,

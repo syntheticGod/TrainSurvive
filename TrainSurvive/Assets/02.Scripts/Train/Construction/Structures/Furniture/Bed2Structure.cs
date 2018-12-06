@@ -19,7 +19,7 @@ public class Bed2Structure : BedStructure {
     private static FixedInfo _info = new FixedInfo {
         Name = "双层床",
         Description = "队伍人数上限+2",
-        WorkAll = 0,
+        WorkAll = 0.01f,
         BuildCosts = new Cost[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,

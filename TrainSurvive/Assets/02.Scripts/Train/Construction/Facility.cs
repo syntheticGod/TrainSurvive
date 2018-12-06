@@ -105,8 +105,6 @@ public class Facility : MonoBehaviour {
                 spriteRenderer.color = HighlightColor;
                 // 右键菜单
                 if (Input.GetMouseButtonUp(1)) {
-                    // 关闭操作菜单
-                    UIManager.Instance?.HideFacilityUI();
                     Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     contextMenu = new ContextMenu();
                     MakeContextMenu(contextMenu);
