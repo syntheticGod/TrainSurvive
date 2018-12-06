@@ -4,7 +4,10 @@
  * 创建时间：2018/10/29 22:08:00
  * 版本：v0.1
  */
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(BoxCollider2D))]
@@ -18,17 +21,13 @@ public class Facility : MonoBehaviour {
     /// 建筑实体
     /// </summary>
     public Structure Structure { get; set; }
-    /// <summary>
-    /// UI
-    /// </summary>
-    public FacilityUI UI { get; set; }
 
     private Indicator _indicator;
     private Indicator Indicator {
         get {
             if (_indicator == null) {
                 _indicator = GetComponentInChildren<Indicator>();
-                _indicator.GetComponent<RectTransform>().localPosition = new Vector3(0, Structure.Info.Sprite.bounds.size.y, 0);
+                _indicator.GetComponent<RectTransform>().localPosition = new Vector3(0, Structure.Info.Sprite.bounds.size.y - Structure.Info.Sprite.pivot.y / Structure.Info.Sprite.pixelsPerUnit, 0);
             }
             return _indicator;
         }
@@ -52,6 +51,10 @@ public class Facility : MonoBehaviour {
                 _boxCollider = GetComponent<BoxCollider2D>();
             return _boxCollider;
         }
+    }
+
+    private void Awake() {
+        gameObject.layer = Structure.Info.Layer;
     }
 
     private void Start() {
@@ -102,8 +105,6 @@ public class Facility : MonoBehaviour {
                 spriteRenderer.color = HighlightColor;
                 // 右键菜单
                 if (Input.GetMouseButtonUp(1)) {
-                    // 关闭操作菜单
-                    UIManager.Instance?.HideFacilityUI();
                     Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     contextMenu = new ContextMenu();
                     MakeContextMenu(contextMenu);
@@ -122,8 +123,11 @@ public class Facility : MonoBehaviour {
                 contextMenu.PutButton("停止", 0, () => Structure.FacilityState = Structure.State.CANCLE);
                 break;
             case Structure.State.WORKING:
-                contextMenu.PutButton("查看", 0, () => UIManager.Instance?.ShowFaclityUI(UI, Structure));
-                contextMenu.PutButton("拆除", 1, () => Structure.FacilityState = Structure.State.REMOVING);
+                Structure.ButtonAction[] actions = Structure.GetActions();
+                for (int i = 0; i < actions.Length; i++) {
+                    int index = i;
+                    contextMenu.PutButton(actions[index].Name, index, () => actions[index].Action(Structure));
+                }
                 break;
             default:
                 break;
