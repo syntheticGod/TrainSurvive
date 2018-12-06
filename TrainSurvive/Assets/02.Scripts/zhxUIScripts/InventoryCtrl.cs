@@ -20,7 +20,8 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     
 
     private void Awake()
-    { 
+    {
+        
         coreInventory = new Inventory(300, this);              //测试临时MaxSize
         itemGridInst = new List<GameObject>();
         RefreshMaxSize();
@@ -81,9 +82,11 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
             if(itemGridInst[i] == grid)
             {
                 itemGridInst.RemoveAt(i);
+                DataSynchronization();
                 return;
             }
         }
+        
         Debug.Log("找不到对应Grid，无法剔除");
         return;
     }
@@ -127,5 +130,23 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         Item[] temp = PublicMethod.GenerateItem(700, 3);
         for (int i = 0; i < temp.Length; ++i)
             coreInventory.PushItem(temp[i]);
+    }
+
+    public void DataSynchronization()
+    {
+        World.getInstance().InventoryItemData.Clear();
+        for (int i = 0; i < itemGridInst.Count; ++i)
+        {
+            ItemData temp = new ItemData(itemGridInst[i].GetComponent<ItemGridCtrl>().item.id,
+                itemGridInst[i].GetComponent<ItemGridCtrl>().item.currPileNum);
+            World.getInstance().InventoryItemData.Add(temp);
+        }
+        Debug.Log("========================================================");
+        for(int i = 0; i < World.getInstance().InventoryItemData.Count; ++i)
+        {
+            Debug.Log(World.getInstance().InventoryItemData[i].id + "  " + World.getInstance().InventoryItemData[i].num);
+        }
+        Debug.Log("========================================================");
+
     }
 }

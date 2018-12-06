@@ -96,8 +96,8 @@ public class World {
     public int woodMax = 1000;
     public int metalMax = 1000;
 
-    public List<int> itemIDs;
-    public List<int> itemNums;
+    public List<ItemData> InventoryItemData = new List<ItemData>();
+    
 
     public int time = 0;
     public int timeSpd = 1;

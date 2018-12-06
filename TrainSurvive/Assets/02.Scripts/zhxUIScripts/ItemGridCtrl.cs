@@ -124,6 +124,10 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         else
         {
             item.currPileNum = restNum;
+            if (belongController != null)
+            {
+                belongController.DataSynchronization();
+            }
         }
         
     }
@@ -134,8 +138,10 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         {
             belongController.RemoveGrid(gameObject);
             belongController.coreInventory.PopItem(item);
+            belongController.DataSynchronization();
+    
         }
-        if(belongContainer != null && belongContainer.name == "WeaponGrid")            //卸载装备需要做的信息更新
+        else if(belongContainer != null && belongContainer.name == "WeaponGrid")            //卸载装备需要做的信息更新
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
             Person curPerson = World.getInstance().persons[personID];
@@ -165,7 +171,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
             {   //同物品容器/同ID ->  堆叠
                 allowNum = item.maxPileNum - item.currPileNum >= allowNum ? allowNum : item.maxPileNum - item.currPileNum;
                 restNum = oriGridCtrl.item.currPileNum - allowNum;
-                item.currPileNum += allowNum;
+                item.currPileNum += allowNum;//++
                 restNum = oriGridCtrl.item.currPileNum - allowNum;
                 oriGrid.SendMessage("SetRestNum", restNum);
             }
@@ -263,7 +269,10 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                 }
             }
         }
-            
+        if(belongController != null)
+        {
+            belongController.DataSynchronization();
+        }    
         
         
     }
@@ -297,7 +306,9 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         Destroy(GameObject.Find("tempDragImg"));
         if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
+
             DestroyMyself();
+
         }
     }
 

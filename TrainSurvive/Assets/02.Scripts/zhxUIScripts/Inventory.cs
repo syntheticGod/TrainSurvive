@@ -86,6 +86,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             }
             controller.RefreshMaxSize();
             controller.RefreshShowGrid();
+            controller.DataSynchronization();
             return true;
         }
 
@@ -97,6 +98,10 @@ namespace Assets._02.Scripts.zhxUIScripts
         public void PushItemWithNoGrid(Item item)
         {
             items.Add(item);
+            if(controller != null)
+            {
+                controller.DataSynchronization();
+            }
         }
 
         private int PushItemWithNoController(Item item)         //该函数可以与PushItem集成，减少代码冗余，后续版本待优化
@@ -207,6 +212,8 @@ namespace Assets._02.Scripts.zhxUIScripts
             }
             controller.RefreshShowGrid();
             controller.RefreshMaxSize();
+            controller.DataSynchronization();
+
             return restNum;
         }
 
@@ -240,6 +247,8 @@ namespace Assets._02.Scripts.zhxUIScripts
                 controller.AddGrid(mappingItem);                 //为前台添加物品
             }
             controller.RefreshMaxSize();
+            controller.DataSynchronization();
+         
             return restNum;
         }
 
@@ -253,12 +262,20 @@ namespace Assets._02.Scripts.zhxUIScripts
             {
                 _curr_size -= item.size * item.currPileNum;
             }
+            if (controller != null)
+            {
+                controller.DataSynchronization();
+            }
         }
 
         public void PopItem(Item item, int num)                 //弹出部分物体
         {
             item.currPileNum -= num;
             _curr_size -= item.size * num;
+            if (controller != null)
+            {
+                controller.DataSynchronization();
+            }
         }
 
         
