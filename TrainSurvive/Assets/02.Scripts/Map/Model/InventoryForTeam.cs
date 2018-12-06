@@ -26,21 +26,18 @@ namespace WorldMap.Model
         /// <returns></returns>
         public int PushItem(Item item)
         {
-            Good good = Good.RandomByItem(item);
-            world.PushGoodsToTeam(good, good.Number);
+            world.PushGoodsToTeam(item.id, item.currPileNum);
             return Inventory.PushItem(item);
         }
-        public bool CanPushItemToPack(Good good, int number)
+        public bool CanPushItemToPack(Good good)
         {
+            Inventory.CanPushAllItem(good.item);
             return true;
         }
-        public void PushItemFromShop(Good good, int number)
+        public void PushItemFromShop(Good good)
         {
-            world.PushGoodsToTeam(good, number);
-            Item item = good.item.Clone();
-            item.currPileNum = number;
-            //FOR TEST 判断背包是否放的下
-            Inventory.PushItem(item);
+            world.PushGoodsToTeam(good.item.id, good.Number);
+            Inventory.PushItem(good.item);
         }
         public float GetWeight()
         {

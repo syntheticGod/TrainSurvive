@@ -20,14 +20,15 @@ namespace WorldMap
             "NONE",
 
             "TEAM_NONE",
+            "TeamEntryAreaBtn",
             "TeamReturnBtn",
             "TeamGatherBtn",
             "TeamPackBtn",
             "TEAM_NUM",
 
             "TRAIN_NONE",
-            "TrainRunBtn",
-            "TrainStopBtn",
+            "TrainRunOrStopBtn",
+            "TrainEntryAreaBtn",
             "TrainTeamActionBtn",
             "TrainChangeBtn",
             "TRAIN_NUM",

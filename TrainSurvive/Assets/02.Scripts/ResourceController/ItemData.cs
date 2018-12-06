@@ -8,6 +8,7 @@ using Assets._02.Scripts.zhxUIScripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -23,8 +24,8 @@ public class ItemData
         num = _num;
     }
     /// <summary>
-     /// 第一次获取时，动态加载。
-     /// </summary>
+    /// 第一次获取时，动态加载。
+    /// </summary>
     [NonSerialized]
     private Item m_item;
     public Item item

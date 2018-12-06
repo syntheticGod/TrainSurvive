@@ -35,29 +35,64 @@ namespace WorldMap
         {
             world.money += money;
         }
-        public bool PushItemToTrain(Good good, int numberBuy)
+        public void PushItemToTrain(int itemID, int numberBuy)
         {
-            good = good.Clone();
-            good.SetNumber(numberBuy);
-            //world.goodsInTrain.Add(good);
-            return true;
+            world.itemDataInTrain.Add(new ItemData(itemID, numberBuy));
         }
-        public bool PushGoodsToTeam(Good good, int numberBuy)
+        public void PushGoodsToTeam(int itemID, int numberBuy)
         {
-            good = good.Clone();
-            good.SetNumber(numberBuy);
-            //world.goodsInTeam.Add(good);
-            return true;
+            world.itemDataInTeam.Add(new ItemData(itemID, numberBuy));
+        }
+        public void SellGoodsFromTeam(int itemID, int numberSell)
+        {
+            foreach (ItemData item in world.itemDataInTeam)
+            {
+                if(item.id == itemID)
+                {
+                    item.num -= numberSell;
+                    if (item.num <= 0)
+                    {
+                        Debug.Assert(world.itemDataInTeam.Remove(item));
+                        if(item.num < 0)
+                            Debug.LogError("系统：探险队售卖数量减扣错误");
+                    }
+                    break;
+                }
+            }
+        }
+        public void SellGoodsFromTrain(int itemID, int numberSell)
+        {
+            foreach (ItemData item in world.itemDataInTrain)
+            {
+                if (item.id == itemID)
+                {
+                    item.num -= numberSell;
+                    if (item.num <= 0)
+                    {
+                        Debug.Assert(world.itemDataInTrain.Remove(item));
+                        if(item.num < 0)
+                            Debug.LogError("系统：探险队售卖数量减扣错误");
+                    }
+                }
+            }
         }
         public List<Good> GetGoodsInTeam()
         {
-            //return world.goodsInTeam;
-            return null;
+            List<Good> goods = new List<Good>();
+            foreach(ItemData item in world.itemDataInTeam)
+            {
+                goods.Add(new Good(item));
+            }
+            return goods;
         }
         public List<Good> GetGoodsInTrain()
         {
-            //return world.goodsInTrain;
-            return null;
+            List<Good> goods = new List<Good>();
+            foreach (ItemData item in world.itemDataInTrain)
+            {
+                goods.Add(new Good(item));
+            }
+            return goods;
         }
         public int Money
         {

@@ -70,11 +70,11 @@ namespace WorldMap.Controller
         }
         public void CallBackGoodsBuy(Good good)
         {
-            //FOR TEST全部买下
+            //TODO：弹出选择窗口
             int numberBuy = good.Number;
             if (!world.Pay(good.Price * numberBuy))
             {
-                Debug.Log("商店：金额不足，滚");
+                Debug.Log("商店：金额不足");
                 return;
             }
             if(numberBuy > good.Number)
@@ -82,38 +82,56 @@ namespace WorldMap.Controller
                 Debug.Log("商店：物品数量不足，另寻他处");
                 return;
             }
+            Good goodInPack = good.Clone();
+            goodInPack.SetNumber(numberBuy);
             if (world.IfTeamOuting)
             {
                 InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
-                if (!inventoryForTeam.CanPushItemToPack(good, numberBuy))
+                if (!inventoryForTeam.CanPushItemToPack(goodInPack))
                 {
                     Debug.Log("系统：购买物品失败");
                     return;
                 }
-                inventoryForTeam.PushItemFromShop(good, numberBuy);
+                inventoryForTeam.PushItemFromShop(goodInPack);
             }
             else
             {
-                if (!world.PushItemToTrain(good, numberBuy))
-                {
-                    Debug.Log("列车：仓库已满");
-                    return;
-                }
+                //TODO：需要列车中的仓库是否满
+                world.PushItemToTrain(good.item.id, numberBuy);
             }
-            //全部买下，不应该失败
-            if (!currentTown.BuyGoods(good, good.Number))
+            if (!currentTown.BuyGoods(good, numberBuy))
             {
                 Debug.LogError("系统：物品购买失败");
             }
-            if (!goodsInShopLV.RemoveItem(good))
-            {
-                Debug.LogError("系统：列表刷新失败");
-            }
-            goodsInPackLV.AddItem(good);
+            Debug.Log("商店：你成功购买了"+goodInPack.Name+" 花费："+ good.Price * numberBuy+" 剩余："+world.Money);
+            //城镇中的Good被修改，ListView中的Good会被一起修改，所以直接刷新。
+            goodsInShopLV.Refresh();
+            goodsInPackLV.AddItem(goodInPack);
         }
         public void CallBackGoodsSell(Good good)
         {
-            
+            //TODO：弹出选择窗口
+            int numberSell = good.Number;
+            if(numberSell > good.Number)
+            {
+                Debug.Log("系统：库存数量不足");
+                return;
+            }
+            Good goodsInTown = good.Clone();
+            goodsInTown.SetNumber(numberSell);
+            currentTown.SellGoods(goodsInTown);
+            if (world.IfTeamOuting)
+            {
+                world.SellGoodsFromTeam(good.ItemID, numberSell);
+            }
+            else
+            {
+                world.SellGoodsFromTrain(good.ItemID, numberSell);
+            }
+            world.AddMoney(numberSell * good.Price);
+            Debug.Log("商店：你出售了" + good.Name +" 获得："+numberSell * good.Price +" 现有："+world.Money);
+            goodsInPackLV.Refresh();
+            goodsInShopLV.AddItem(goodsInTown);
         }
         protected override bool FocusBehaviour()
         {

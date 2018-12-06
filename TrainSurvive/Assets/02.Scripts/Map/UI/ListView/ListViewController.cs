@@ -168,7 +168,7 @@ namespace WorldMap.UI
         {
             Utility.ForceGetComponent<Image>(gameObject).color = color;
         }
-        public void Refresh()
+        public virtual void Refresh()
         {
             RemoveAllItem();
             for (int i = 0; i < Datas.Count; i++)
@@ -177,13 +177,13 @@ namespace WorldMap.UI
                     OnItemView(AppendItem(), Datas[i]);
             }
         }
-        public void AddItem(D data)
+        public virtual void AddItem(D data)
         {
             Datas.Add(data);
             if (onItemFilter == null || !onItemFilter(data))
                 OnItemView(AppendItem(), data);
         }
-        public bool RemoveItem(D data)
+        public virtual bool RemoveItem(D data)
         {
             if (!Datas.Remove(data))
                 return false;
@@ -241,7 +241,7 @@ namespace WorldMap.UI
             child.offsetMax = Vector2.zero;
         }
 
-        private ListViewItem AppendItem()
+        protected ListViewItem AppendItem()
         {
             ListViewItem itemView;
             if (recycal.Count == 0)

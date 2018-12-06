@@ -34,10 +34,15 @@ namespace WorldMap
         public void OnClick(BUTTON_ID buttonID)
         {
             Debug.Log(ButtonIDBinder.GetButtonName(buttonID) + " clicked");
+            List<OnClickListener> accepted = new List<OnClickListener>();
             foreach(var listener in listeners)
             {
-                if(listener.IfAccepted(buttonID))
-                    listener.OnClick(buttonID);
+                if (listener.IfAccepted(buttonID))
+                    accepted.Add(listener);
+            }
+            foreach(var listener in accepted)
+            {
+                listener.OnClick(buttonID);
             }
         }
     }
@@ -46,14 +51,15 @@ namespace WorldMap
         NONE,
         
         TEAM_NONE,//小队模式显示的按键
+        TEAM_ENTRY_AREA,//小队回车
         TEAM_RETRUN,//小队回车
         TEAM_GATHER,//小队采集
         TEAM_PACK,//小队背包
         TEAM_NUM,
 
         TRAIN_NONE,//列车模式显示的按钮
-        TRAIN_RUN,
-        TRAIN_STOP,
+        TRAIN_RUN_OR_STOP,//开/停车
+        TRAIN_ENTRY_AREA,//进入区域
         TRAIN_TEAM_ACTION,//小队下车行动
         TRAIN_CHANGE,
         TRAIN_NUM,
