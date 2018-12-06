@@ -35,6 +35,7 @@ namespace WorldMap.Controller
         private TeamOutPrepareDialog teamOutDialog;
         public void init()
         {
+            Debug.Log("TrainController init");
             map = Map.GetIntanstance();
             //监听列车的所有状态
             ButtonHandler.Instance.AddListeners(this);
@@ -42,6 +43,7 @@ namespace WorldMap.Controller
         }
         protected override void CreateModel()
         {
+            Debug.Log("TrainController CreateModel");
             Transform canvas = GameObject.Find("/Canvas").transform;
             trainModeBTs = canvas.Find("TrainMode").gameObject;
             trainActionBtn = trainModeBTs.transform.Find("TrainRunOrStopBtn").Find("Text").GetComponent<Text>();
@@ -58,11 +60,11 @@ namespace WorldMap.Controller
         }
         protected override void Start()
         {
+            Debug.Log("TrainController Start");
             base.Start();
             Train train = Train.Instance;
             transform.position = StaticResource.MapPosToWorldPos(train.PosTrain, levelOfTrain);
             map.MoveToThisSpawn(train.MapPosTrain);
-            Debug.Log("TrainController Start");
         }
         protected override void Update()
         {
@@ -138,15 +140,21 @@ namespace WorldMap.Controller
                 case BUTTON_ID.TRAIN_ENTRY_AREA:
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
-                    townController.TryShowTown(train.MapPosTrain);
+                    if(townController!=null)
+                        townController.TryShowTown(train.MapPosTrain);
+                    else
+                        Debug.Log("TeamOutDialog is null");
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
                     //弹出框之后不能再操作列车
-                    teamOutDialog.Show();
+                    if (teamOutDialog != null)
+                        teamOutDialog.Show();
+                    else
+                        Debug.Log("TeamOutDialog is null");
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
-                    SceneManager.LoadScene("GCTestScene1");
+                    SceneManager.LoadScene("TrainScene");
                     break;
             }
         }
