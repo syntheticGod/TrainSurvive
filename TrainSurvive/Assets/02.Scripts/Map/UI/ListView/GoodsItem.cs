@@ -5,8 +5,6 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace WorldMap.UI
@@ -15,10 +13,10 @@ namespace WorldMap.UI
     {
         private Text numView;
         private Text priceView;
-        private Button buyBtn;
+        //按钮可以为购买，或者是售卖。
+        private Button actionBtn;
         private Transform itemView;
-        private float defualtWidth = 500F;
-        private float defaultHeight = 200F;
+        private Vector2 defaultSize = new Vector2(500F, 200F);
         void Start()
         {
             //For Test
@@ -30,34 +28,29 @@ namespace WorldMap.UI
         protected override void CreateModel()
         {
             base.CreateModel();
-            numView = CreateText("Number");
-            priceView = CreateText("Price");
-            buyBtn = CreateBtn("Buy", "购买");
+            numView = Utility.CreateText("Number");
+            priceView = Utility.CreateText("Price");
+            actionBtn = Utility.CreateBtn("Action", "", transform);
             itemView = new GameObject("Item", typeof(RectTransform)).transform;
         }
         protected override void InitModel()
         {
-            SetParent(backgroudImage, itemView);
-            SetParent(targetImage, itemView);
-            SetParent(markImage, itemView);
-            SetParent(itemView, this);
-            SetParent(numView, this);
-            SetParent(priceView, this);
-            SetParent(buyBtn, this);
+            Utility.SetParent(backgroudImage, itemView);
+            Utility.SetParent(targetImage, itemView);
+            Utility.SetParent(markImage, itemView);
+            Utility.SetParent(itemView, this);
+            Utility.SetParent(numView, this);
+            Utility.SetParent(priceView, this);
+            Utility.SetParent(actionBtn, this);
         }
         protected override void PlaceModel()
         {
             base.PlaceModel();
-            SetAnchor(itemView, 0.2F, 0.5F, 0.2F, 0.5F);
-            SetAnchor(priceView, 0.4F, 0.5F, 0.4F, 0.5F);
-            SetAnchor(numView, 0.6F, 0.5F, 0.6F, 0.5F);
-            SetAnchor(buyBtn, 0.8F, 0.5F, 0.8F, 0.5F);
-            SetAnchor(this, 0.5F, 0.5F, 0.5F, 0.5F);
-            SetSize(itemView, 100F, 100F);
-            SetSize(priceView, 80F, 40F);
-            SetSize(numView, 80F, 40F);
-            SetSize(buyBtn, 90F, 40F);
-            SetSize(this, defualtWidth, defaultHeight);
+            Utility.CenterAt(itemView, new Vector2(0.2F, 0.5F), new Vector2(100F, 100F));
+            Utility.CenterAt(priceView, new Vector2(0.4F, 0.5F), new Vector2(80F, 40F));
+            Utility.CenterAt(numView, new Vector2(0.6F, 0.5F), new Vector2(80F, 40F));
+            Utility.CenterAt(actionBtn, new Vector2(0.8F, 0.5F), new Vector2(90F, 40F));
+            Utility.CenterAt(this, new Vector2(0.5F, 0.5F), defaultSize);
         }
         public void SetNumber(int num)
         {
@@ -66,6 +59,14 @@ namespace WorldMap.UI
         public void SetPrice(int price)
         {
             priceView.text = "$" + price.ToString();
+        }
+        public void BindActionBtnEvent(Button.ButtonClickedEvent onclick)
+        {
+            actionBtn.onClick = onclick;
+        }
+        public void SetActionBtnContent(string content)
+        {
+            Utility.SetBtnContent(actionBtn, content);
         }
     }
 }

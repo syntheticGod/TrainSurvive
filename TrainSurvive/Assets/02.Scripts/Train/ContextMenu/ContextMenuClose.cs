@@ -14,12 +14,15 @@ public class ContextMenuClose : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private bool isOuside = false;
     
     void Update() {
-        if (Input.GetMouseButton(1)) {
+        if (Input.GetMouseButtonDown(1)) {
             Destroy(gameObject);
         }
-        if (isOuside && Input.GetMouseButton(0)) {
+        if (isOuside && Input.GetMouseButtonDown(0)) {
             Destroy(gameObject);
         }
+        float scale = Camera.main.orthographicSize / 250.0f;
+        if (transform.localScale.x != scale)
+            transform.localScale = new Vector3(scale, scale, 1);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {

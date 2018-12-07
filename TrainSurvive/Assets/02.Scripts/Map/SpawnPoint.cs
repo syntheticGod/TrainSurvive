@@ -196,7 +196,8 @@ namespace WorldMap {
                 spawnObjectEnum == SpawnObjectEnum.RAIL) {
 
                 //如果没有地形object，减一
-                if (terrainType == TerrainEnum.NONE) {
+                if (terrainType == TerrainEnum.NONE ||
+                    terrainType == TerrainEnum.PLAIN) {
                     curSpawnIndex--;
                 }
             }

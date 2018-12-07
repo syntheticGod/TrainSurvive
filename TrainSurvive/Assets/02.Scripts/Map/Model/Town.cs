@@ -20,21 +20,10 @@ namespace WorldMap.Model
         const int MaxGoodMaterialCnt = 3;
         [NonSerialized]
         const int MaxGoodWeaponCnt = 2;
+        [NonSerialized]
+        const int MaxGoodSpecailCnt = 1;
         private Town()
-        {
-            
-        }
-        //public Town(Town town)
-        //{
-        //    PosIndexX = town.PosIndexX;
-        //    PosIndexY = town.PosIndexY;
-        //    Name = town.Name;
-        //    LevelShop = town.LevelShop;
-        //    LevelTavern = town.LevelTavern;
-        //    LevelSchool = town.LevelSchool;
-        //    Goods = town.Goods;
-        //    NPCs = town.NPCs;
-        //}
+        { }
         public static Town Random()
         {
             Town ret = new Town();
@@ -51,6 +40,10 @@ namespace WorldMap.Model
             for(int i = 0; i < MaxGoodMaterialCnt; ++i)
             {
                 ret.Goods.Add(Good.RandomMaterial());
+            }
+            for(int i = 0; i < MaxGoodSpecailCnt; ++i)
+            {
+                ret.Goods.Add(Good.RandomSpecail());
             }
             ret.Name = StaticResource.RandomTownName();
             return ret;
@@ -74,6 +67,11 @@ namespace WorldMap.Model
         public int GoodsCnt { get { return Goods.Count; } }
         //酒馆角色数量
         public int NPCCnt { get { return NPCs.Count; } }
+        /// <summary>
+        /// 招募NPC
+        /// </summary>
+        /// <param name="theOne"></param>
+        /// <returns></returns>
         public bool RecruitNPC(NPC theOne)
         {
             if (!NPCs.Contains(theOne))
@@ -81,6 +79,40 @@ namespace WorldMap.Model
             WorldForMap.Instance.AddPerson(theOne.PersonInfo);
             NPCs.Remove(theOne);
             return true;
+        }
+        /// <summary>
+        /// 购买商品
+        /// </summary>
+        /// <param name="goods"></param>
+        /// <param name="number"></param>
+        /// <returns>
+        /// TRUE：购买成功
+        /// FALSE：商品不存在，或数量不足
+        /// </returns>
+        public bool BuyGoods(Good goods, int number)
+        {
+            int index = Goods.IndexOf(goods);
+            if (index == -1)
+            {
+                Debug.Log("商店：商品不存在：" + goods.item.name);
+                return false;
+            }
+            if (!goods.DecreaseNumber(number))
+            {
+                Debug.Log("商店：商品数量不足，我有：" + goods.Number+" 需求："+number);
+                return false;
+            }
+            if (goods.Number == 0)
+                Goods.Remove(goods);
+            return true;
+        }
+        /// <summary>
+        /// 向商店售卖
+        /// </summary>
+        /// <param name="goods"></param>
+        public void SellGoods(Good goods)
+        {
+            Goods.Add(goods);
         }
         //城镇简介
         public string Info

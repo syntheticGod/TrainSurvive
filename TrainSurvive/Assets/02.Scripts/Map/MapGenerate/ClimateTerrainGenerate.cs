@@ -113,7 +113,7 @@ namespace WorldMap {
             //真实气候的数量
             realTypeNum = (int)SpawnPoint.ClimateEnum.NUM;
             //额外多余气候的数量（温带占2/(n+1)，其余的占1/(n+1)）
-            randTypeNum = realTypeNum;
+            randTypeNum = realTypeNum + 1;
             //设置气候地块的大小
             sizeFac = climateSizeFac;
             //设置气候地块的数量
@@ -144,14 +144,14 @@ namespace WorldMap {
             //真实地块类型的数量
             realTypeNum = (int)SpawnPoint.TerrainEnum.NUM;
             //额外多余类型的数量（平原占2/(n+1)，其余的占1/(n+1)）
-            randTypeNum = realTypeNum + 1;
+            randTypeNum = realTypeNum;
             //设置地形地块的大小
             sizeFac = terrainSizeFac;
             //设置地形地块的数量
             blockNum = terrainBlockNum;
 
-            //设置初始化为-1，默认没有
-            gridInit = -1;
+            //设置初始化为0，默认平原
+            gridInit = 0;
 
             //生成大地图的地块（取消修正）
             init();
@@ -205,7 +205,8 @@ namespace WorldMap {
 
             for (int i = 0; i < mapData.rowNum; i++) {
                 for (int j = 0; j < mapData.colNum; j++) {
-                    if ((int)mapData.spowns[i, j].terrainType < 0) {
+                    //平原没有图标
+                    if ((int)mapData.spowns[i, j].terrainType < 1) {
                         continue;
                     }
                     //生成指定气候的类型
@@ -311,7 +312,7 @@ namespace WorldMap {
             for (int i = 0; i < time; i++) {
                 block(Random.Range(0, mapHeight),
                     Random.Range(0, mapWidth),
-                    Random.Range(0, numType) + 1,
+                    Random.Range(1, numType),
                     (int)(sizeFac * mapHeight / sqrtTime),
                     (int)(sizeFac * mapWidth / sqrtTime));
             }

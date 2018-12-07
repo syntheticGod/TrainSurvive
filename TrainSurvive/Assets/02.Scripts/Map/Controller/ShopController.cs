@@ -5,92 +5,142 @@
  * 版本：v0.1
  */
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using WorldMap.UI;
-using Assets._02.Scripts.zhxUIScripts;
+using WorldMap.Model;
 
-namespace WorldMap
+namespace WorldMap.Controller
 {
-    public class ShopController : MonoBehaviour
+    public class ShopController : WindowsController
     {
-        private ListViewController goodsInShopLV;
-        private ListViewController goodsInPackLV;
-        private List<Model.Good> goodsInShop;
-        private List<Model.Good> goodsInPack;
-        //private InventoryCtrl goodsInShopIC;
-        //private InventoryCtrl goodsInPackIC;
-        private WorldForMap world;
-        void Awake()
+        private string[] btnStrs = { "退出" };
+        private GoodsListView goodsInShopLV;
+        private GoodsListView goodsInPackLV;
+        private Model.Town currentTown;
+        protected override void CreateModel()
         {
-            ListViewController[] ls = GetComponentsInChildren<ListViewController>();
-            goodsInShopLV = ls[0];
-            goodsInShopLV.SetContent(typeof(GoodsItem));
-            goodsInPackLV = ls[1];
-            goodsInPackLV.SetContent(typeof(GoodsItem));
-            goodsInShopLV.onItemView = delegate (ListViewItem item, int index)
-            {
-                Model.Good data = goodsInShop[index];
-                GoodsItem view = item.GetComponentInChildren<GoodsItem>();
-                view.SetTargetByName("Weapon_img");
-                view.SetNumber(data.item.currPileNum);
-                view.SetPrice(data.Price);
-            };
-            goodsInPackLV.onItemView = delegate (ListViewItem item, int index)
-            {
+            base.CreateModel();
+            WinSizeType = WindowSizeType.BIG;
+            //ListView
+            goodsInShopLV = new GameObject("GoodsInShopLayout").AddComponent<GoodsListView>();
+            ConfigListView(goodsInShopLV, 0.25F);
+            
+            goodsInShopLV.callBackGoodsAction = CallBackGoodsBuy;
+            goodsInPackLV = new GameObject("GoodsInPackLayout").AddComponent<GoodsListView>();
+            ConfigListView(goodsInPackLV, 0.75F);
+            goodsInPackLV.ActionBtnString = "售卖";
+            goodsInPackLV.callBackGoodsAction = CallBackGoodsSell;
+            //Buttons
+            RectTransform btns = new GameObject("Btns").AddComponent<RectTransform>();
+            Utility.SetParent(btns, this);
+            Utility.Anchor(btns, Vector2.zero, new Vector2(1F, 0.2F));
 
-            };
-            goodsInPack = new List<Model.Good>();
+            Vector2 btnSize = new Vector2(120, 80);
+            Button cancel = Utility.CreateBtn("Cancel", btnStrs[0]);
+            Utility.SetParent(cancel, btns);
+            Utility.CenterAt(cancel, new Vector2(0.5F, 0.5F), btnSize);
+            cancel.onClick.AddListener(delegate () { HideWindow(); });
         }
-        void Start()
+        private void ConfigListView(GoodsListView listView, float xAnchor)
         {
+            listView.SetCellSize(new Vector2(500F, 100F));
+            listView.ScrollDirection = ScrollType.Vertical;
+            listView.m_selectable = false;
+            listView.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            Utility.SetParent(listView, this);
+            Utility.VLineAt(comp: listView, anchor: xAnchor, top: 0.95F, bottom: 0.2F, width: 502F);
         }
-        void Update()
-        { }
-        public void Init()
+        protected override bool PrepareDataBeforeShowWindow()
         {
-            world = WorldForMap.Instance;
+            return true;
         }
-        public void Show(Model.Town town)
+
+        protected override void AfterShowWindow()
         {
-            if (gameObject.activeInHierarchy)
+            goodsInShopLV.Datas = new List<Good>(currentTown.Goods);
+            if(world.IfTeamOuting)
+                goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTeam());
+            else
+                goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTrain());
+        }
+        public void SetTown(Model.Town town)
+        {
+            currentTown = town;
+        }
+        public void CallBackGoodsBuy(Good good)
+        {
+            //TODO：弹出选择窗口
+            int numberBuy = good.Number;
+            if (!world.Pay(good.Price * numberBuy))
             {
-                Debug.Log("商店已显示");
+                Debug.Log("商店：金额不足");
                 return;
             }
-            gameObject.SetActive(true);
-            goodsInShop = town.Goods;
-            goodsInShopLV.RemoveAllItem();
-            for (int i = 0; i < goodsInShop.Count; ++i)
-                goodsInShopLV.AppendItem();
-            ////探险队访问商店
-            //if (world.IfTeamOuting)
-            //{
-            //}
-            ////列车访问商店
-            //else
-            //{
+            if(numberBuy > good.Number)
+            {
+                Debug.Log("商店：物品数量不足，另寻他处");
+                return;
+            }
+            Good goodInPack = good.Clone();
+            goodInPack.SetNumber(numberBuy);
+            if (world.IfTeamOuting)
+            {
+                InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
+                if (!inventoryForTeam.CanPushItemToPack(goodInPack))
+                {
+                    Debug.Log("系统：购买物品失败");
+                    return;
+                }
+                inventoryForTeam.PushItemFromShop(goodInPack);
+            }
+            else
+            {
+                //TODO：需要列车中的仓库是否满
+                world.PushItemToTrain(good.item.id, numberBuy);
+            }
+            if (!currentTown.BuyGoods(good, numberBuy))
+            {
+                Debug.LogError("系统：物品购买失败");
+            }
+            Debug.Log("商店：你成功购买了"+goodInPack.Name+" 花费："+ good.Price * numberBuy+" 剩余："+world.Money);
+            //城镇中的Good被修改，ListView中的Good会被一起修改，所以直接刷新。
+            goodsInShopLV.Refresh();
+            goodsInPackLV.AddItem(goodInPack);
+        }
+        public void CallBackGoodsSell(Good good)
+        {
+            //TODO：弹出选择窗口
+            int numberSell = good.Number;
+            if(numberSell > good.Number)
+            {
+                Debug.Log("系统：库存数量不足");
+                return;
+            }
+            Good goodsInTown = good.Clone();
+            goodsInTown.SetNumber(numberSell);
+            currentTown.SellGoods(goodsInTown);
+            if (world.IfTeamOuting)
+            {
+                world.SellGoodsFromTeam(good.ItemID, numberSell);
+            }
+            else
+            {
+                world.SellGoodsFromTrain(good.ItemID, numberSell);
+            }
+            world.AddMoney(numberSell * good.Price);
+            Debug.Log("商店：你出售了" + good.Name +" 获得："+numberSell * good.Price +" 现有："+world.Money);
+            goodsInPackLV.Refresh();
+            goodsInShopLV.AddItem(goodsInTown);
+        }
+        protected override bool FocusBehaviour()
+        {
+            return true;
+        }
 
-            //}
-        }
-        private void Hide()
+        protected override void UnfocusBehaviour()
         {
-            if (gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(false);
-            }
-        }
-        public void OnBtnClick(int id)
-        {
-            switch (id)
-            {
-                case 0://购买
-                    break;
-                case 1://取消
-                    Hide();
-                    break;
-                default:
-                    break;
-            }
+
         }
     }
 }
