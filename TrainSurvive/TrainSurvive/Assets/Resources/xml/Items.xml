@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<items>
+  <weapon id="000" name="隔壁老王的示范剑" type="1" rarity="4" size="13" range="1" atk="56" ats="1.2" spd="1" crc="0.15" crd="1.5" hit="1" hrec ="1" arec="1.5" sdmg="1" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
+  
+  <material id="200" name="隔壁老王遗落的裤头们" rarity="3" size="0.7" pilenum="5" description="传说中的隔壁老王匆忙离去后忘记带走的絮状织物" spritepath="ItemSprite/Material_img" />
+  <material id="201" name="浆果" rarity="0" size="0.1" pilenum="20" description="放心吧，它没毒" spritepath="ItemSprite/Material_img" />
+  <material id="211" name="小麦" rarity="1" size="0.1" pilenum="20" description="人类与动物产生区别的第一种食品" spritepath="ItemSprite/Material_img" />
+  <material id="212" name="面包" rarity="1" size="0.25" pilenum="10" description="总算是个人吃的东西了" spritepath="ItemSprite/Material_img" />
+  <material id="213" name="生肉" rarity="1" size="0.5" pilenum="10" description="生吃？不，咋是体面人" spritepath="ItemSprite/Material_img" />
+  <material id="214" name="熟肉" rarity="1" size="0.5" pilenum="10" description="至少管饱不是" spritepath="ItemSprite/Material_img" />
+  <material id="221" name="煤炭" rarity="1" size="0.2" pilenum="20" description="基础动力源" spritepath="ItemSprite/Material_img" />
+  <material id="222" name="木炭" rarity="0" size="0.15" pilenum="20" description="发生了什么让你连木材都不放过？" spritepath="ItemSprite/Material_img" />
+  <material id="223" name="原木" rarity="0" size="2" pilenum="5" description="看啥，这就是原木啊" spritepath="ItemSprite/Material_img" />  
+  <material id="231" name="铜矿" rarity="2" size="0.5" pilenum="10" description="电子类基础资源" spritepath="ItemSprite/Material_img" />
+  <material id="232" name="铜锭" rarity="2" size="1" pilenum="5" description="铜矿精炼而成" spritepath="ItemSprite/Material_img" />
+  <material id="233" name="铁矿" rarity="2" size="0.5" pilenum="10" description="我不想写描述了" spritepath="ItemSprite/Material_img" />
+  <material id="234" name="铁锭" rarity="2" size="1" pilenum="5" description="铁矿精炼而成" spritepath="ItemSprite/Material_img" />
+  
+  <special id="700" name="隔壁老王之魂" rarity="2" pilenum="1" description="老王的怨念所化成的结晶体" spritepath="ItemSprite/Other_img" />
+</items>
