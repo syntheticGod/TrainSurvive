@@ -11,6 +11,7 @@ using UnityEngine;
 
 
 public class TimeController : MonoBehaviour {
+    [System.Serializable]
     public enum speedRate
     {
         stop = 0,
@@ -34,7 +35,7 @@ public class TimeController : MonoBehaviour {
     /// <summary>
     /// 现实1S=游戏game_time_scale分钟
     /// </summary>
-    private const double game_time_scale = 10.0f;
+    private const float game_time_scale = 10.0f;
     private World world;
 
     private IEnumerator Time_PerSecond_Corutine()
@@ -102,8 +103,14 @@ public class TimeController : MonoBehaviour {
               */
     }
 
-
-
+    /// <summary>
+    /// 获取时间比例
+    /// </summary>
+    /// <returns></returns>
+    public float getGame_time_scale()
+    {
+        return game_time_scale;
+    }
     /// <summary>
     /// 获取静态实例
     /// </summary>
@@ -133,7 +140,7 @@ public class TimeController : MonoBehaviour {
     /// 设置游戏进行速度，在时停场景下调用没效果
     /// </summary>
     /// <param name="rate"></param>
-    public void setGameSpeedRate(speedRate rate)
+    private void setGameSpeedRate(speedRate rate)
     {
         game_speed= rate;
         if (!is_paused_scene)
@@ -142,6 +149,22 @@ public class TimeController : MonoBehaviour {
             Time.timeScale = 1;
     }
 
+    public void speed_pause()
+    {
+        setGameSpeedRate(speedRate.stop);
+    }
+    public void speed_normal()
+    {
+        setGameSpeedRate(speedRate.normal);
+    }
+    public void speed_fast()
+    {
+        setGameSpeedRate(speedRate.fast);
+    }
+    public void speed_veryfast()
+    {
+        setGameSpeedRate(speedRate.veryfast);
+    }
     public speedRate getGameSpeedRate()
     {
         return game_speed;

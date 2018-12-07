@@ -152,8 +152,8 @@ namespace WorldMap.UI
                 foodSelected = foodInTrain;
             if (foodSelected < 0)
                 foodSelected = 0;
-            if (foodSelected >= world.foodOutMax)
-                foodSelected = world.foodOutMax;
+            if (foodSelected >= world.getFoodOutMax())
+                foodSelected = (int)world.getFoodOutMax();
             foodEditUI.text = foodSelected + "";
         }
         public void OnClick(BUTTON_ID id)
