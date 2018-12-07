@@ -16,7 +16,7 @@ namespace WorldMap.Model
         //列车的最大移动速度
         public float MaxSpeed { set; get; }
         //列车的最小移动距离
-        public float MinDeltaStep { set; get; } = 0.01F;
+        public float MinDeltaStep { private set; get; } = 0.01F;
         public float SmoothTime { set; get; } = 0.3F;
         //列车所在的世界坐标
         public Vector2 PosTrain { private set; get; }
@@ -54,8 +54,7 @@ namespace WorldMap.Model
         //外部引用
         private IMapForTrain map;
         private Team team;
-        private World world;
-        public TrainController Controller { private set; get; }
+        private WorldForMap world;
         public override int MaxState()
         {
             return (int)STATE.NUM;
@@ -64,17 +63,16 @@ namespace WorldMap.Model
         private Train() : base()
         {
         }
-        public void Init(bool movable, float maxSpeed, Vector2Int initPosition, TrainController controller)
+        public void Init(Vector2Int initPosition, bool movable, float maxSpeed)
         {
             map = Map.GetIntanstance();
             team = Team.Instance;
-            world = World.getInstance();
+            world = WorldForMap.Instance;
             PosTrain = StaticResource.BlockCenter(initPosition);
             IsMovable = movable;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
-            Controller = controller;
-            Controller.init(this);
+            MinDeltaStep = 0.01F * StaticResource.BlockSize.x;
         }
         /// <summary>
         /// 判断current和click之间是否连通
@@ -205,6 +203,7 @@ namespace WorldMap.Model
         public void PassCenterCallBack(Vector2Int center)
         {
             map.MoveToThisSpawn(center);
+            world.TrainSetMapPos(center);
             //暂时性停车
             if (ifTemporarilyStop)
             {
@@ -272,32 +271,6 @@ namespace WorldMap.Model
             return true;
         }
         /// <summary>
-        /// 探险队外出时，列车该做的准备
-        /// </summary>
-        /// <param name="selectFood">外带的食物</param>
-        /// <param name="personsSelected">外出的人员</param>
-        public void TeamOutPrepare(int selectFood, List<Person> personsSelected)
-        {
-            if (world.addFoodIn(-selectFood) != 1)
-            {
-                Debug.LogWarning("列车食物减少不正常——探险队外出！");
-            }
-            world.numIn = world.persons.Count - personsSelected.Count;
-            world.ifOuting = true;
-            Debug.Log("列车：探险队外出了，剩下"+world.numIn+"人，剩下"+world.getFoodIn()+"食物");
-        }
-        /// <summary>
-        /// 探险队回车
-        /// </summary>
-        /// <returns></returns>
-        public bool TeamComeBack()
-        {
-            world.numIn += team.PersonCount;
-            world.ifOuting = false;
-            Debug.Log("列车：探险队回车了");
-            return true;
-        }
-        /// <summary>
         /// 列车招募到英雄的回调函数
         /// </summary>
         /// <param name="theOne"></param>
@@ -328,15 +301,9 @@ namespace WorldMap.Model
             get { return State == STATE.STOPING; }
         }
         public bool IsMovable { private set; get; }
-        public bool SetMovable(bool movable)
+        public void SetMovable(bool movable)
         {
-            if (!movable && !IsStoped)
-            {
-                Debug.Log("列车没有停下，不能出队");
-                return false;
-            }
             IsMovable = movable;
-            return true;
         }
         private bool IsMovePositive { set; get; }
         public enum STATE

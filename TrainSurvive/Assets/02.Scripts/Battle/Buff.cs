@@ -14,5 +14,5 @@ public class Buff {
     private int maxAccumulation;
     private int accumulation;
 	
-    public void 
+   // public void 
 }

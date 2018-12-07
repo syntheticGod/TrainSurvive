@@ -33,6 +33,22 @@ namespace WorldMap.Model
             {
                 state = value;
                 this.Notify((int)state);
+                switch (state)
+                {
+                    case STATE.GATHERING:
+                        world.DoGather();
+                        break;
+                    case STATE.STOP_OUT:
+                    case STATE.STOP_TOWN:
+                        world.TeamStandeBy();
+                        break;
+                    case STATE.MOVING:
+                        world.TeamMoving();
+                        break;
+                    case STATE.IN_TRAIN:
+                        world.TeamGetIn();
+                        break;
+                }
             }
         }
         //人数
@@ -45,12 +61,11 @@ namespace WorldMap.Model
         //移动时下一临近块
         private Vector2 nextStopPosition;
         //背包
-        public Inventory Inventory { private set; get; }
+        public InventoryForTeam Inventory { private set; get; }
         //外部引用
         private Train train;
         private IMapForTrain map;
-        private World world;
-        public TeamController Controller { private set; get; }
+        private WorldForMap world;
         public override int MaxState()
         {
             return (int)STATE.NUM;
@@ -59,15 +74,25 @@ namespace WorldMap.Model
         private Team() : base()
         {
             state = STATE.NONE;
-            Inventory = new Inventory(float.MaxValue);
-            world = World.getInstance();
+            Inventory = new InventoryForTeam(float.MaxValue);
+            world = WorldForMap.Instance;
         }
-        public void Init(TeamController controller)
+        /// <summary>
+        /// 仅没设置探险队位置的初始化
+        /// </summary>
+        public void Init()
         {
             map = Map.GetIntanstance();
             train = Train.Instance;
-            Controller = controller;
-            Controller.Init(this);
+        }
+        /// <summary>
+        /// 夹带探险队位置的初始化
+        /// </summary>
+        /// <param name="initPosition"></param>
+        public void Init(Vector2 initPosition)
+        {
+            Init();
+            PosTeam = initPosition;
         }
         /// <summary>
         /// 探险队是上下左右，四个方向移动
@@ -102,29 +127,7 @@ namespace WorldMap.Model
         public void PassCenterCallBack(Vector2Int position)
         {
             map.MoveToThisSpawn(StaticResource.BlockIndex(position));
-
-        }
-        public void Action()
-        {
-            PosTeam = train.PosTrain;
-        }
-        /// <summary>
-        /// 小队自我固定消耗函数
-        /// </summary>
-        public void Consume()
-        {
-        }
-        /// <summary>
-        /// 主动采集
-        /// </summary>
-        /// <returns>
-        /// TRUE：成功采集
-        /// FALSE：暂时不会返回
-        /// </returns>
-        public bool Gather()
-        {
-            
-            return true;
+            world.TeamSetMapPos(position);
         }
         /// <summary>
         /// 探险队外出时，探险队该做的准备
@@ -134,14 +137,8 @@ namespace WorldMap.Model
         /// <param name="selectedPersons">选择的成员</param>
         public void OutPrepare(Vector2 initPosition, int selectedFood, List<Person> selectedPersons)
         {
-            if (!world.setFoodOut((uint)selectedFood))
-            {
-                Debug.LogWarning("探险队携带外出食物不正常！");
-            }
             PosTeam = initPosition;
-            persons = selectedPersons;
-            world.numOut = selectedPersons.Count;
-            Debug.Log("探险队：我们（一共"+world.numOut+"人）外出了，带走了" + world.getFoodOut() + "点食物");
+            world.TeamGetOut(selectedFood, selectedPersons);
             State = IfInTown()? STATE.STOP_TOWN : STATE.STOP_OUT;
         }
         /// <summary>
@@ -169,20 +166,9 @@ namespace WorldMap.Model
         /// </returns>
         public bool GoBackToTrain()
         {
-            //探险队放回食物
-            int remain = (int)world.getFoodOut();
-            world.setFoodOut(0);
-            if (world.addFoodIn(remain) != 1)
-            {
-                Debug.LogWarning("探险队增加内部食物不正常");
-            }
-            //TODO:将身上的物品返回
             
-            world.numOut = 0;
-            Debug.Log("探险队：我们（人数："+persons.Count+"）回车了，带回食物：" + remain+"，列车现在有食物："+world.getFoodIn());
             State = STATE.IN_TRAIN;
             persons = null;
-
             return true;
         }
         /// <summary>

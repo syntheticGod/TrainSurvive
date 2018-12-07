@@ -54,6 +54,12 @@ public class Person{
     /// </summary>
     private const int numsLeft=3;
 
+    /// <summary>
+    /// 人物所持有的武器对象
+    /// </summary>
+    public Weapon weapon = null;
+
+
     [NonSerialized]
     private int lastWeaponId = -1;
     private Person()
@@ -98,8 +104,7 @@ public class Person{
     {
         double apRec = 5 * (1 + 0.05 * intelligence);
         if (hasWeapon)
-        {
-            Weapon weapon = (Weapon)PublicMethod.GenerateItem(weaponId, 1)[0];
+        {  
             apRec = apRec * weapon.facArec;
         }
         return Math.Round(apRec, numsLeft);
@@ -171,7 +176,16 @@ public class Person{
     }
     public void equipWeapon(Weapon weapon)
     {
+        this.weapon = (Weapon)weapon.Clone();
         weaponId = weapon.id;
         hasWeapon = true;
+        Debug.Log("装备武器");
+    }
+
+    public void unequipWeapon()
+    {
+        weapon = null;
+        weaponId = -1;
+        hasWeapon = false;
     }
 }

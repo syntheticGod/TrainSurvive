@@ -20,64 +20,49 @@ namespace WorldMap.UI
     {
         public GameObject personProfile;
 
-        private World world;
+        private WorldForMap world;
 
         private InputField foodEditUI;
-        private ListViewController herosChoosedLV;
-        private ListViewController herosGetReadyLV;
+        private HeroListView herosChoosedLV;
+        private HeroListView herosGetReadyLV;
         private int foodInTrain;
         private int foodSelected = 1000;
         private const int deltaFood = 100;
-        private List<Person> herosChoosed = new List<Person>();
-        private List<Person> herosGetReady;
         public DialogCallBack CallBack { set; get; }
         public void Init()
         {
             ButtonHandler.Instance.AddListeners(this);
-            world = World.getInstance();
+            world = WorldForMap.Instance;
         }
         void Awake()
         {
             Transform topLayout = transform.Find("TopLayout");
             foodEditUI = topLayout.Find("OperationUI").GetComponentInChildren<InputField>();
             Debug.Assert(foodEditUI != null);
-            herosChoosedLV = topLayout.Find("HerosSelected").GetComponent<ListViewController>();
+            herosChoosedLV = topLayout.Find("HerosSelected").GetComponent<HeroListView>();
             Debug.Assert(herosChoosedLV != null);
-            herosGetReadyLV = transform.Find("MiddleLayout").Find("HerosReadyForSelect").GetComponent<ListViewController>();
+            herosGetReadyLV = transform.Find("MiddleLayout").Find("HerosReadyForSelect").GetComponent<HeroListView>();
             Debug.Assert(herosGetReadyLV != null);
             foodEditUI.onEndEdit.AddListener(delegate
             {
                 Debug.Assert(int.TryParse(foodEditUI.text, out foodSelected));
                 TryShowFood();
             });
-            herosChoosedLV.onItemClick = delegate (ListViewItem item, int index)
+            herosChoosedLV.onItemClick = delegate (ListViewItem item, Person person)
             {
-                Person person = herosChoosed[index];
-                herosChoosed.RemoveAt(index);
-                herosGetReady.Add(person);
-                herosChoosedLV.RemoveItem(index);
-                herosGetReadyLV.AppendItem();
+                if(herosChoosedLV.RemoveItem(person))
+                    herosGetReadyLV.AddItem(person);
             };
-            herosGetReadyLV.onItemClick = delegate (ListViewItem item, int index)
+            herosGetReadyLV.onItemClick = delegate (ListViewItem item, Person person)
             {
-                Person person = herosGetReady[index];
-                herosGetReady.RemoveAt(index);
-                herosChoosed.Add(person);
-                herosGetReadyLV.RemoveItem(index);
-                herosChoosedLV.AppendItem();
+                if(herosGetReadyLV.RemoveItem(person))
+                    herosChoosedLV.AddItem(person);
             };
-            //已选
-            herosChoosedLV.onItemView = delegate (ListViewItem item, int index)
-            {
-                item.GetComponentInChildren<Text>().text = herosChoosed[index].name;
-                item.Tag = herosChoosed[index];
-            };
-            //备选
-            herosGetReadyLV.onItemView = delegate (ListViewItem item, int index)
-            {
-                item.GetComponentInChildren<Text>().text = herosGetReady[index].name;
-                item.Tag = herosGetReady[index];
-            };
+            herosChoosedLV.m_lengthOfLine = 1;
+            herosChoosedLV.m_selectable = false;
+            herosGetReadyLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            herosGetReadyLV.ScrollDirection = ScrollType.Vertical;
+            herosGetReadyLV.m_selectable = false;
         }
         void Start()
         {
@@ -93,13 +78,9 @@ namespace WorldMap.UI
             {
                 gameObject.SetActive(true);
             }
-            herosGetReadyLV.RemoveAllItem();
-            herosGetReady = world.persons;
-            for (int i = 0; i < herosGetReady.Count; ++i)
-            {
-                ListViewItem item = herosGetReadyLV.AppendItem();
-            }
-            foodInTrain = (int)world.getFoodIn();
+            herosChoosedLV.Datas = new List<Person>();
+            herosGetReadyLV.Datas = new List<Person>(world.GetHeros());
+            foodInTrain = world.GetFoodIn();
             TryShowFood();
         }
         private void HideDialog()
@@ -136,11 +117,11 @@ namespace WorldMap.UI
         }
         public List<Person> GetSelectedPerson()
         {
-            return herosChoosed;
+            return herosChoosedLV.Datas;
         }
         private int GetSelectedCount()
         {
-            return herosChoosed.Count;
+            return herosChoosedLV.Datas.Count;
         }
         public int GetSelectedFood()
         {
@@ -152,8 +133,8 @@ namespace WorldMap.UI
                 foodSelected = foodInTrain;
             if (foodSelected < 0)
                 foodSelected = 0;
-            if (foodSelected >= world.getFoodOutMax())
-                foodSelected = (int)world.getFoodOutMax();
+            if (foodSelected >= world.GetFootOutMax())
+                foodSelected = world.GetFootOutMax();
             foodEditUI.text = foodSelected + "";
         }
         public void OnClick(BUTTON_ID id)
