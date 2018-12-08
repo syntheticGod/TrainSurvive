@@ -252,9 +252,19 @@ namespace Assets._02.Scripts.zhxUIScripts
                 controller.AddGrid(mappingItem);                 //为前台添加物品
             }
             controller.RefreshMaxSize();
-            controller.DataSynchronization();
+            controller.DataSynchronization();                   //每次加载若用此函数，那么每次加载时会多出物品，故用LoadItem函数进行加载
          
             return restNum;
+        }
+
+        public void LoadItem(Item item)
+        {
+            Item mappingItem;
+            mappingItem = item.Clone();
+            _items.Add(mappingItem);
+            _curr_size += item.currPileNum * item.size;
+            controller.AddGrid(mappingItem);
+            controller.RefreshMaxSize();
         }
 
         public void PopItem(Item item)                          //弹出所有物体
