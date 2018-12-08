@@ -16,6 +16,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace WorldMap {
     public class MapGenerate : MonoBehaviour, IMapForTrainTemp {
@@ -24,10 +25,12 @@ namespace WorldMap {
         public int mapWidth = 100;
         public int mapHeight = 100;
 
-        //四种地形的图标
-        public GameObject plainObject;
-        public GameObject hillObject;
-        public GameObject mountainObject;
+        //三种特殊地形的图标
+        //湖泊
+        public GameObject lakeObject;
+        //火山
+        public GameObject volcanoObject;
+        //密林
         public GameObject forestObject;
 
         //将地形存放到同一object下
@@ -35,14 +38,12 @@ namespace WorldMap {
         private GameObject[] mapParent;
         public GameObject mapRootObject;
 
-        public int loadNum;
-        public int waterNum = 0;
-        public int mountainNum = 0;
-        public int treeNum = 0;
+        //特殊地形的数目
+        public int lakeNum = 0;
+        public int volcanoNum = 0;
+        public int forestNum = 0;
 
-        public int mountainSize = 3;
-        public int waterSize = 3;
-        public int treeSize = 3;
+        public const int specialTerrainSize = 2;
 
         //地块大小
         [System.NonSerialized]
@@ -76,19 +77,6 @@ namespace WorldMap {
             characterBuild.Init(mapData.towns[0, 0].position);
         }
 
-        //保存时间的时间间隔
-        public float SaveTimeInterval = 3.0f;
-        //当前的时间
-        private float curTime = 5.0f;
-        //测试，3s保存一次动态数据
-        private void Update() {
-            curTime -= Time.deltaTime;
-            if (curTime < 0) {
-                curTime = SaveTimeInterval;
-                SaveReadMap.SaveDynamicMapInfo();
-            }
-        }
-
         //创建地图
         public void CreateModel() {
             //获取城镇铁轨脚本
@@ -102,15 +90,13 @@ namespace WorldMap {
 
             //为每种地形赋予一个图标
             mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
-            mapObject[(int)SpawnPoint.TerrainEnum.PLAIN] = plainObject;
-            mapObject[(int)SpawnPoint.TerrainEnum.HILL] = hillObject;
+            mapObject[(int)SpawnPoint.TerrainEnum.HILL] = lakeObject;
             mapObject[(int)SpawnPoint.TerrainEnum.FOREST] = forestObject;
-            mapObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = mountainObject;
+            mapObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = volcanoObject;
 
             //将地图素材存放到同一object中
             mapRootObject = new GameObject("map");
             mapParent = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
-            mapParent[(int)SpawnPoint.TerrainEnum.PLAIN] = new GameObject("plains");
             mapParent[(int)SpawnPoint.TerrainEnum.HILL] = new GameObject("hills");
             mapParent[(int)SpawnPoint.TerrainEnum.FOREST] = new GameObject("froests");
             mapParent[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = new GameObject("mountains");
@@ -154,28 +140,28 @@ namespace WorldMap {
 
         ////生成地形
         private void BuildTerrain() { }
-        //private void buildTerrain() {
-        //    //生成特殊地形
-        //    buildSpecialTerrain(mountainSize, mountainNum, SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_MOUNTAIN);
-        //    buildSpecialTerrain(waterSize, waterNum, SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_WATER);
-        //    buildSpecialTerrain(treeSize, treeNum, SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_TREE);
-        //}
+        private void buildTerrain() {
+            //生成特殊地形
+            //buildSpecialTerrain(specialTerrainSize, lakeNum, SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_MOUNTAIN);
+            //buildSpecialTerrain(specialTerrainSize, volcanoNum, SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_WATER);
+            //buildSpecialTerrain(specialTerrainSize, forestNum, SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_TREE);
+        }
 
-        ////生成特定的地形
-        //private void buildSpecialTerrain(int terrainSize, int terrainNum, SPAWN_POINT_TYPE pointType) {
+        //生成特定的地形
+        //private void buildSpecialTerrain(int terrainSize, int terrainNum) {
         //    Random random = new Random();
 
         //    //随机生成
         //    for (int i = 0; i < terrainNum; i++) {
         //        //按范围随机生成点
-        //        int posx = Random.Range(0, mapData.width - terrainSize);
-        //        int posy = Random.Range(0, mapData.length - terrainSize);
+        //        int posx = Random.Range(0, mapData.rowNum - terrainSize);
+        //        int posy = Random.Range(0, mapData.colNum - terrainSize);
 
         //        //检查该点是否合法
         //        bool isLegal = true;
         //        for (int j = 0; j < terrainSize && isLegal; j++) {
         //            for (int k = 0; k < terrainSize; k++) {
-        //                if (mapData.data[posx + j, posy + k] != SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_LOAD) {
+        //                if (mapData.spowns[posx + j, posy + k] != SPAWN_POINT_TYPE.BLOCK_SPAWN_POINT_LOAD) {
         //                    isLegal = false;
         //                    break;
         //                }
@@ -186,7 +172,7 @@ namespace WorldMap {
         //        if (isLegal == true) {
         //            for (int j = 0; j < terrainSize && isLegal; j++) {
         //                for (int k = 0; k < terrainSize; k++) {
-        //                    mapData.data[posx + j, posy + k] = pointType;
+        //                    mapData.spowns[posx + j, posy + k] = pointType;
         //                }
         //            }
         //        }

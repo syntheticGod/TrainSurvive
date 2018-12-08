@@ -9,7 +9,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldBattle {
-    public class PersonAI : BattleAI {
+    public class PersonAI : BattleActor {
+        //撤退所需的等待时间
+        private const float retreatNeedTime = 5.0f;
+
+        //设置控制射程的范围参数
+        private const float controlRangePara = 0.8f;
+
         //玩家当前的策略状态
         public StrategyStateEnum strategyState;
 
@@ -59,33 +65,12 @@ namespace WorldBattle {
 
                 //休息状态（进入休息子状态）
                 case StrategyStateEnum.REST:
-                    startRestState();
+                    changeSubState(ActionStateEnum.REST);
                     break;
             }
 
             //调用是否可以撤退
             checkCanRetreat();
-        }
-
-        // Use this for initialization
-        //void Start() {
-
-        //}
-
-        /// <summary>
-        /// 开始撤退
-        /// </summary>
-        public void startRetreat() {
-            //播放撤退动画
-
-            //设置撤退状态
-            actionState = ActionStateEnum.RETREAT;
-
-            //该角色本场不行动
-            isAlive = false;
-
-            //每次有角色死亡或撤退调用battleConroller判断本场战斗是否结束
-            battleController.isBattleEnd(isPlayer);
         }
 
         /// <summary>
@@ -96,7 +81,7 @@ namespace WorldBattle {
         /// </summary>
         private void attackState() {
             //如果当前处于攻击状态，等这次攻击完
-            if (actionState == ActionStateEnum.ATTACK) {
+            if (subStateController.curActionState == ActionStateEnum.ATTACK) {
                 return;
             }
 
@@ -110,14 +95,14 @@ namespace WorldBattle {
 
             //先朝向敌人，若朝向不对，开始转向
             //获取当前角色应该的朝向（朝向敌人）
-            curMotionDir = enemy[atkTarget].pos - pos > 0.0f ? 1 : -1;
+            curMotionDir = enemyActors[atkTarget].pos - pos > 0.0f ? 1 : -1;
 
             //如果目标小于攻击范围，则进入攻击状态
-            if (Mathf.Abs(enemy[atkTarget].pos - pos) <= atkRange) {
-                startAttackState();
+            if (Mathf.Abs(enemyActors[atkTarget].pos - pos) <= atkRange) {
+                changeSubState(ActionStateEnum.ATTACK);
             } else {
                 //进入移动状态
-                actionState = ActionStateEnum.MOTION;
+                changeSubState(ActionStateEnum.MOTION);
             }
 
             return;
@@ -134,7 +119,7 @@ namespace WorldBattle {
             //curMotionDir = -getMotionDir();
 
             //进入移动状态
-            actionState = ActionStateEnum.MOTION;
+            changeSubState(ActionStateEnum.MOTION);
 
             return;
         }
@@ -148,7 +133,7 @@ namespace WorldBattle {
         /// </summary>
         private void controlRangeState() {
             //如果当前处于攻击状态，等这次攻击完
-            if (actionState == ActionStateEnum.ATTACK) {
+            if (subStateController.curActionState == ActionStateEnum.ATTACK) {
                 return;
             }
 
@@ -161,26 +146,26 @@ namespace WorldBattle {
             }
 
             //当前敌人与自己的距离
-            float distance = Mathf.Abs(enemy[atkTarget].pos - pos);
+            float distance = Mathf.Abs(enemyActors[atkTarget].pos - pos);
             //获取当前角色应该的朝向（朝向敌人）
-            curMotionDir = enemy[atkTarget].pos - pos > 0.0f ? 1 : -1;
+            curMotionDir = enemyActors[atkTarget].pos - pos > 0.0f ? 1 : -1;
 
             //如果当前距离超过攻击距离，则向目标靠近
             if (distance > atkRange) {
                 //进入移动状态
-                actionState = ActionStateEnum.MOTION;
+                changeSubState(ActionStateEnum.MOTION);
             }
             //如果当前距离小于控制范围，则远离敌人
             else if (distance < atkRange * controlRangePara) {
                 //远离敌人
                 curMotionDir *= -1;
                 //进入移动状态
-                actionState = ActionStateEnum.MOTION;
+                changeSubState(ActionStateEnum.MOTION);
             }
             //如果距离在控制范围之内，进行攻击
             else {
                 //进入攻击状态
-                startAttackState();
+                changeSubState(ActionStateEnum.ATTACK);
             }
 
             return;
@@ -219,28 +204,54 @@ namespace WorldBattle {
             strategyState = StrategyStateEnum.REST;
         }
 
+        //切换目标
+        public void changeSelectTarget(int num) {
+            Debug.Log("切换所选的目标" + num);
+            selectedAtkTarget = num - 1;
+            //如果当前目标已经死亡，这次选择目标不生效
+            if (enemyActors[selectedAtkTarget].isAlive == false) {
+                selectedAtkTarget = -1;
+            }
+        }
+
         /// <summary>
         /// 检查当前是否撤退
         /// </summary>
         private void checkCanRetreat() {
             //如果当前是攻击状态或技能状态，撤退时间清空
-            if (actionState == ActionStateEnum.ATTACK || actionState == ActionStateEnum.SKILL) {
-                curRetreatWaitTime = 0.0f;
+            if (subStateController.curActionState == ActionStateEnum.ATTACK
+                || subStateController.curActionState == ActionStateEnum.SKILL) {
+                curRetreatPassTime = 0.0f;
             }
 
             //当前撤退等待时间增加
-            curRetreatWaitTime += Time.deltaTime;
+            curRetreatPassTime += Time.deltaTime;
 
             //Debug.Log(curRetreatWaitTime);
 
             //如果当前撤退等待时间大于撤退所需时间
-            if (curRetreatWaitTime > retreatNeedTime) {
+            if (curRetreatPassTime > retreatNeedTime) {
                 //显示可以撤退
                 retreatBtn.interactable = true;
             } else {
                 //如果不是显示不能撤退
                 retreatBtn.interactable = false;
             }
+        }
+
+        /// <summary>
+        /// 开始撤退状态
+        /// </summary>
+        public void startRetreat() {
+            changeSubState(ActionStateEnum.RETREAT);
+        }
+
+        /// <summary>
+        /// 开始释放技能
+        /// </summary>
+        /// <param name="skillIndex">技能的编号</param>
+        public void startSkillRelease(int skillIndex) {
+            changeSubState(ActionStateEnum.SKILL);
         }
     }
 }

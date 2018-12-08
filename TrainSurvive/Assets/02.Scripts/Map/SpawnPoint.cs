@@ -66,6 +66,8 @@ namespace WorldMap {
             //铁轨
             RAIL,
 
+            //湖泊
+
             //剧情副本
             SCENARIO_AREA,
 

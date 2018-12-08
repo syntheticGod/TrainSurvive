@@ -7,7 +7,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using WorldMap;
+using WorldMap.Model;
 
 namespace WorldBattle {
     public class BattleController : MonoBehaviour {
@@ -30,23 +33,31 @@ namespace WorldBattle {
 
         //当前出战人数
         public int personNum = 5;
-        //当前玩家角色剩余人数
-        //public int personRemainNum = 5;
         //当前出战敌人人数
         public int enemyNum = 10;
-        //当前出战剩余敌人人数
-        //public int enemyRemainNum = 10;
 
         //设置人物所占大小
         public float personWidth = 0.5f;
 
         //当前战斗的玩家角色
-        public BattleAI[] person;
+        public List<BattleActor> playerActors;
         //当前战斗的敌人角色
-        public BattleAI[] enemy;
+        public List<BattleActor> enemyActors;
 
-        //给玩家一的panel（测试）
-        public Transform[] panel;
+        //当前场景的canvas
+        public Canvas curCanvas;
+        //给玩家一的panelPrefab
+        public GameObject playerPanel;
+        //给所有玩家角色的指令panel
+        public GameObject teamPanel;
+        //玩家的操作命令面板
+        private List<GameObject> playerPanels;
+
+        //敌人的显示面板Prefab
+        public GameObject enemyPanel;
+        //敌人的显示面板
+        public List<GameObject> enemyPanels;
+
         //玩家的gameObject
         public GameObject player;
 
@@ -54,6 +65,14 @@ namespace WorldBattle {
         public GameObject playersRoot;
         //保存敌人的父级
         public GameObject enemysRoot;
+
+        //获胜图标
+        public GameObject winText;
+        //失败图标
+        public GameObject defeatText;
+
+        //设置当前是否为测试状态
+        public bool isTest = true;
 
         //当前战斗场景结束时释放资源
         public void clear() {
@@ -72,57 +91,218 @@ namespace WorldBattle {
             //保存敌人的父级
             enemysRoot = new GameObject("enemys");
 
-            Debug.Log(player.GetComponent<Collider>().bounds.size);
-
-            person = new BattleAI[personNum];
-            enemy = new BattleAI[enemyNum];
-            for (int i = 0; i < personNum; i++) {
-                //生成玩家
-                //GameObject curPlayer = Instantiate(player, playersRoot.transform);
-                GameObject curPlayer = Instantiate(player,
-                    orign + new Vector3(0, i * personWidth, 0),
-                    Quaternion.identity);
-
-                //绑定gameObject
-                curPlayer.AddComponent<PersonAI>();
-
-                //将生成的脚本和person数组绑定
-                person[i] = curPlayer.GetComponent<PersonAI>();
-
-                //初始化人物属性
-                initBattlePerson(ref person[i], i);
-
-                //绑定Panel
-                bindPanel((PersonAI)person[i], panel[i]);
-            }
+            //初始化敌人
+            enemyActors = new List<BattleActor>();
+            enemyPanels = new List<GameObject>();
+            
             for (int i = 0; i < enemyNum; i++) {
                 //生成敌人
-                //GameObject curPlayer = Instantiate(player, enemysRoot.transform);
                 GameObject curPlayer = Instantiate(player,
-                    orign + new Vector3(0, battleMapLen - i * personWidth, 0),
+                    orign + new Vector3(0, battleMapLen, 0),
                     Quaternion.identity);
                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
                 //绑定gameObject
+                curPlayer.AddComponent<EnemyAI>();
+
+                //将生成的脚本和person数组绑定
+                BattleActor battleActor = curPlayer.GetComponent<EnemyAI>();
+                //绑定对应的gameObject
+                battleActor.playerPrefab = curPlayer;
+
+                //初始化人物属性
+                initBattleEnemy(ref battleActor, i);
+
+                //创建一个新的panel
+                GameObject curPanel = Instantiate(enemyPanel);
+                //将panel增加到panel列表中
+                enemyPanels.Add(curPanel);
+                //将当前的panel绑定到canvas中
+                curPanel.transform.SetParent(curCanvas.transform);
+
+                RectTransform rect = curPanel.GetComponent<RectTransform>();
+                rect.pivot = Vector2.one;
+                rect.anchorMin = Vector2.one;
+                rect.anchorMax = Vector2.one;
+                rect.anchoredPosition = new Vector3();
+
+                //改变rect的位置
+                curPanel.transform.position -=
+                    new Vector3(curPanel.GetComponent<RectTransform>().rect.width * i, 0, 0);
+                //绑定战斗角色和操作表
+                bindEnemyPanel((EnemyAI)battleActor, curPanel.transform);
+
+                //添加到玩家列表中
+                enemyActors.Add(battleActor);
+            }
+
+            //初始化相应列表
+            playerActors = new List<BattleActor>();
+            playerPanels = new List<GameObject>();
+
+            //如果当前处于测试状态
+            if (isTest) {
+                for (int i = 0; i < personNum; i++) {
+                    //生成玩家
+                    GameObject curPlayer = Instantiate(player,
+                        orign + new Vector3(0, 0, 0),
+                        Quaternion.identity);
+
+                    //绑定gameObject
+                    curPlayer.AddComponent<PersonAI>();
+
+                    //将生成的脚本和person数组绑定
+                    BattleActor battleActor = curPlayer.GetComponent<PersonAI>();
+                    //获取绑定的游戏对象
+                    battleActor.playerPrefab = curPlayer;
+
+                    //初始化人物属性
+                    initBattlePerson(ref battleActor, i);
+
+                    //创建一个新的panel
+                    GameObject curPanel = Instantiate(playerPanel);
+                    //将panel增加到panel列表中
+                    playerPanels.Add(curPanel);
+                    //将当前的panel绑定到canvas中
+                    curPanel.transform.parent = curCanvas.transform;
+                    //改变rect的位置
+                    curPanel.transform.position +=
+                        new Vector3(curPanel.GetComponent<RectTransform>().rect.width * i, 0, 0);
+                    //绑定战斗角色和操作表
+                    bindPlayerPanel((PersonAI)battleActor, playerPanels[i].transform);
+
+                    //添加到玩家列表中
+                    playerActors.Add(battleActor);
+                }
+            } else {
+                initPlayerTeam();
+            }
+
+            //初始化小队操作的指令
+            initTeamPanel();
+        }
+
+        /// <summary>
+        /// 初始化玩家小队的操作指令
+        /// </summary>
+        private void initTeamPanel() {
+            //创建一个新的panel
+            GameObject curPanel = Instantiate(teamPanel);
+            //将panel增加到panel列表中
+            //playerPanels.Add(curPanel);
+            //将当前的panel绑定到canvas中
+            curPanel.transform.parent = curCanvas.transform;
+            //改变rect的位置
+            curPanel.transform.position +=
+                new Vector3(curPanel.GetComponent<RectTransform>().rect.width * personNum, 0, 0);
+
+            //绑定战斗角色和操作表
+            Transform panel = curPanel.transform;
+            //初始化下拉选取框
+            Dropdown dropdown = panel.Find("SelectTarget").GetComponent<Dropdown>();
+            //绑定小队选取目标的监听事件
+            dropdown.onValueChanged.AddListener(x => {
+                foreach (GameObject playerPanel in playerPanels) {
+                    playerPanel.transform.Find("SelectTarget")
+                    .GetComponent<Dropdown>().value = x;
+                }
+                //选定攻击目标后设置攻击状态
+                panel.Find("ToggleGroup").Find("AttackToggle").GetComponent<Toggle>().isOn = true;
+            });
+            //初始化选取敌方目标
+            for (int i = 0; i < enemyActors.Count; i++) {
+                Dropdown.OptionData op = new Dropdown.OptionData();
+                op.text = "集火敌方目标" + (i + 1);
+                dropdown.options.Add(op);
+            }
+
+            //增加攻击监听事件
+            panel.Find("ToggleGroup").Find("AttackToggle").GetComponent<Toggle>()
+                .onValueChanged.AddListener((bool isOn) => {
+                    foreach(GameObject playerPanel in playerPanels) {
+                        playerPanel.transform.Find("ToggleGroup").Find("AttackToggle")
+                        .GetComponent<Toggle>().isOn = true;
+                    }
+                });
+
+            //增加控制射程监听事件
+            panel.Find("ToggleGroup").Find("RangeControlToggle").GetComponent<Toggle>()
+                .onValueChanged.AddListener((bool isOn) => {
+                    foreach (GameObject playerPanel in playerPanels) {
+                        playerPanel.transform.Find("ToggleGroup").Find("RangeControlToggle")
+                        .GetComponent<Toggle>().isOn = true;
+                    }
+                });
+
+            //增加后退监听事件
+            panel.Find("ToggleGroup").Find("BackUpToggle").GetComponent<Toggle>()
+                .onValueChanged.AddListener((bool isOn) => {
+                    foreach (GameObject playerPanel in playerPanels) {
+                        playerPanel.transform.Find("ToggleGroup").Find("BackUpToggle")
+                        .GetComponent<Toggle>().isOn = true;
+                    }
+                });
+
+            //增加休息监听事件
+            panel.Find("ToggleGroup").Find("RestToggle").GetComponent<Toggle>()
+                .onValueChanged.AddListener((bool isOn) => {
+                    foreach (GameObject playerPanel in playerPanels) {
+                        playerPanel.transform.Find("ToggleGroup").Find("RestToggle")
+                        .GetComponent<Toggle>().isOn = true;
+                    }
+                });
+        }
+
+        //初始化玩家战斗队伍
+        private void initPlayerTeam() {
+            //初始化当前玩家角色人物为0
+            personNum = 0;
+
+            //遍历world中的人物列表，将小队人物参战
+            foreach (Person person in World.getInstance().persons) {
+                //如果当前人不处于外出状态，返回false
+                if (person.ifOuting == false) {
+                    continue;
+                }
+
+                //生成玩家
+                GameObject curPlayer = Instantiate(player,
+                    orign + new Vector3(0, 0, 0),
+                    Quaternion.identity);
+
+                //绑定gameObject
                 curPlayer.AddComponent<PersonAI>();
 
                 //将生成的脚本和person数组绑定
-                enemy[i] = curPlayer.GetComponent<PersonAI>();
+                BattleActor battleActor = curPlayer.GetComponent<PersonAI>();
+                //获取绑定的游戏对象
+                battleActor.playerPrefab = curPlayer;
 
                 //初始化人物属性
-                initBattleEnemy(ref enemy[i], i);
+                initTrueBattlePerson(ref battleActor, personNum, person);
 
-                //绑定Panel
-                bindPanel((PersonAI)enemy[i], panel[1]);
+                //创建一个新的panel
+                GameObject curPanel = Instantiate(playerPanel);
+                //将panel增加到panel列表中
+                playerPanels.Add(curPanel);
+                //将当前的panel绑定到canvas中
+                curPanel.transform.parent = curCanvas.transform;
+                //改变rect的位置
+                curPanel.transform.position +=
+                    new Vector3(curPanel.GetComponent<RectTransform>().rect.width * personNum, 0, 0);
+                //绑定战斗角色和操作表
+                bindPlayerPanel((PersonAI)battleActor, playerPanels[personNum].transform);
+
+                //添加到玩家列表中
+                playerActors.Add(battleActor);
+
+                //增加人的数量
+                personNum++;
             }
-           
-            //初始化剩余人数
-            //personRemainNum = personNum;
-            //enemyRemainNum = enemyNum;
         }
 
         //给玩家绑定hp和ap的显示，和玩家指令绑定
-        void bindPanel(PersonAI person, Transform panel) {
+        void bindPlayerPanel(PersonAI person, Transform panel) {
             //绑定撤退按钮的监听事件
             person.retreatBtn = panel.Find("BackUpBtn").GetComponent<Button>();
             //绑定撤退监听事件
@@ -130,12 +310,22 @@ namespace WorldBattle {
             //设置一开始撤退无效
             person.retreatBtn.interactable = false;
 
+            //绑定技能技能监听事件
+            panel.Find("skill1").GetComponent<Button>()
+                .onClick.AddListener(() => person.startSkillRelease(0));
+            panel.Find("skill2").GetComponent<Button>()
+                .onClick.AddListener(() => person.startSkillRelease(1));
+
             //初始化下拉选取框
             Dropdown dropdown = panel.Find("SelectTarget").GetComponent<Dropdown>();
             //绑定选取目标的监听事件
-            dropdown.onValueChanged.AddListener(x => person.changeSelectTarget(x));
+            dropdown.onValueChanged.AddListener(x => {
+                person.changeSelectTarget(x);
+                //选取目标后同时设置攻击状态
+                panel.Find("ToggleGroup").Find("AttackToggle").GetComponent<Toggle>().isOn = true;
+            });
             //初始化选取敌方目标
-            for (int i = 0; i < enemyNum; i++) {
+            for (int i = 0; i < enemyActors.Count; i++) {
                 Dropdown.OptionData op = new Dropdown.OptionData();
                 op.text = "集火敌方目标" + (i + 1);
                 dropdown.options.Add(op);
@@ -171,6 +361,44 @@ namespace WorldBattle {
                 });
         }
 
+        /// <summary>
+        /// 绑定敌人的panel
+        /// </summary>
+        /// <param name="person"></param>
+        /// <param name="panel"></param>
+        void bindEnemyPanel(EnemyAI person, Transform panel) {
+            //绑定hpSlider
+            person.hpSlider = panel.Find("HpSlider").GetComponent<Slider>();
+            //绑定apSlider
+            person.apSlider = panel.Find("ApSlider").GetComponent<Slider>();
+        }
+
+        private void initTrueBattlePerson(ref BattleActor battleActor, int i, Person person) {
+            //初始化人物各属性值(随机)，只做测试使用
+            battleActor.maxHealthPoint = (float)person.getHpMax();
+            battleActor.maxActionPoint = (float)person.getApMax();
+            battleActor.hpRecovery = (float)person.getHpRec();
+            battleActor.apRecovery = (float)person.getApRec();
+            battleActor.atkNeedTime = 1 / (float)person.getValAts();
+            battleActor.moveSpeed = (float)person.getValSpd();
+            battleActor.atkDamage = (float)person.getValAtk();
+            battleActor.atkRange = (float)person.getRange();
+            battleActor.damageRate = 1.0f;
+            battleActor.critDamage = (float)person.getValCrd();
+            battleActor.critRate = (float)person.getValCrc();
+            battleActor.hitRate = (float)person.getValHrate();
+            battleActor.dodgeRate = (float)person.getValErate();
+
+            //初始化人物的位置
+            battleActor.pos = 0.0f;
+
+            //初始化人物的id
+            battleActor.myId = i;
+
+            //初始化人物是否为玩家角色
+            battleActor.isPlayer = true;
+        }
+
         //以下属性只做测试用
         private float maxHealthPoint = 200.0f;
         private float minHealthPoint = 150.0f;
@@ -184,7 +412,7 @@ namespace WorldBattle {
         private float maxAtkRange = 5f;
 
         //初始化出战对应的人，并初始化对应出场的位置
-        void initBattlePerson(ref BattleAI person, int i) {
+        void initBattlePerson(ref BattleActor person, int i) {
             //初始化人物各属性值(随机)，只做测试使用
             person.maxHealthPoint = Random.Range(minHealthPoint, maxHealthPoint);
             person.maxActionPoint = Random.Range(minActionPoint, maxActionPoint);
@@ -198,10 +426,10 @@ namespace WorldBattle {
             person.critDamage = 1.6f;
             person.critRate = 0.2f;
             person.hitRate = 1.0f;
-            person.dodgeRate = 0.2f;
+            person.dodgeRate = 0.0f;
 
             //初始化人物的位置
-            person.pos = i * personWidth;
+            person.pos = 0.0f;
 
             //初始化人物的id
             person.myId = i;
@@ -211,9 +439,9 @@ namespace WorldBattle {
         }
 
         //敌人数值相应的削弱
-        private float enemyPara = 0.8f;
+        private float enemyPara = 1.0f;
         //初始化出战对应的敌人，并初始化对应出场的位置
-        void initBattleEnemy(ref BattleAI person, int i) {
+        void initBattleEnemy(ref BattleActor person, int i) {
             //初始化人物各属性值(随机)，只做测试使用
             person.maxHealthPoint = Random.Range(minHealthPoint, maxHealthPoint) * enemyPara;
             person.maxActionPoint = Random.Range(minActionPoint, maxActionPoint) * enemyPara;
@@ -227,10 +455,10 @@ namespace WorldBattle {
             person.critDamage = 1.6f;
             person.critRate = 0.2f;
             person.hitRate = 1.0f;
-            person.dodgeRate = 0.2f;
+            person.dodgeRate = 0.0f;
 
             //初始化人物的位置
-            person.pos = battleMapLen - i * personWidth;
+            person.pos = battleMapLen;
 
             //初始化人物的id
             person.myId = i;
@@ -251,16 +479,16 @@ namespace WorldBattle {
 
             if (isPlayer) {
                 //如果是玩家判断玩家那方是否全部阵亡或逃跑
-                for (int i = 0; i < personNum; i++) {
-                    if (person[i].isAlive == true) {
+                foreach (PersonAI player in playerActors) {
+                    if (player.isAlive == true) {
                         isBattleEnd = false;
                         break;
                     }
                 }
             } else {
                 //如果是敌人判断敌人那方是否全部阵亡或逃跑
-                for (int i = 0; i < enemyNum; i++) {
-                    if (enemy[i].isAlive == true) {
+                foreach (EnemyAI enemy in enemyActors) {
+                    if (enemy.isAlive == true) {
                         isBattleEnd = false;
                         break;
                     }
@@ -287,14 +515,26 @@ namespace WorldBattle {
             if (isPlayer) {
                 //如果是玩家胜利，设置玩家胜利
                 for (int i = 0; i < personNum; i++) {
-                    person[i].startWin();
+                    playerActors[i].startWin();
                 }
+                //显示胜利的文本
+                winText.SetActive(true);
             } else {
                 //如果是敌人胜利，设置敌人胜利
-                for (int i = 0; i < enemyNum; i++) {
-                    enemy[i].startWin();
+                foreach (EnemyAI enemy in enemyActors) {
+                    enemy.startWin();
                 }
+                //显示失败的文本
+                defeatText.SetActive(true);
             }
+
+            //开启协程过5秒后跳转场景
+            StartCoroutine(changeMapScene());
+        }
+
+        IEnumerator changeMapScene() {
+            yield return new WaitForSeconds(5.0f);
+            SceneManager.LoadScene("MapScene");
         }
     }
 }
