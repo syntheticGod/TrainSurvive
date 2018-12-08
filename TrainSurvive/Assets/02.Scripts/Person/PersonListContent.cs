@@ -11,10 +11,12 @@ using UnityEngine;
 
 public class PersonListContent : MonoBehaviour {
     public GameObject content;
+    public UnitInventoryCtrl EquipmentCtrl;
     
     // Use this for initialization
     void Start () {
         reloadData();
+        EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
     }
 	
 	// Update is called once per frame

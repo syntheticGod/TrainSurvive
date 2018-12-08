@@ -80,7 +80,6 @@ namespace WorldMap
             teamObject = Instantiate(teamPrefab);
             teamObject.name = "Team";
             team.Init(world.TeamMapPos());
-            teamObject.GetComponent<TeamController>().Init();
             teamObject.transform.parent = characterObject.transform;
             
             trainObject.SetActive(!world.IfTeamOuting);

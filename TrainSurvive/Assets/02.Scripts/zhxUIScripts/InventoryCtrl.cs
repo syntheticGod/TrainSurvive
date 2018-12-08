@@ -27,7 +27,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         //jiazai item
         for(int i=0; i<World.getInstance().itemDataInTrain.Count; ++i)
         {
-            coreInventory.PushItemToLast(World.getInstance().itemDataInTrain[i].item.Clone());
+            coreInventory.PushItemToLast(World.getInstance().itemDataInTrain[i].item.Clone(), false);
         }
     }
 

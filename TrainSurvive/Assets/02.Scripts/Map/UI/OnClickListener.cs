@@ -8,6 +8,7 @@ namespace WorldMap
 {
     public interface OnClickListener
     {
+        string GetName();
         void OnClick(BUTTON_ID id);
         bool IfAccepted(BUTTON_ID id);
     }

@@ -11,14 +11,9 @@ using System;
 
 namespace WorldMap.UI
 {
-    public class TeamPackItem : ItemBase
+    public class TeamPackItem : ResourceItemBase
     {
         protected Text numView;
-        void Start()
-        { }
-
-        void Update()
-        { }
         protected override void CreateModel()
         {
             base.CreateModel();

@@ -34,10 +34,13 @@ namespace WorldMap.Controller
         { }
         protected override void CreateModel()
         {
+            enableTitileBar = false;
             base.CreateModel();
             //PackListView
             packLV = Utility.ForceGetComponentInChildren<TeamPackListView>(gameObject, "PackListViewLayout");
             packLV.SetBackgroudColor(containerColor);
+            packLV.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            packLV.GridConstraintCount = 8;
             packLV.ScrollDirection = ScrollType.Vertical;
             packLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
             Utility.FullFillRectTransform(packLV, new Vector2(20, 20), new Vector2(-20, -20));
@@ -78,7 +81,7 @@ namespace WorldMap.Controller
             for (int i = 0; i < topLeftBtnsName.Length; i++)
             {
                 topLeftBtns[i] = Utility.CreateBtn(topLeftBtnsName[i], topLeftBtnsContent[i], btns);
-                Utility.TopLeft(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
+                Utility.LeftTop(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
                 direction.x += sizeOfTopLeft.x;
                 int index = i;
                 topLeftBtns[i].onClick.AddListener(delegate () { OnTopLeftBtnClick(index); });

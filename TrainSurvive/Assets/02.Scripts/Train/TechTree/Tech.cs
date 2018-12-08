@@ -24,9 +24,9 @@ public abstract class Tech : ISerializable {
     private Coroutine ResearchCoroutine { get; set; }
 
     /// <summary>
-    /// 工作量系数
+    /// 工作速度系数
     /// </summary>
-    public float WorkRatio { get; set; } = 1;
+    public float WorkSpeedRatio { get; set; } = 1;
     /// <summary>
     /// 当前工作量
     /// </summary>
@@ -36,8 +36,11 @@ public abstract class Tech : ISerializable {
     /// </summary>
     public State TechState {
         get {
+            if (World.getInstance().techUnlock <= 0 && !IsCompleted) {
+                return State.LOCKED;
+            }
             for (int i = 0; i < Dependencies.Length; i++) {
-                if (TechTree.Techs[Dependencies[i]].TechState != State.COMPLETED) {
+                if (TechTreeManager.Techs[Dependencies[i]].TechState != State.COMPLETED) {
                     return State.LOCKED;
                 }
             }
@@ -105,7 +108,7 @@ public abstract class Tech : ISerializable {
     protected Tech(SerializationInfo info, StreamingContext context) {
         IsCompleted = info.GetBoolean("IsCompleted");
         IsWorking = info.GetBoolean("IsWorking");
-        WorkRatio = (float)info.GetValue("WorkRatio", typeof(float));
+        WorkSpeedRatio = (float)info.GetValue("WorkSpeedRatio", typeof(float));
         CurrentWorks = (float)info.GetValue("CurrentWorks", typeof(float));
         if (IsWorking) {
             StartWorking();
@@ -120,13 +123,13 @@ public abstract class Tech : ISerializable {
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context) {
         info.AddValue("IsCompleted", IsCompleted);
         info.AddValue("IsWorking", IsWorking);
-        info.AddValue("WorkRatio", WorkRatio);
+        info.AddValue("WorkSpeedRatio", WorkSpeedRatio);
         info.AddValue("CurrentWorks", CurrentWorks);
     }
 
     private IEnumerator RunResearch() {
-        while (CurrentWorks < TotalWorks * WorkRatio) {
-            CurrentWorks += Time.deltaTime;
+        while (CurrentWorks < TotalWorks) {
+            CurrentWorks += Time.deltaTime * WorkSpeedRatio;
             yield return 1;
         }
         IsCompleted = true;
