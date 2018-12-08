@@ -74,8 +74,6 @@ namespace WorldMap.Model
         private Team() : base()
         {
             state = STATE.NONE;
-            Inventory = new InventoryForTeam(float.MaxValue);
-            world = WorldForMap.Instance;
         }
         /// <summary>
         /// 仅没设置探险队位置的初始化
@@ -84,6 +82,8 @@ namespace WorldMap.Model
         {
             map = Map.GetIntanstance();
             train = Train.Instance;
+            world = WorldForMap.Instance;
+            Inventory = new InventoryForTeam(float.MaxValue);
         }
         /// <summary>
         /// 夹带探险队位置的初始化
@@ -178,6 +178,8 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("探险队：招募到" + theOne.name);
+            theOne.ifOuting = true;
+            persons.Add(theOne);
         }
         /// <summary>
         /// 移动到指定坐标

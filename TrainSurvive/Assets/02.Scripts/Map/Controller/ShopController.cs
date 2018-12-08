@@ -20,17 +20,23 @@ namespace WorldMap.Controller
         private Model.Town currentTown;
         protected override void CreateModel()
         {
+            m_titleString = "商店";
+            m_windowSizeType = WindowSizeType.MIDDLE14x12;
             base.CreateModel();
-            WinSizeType = WindowSizeType.BIG;
+            SetBackground("tavern_bg_01");
             //ListView
             goodsInShopLV = new GameObject("GoodsInShopLayout").AddComponent<GoodsListView>();
-            ConfigListView(goodsInShopLV, 0.25F);
-            
+            goodsInShopLV.ActionBtnString = "购买";
             goodsInShopLV.callBackGoodsAction = CallBackGoodsBuy;
+            ConfigListView(goodsInShopLV, 0.25F);
+            Utility.Anchor(goodsInShopLV, new Vector2(0.0417F, 0.2F), new Vector2(0.3481F, 0.8F));
+
             goodsInPackLV = new GameObject("GoodsInPackLayout").AddComponent<GoodsListView>();
-            ConfigListView(goodsInPackLV, 0.75F);
             goodsInPackLV.ActionBtnString = "售卖";
             goodsInPackLV.callBackGoodsAction = CallBackGoodsSell;
+            ConfigListView(goodsInPackLV, 0.75F);
+            Utility.Anchor(goodsInPackLV, new Vector2(0.6522F, 0.2F), new Vector2(0.9572F, 0.8F));
+
             //Buttons
             RectTransform btns = new GameObject("Btns").AddComponent<RectTransform>();
             Utility.SetParent(btns, this);
@@ -44,12 +50,11 @@ namespace WorldMap.Controller
         }
         private void ConfigListView(GoodsListView listView, float xAnchor)
         {
-            listView.SetCellSize(new Vector2(500F, 100F));
+            listView.SetCellSize(new Vector2(-1, 100F));
             listView.ScrollDirection = ScrollType.Vertical;
             listView.m_selectable = false;
-            listView.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            listView.StartAxis = GridLayoutGroup.Axis.Vertical;
             Utility.SetParent(listView, this);
-            Utility.VLineAt(comp: listView, anchor: xAnchor, top: 0.95F, bottom: 0.2F, width: 502F);
         }
         protected override bool PrepareDataBeforeShowWindow()
         {

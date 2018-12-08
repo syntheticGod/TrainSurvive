@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace WorldMap.UI
 {
-    public abstract class MergableListView<M> : ListViewController<M>
+    public abstract class MergableListView<M> : BaseListView<M>
         where M : Mergable
     {
         /// <summary>

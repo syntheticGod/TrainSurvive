@@ -10,12 +10,19 @@ using UnityEngine.UI;
 
 namespace WorldMap.UI
 {
-    public class PersonSmall : MonoBehaviour
+    public class PersonBaseItem : BaseItem
     {
-        private void Awake()
+        private Text text;
+        protected override void CreateModel()
         {
-            Text text = Utility.CreateText("Name");
+            text = Utility.CreateText("Name");
+        }
+        protected override void InitModel()
+        {
             Utility.SetParent(text, this);
+        }
+        protected override void PlaceModel()
+        {
             Utility.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
         }
     }

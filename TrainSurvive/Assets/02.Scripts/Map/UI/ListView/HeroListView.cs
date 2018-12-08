@@ -10,11 +10,11 @@ using UnityEngine.UI;
 
 namespace WorldMap.UI
 {
-    public class HeroListView : ListViewController<Person>
+    public class HeroListView : BaseListView<Person>
     {
         protected override void OnItemView(ListViewItem item, Person data)
         {
-            Utility.ForceGetComponentInChildren<PersonSmall>(item, "Hero").GetComponentInChildren<Text>().text = data.name;
+            Utility.ForceGetComponentInChildren<PersonBaseItem>(item, "Hero").GetComponentInChildren<Text>().text = data.name;
             item.Tag = data;
         }
     }

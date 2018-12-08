@@ -41,7 +41,7 @@ namespace WorldMap.Controller
             window.SetParent(canvas);
             window.anchorMax = window.anchorMin = new Vector2(0.5F, 0.5F);
             window.localPosition = new Vector3(0.0F, 0.0F, 0.0F);
-            Utility.ForceGetComponent<WindowsController, BaseWindowsController>(window);
+            Utility.ForceGetComponent<WindowsController, NullWindowsController>(window);
             return true;
         }
         public static bool HideWindow(WindowsController windows)

@@ -11,7 +11,7 @@ using WorldMap;
 
 namespace WorldMap.UI
 {
-    public class ItemBase : MonoBehaviour
+    public class ResourceItemBase : BaseItem
     {
         protected static string spriteFloder = "ItemSprite/";
         protected Image backgroudImage;
@@ -20,30 +20,28 @@ namespace WorldMap.UI
         private string targetImageFN;
         private string markImageFN;
         private string backgroudImageFN;
-        protected static Color[] markColors = new Color[] { new Color(1, 1, 1), new Color(0.2824f, 0.8824f, 0.2627f), new Color(0.2627f, 0.7569f, 0.8784f), new Color(0.7373f, 0.2627f, 0.8706f), new Color(0.8706f, 0.2706f, 0.2706f) };
-        void Awake()
+        protected static Color[] markColors = new Color[] 
         {
-            CreateModel();
-            InitModel();
-            PlaceModel();
-
-        }
-        void Start()
-        { }
-        protected virtual void CreateModel()
+            new Color(1, 1, 1),
+            new Color(0.2824f, 0.8824f, 0.2627f),
+            new Color(0.2627f, 0.7569f, 0.8784f),
+            new Color(0.7373f, 0.2627f, 0.8706f),
+            new Color(0.8706f, 0.2706f, 0.2706f)
+        };
+        protected override void CreateModel()
         {
             backgroudImage = Utility.CreateImage("Backgroud");
             markImage = Utility.CreateImage("Mark");
             markImage.sprite = Resources.Load<Sprite>(spriteFloder + "RarityMark");
             targetImage = Utility.CreateImage("Target");
         }
-        protected virtual void InitModel()
+        protected override void InitModel()
         {
             Utility.SetParent(backgroudImage, this);
             Utility.SetParent(targetImage, this);
             Utility.SetParent(markImage, this);
         }
-        protected virtual void PlaceModel()
+        protected override void PlaceModel()
         {
             Utility.FullFillRectTransform(backgroudImage, Vector2.zero, Vector2.zero);
             Utility.FullFillRectTransform(markImage, Vector2.zero, Vector2.zero);

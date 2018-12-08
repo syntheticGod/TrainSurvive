@@ -9,13 +9,6 @@ using WorldMap;
 public class World {
     private World() {
         //测试用 xys
-        for(int i = 0; i < 3; i++)
-        {
-            Person p=Person.CreatePerson();
-            p.name = WorldMap.StaticResource.RandomNPCName(true);
-            //p.vitality= UnityEngine.Random.Range(0,10);
-            persons.Add(p);
-        }
         foodIn = (uint)foodInMax;
         money = 9999;//9,999
         //----

@@ -12,6 +12,8 @@ namespace WorldMap.Model
     public class NPC
     {
         public Person PersonInfo { private set; get; }
+        public string Name { get { return PersonInfo.name; } }
+        public int Strength { get { return PersonInfo.strength; } }
         private NPC()
         {
             PersonInfo = Person.CreatePerson();
