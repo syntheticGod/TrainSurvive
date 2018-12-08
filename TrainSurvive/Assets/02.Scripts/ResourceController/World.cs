@@ -90,7 +90,11 @@ public class World {
     private uint foodInMax = 1000;
     private uint foodOutMax = 1000;
     private uint energyMax = 1000;
-    
+    public int money;
+
+    public List<ItemData> itemDataInTrain = new List<ItemData>();
+    public List<ItemData> itemDataInTeam = new List<ItemData>();
+
 
     public List<int> itemIDs;
     public List<int> itemNums;
@@ -132,8 +136,11 @@ public class World {
     
 
     public List<Structure> buildInstArray = new List<Structure>();
+    public List<TrainCarriage> carriageInstArray = new List<TrainCarriage>();
     public bool[] buildUnlock;
-    public Tech[] techArray = TechTree.Techs;
+    public bool[] carriageUnlock;
+    public Tech[] techArray;
+    public int techUnlock;
 
     public int[] abiAllin;
     public int[] abiAllOut;

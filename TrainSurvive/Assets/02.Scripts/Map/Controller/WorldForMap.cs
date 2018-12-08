@@ -217,7 +217,7 @@ namespace WorldMap
         }
         public int GetFootOutMax()
         {
-            return (int)world.foodOutMax;
+            return (int)world.getFoodOutMax();
         }
         public void TrainSetMapPos(Vector2Int mapPos)
         {
