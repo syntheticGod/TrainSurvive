@@ -222,7 +222,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             return restNum;
         }
 
-        public int PushItemToLast(Item item)//已同步
+        public int PushItemToLast(Item item, bool needSync = true)//已同步
         {
             if (!controller)
             {
@@ -252,7 +252,9 @@ namespace Assets._02.Scripts.zhxUIScripts
                 controller.AddGrid(mappingItem);                 //为前台添加物品
             }
             controller.RefreshMaxSize();
-            controller.DataSynchronization();
+            if (needSync) {
+                controller.DataSynchronization();
+            }
          
             return restNum;
         }
