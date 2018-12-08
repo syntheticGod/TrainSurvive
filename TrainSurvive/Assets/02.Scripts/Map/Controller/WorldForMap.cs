@@ -132,6 +132,10 @@ namespace WorldMap
         {
             get { return world.ifOuting; }
         }
+        public bool IfTeamGathering
+        {
+            get { return world.ifGather; }
+        }
         /// <summary>
         /// 探险队移动回调
         /// </summary>
@@ -146,6 +150,11 @@ namespace WorldMap
         public void DoGather()
         {
             world.ifGather = true;
+            world.ifMoving = false;
+        }
+        public void StopGather()
+        {
+            world.ifGather = false;
             world.ifMoving = false;
         }
         /// <summary>
@@ -171,8 +180,14 @@ namespace WorldMap
             {
                 Debug.LogWarning("探险队增加内部食物不正常");
             }
-            //TODO:将身上的物品返回
-            Debug.Log("探险队：我们（人数：" + world.numOut + "）回车了，带回食物：" + remain + "，列车现在有食物：" + world.getFoodIn());
+            Debug.Log("探险队：我们（人数：" + world.numOut + "）回车了。" +
+                "带回食物：" + remain + "，列车现在有食物：" + world.getFoodIn() +
+                "带回东西：" + world.itemDataInTeam.Count + "个");
+            foreach (ItemData item in world.itemDataInTeam)
+            {
+                world.itemDataInTrain.Add(item);
+            }
+            world.itemDataInTeam.Clear();
             world.numIn += world.numOut;
             world.numOut = 0;
             foreach(Person person in world.persons)

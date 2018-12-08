@@ -10,7 +10,7 @@ using WorldMap.Model;
 
 namespace WorldMap.UI
 {
-    public class TeamPackListView : MergableListView<Good>
+    public class TeamPackListView : ResourceListViewBase
     {
         protected override void OnItemView(ListViewItem item, Good data)
         {

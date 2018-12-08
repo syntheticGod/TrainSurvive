@@ -43,6 +43,7 @@ namespace WorldMap.UI
         public ItemFilter onItemFilter { set; get; }
 
         private RectTransform content;
+        private RectTransform hoverPanel;
         private RectTransform viewport;
         private List<ListViewItem> items;
         private List<ListViewItem> recycal;
@@ -61,11 +62,18 @@ namespace WorldMap.UI
         /// 一行的长度
         /// -1：无限长
         /// </summary>
-        public int m_lengthOfLine = -1;
         private Vector2 viewPortSize;
         private List<D> m_datas;
         private int m_persistentCount;
-        public List<D> Datas { set { m_datas = value; Refresh(); } get { return m_datas; } }
+        public List<D> Datas
+        {
+            set
+            {
+                m_datas = value;
+                Refresh();
+            }
+            get { return m_datas; }
+        }
         public void SetData(List<D> datas)
         {
             m_datas = datas;
@@ -94,7 +102,6 @@ namespace WorldMap.UI
                 if (gridLayout != null)
                 {
                     gridLayout.startAxis = m_startAxis;
-                    gridLayout.constraint = GridLayoutGroup.Constraint.Flexible;
                     if (m_startAxis == GridLayoutGroup.Axis.Horizontal)
                     {
                         contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -112,6 +119,28 @@ namespace WorldMap.UI
                 return m_startAxis;
             }
         }
+        public int GridConstraintCount
+        {
+            set
+            {
+                gridLayout.constraintCount = value;
+            }
+            get
+            {
+                return gridLayout.constraintCount;
+            }
+        }
+        public GridLayoutGroup.Constraint GridConstraint
+        {
+            set
+            {
+                gridLayout.constraint = value;
+            }
+            get
+            {
+                return gridLayout.constraint;
+            }
+        }
         protected void ConfigCellSize()
         {
             if (cellSize.x < 0)
@@ -125,6 +154,8 @@ namespace WorldMap.UI
             gridLayout.cellSize = cellSize;
         }
         public int ItemCount { get { return items.Count; } }
+        protected virtual int GetPersistentCount()
+        { return 0; }
         protected virtual void Awake()
         {
             CreateBaseModel();
@@ -169,6 +200,13 @@ namespace WorldMap.UI
             }
             Utility.FullFillRectTransform(content);
             content.pivot = new Vector2(0, 1);
+            //Hover Panel
+            hoverPanel = new GameObject("ListViewItemPanel").AddComponent<RectTransform>();
+            Utility.SetParent(hoverPanel, this);
+            hoverPanel.pivot = new Vector2(0, 1);
+            Utility.Anchor(hoverPanel, new Vector2(0, 1), new Vector2(0, 1));
+            hoverPanel.gameObject.SetActive(false);
+
             //Config ScrollRect
             scrollRect.content = content;
             scrollRect.viewport = viewport;
@@ -176,14 +214,9 @@ namespace WorldMap.UI
             ScrollDirection = m_scrollType;
             //Config GridLayoutGroup
             gridLayout = content.GetComponent<GridLayoutGroup>();
-            gridLayout.constraint = GridLayoutGroup.Constraint.Flexible;
             recycal = new List<ListViewItem>();
             items = new List<ListViewItem>();
         }
-        protected virtual int GetPersistentCount()
-        { return 0; }
-        protected virtual void OnPersistentItemView(ListViewItem item, int index)
-        { }
         void Start()
         {
             viewPortSize = viewport.rect.size;
@@ -201,9 +234,13 @@ namespace WorldMap.UI
         {
             Utility.ForceGetComponent<Image>(gameObject).color = color;
         }
-        public virtual void Refresh()
+        public void Refresh()
         {
             RemoveAllItem();
+            RefreshData();
+        }
+        protected virtual void RefreshData()
+        {
             for (int i = 0; i < Datas.Count; i++)
             {
                 if (onItemFilter == null || !onItemFilter(Datas[i]))
@@ -252,7 +289,7 @@ namespace WorldMap.UI
         public void CallbackItemClick(ListViewItem item)
         {
             int index = items.IndexOf(item);
-            if(index < GetPersistentCount())
+            if (index < GetPersistentCount())
             {
                 onPersistentItemClick?.Invoke(item, index);
             }
@@ -268,6 +305,32 @@ namespace WorldMap.UI
                 item.ShowSelectedColor();
             }
             lastClickedItem = item;
+        }
+        public void CallbackItemEnter(ListViewItem item)
+        {
+            int index = items.IndexOf(item);
+            //持久的Item不显示Panel
+            if (index >= GetPersistentCount())
+            {
+                index -= GetPersistentCount();
+                StartCoroutine(ShowPanel(Datas[index]));
+            }
+        }
+        IEnumerator ShowPanel(D data)
+        {
+            yield return new WaitForSeconds(0.5f);
+            //防止出现闪烁现象
+            hoverPanel.position = Input.mousePosition + new Vector3(0.1F, -0.1F, 0F);
+            OnHoverPanelShow(hoverPanel, data);
+            hoverPanel.gameObject.SetActive(true);
+        }
+        public void CallbackItemExit(ListViewItem item)
+        {
+            StopAllCoroutines();
+            if (hoverPanel.gameObject.activeSelf)
+            {
+                hoverPanel.gameObject.SetActive(false);
+            }
         }
         private void SetParent(RectTransform child, RectTransform parent)
         {
@@ -289,6 +352,8 @@ namespace WorldMap.UI
             {
                 itemView = CreateItem();
                 itemView.callBackItemClick = CallbackItemClick;
+                itemView.callBackItemEnter = CallbackItemEnter;
+                itemView.callBackItemExit = CallbackItemExit;
             }
             else
             {
@@ -317,17 +382,28 @@ namespace WorldMap.UI
             return listViewItem;
         }
         protected abstract void OnItemView(ListViewItem item, D data);
+        protected virtual void OnPersistentItemView(ListViewItem item, int index)
+        { }
+        protected virtual void OnHoverPanelShow(RectTransform panel, D data)
+        {
+
+        }
     }
-    public class ListViewItem : Image, IPointerClickHandler
+    public class ListViewItem : Image, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        public delegate void CallBackItemClick(ListViewItem item);
+        public delegate void CallBackItemEvent(ListViewItem item);
         private static int IncreaseingID = 0;
         public static int GetNewIDUnsafely()
         {
             return IncreaseingID++;
         }
         private const int UNSET = -1;
-        public CallBackItemClick callBackItemClick;
+        //鼠标点击Item回调代理
+        public CallBackItemEvent callBackItemClick;
+        //鼠标进入item回调代理
+        public CallBackItemEvent callBackItemEnter;
+        //鼠标移出item回调代理
+        public CallBackItemEvent callBackItemExit;
         public Color BaseColor { set; get; } = new Color(1F, 1F, 1F, 1F);
         public Color SelectedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F, 0.5F);
         public Color ClickedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F, 0.5F);
@@ -359,6 +435,18 @@ namespace WorldMap.UI
             {
                 callBackItemClick?.Invoke(this);
             }
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            Debug.Log("鼠标进入条款");
+            callBackItemEnter?.Invoke(this);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            Debug.Log("鼠标退出条款");
+            callBackItemExit?.Invoke(this);
         }
     }
     public class NullListView : BaseListView<int>

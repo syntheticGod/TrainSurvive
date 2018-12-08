@@ -34,10 +34,13 @@ namespace WorldMap.Controller
         { }
         protected override void CreateModel()
         {
+            enableTitileBar = false;
             base.CreateModel();
             //PackListView
             packLV = Utility.ForceGetComponentInChildren<TeamPackListView>(gameObject, "PackListViewLayout");
             packLV.SetBackgroudColor(containerColor);
+            packLV.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            packLV.GridConstraintCount = 8;
             packLV.ScrollDirection = ScrollType.Vertical;
             packLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
             Utility.FullFillRectTransform(packLV, new Vector2(20, 20), new Vector2(-20, -20));

@@ -47,6 +47,8 @@ namespace WorldMap.Controller
             SetBackground("tavern_bg_01");
             //左上角的头像框
             tavernNPCListView = new GameObject("HeroListView").AddComponent<TavernNPCListView>();
+            tavernNPCListView.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            tavernNPCListView.GridConstraintCount = 2;
             tavernNPCListView.StartAxis = GridLayoutGroup.Axis.Horizontal;
             tavernNPCListView.ScrollDirection = ScrollType.Vertical;
             tavernNPCListView.onItemClick = OnItemClick;
@@ -55,6 +57,8 @@ namespace WorldMap.Controller
             Utility.Anchor(tavernNPCListView, new Vector2(0.0417F, 0.2F), new Vector2(0.292F, 0.8F));
             //中间聊天窗
             townChatListView = new GameObject("TownChatListView").AddComponent<TownChatListView>();
+            townChatListView.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            townChatListView.GridConstraintCount = 1;
             townChatListView.StartAxis = GridLayoutGroup.Axis.Vertical;
             townChatListView.ScrollDirection = ScrollType.Vertical;
             townChatListView.SetCellSize(new Vector2(-1, 40F));

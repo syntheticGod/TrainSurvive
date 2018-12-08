@@ -63,9 +63,8 @@ namespace WorldMap.UI
         /// <summary>
         /// 刷新ListView，删去数量小于等于0的。
         /// </summary>
-        public override void Refresh()
+        protected override void RefreshData()
         {
-            RemoveAllItem();
             List<M> tempDatas = new List<M>(Datas);
             Datas.Clear();
             for (int i = 0; i < tempDatas.Count; i++)

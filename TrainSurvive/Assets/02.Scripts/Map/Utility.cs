@@ -206,6 +206,19 @@ namespace WorldMap
         {
             FullFillRectTransform(comp, Vector2.zero, Vector2.zero);
         }
+        public static InputField CreateInputField(string name)
+        {
+            InputField inputField = new GameObject(name, typeof(Image)).AddComponent<InputField>();
+            Text text = CreateText("Text");
+            SetParent(text, inputField);
+            FullFillRectTransform(text);
+            Text placeHolder = CreateText("Placeholder");
+            SetParent(placeHolder, inputField);
+            FullFillRectTransform(placeHolder);
+            inputField.textComponent = text;
+            inputField.placeholder = placeHolder;
+            return inputField;
+        }
         public static Button CreateBtn(string name, string content, Transform parent)
         {
             Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();

@@ -128,6 +128,10 @@ namespace WorldMap.Model
         {
             map.MoveToThisSpawn(StaticResource.BlockIndex(position));
             world.TeamSetMapPos(position);
+            if (StaticResource.RandomInt(5) == 0)
+            {
+                //触发战斗
+            }
         }
         /// <summary>
         /// 探险队外出时，探险队该做的准备
@@ -166,7 +170,6 @@ namespace WorldMap.Model
         /// </returns>
         public bool GoBackToTrain()
         {
-            
             State = STATE.IN_TRAIN;
             persons = null;
             return true;

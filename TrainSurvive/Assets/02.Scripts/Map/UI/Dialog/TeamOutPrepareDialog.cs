@@ -14,7 +14,7 @@ namespace WorldMap.UI
     public class TeamOutPrepareDialog : BaseDialog
     {
         public GameObject personProfile;
-        
+
         private InputField foodEditUI;
         private HeroListView herosChoosedLV;
         private HeroListView herosGetReadyLV;
@@ -24,84 +24,66 @@ namespace WorldMap.UI
         protected override void CreateModel()
         {
             SetTitle("选择英雄");
-            Transform topLayout = transform.Find("TopLayout");
-            foodEditUI = topLayout.Find("OperationUI").GetComponentInChildren<InputField>();
-            Debug.Assert(foodEditUI != null);
-            herosChoosedLV = topLayout.Find("HerosSelected").GetComponent<HeroListView>();
-            Debug.Assert(herosChoosedLV != null);
-            herosGetReadyLV = transform.Find("MiddleLayout").Find("HerosReadyForSelect").GetComponent<HeroListView>();
-            Debug.Assert(herosGetReadyLV != null);
+            //上部分
+            RectTransform topLayout = new GameObject("TopLayout", typeof(Image)).GetComponent<RectTransform>();
+            Utility.SetParent(topLayout, this);
+            Utility.Anchor(topLayout, new Vector2(0F, 0.7F), new Vector2(1F, 0.95F));
+            //FoodEdit
+            foodEditUI = Utility.CreateInputField("FoodEdit");
             foodEditUI.onEndEdit.AddListener(delegate
             {
                 Debug.Assert(int.TryParse(foodEditUI.text, out foodSelected));
                 TryShowFood();
             });
+            Utility.SetParent(foodEditUI, topLayout);
+            Utility.Anchor(foodEditUI, Vector2.zero, new Vector2(0.2F, 1F));
+            //Plus
+            Button plus = Utility.CreateBtn("Plus", "+");
+            plus.onClick.AddListener(delegate () { OnClick(BUTTON_ID.TEAM_SELECT_FOOD_PLUS); });
+            Utility.SetParent(plus, topLayout);
+            Utility.Anchor(plus, new Vector2(0.2F, 0F), new Vector2(0.3F, 1F));
+            //Utility.Anchor(plus, )
+            Button minus = Utility.CreateBtn("Minus", "-");
+            minus.onClick.AddListener(delegate () { OnClick(BUTTON_ID.TEAM_SELECT_FOOD_SUBTRCT); });
+            Utility.SetParent(minus, topLayout);
+            Utility.Anchor(minus, new Vector2(0.3F, 0F), new Vector2(0.4F, 1F));
+            //已选
+            herosChoosedLV = new GameObject("TeamChoosedLV").AddComponent<HeroListView>();
+            herosChoosedLV.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
+            herosChoosedLV.SetCellSize(new Vector2(200F, 200F));
+            herosChoosedLV.GridConstraintCount = 1;
+            herosChoosedLV.m_selectable = false;
+            herosChoosedLV.ScrollDirection = ScrollType.Horizontal;
+            herosChoosedLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            Utility.SetParent(herosChoosedLV, topLayout);
+            Utility.Anchor(herosChoosedLV, new Vector2(0.4F, 0F), new Vector2(1F, 1F));
             herosChoosedLV.onItemClick = delegate (ListViewItem item, Person person)
             {
-                if(herosChoosedLV.RemoveItem(person))
+                if (herosChoosedLV.RemoveItem(person))
                     herosGetReadyLV.AddItem(person);
             };
+            //下部分 待选
+            herosGetReadyLV = new GameObject("TeamGetReadyLV").AddComponent<HeroListView>();
+            herosGetReadyLV.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
+            herosGetReadyLV.GridConstraintCount = 2;
+            herosGetReadyLV.m_selectable = false;
+            herosGetReadyLV.ScrollDirection = ScrollType.Horizontal;
+            herosGetReadyLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            Utility.SetParent(herosGetReadyLV, this);
+            Utility.Anchor(herosGetReadyLV, new Vector2(0F, 0.2F), new Vector2(1F, 0.6F));
+            Debug.Assert(herosGetReadyLV != null);
             herosGetReadyLV.onItemClick = delegate (ListViewItem item, Person person)
             {
-                if(herosGetReadyLV.RemoveItem(person))
+                if (herosGetReadyLV.RemoveItem(person))
                     herosChoosedLV.AddItem(person);
             };
-            herosChoosedLV.m_lengthOfLine = 1;
-            herosChoosedLV.m_selectable = false;
-            herosGetReadyLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            herosGetReadyLV.ScrollDirection = ScrollType.Vertical;
-            herosGetReadyLV.m_selectable = false;
         }
-        void Start()
+        protected override void AfterDialogShow()
         {
-        }
-
-        void Update()
-        {
-
-        }
-        public void Show()
-        {
-            if (!gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(true);
-            }
             herosChoosedLV.Datas = new List<Person>();
             herosGetReadyLV.Datas = new List<Person>(world.GetHeros());
             foodInTrain = world.GetFoodIn();
             TryShowFood();
-        }
-        private void HideDialog()
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(false);
-            }
-        }
-        public void OnItemClick(object tag)
-        {
-            //if(item.transform.parent == personsForSelectUI.transform)
-            //{
-            //    if(!personsForSelectUI.Detach(item))
-            //    {
-            //        Debug.LogError("备选框中不存在Item:"+item.Person.name);
-            //        return;
-            //    }
-            //    personsSelectedUI.Append(item);
-            //}
-            //else if(item.transform.parent == personsSelectedUI.transform)
-            //{
-            //    if (!personsSelectedUI.Detach(item))
-            //    {
-            //        Debug.LogError("已选框中不存在Item:" + item.Person.name);
-            //        return;
-            //    }
-            //    personsForSelectUI.Append(item);
-            //}
-            //else
-            //{
-            //    Debug.LogError("找不到Item的父类");
-            //}
         }
         public List<Person> GetSelectedPerson()
         {
@@ -125,7 +107,7 @@ namespace WorldMap.UI
                 foodSelected = world.GetFootOutMax();
             foodEditUI.text = foodSelected + "";
         }
-        public void OnClick(BUTTON_ID id)
+        private void OnClick(BUTTON_ID id)
         {
             switch (id)
             {
@@ -139,32 +121,35 @@ namespace WorldMap.UI
                     foodSelected -= deltaFood;
                     TryShowFood();
                     break;
-                case BUTTON_ID.TEAM_SELECT_FOOD_OK:
-                    if (GetSelectedCount() == 0)
-                    {
-                        Debug.Log("未选择任何人");
-                        break;
-                    }
-                    if (foodSelected == 0)
-                    {
-                        Debug.Log("请选择食物");
-                        break;
-                    }
-                    if (CallBack != null)
-                        CallBack.OK(this);
-                    HideDialog();
-                    break;
-                case BUTTON_ID.TEAM_SELECT_FOOD_CANCEL:
-                    if (CallBack != null)
-                        CallBack.Cancel();
-                    HideDialog();
-                    break;
             }
         }
 
         public string GetName()
         {
             return "TeamOutPrepareDialog";
+        }
+
+        protected override void OK()
+        {
+            if (GetSelectedCount() == 0)
+            {
+                Debug.Log("未选择任何人");
+                return;
+            }
+            if (foodSelected == 0)
+            {
+                Debug.Log("请选择食物");
+                return;
+            }
+            if (DialogCallBack != null)
+                DialogCallBack.OK(this);
+            CloseDialog();
+        }
+
+        protected override void Cancel()
+        {
+            if (DialogCallBack != null)
+                DialogCallBack.Cancel();
         }
     }
 }

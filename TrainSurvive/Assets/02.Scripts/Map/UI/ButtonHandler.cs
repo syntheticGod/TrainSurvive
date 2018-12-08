@@ -57,7 +57,7 @@ namespace WorldMap
         NONE,
         
         TEAM_NONE,//小队模式显示的按键
-        TEAM_ENTRY_AREA,//小队回车
+        TEAM_ENTRY_AREA,//小队进入区域
         TEAM_RETRUN,//小队回车
         TEAM_GATHER,//小队采集
         TEAM_PACK,//小队背包
@@ -85,8 +85,6 @@ namespace WorldMap
         TEAM_SELECT_DIALOG_NONE,//探险队选择框
         TEAM_SELECT_FOOD_PLUS,//增加食物
         TEAM_SELECT_FOOD_SUBTRCT,//减少食物
-        TEAM_SELECT_FOOD_OK,
-        TEAM_SELECT_FOOD_CANCEL,
         TEAM_SELECT_DIALOG_NUM,
         NUM,
     }

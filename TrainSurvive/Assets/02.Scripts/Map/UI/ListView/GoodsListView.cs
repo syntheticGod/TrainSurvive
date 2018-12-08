@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace WorldMap.UI
 {
-    public class GoodsListView : MergableListView<Good>
+    public class GoodsListView : ResourceListViewBase
     {
         public delegate void CallBackGoodsBuy(Good good);
         public CallBackGoodsBuy callBackGoodsAction;

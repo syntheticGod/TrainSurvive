@@ -73,6 +73,7 @@ namespace WorldMap.Controller
         protected Image backgroundImage;
         protected string backgroudFN;
         //左上角标题
+        protected bool enableTitileBar = true;
         protected Text titleText;
         //右上角关闭
         protected Button closeBtn;
@@ -101,29 +102,32 @@ namespace WorldMap.Controller
             rect.anchorMin = defaultMinAnchor;
             rect.anchorMax = defaultMaxAnchor;
             WinSizeType = m_windowSizeType;
-            //TitleBar
-            RectTransform titleBar = new GameObject("TitleBar").AddComponent<RectTransform>();
-            Utility.SetParent(titleBar, this);
-            Utility.TopFull(titleBar, 60F);
-            //Title
-            Image titleBg = Utility.CreateImage("TitleBG");
-            Utility.SetParent(titleBg, titleBar);
-            Utility.LeftTop(titleBg, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
-            titleBg.color = new Color(0.9F, 0.9F, 0.9F);
-            titleText = Utility.CreateText("Title", m_titleString);
-            Utility.SetParent(titleText, titleBg);
-            Utility.LeftTop(titleText, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
-            //Close Button
-            closeBtn = Utility.CreateBtn("Close", "X");
-            closeBtn.onClick.AddListener(delegate () { HideWindow(); });
-            Utility.SetParent(closeBtn, titleBar);
-            Utility.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
-            ColorBlock redColorBlock = closeBtn.colors;
-            redColorBlock.normalColor = new Color(1, 0, 0);
-            redColorBlock.highlightedColor = new Color(0.9F, 0, 0);
-            redColorBlock.pressedColor = new Color(0.8F, 0, 0);
-            redColorBlock.disabledColor = new Color(0.8F, 0.8F, 0.8F);
-            closeBtn.colors = redColorBlock;
+            if (enableTitileBar)
+            {
+                //TitleBar
+                RectTransform titleBar = new GameObject("TitleBar").AddComponent<RectTransform>();
+                Utility.SetParent(titleBar, this);
+                Utility.TopFull(titleBar, 60F);
+                //Title
+                Image titleBg = Utility.CreateImage("TitleBG");
+                Utility.SetParent(titleBg, titleBar);
+                Utility.LeftTop(titleBg, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
+                titleBg.color = new Color(0.9F, 0.9F, 0.9F);
+                titleText = Utility.CreateText("Title", m_titleString);
+                Utility.SetParent(titleText, titleBg);
+                Utility.LeftTop(titleText, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
+                //Close Button
+                closeBtn = Utility.CreateBtn("Close", "X");
+                closeBtn.onClick.AddListener(delegate () { HideWindow(); });
+                Utility.SetParent(closeBtn, titleBar);
+                Utility.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
+                ColorBlock redColorBlock = closeBtn.colors;
+                redColorBlock.normalColor = new Color(1, 0, 0);
+                redColorBlock.highlightedColor = new Color(0.9F, 0, 0);
+                redColorBlock.pressedColor = new Color(0.8F, 0, 0);
+                redColorBlock.disabledColor = new Color(0.8F, 0.8F, 0.8F);
+                closeBtn.colors = redColorBlock;
+            }
         }
         protected void SetTitle(string title)
         {
@@ -149,6 +153,8 @@ namespace WorldMap.Controller
                 return false;
             }
             gameObject.SetActive(true);
+            if (gameObject.transform.parent != null)
+                AfterShowWindow();
             return true;
         }
         protected abstract bool PrepareDataBeforeShowWindow();

@@ -17,7 +17,7 @@ using UnityEngine.UI;
 
 namespace WorldMap.Controller
 {
-    public class TrainController : BaseController, Observer
+    public class TrainController : BaseController, DialogCallBack, Observer
     {
         private const int levelOfTrain = -1;
         //列车状态映射显示信息
@@ -25,15 +25,12 @@ namespace WorldMap.Controller
         private const int ECHO_FROM_TRAIN = 1;
         private static string[] bottomBtnsStrs = { "进入区域", "小队行动", "开车", "列车内部" };
         private Button[] bottomBtns;
-        //主摄像机
-        private Camera mainCamera;
+        private Text trainActionBtn;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
         //外部引用
         private IMapForTrain map;
         private RectTransform trainModeBTs;
-        private Text trainActionBtn;
-        private TeamOutPrepareDialog teamOutDialog;
         public void init()
         {
             Debug.Log("TrainController init");
@@ -116,10 +113,6 @@ namespace WorldMap.Controller
             if (train.Run(ref current))
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTrain);
         }
-        public bool IfAccepted(BUTTON_ID id)
-        {
-            return Utility.Between((int)BUTTON_ID.TRAIN_NONE, (int)BUTTON_ID.TRAIN_NUM, (int)id);
-        }
         /// <summary>
         /// UI按钮的点击事件，地图的鼠标事件在Update中处理。
         /// </summary>
@@ -168,6 +161,9 @@ namespace WorldMap.Controller
                     Debug.Log("探险队行动");
                     //弹出框之后不能再操作列车
                     //teamOutDialog.Show();
+                    TeamOutPrepareDialog dialog = Utility.ForceGetComponentInChildren<TeamOutPrepareDialog>(GameObject.Find("Canvas"), "TeamOutPrepareDialog");
+                    dialog.DialogCallBack = this;
+                    dialog.ShowDialog();
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
                     SceneManager.LoadScene("TrainScene");
@@ -175,15 +171,16 @@ namespace WorldMap.Controller
             }
         }
 
-        public void OK(TeamOutPrepareDialog dialog)
+        public void OK(BaseDialog baseDialog)
         {
+            if (!(baseDialog is TeamOutPrepareDialog)) return;
+            TeamOutPrepareDialog dialog = baseDialog as TeamOutPrepareDialog;
             //险队准备
             ActiveTrain(false);
             ActiveBTs(false);
             Team.Instance.OutPrepare(Train.Instance.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
             ControllerManager.FocusController("Team", "Character");
         }
-
         public void Cancel()
         { }
         private void ActiveTrain(bool active)
