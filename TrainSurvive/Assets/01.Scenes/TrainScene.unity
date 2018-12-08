@@ -2056,7 +2056,7 @@ Prefab:
     - target: {fileID: 224183511581955424, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
         type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 224183511581955424, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
         type: 2}
@@ -2452,6 +2452,11 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114094651792699304, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+        type: 2}
+      propertyPath: EquipmentCtrl
+      value: 
+      objectReference: {fileID: 865220603}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4b5a61f6f8fc5b4f958e631519c43ed, type: 2}
   m_IsPrefabAsset: 0
@@ -4180,7 +4185,7 @@ RectTransform:
   - {fileID: 88973733}
   - {fileID: 864635147}
   m_Father: {fileID: 1303188842}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5010,6 +5015,12 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 864635146}
   m_CullTransparentMesh: 0
+--- !u!114 &865220603 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114377185676482794, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 336281558}
+  m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
 --- !u!1 &873774078
 GameObject:
   m_ObjectHideFlags: 0
@@ -6884,10 +6895,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 668799465}
   - {fileID: 2002818661}
   - {fileID: 127042281}
   - {fileID: 1922754869}
-  - {fileID: 668799465}
   - {fileID: 1449954596}
   - {fileID: 27843102}
   m_Father: {fileID: 0}
@@ -10303,7 +10314,7 @@ RectTransform:
   - {fileID: 1865594317}
   - {fileID: 1949072049}
   m_Father: {fileID: 1303188842}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.6581043, y: 0.115}
   m_AnchorMax: {x: 0.9412293, y: 0.8463704}
@@ -10820,7 +10831,7 @@ RectTransform:
   m_Children:
   - {fileID: 390819937}
   m_Father: {fileID: 1303188842}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.058562502, y: 0.115}
   m_AnchorMax: {x: 0.5, y: 0.9252223}
