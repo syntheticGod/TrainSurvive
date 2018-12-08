@@ -106,9 +106,9 @@ public class SteamEngineStructure : Structure {
     }
 
     private IEnumerator Run() {
-        WaitUntil wait = new WaitUntil(() => Gas != null && Gas.currPileNum >= 1 && World.getInstance().energy < World.getInstance().energyMax);
+        WaitUntil wait = new WaitUntil(() => Gas != null && Gas.currPileNum >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax());
         while (FacilityState == State.WORKING) {
-            if (!(Gas != null && Gas.currPileNum >= 1 && World.getInstance().energy < World.getInstance().energyMax)) {
+            if (!(Gas != null && Gas.currPileNum >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax())) {
                 Progress = 0;
                 yield return wait;
             }

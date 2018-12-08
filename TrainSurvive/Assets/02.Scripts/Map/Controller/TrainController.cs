@@ -17,46 +17,60 @@ using UnityEngine.UI;
 
 namespace WorldMap.Controller
 {
-    public class TrainController : BaseController, OnClickListener, DialogCallBack, Observer
+    public class TrainController : BaseController, Observer
     {
         private const int levelOfTrain = -1;
         //列车状态映射显示信息
-        private static string[] trainActionBtnStrs = { "开车","开车", "停车中..." ,"停车"};
+        private static string[] trainActionBtnStrs = { "开车", "开车", "停车中...", "停车" };
         private const int ECHO_FROM_TRAIN = 1;
+        private static string[] bottomBtnsStrs = { "进入区域", "小队行动", "开车", "列车内部" };
+        private Button[] bottomBtns;
         //主摄像机
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
         //外部引用
         private IMapForTrain map;
-        private GameObject trainModeBTs;
+        private RectTransform trainModeBTs;
         private Text trainActionBtn;
-        private TownController townController;
         private TeamOutPrepareDialog teamOutDialog;
         public void init()
         {
             Debug.Log("TrainController init");
             map = Map.GetIntanstance();
-            //监听列车的所有状态
-            ButtonHandler.Instance.AddListeners(this);
-            Train.Instance.Attach(this, ECHO_FROM_TRAIN);
         }
         protected override void CreateModel()
         {
             Debug.Log("TrainController CreateModel");
+            //Buttons
             Transform canvas = GameObject.Find("/Canvas").transform;
-            trainModeBTs = canvas.Find("TrainMode").gameObject;
-            trainActionBtn = trainModeBTs.transform.Find("TrainRunOrStopBtn").Find("Text").GetComponent<Text>();
+            trainModeBTs = new GameObject("TrainMode").AddComponent<RectTransform>();
+            Utility.SetParent(trainModeBTs, canvas);
+            Utility.RightBottom(trainModeBTs, new Vector2(1, 0), Vector2.zero, Vector2.zero);
+            Vector2 btnPivot = new Vector2(1, 0);
+            Vector2 btnSize = new Vector2(120, 120);
+            float btnSpace = 6;
+            bottomBtns = new Button[bottomBtnsStrs.Length];
+            for (int i = 0; i < bottomBtnsStrs.Length; i++)
+            {
+                bottomBtns[i] = Utility.CreateBtn("Btn" + i, bottomBtnsStrs[i]);
+                Utility.SetParent(bottomBtns[i], trainModeBTs);
+                Utility.RightBottom(bottomBtns[i], btnPivot, btnSize, new Vector2((btnSize.x + btnSpace) * -i, 0));
+                BUTTON_ID btnID = BUTTON_ID.TRAIN_NONE + i + 1;
+                bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
+            }
+            trainActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
 
-            townController = canvas.Find("TownViewer").GetComponent<TownController>();
-            townController.Init();
-
-            teamOutDialog = canvas.Find("TeamSelectDialog").GetComponent<TeamOutPrepareDialog>();
-            teamOutDialog.CallBack = this;
-            teamOutDialog.Init();
-            
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
             cameraFocus.focusLock(transform);
+        }
+        protected override void OnEnable()
+        {
+            Train.Instance.Attach(this, ECHO_FROM_TRAIN);
+        }
+        protected override void OnDisable()
+        {
+            Train.Instance.Detach(obs: this);
         }
         protected override void Start()
         {
@@ -124,7 +138,6 @@ namespace WorldMap.Controller
                             Debug.Log("开车指令失败");
                             break;
                         }
-                        //trainActionBtn.text = trainActionBtnStrs[0];
                     }
                     else
                     {
@@ -134,24 +147,27 @@ namespace WorldMap.Controller
                             Debug.Log("开车指令失败");
                             break;
                         }
-                        //trainActionBtn.text = trainActionBtnStrs[1];
                     }
                     break;
                 case BUTTON_ID.TRAIN_ENTRY_AREA:
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
-                    if(townController!=null)
-                        townController.TryShowTown(train.MapPosTrain);
+                    Model.Town town;
+                    if(world.FindTown(train.MapPosTrain, out town))
+                    {
+                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
+                        townController.SetTown(town);
+                        townController.ShowWindow();
+                    }
                     else
-                        Debug.Log("TeamOutDialog is null");
+                    {
+                        Debug.Log("该区域不可触发");
+                    }
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
                     //弹出框之后不能再操作列车
-                    if (teamOutDialog != null)
-                        teamOutDialog.Show();
-                    else
-                        Debug.Log("TeamOutDialog is null");
+                    //teamOutDialog.Show();
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
                     SceneManager.LoadScene("TrainScene");
@@ -176,12 +192,12 @@ namespace WorldMap.Controller
         }
         private bool ActiveBTs(bool active)
         {
-            if (trainModeBTs.activeSelf == active)
+            if (trainModeBTs.gameObject.activeSelf == active)
             {
                 Debug.Log("重复激活按钮，无效");
                 return false;
             }
-            trainModeBTs.SetActive(active);
+            trainModeBTs.gameObject.SetActive(active);
             return true;
         }
         protected override bool FocusBehaviour()
@@ -201,12 +217,17 @@ namespace WorldMap.Controller
             switch (echo)
             {
                 case ECHO_FROM_TRAIN:
-                    if(state < trainActionBtnStrs.Length)
+                    if (state < trainActionBtnStrs.Length)
                         trainActionBtn.text = trainActionBtnStrs[state];
                     else
                         Debug.LogError("系统：该列车状态无对应的显示信息");
                     break;
             }
+        }
+
+        public string GetName()
+        {
+            return "TrainController";
         }
     }
 }

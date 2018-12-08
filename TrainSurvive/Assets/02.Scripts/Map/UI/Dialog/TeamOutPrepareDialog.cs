@@ -11,31 +11,19 @@ using UnityEngine.UI;
 
 namespace WorldMap.UI
 {
-    public interface DialogCallBack
-    {
-        void OK(TeamOutPrepareDialog dialog);
-        void Cancel();
-    }
-    public class TeamOutPrepareDialog : MonoBehaviour, OnClickListener
+    public class TeamOutPrepareDialog : BaseDialog
     {
         public GameObject personProfile;
-
-        private WorldForMap world;
-
+        
         private InputField foodEditUI;
         private HeroListView herosChoosedLV;
         private HeroListView herosGetReadyLV;
         private int foodInTrain;
         private int foodSelected = 1000;
         private const int deltaFood = 100;
-        public DialogCallBack CallBack { set; get; }
-        public void Init()
+        protected override void CreateModel()
         {
-            ButtonHandler.Instance.AddListeners(this);
-            world = WorldForMap.Instance;
-        }
-        void Awake()
-        {
+            SetTitle("选择英雄");
             Transform topLayout = transform.Find("TopLayout");
             foodEditUI = topLayout.Find("OperationUI").GetComponentInChildren<InputField>();
             Debug.Assert(foodEditUI != null);
@@ -174,9 +162,9 @@ namespace WorldMap.UI
             }
         }
 
-        public bool IfAccepted(BUTTON_ID id)
+        public string GetName()
         {
-            return Utility.IfBetweenBoth((int)BUTTON_ID.TEAM_SELECT_DIALOG_NONE, (int)BUTTON_ID.TEAM_SELECT_DIALOG_NUM, (int)id);
+            return "TeamOutPrepareDialog";
         }
     }
 }

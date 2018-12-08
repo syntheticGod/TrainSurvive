@@ -78,7 +78,7 @@ namespace WorldMap.Controller
             for (int i = 0; i < topLeftBtnsName.Length; i++)
             {
                 topLeftBtns[i] = Utility.CreateBtn(topLeftBtnsName[i], topLeftBtnsContent[i], btns);
-                Utility.TopLeft(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
+                Utility.LeftTop(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
                 direction.x += sizeOfTopLeft.x;
                 int index = i;
                 topLeftBtns[i].onClick.AddListener(delegate () { OnTopLeftBtnClick(index); });

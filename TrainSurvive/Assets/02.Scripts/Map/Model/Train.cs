@@ -277,6 +277,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("列车：招募到" + theOne.name);
+            theOne.ifOuting = false;
         }
         //列车属性判断
         public bool IsRunning

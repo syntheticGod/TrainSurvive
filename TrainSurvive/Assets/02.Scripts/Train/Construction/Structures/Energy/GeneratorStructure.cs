@@ -116,7 +116,7 @@ public class GeneratorStructure : Structure {
     }
 
     private IEnumerator Run() {
-        WaitUntil wait = new WaitUntil(() => World.getInstance().energy < World.getInstance().energyMax);
+        WaitUntil wait = new WaitUntil(() => World.getInstance().getEnergy() < World.getInstance().getEnergyMax());
         while (FacilityState == State.WORKING) {
             // TODO
             //if (!(Gas != null && Gas.currPileNum >= 1 && World.getInstance().energy < World.getInstance().energyMax)) {

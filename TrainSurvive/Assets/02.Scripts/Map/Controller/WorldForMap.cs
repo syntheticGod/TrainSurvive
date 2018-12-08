@@ -20,6 +20,21 @@ namespace WorldMap
         {
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                Person p = Person.CreatePerson();
+                p.name = StaticResource.RandomNPCName(true);
+                p.vitality = StaticResource.RandomRange(0, 10);
+                p.strength = StaticResource.RandomRange(0, 10);
+                p.agile = StaticResource.RandomRange(0, 10);
+                p.technique = StaticResource.RandomRange(0, 10);
+                p.intelligence = StaticResource.RandomRange(0, 10);
+                p.ifOuting = false;
+                AddPerson(p);
+            }
+            
+            world.money = 9999;//9,999
         }
         public bool IfMoneyEnough(int cost)
         {
@@ -217,7 +232,7 @@ namespace WorldMap
         }
         public int GetFootOutMax()
         {
-            return (int)world.foodOutMax;
+            return (int)world.getFoodOutMax();
         }
         public void TrainSetMapPos(Vector2Int mapPos)
         {

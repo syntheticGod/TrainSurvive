@@ -33,11 +33,13 @@ namespace WorldMap.UI
         Vertical,//垂直滑动
         Both//四周滑动
     }
-    public abstract class ListViewController<D> : MonoBehaviour
+    public abstract class BaseListView<D> : MonoBehaviour
     {
         public delegate void ItemClick(ListViewItem item, D data);
+        public delegate void PersistenItemClick(ListViewItem item, int index);
         public delegate bool ItemFilter(D data);
         public ItemClick onItemClick { set; get; }
+        public PersistenItemClick onPersistentItemClick { set; get; }
         public ItemFilter onItemFilter { set; get; }
 
         private RectTransform content;
@@ -47,29 +49,33 @@ namespace WorldMap.UI
         private ListViewItem lastClickedItem;
         private GridLayoutGroup gridLayout;
         private ScrollRect scrollRect;
+        private ContentSizeFitter contentSizeFitter;
 
         public ScrollType m_scrollType = ScrollType.Horizontal;
         public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
         public GameObject m_itemContentPrefab;
         public bool m_selectable = true;
-        public Vector2 defualtCellSize = new Vector2(100.0F, 100.0F);
+        protected Vector2 cellSize = new Vector2(100.0F, 100.0F);
         public float defaultScrollRectSensitivity = 15F;
         /// <summary>
         /// 一行的长度
-        /// -1：自适应长度
+        /// -1：无限长
         /// </summary>
         public int m_lengthOfLine = -1;
-
-        private float viewPortHeight;
+        private Vector2 viewPortSize;
         private List<D> m_datas;
-        public List<D> Datas { set { m_datas = value;Refresh(); } get { return m_datas;} }
-
+        private int m_persistentCount;
+        public List<D> Datas { set { m_datas = value; Refresh(); } get { return m_datas; } }
+        public void SetData(List<D> datas)
+        {
+            m_datas = datas;
+        }
         public ScrollType ScrollDirection
         {
             set
             {
                 m_scrollType = value;
-                if(scrollRect != null)
+                if (scrollRect != null)
                 {
                     scrollRect.vertical = m_scrollType != ScrollType.Horizontal;
                     scrollRect.horizontal = m_scrollType != ScrollType.Vertical;
@@ -88,9 +94,17 @@ namespace WorldMap.UI
                 if (gridLayout != null)
                 {
                     gridLayout.startAxis = m_startAxis;
-                    gridLayout.constraint = m_startAxis == GridLayoutGroup.Axis.Horizontal ?
-                        GridLayoutGroup.Constraint.FixedColumnCount :
-                        GridLayoutGroup.Constraint.FixedRowCount;
+                    gridLayout.constraint = GridLayoutGroup.Constraint.Flexible;
+                    if (m_startAxis == GridLayoutGroup.Axis.Horizontal)
+                    {
+                        contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+                        contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
+                    }
+                    else
+                    {
+                        contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
+                        contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                    }
                 }
             }
             get
@@ -98,41 +112,63 @@ namespace WorldMap.UI
                 return m_startAxis;
             }
         }
+        protected void ConfigCellSize()
+        {
+            if (cellSize.x < 0)
+            {
+                cellSize.x = viewPortSize.x;
+            }
+            if (cellSize.y < 0)
+            {
+                cellSize.y = viewPortSize.y;
+            }
+            gridLayout.cellSize = cellSize;
+        }
         public int ItemCount { get { return items.Count; } }
-
         protected virtual void Awake()
         {
+            CreateBaseModel();
+            m_persistentCount = GetPersistentCount();
+            for (int i = 0; i < m_persistentCount; i++)
+            {
+                OnPersistentItemView(AppendItem(), i);
+            }
+        }
+        protected void CreateBaseModel()
+        {
+            gameObject.AddComponent<RectTransform>();
             //ScrollRect
-            scrollRect = gameObject.GetComponent<ScrollRect>();
-            if (scrollRect == null)
-                scrollRect = gameObject.AddComponent<ScrollRect>();
+            scrollRect = Utility.ForceGetComponent<ScrollRect>(this);
             //Viewport
-
             Transform viewportTransform = transform.Find("Viewport");
             if (viewportTransform == null)
             {
                 viewport = new GameObject("Viewport", typeof(Mask), typeof(Image)).GetComponent<RectTransform>();
                 viewport.GetComponent<Image>().color = new Color(0, 0, 0, 0.1F);
-                SetParent(viewport, scrollRect.GetComponent<RectTransform>());
+                Utility.SetParent(viewport, scrollRect);
             }
             else
             {
                 viewport = viewportTransform.GetComponent<RectTransform>();
             }
-            viewPortHeight = viewport.rect.height;
+            Utility.FullFillRectTransform(viewport);
             //Content
             Transform contentTransform = viewport.Find("Content");
             if (contentTransform == null)
             {
                 content = new GameObject("Content", typeof(GridLayoutGroup), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
-                content.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.MinSize;
-                content.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.MinSize;
-                SetParent(content, viewport);
+                contentSizeFitter = content.GetComponent<ContentSizeFitter>();
+                contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
+                contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
+                Utility.SetParent(content, viewport);
             }
             else
             {
-                content = contentTransform.GetComponent<RectTransform>();
+                content = Utility.ForceGetComponent<RectTransform>(contentTransform);
+                contentSizeFitter = Utility.ForceGetComponent<ContentSizeFitter>(contentTransform);
             }
+            Utility.FullFillRectTransform(content);
+            content.pivot = new Vector2(0, 1);
             //Config ScrollRect
             scrollRect.content = content;
             scrollRect.viewport = viewport;
@@ -140,29 +176,26 @@ namespace WorldMap.UI
             ScrollDirection = m_scrollType;
             //Config GridLayoutGroup
             gridLayout = content.GetComponent<GridLayoutGroup>();
-            StartAxis = m_startAxis;
-            gridLayout.constraintCount = m_lengthOfLine;
-            SetCellSize(defualtCellSize);
+            gridLayout.constraint = GridLayoutGroup.Constraint.Flexible;
             recycal = new List<ListViewItem>();
             items = new List<ListViewItem>();
         }
-        void Start()
+        protected virtual int GetPersistentCount()
+        { return 0; }
+        protected virtual void OnPersistentItemView(ListViewItem item, int index)
         { }
+        void Start()
+        {
+            viewPortSize = viewport.rect.size;
+            Debug.Log("vireport:" + viewport.rect.size + " width:" + viewport.rect.width + " height:" + viewport.rect.height);
+            ConfigCellSize();
+            StartAxis = m_startAxis;
+        }
         void Update()
         { }
         public void SetCellSize(Vector2 cellSize)
         {
-            gridLayout.cellSize = cellSize;
-            if (m_startAxis == GridLayoutGroup.Axis.Horizontal)
-            {
-                if (m_lengthOfLine <= 0)
-                    gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.width / cellSize.x);
-            }
-            else if (m_startAxis == GridLayoutGroup.Axis.Vertical)
-            {
-                if (m_lengthOfLine <= 0)
-                    gridLayout.constraintCount = Mathf.FloorToInt(viewport.rect.height / cellSize.y);
-            }
+            this.cellSize = cellSize;
         }
         public void SetBackgroudColor(Color color)
         {
@@ -173,7 +206,7 @@ namespace WorldMap.UI
             RemoveAllItem();
             for (int i = 0; i < Datas.Count; i++)
             {
-                if(onItemFilter == null || !onItemFilter(Datas[i]))
+                if (onItemFilter == null || !onItemFilter(Datas[i]))
                     OnItemView(AppendItem(), Datas[i]);
             }
         }
@@ -193,14 +226,14 @@ namespace WorldMap.UI
         }
         public void RemoveAllItem()
         {
-            for (int i = 0; i < items.Count; ++i)
+            for (int i = m_persistentCount; i < items.Count; ++i)
             {
                 ListViewItem item = items[i];
                 item.Recycle();
                 item.gameObject.SetActive(false);
                 recycal.Add(item);
             }
-            items.Clear();
+            items.RemoveRange(m_persistentCount, items.Count - m_persistentCount);
         }
         /// <summary>
         /// 代码逻辑点击Item，适用于默认显示指定item
@@ -218,7 +251,16 @@ namespace WorldMap.UI
         }
         public void CallbackItemClick(ListViewItem item)
         {
-            onItemClick?.Invoke(item, Datas[items.IndexOf(item)]);
+            int index = items.IndexOf(item);
+            if(index < GetPersistentCount())
+            {
+                onPersistentItemClick?.Invoke(item, index);
+            }
+            else
+            {
+                index -= GetPersistentCount();
+                onItemClick?.Invoke(item, Datas[index]);
+            }
             if (m_selectable)
             {
                 if (lastClickedItem != null && item != lastClickedItem)
@@ -240,7 +282,6 @@ namespace WorldMap.UI
             child.offsetMin = Vector2.zero;
             child.offsetMax = Vector2.zero;
         }
-
         protected ListViewItem AppendItem()
         {
             ListViewItem itemView;
@@ -320,5 +361,10 @@ namespace WorldMap.UI
             }
         }
     }
-
+    public class NullListView : BaseListView<int>
+    {
+        protected override void OnItemView(ListViewItem item, int data)
+        {
+        }
+    }
 }

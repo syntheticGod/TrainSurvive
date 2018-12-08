@@ -18,15 +18,18 @@ namespace WorldMap.Controller
         
         private GameObject teamModeBTs;
         private TrainController trainController;
-        private TownController townController;
         //主摄像机
         private Camera mainCamera;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
         private float lastSize = 0;
-        public void Init()
+        TeamController()
         {
-            ButtonHandler.Instance.AddListeners(this);
+            ButtonHandler.Instance.AddListener(this);
+        }
+        ~TeamController()
+        {
+            ButtonHandler.Instance.RemoveListener(this);
         }
         protected override void CreateModel()
         {
@@ -35,9 +38,7 @@ namespace WorldMap.Controller
             mainCamera = Camera.main;
             Debug.Assert(null != mainCamera, "需要将主摄像机的Tag改为MainCamera");
             cameraFocus = mainCamera.GetComponent<ICameraFocus>();
-
-            townController = canvas.Find("TownViewer").GetComponent<TownController>();
-            townController.Init();
+            
         }
         protected override void Start()
         {
@@ -73,7 +74,17 @@ namespace WorldMap.Controller
                 case BUTTON_ID.TEAM_ENTRY_AREA:
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
-                    townController.TryShowTown(Team.Instance.MapPosTeam);
+                    Model.Town town;
+                    if (world.FindTown(Team.Instance.MapPosTeam, out town))
+                    {
+                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
+                        townController.SetTown(town);
+                        townController.ShowWindow();
+                    }
+                    else
+                    {
+                        Debug.Log("该区域不可触发");
+                    }
                     break;
                 case BUTTON_ID.TEAM_RETRUN:
                     Debug.Log("回车指令");
@@ -162,6 +173,11 @@ namespace WorldMap.Controller
         }
         protected override void UnfocusBehaviour()
         {
+        }
+
+        public string GetName()
+        {
+            return "TeamController";
         }
     }
 }
