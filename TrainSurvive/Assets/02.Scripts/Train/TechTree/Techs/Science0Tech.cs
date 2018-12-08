@@ -4,11 +4,13 @@
  * 创建时间：2018/12/3 21:43:23
  * 版本：v0.1
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class Science0Tech : Tech {
     public Science0Tech() : base() { }
     protected Science0Tech(SerializationInfo info, StreamingContext context) : base(info, context) { }

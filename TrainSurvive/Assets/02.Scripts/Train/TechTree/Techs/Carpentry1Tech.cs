@@ -4,11 +4,13 @@
  * 创建时间：2018/12/3 22:02:16
  * 版本：v0.1
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class Carpentry1Tech : Tech {
     public Carpentry1Tech() : base() { }
     protected Carpentry1Tech(SerializationInfo info, StreamingContext context) : base(info, context) { }

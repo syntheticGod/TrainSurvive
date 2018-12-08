@@ -60,11 +60,11 @@ public class SceneZoomer : MonoBehaviour {
                 float h = Input.GetAxis("Mouse X") * MoveSpeed * Time.unscaledDeltaTime;
                 float v = Input.GetAxis("Mouse Y") * MoveSpeed * Time.unscaledDeltaTime;
                 Vector3 newPos = transform.position - new Vector3(h, v, 0);
-                if (newPos.y + Camera.main.orthographicSize <= MaxZoom && newPos.y - Camera.main.orthographicSize >= -MaxZoom) {
+                if ((newPos.y + Camera.main.orthographicSize <= MaxZoom || v > 0) && (newPos.y - Camera.main.orthographicSize >= -MaxZoom || v < 0)) {
                     transform.Translate(0, -v, 0, Space.World);
                 }
                 float x = World.getInstance().carriageInstArray[World.getInstance().carriageInstArray.Count - 1].Position.x - LeftPadding;
-                if (newPos.x + Camera.main.orthographicSize * Camera.main.aspect <= RightBound && newPos.x - Camera.main.orthographicSize * Camera.main.aspect >= x) {
+                if ((newPos.x + Camera.main.orthographicSize * Camera.main.aspect <= RightBound || h > 0) && (newPos.x - Camera.main.orthographicSize * Camera.main.aspect >= x || h < 0)) {
                     transform.Translate(-h, 0, 0, Space.World);
                 }
             }

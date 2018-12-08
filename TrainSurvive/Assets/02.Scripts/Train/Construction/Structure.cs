@@ -251,7 +251,7 @@ public abstract class Structure : ISerializable {
     protected Structure(SerializationInfo info, StreamingContext context) {
         WorkSpeedRatio = (float)info.GetValue("WorkSpeedRatio", typeof(float));
         WorkNow = (float)info.GetValue("WorkNow", typeof(float));
-        Position = (Vector3)info.GetValue("Position", typeof(Vector3));
+        Position = new Vector3((float)info.GetValue("PositionX", typeof(float)), (float)info.GetValue("PositionY", typeof(float)), (float)info.GetValue("PositionZ", typeof(float)));
         BuildCostRatios = (float[])info.GetValue("BuildCostRatios", typeof(float[]));
         CostReturnRatios = (float[])info.GetValue("CostReturnRatios", typeof(float[]));
         State state = (State)info.GetValue("FacilityState", typeof(State));
@@ -266,7 +266,9 @@ public abstract class Structure : ISerializable {
         info.AddValue("WorkSpeedRatio", WorkSpeedRatio);
         info.AddValue("WorkNow", WorkNow);
         info.AddValue("FacilityState", FacilityState);
-        info.AddValue("Position", Position);
+        info.AddValue("PositionX", Position.x);
+        info.AddValue("PositionY", Position.y);
+        info.AddValue("PositionZ", Position.z);
         info.AddValue("BuildCostRatios", BuildCostRatios);
         info.AddValue("CostReturnRatios", CostReturnRatios);
     }

@@ -31,11 +31,11 @@ public class EnergyCoreStructure : Structure {
     public override FixedInfo Info { get; } = _info;
 
     protected override void OnStart() {
-        World.getInstance().energyMax += 2000;
+        World.getInstance().setEnergyMax(World.getInstance().getEnergyMax() + 2000);
     }
 
     protected override void OnRemoving() {
         base.OnRemoving();
-        World.getInstance().energyMax -= 2000;
+        World.getInstance().setEnergyMax(World.getInstance().getEnergyMax() - 2000);
     }
 }

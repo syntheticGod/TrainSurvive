@@ -82,6 +82,7 @@ public class Facility : MonoBehaviour {
     }
 
     private void OnStateChange(Structure structure) {
+        contextMenu?.Close();
         switch (Structure.FacilityState) {
             case Structure.State.REMOVING:
             case Structure.State.CANCLE:
@@ -109,6 +110,9 @@ public class Facility : MonoBehaviour {
                     contextMenu = new ContextMenu();
                     MakeContextMenu(contextMenu);
                     contextMenu.Render(mousePos);
+                }
+                if (Input.GetMouseButtonUp(0)) {
+                    UIManager.Instance?.ShowInfoPanel(Structure.Info.Name, Structure.Info.Description);
                 }
             }
         }

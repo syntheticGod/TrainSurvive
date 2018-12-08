@@ -66,6 +66,7 @@ public class Gather {
         World world = World.getInstance();
         Map mp = Map.GetIntanstance();
         SpawnPoint teamPlace = mp.spowns[world.posTeamX, world.posTeamY];
+
         double climateGatherRate = 1;
         double terranGatherRate = 1;
         switch (teamPlace.climateType)
@@ -146,5 +147,10 @@ public class Gather {
         possibilityMap.Clear();
         totalWeight = 0;
         return resultItemId;
+    }
+
+    private Gather()
+    {
+
     }
 }

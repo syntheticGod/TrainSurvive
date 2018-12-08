@@ -178,7 +178,7 @@ public abstract class TrainCarriage : ISerializable {
     public TrainCarriage(SerializationInfo info, StreamingContext context) {
         WorkSpeedRatio = (float)info.GetValue("WorkSpeedRatio", typeof(float));
         WorkNow = (float)info.GetValue("WorkNow", typeof(float));
-        Position = (Vector3)info.GetValue("Position", typeof(Vector3));
+        Position = new Vector3((float)info.GetValue("PositionX", typeof(float)), (float)info.GetValue("PositionY", typeof(float)), (float)info.GetValue("PositionZ", typeof(float)));
         BuildCostRatios = (float[])info.GetValue("BuildCostRatios", typeof(float[]));
         State state = (State)info.GetValue("CarriageState", typeof(State));
         if (state != State.IDLE) {
@@ -192,7 +192,9 @@ public abstract class TrainCarriage : ISerializable {
         info.AddValue("WorkSpeedRatio", WorkSpeedRatio);
         info.AddValue("WorkNow", WorkNow);
         info.AddValue("CarriageState", CarriageState);
-        info.AddValue("Position", Position);
+        info.AddValue("PositionX", Position.x);
+        info.AddValue("PositionY", Position.y);
+        info.AddValue("PositionZ", Position.z);
         info.AddValue("BuildCostRatios", BuildCostRatios);
     }
 

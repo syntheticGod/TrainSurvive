@@ -194,6 +194,8 @@ public class ConstructionManager : MonoBehaviour {
         Vector3 point = GetPlacablePointForTrainCarriage(carriageObject.TrainCarriage);
         carriageTransform.SetPositionAndRotation(point, Quaternion.identity);
 
+        UIManager.Instance?.ShowInfoPanel(carriageObject.TrainCarriage.Info.Name, carriageObject.TrainCarriage.Info.Description);
+
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
         float vOrthographicSize = 0;
         float vxCameraPos = 0;
@@ -241,7 +243,7 @@ public class ConstructionManager : MonoBehaviour {
         float vs = 0.06f;
         float vpx = 0.06f;
         float vpy = 0.06f;
-        while (vs > 0.05f || vpx > 0.05f || vpy > 0.05f) {
+        while (!Input.GetMouseButton(0) && (vs > 0.05f || vpx > 0.05f || vpy > 0.05f)) {
             Camera.main.orthographicSize = Mathf.SmoothDamp(Camera.main.orthographicSize, toSize, ref vs, 0.2f);
             float x = Mathf.SmoothDamp(Camera.main.transform.position.x, toPos.x, ref vpx, 0.2f);
             float y = Mathf.SmoothDamp(Camera.main.transform.position.y, toPos.y, ref vpy, 0.2f);
@@ -253,8 +255,10 @@ public class ConstructionManager : MonoBehaviour {
     private IEnumerator moveFacility(Facility facility) {
         Transform fTransform = facility.GetComponent<Transform>();
         SpriteRenderer fSpriteRenderer = facility.GetComponent<SpriteRenderer>();
-        WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
+        UIManager.Instance?.ShowInfoPanel(facility.Structure.Info.Name, facility.Structure.Info.Description);
+
+        WaitForEndOfFrame wait = new WaitForEndOfFrame();
         while (PlaceState == State.PLACING) {
             RaycastHit2D? hit = getPlacablePointByMousePosition(facility.Structure.Info.RequiredLayers, facility.Structure.Info.LayerOrientation);
             bool isCollided = false;
