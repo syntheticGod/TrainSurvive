@@ -20,14 +20,12 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     private void OnEnable()
     {
-        Debug.Log("同步后台数据");
         coreInventory = new Inventory(300, this);              //测试临时MaxSize
         itemGridInst = new List<GameObject>();
         RefreshMaxSize();
         //jiazai item
         for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
         {
-            Debug.Log("3240");
             coreInventory.LoadItem(World.getInstance().itemDataInTrain[i].item.Clone());    
         }
     }

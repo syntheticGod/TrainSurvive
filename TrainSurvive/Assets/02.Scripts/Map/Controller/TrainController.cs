@@ -154,7 +154,9 @@ namespace WorldMap.Controller
                     }
                     else
                     {
-                        Debug.Log("该区域不可触发");
+                        InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                        infoDialog.SetInfo("该区域不可进入，目前只能进城镇。");
+                        infoDialog.ShowDialog();
                     }
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
