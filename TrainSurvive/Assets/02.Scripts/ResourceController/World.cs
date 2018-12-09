@@ -96,7 +96,9 @@ public class World {
     public int woodMax = 1000;
     public int metalMax = 1000;
     public int money;
-    
+
+
+    public string preDragName;
     public List<ItemData> itemDataInTrain = new List<ItemData>();
     public List<ItemData> itemDataInTeam = new List<ItemData>();
     

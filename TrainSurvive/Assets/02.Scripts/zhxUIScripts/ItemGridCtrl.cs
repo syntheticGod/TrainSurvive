@@ -145,8 +145,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
             Person curPerson = World.getInstance().persons[personID];
-            curPerson.unequipWeapon();
-            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
+            GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID, false);
         }
         Destroy(gameObject);
     }
@@ -231,10 +230,10 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                 else
                 {   //非物品栏收到不同物品堆叠请求 -> 直接交换双方物品  （有些物品不能放在某些设备上，这个需要设备的脚本去把控）
                     //---------------------------------------------------------------------------------------------------------
-                    //if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
-                    //{
-                    //    return;
-                    //}
+                    if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
+                    {
+                        return;
+                    }
                     //----------------------------------------------------------------------------------------------------------
                     float restSize = oriGridCtrl.belongController.coreInventory.maxSize - oriGridCtrl.belongController.coreInventory.currSize;
                     float deltaSize = item.size * item.currPileNum - oriGridCtrl.item.size * oriGridCtrl.item.currPileNum;
@@ -262,8 +261,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                             Person curPerson = World.getInstance().persons[personID];
                             curPerson.unequipWeapon();
                             curPerson.equipWeapon((Weapon)item);
-                            Debug.Log("更换装备");
-                            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
+                            GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID,false);
                         }
                     }
                 }
@@ -279,6 +277,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        World.getInstance().preDragName = this.gameObject.name;
         draggingImg = new GameObject("tempDragImg");
 
         Image tempImg = draggingImg.AddComponent<Image>();
@@ -306,7 +305,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         Destroy(GameObject.Find("tempDragImg"));
         if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
-
+            Debug.Log("asdf00");
             DestroyMyself();
 
         }
@@ -359,4 +358,5 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
             temp.transform.SetAsLastSibling();
         }
     }
+
 }
