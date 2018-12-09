@@ -55,7 +55,7 @@ namespace WorldBattle {
         public Button retreatBtn;
         //获取绑定的gameObject(销毁用)
         public GameObject playerPrefab;
-             
+
         //当前攻击间隔等待时间(攻击一次完后清零，其余时间一直计时)
         public float curAtkPassTime = 0.0f;
         //当前撤退的等待时间
@@ -69,7 +69,7 @@ namespace WorldBattle {
         //当前战斗地图的起始位置
         private Vector3 orign;
         //战斗地图的卷轴长度（假设战斗地图以x,z为平面）
-        public int battleMapLen = 40;
+        public int battleMapLen {get; private set; }
 
         //角色当前的攻击目标
         public int atkTarget;
@@ -87,10 +87,10 @@ namespace WorldBattle {
         //当前角色是否存活(死亡或撤退都属于不存活)
         public bool isAlive { get; set; }
         //当前角色行为是否停止（存活后有可能要播放动画）
-        public bool isActorStop;
+        public bool isActorStop { get; set; }
 
         //当前角色的状态
-        public SubStateController subStateController;
+        public SubStateController subStateController { get; set; }
 
         //当前战斗的玩家角色
         public List<BattleActor> playerActors;
@@ -123,10 +123,10 @@ namespace WorldBattle {
             //转向
             CHANGE_DIR,
 
-            //已死亡
+            //死亡
             DEAD,
 
-            //已撤退
+            //撤退
             RETREAT,
 
             //胜利

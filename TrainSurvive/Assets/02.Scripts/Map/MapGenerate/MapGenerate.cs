@@ -88,21 +88,21 @@ namespace WorldMap {
             mapData = Map.GetIntanstance();
             mapData.initMap(mapWidth, mapHeight);
 
-            //为每种地形赋予一个图标
-            mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
-            mapObject[(int)SpawnPoint.TerrainEnum.HILL] = lakeObject;
-            mapObject[(int)SpawnPoint.TerrainEnum.FOREST] = forestObject;
-            mapObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = volcanoObject;
+            ////为每种地形赋予一个图标
+            //mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
+            //mapObject[(int)SpawnPoint.TerrainEnum.HILL] = lakeObject;
+            //mapObject[(int)SpawnPoint.TerrainEnum.FOREST] = forestObject;
+            //mapObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = volcanoObject;
 
-            //将地图素材存放到同一object中
-            mapRootObject = new GameObject("map");
-            mapParent = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
-            mapParent[(int)SpawnPoint.TerrainEnum.HILL] = new GameObject("hills");
-            mapParent[(int)SpawnPoint.TerrainEnum.FOREST] = new GameObject("froests");
-            mapParent[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = new GameObject("mountains");
-            for (int i = 0; i < (int)SpawnPoint.TerrainEnum.NUM; i++) {
-                mapParent[i].transform.parent = mapRootObject.transform;
-            }
+            ////将地图素材存放到同一object中
+            //mapRootObject = new GameObject("map");
+            //mapParent = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
+            //mapParent[(int)SpawnPoint.TerrainEnum.HILL] = new GameObject("hills");
+            //mapParent[(int)SpawnPoint.TerrainEnum.FOREST] = new GameObject("froests");
+            //mapParent[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = new GameObject("mountains");
+            //for (int i = 0; i < (int)SpawnPoint.TerrainEnum.NUM; i++) {
+            //    mapParent[i].transform.parent = mapRootObject.transform;
+            //}
 
             //先读取地图的信息
             SaveReadMap.ReadMapInfo();

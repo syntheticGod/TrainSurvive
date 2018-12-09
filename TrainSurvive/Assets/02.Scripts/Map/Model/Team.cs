@@ -9,6 +9,7 @@ using UnityEngine;
 
 using WorldMap;
 using Assets._02.Scripts.zhxUIScripts;
+using UnityEngine.SceneManagement;
 
 namespace WorldMap.Model
 {
@@ -131,6 +132,7 @@ namespace WorldMap.Model
             if (StaticResource.RandomInt(5) == 0)
             {
                 //触发战斗
+                SceneManager.LoadScene("BattleScene");
             }
         }
         /// <summary>

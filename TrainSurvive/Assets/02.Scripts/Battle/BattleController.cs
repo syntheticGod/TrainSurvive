@@ -519,6 +519,9 @@ namespace WorldBattle {
                 }
                 //显示胜利的文本
                 winText.SetActive(true);
+
+                //给队伍背包加随机材料
+                Team.Instance.Inventory.PushItem(Good.RandomMaterial().item);
             } else {
                 //如果是敌人胜利，设置敌人胜利
                 foreach (EnemyAI enemy in enemyActors) {
