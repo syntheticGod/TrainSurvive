@@ -32,7 +32,7 @@ namespace WorldMap.Controller
         }
         protected override void CreateModel()
         {
-            m_windowSizeType = WindowSizeType.BIG26x14;
+            m_windowSizeType = EWindowSizeType.BIG26x14;
             m_titleString = "城镇";
             base.CreateModel();
             SetBackground("town_bg_02");
