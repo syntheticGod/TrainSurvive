@@ -17,18 +17,31 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     public GameObject itemGrid;
     public List<GameObject> itemGridInst;
     public Text sizeShow;
-    
 
-    private void Awake()
+    private void OnEnable()
     {
+        Debug.Log("同步后台数据");
         coreInventory = new Inventory(300, this);              //测试临时MaxSize
         itemGridInst = new List<GameObject>();
         RefreshMaxSize();
         //jiazai item
-        for(int i=0; i<World.getInstance().itemDataInTrain.Count; ++i)
+        for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
         {
-            coreInventory.PushItemToLast(World.getInstance().itemDataInTrain[i].item.Clone(), false);
+            coreInventory.LoadItem(World.getInstance().itemDataInTrain[i].item.Clone());    
         }
+    }
+    private void OnDisable()
+    {
+        for(int i=0; i<itemGridInst.Count; ++i)
+        {
+            Destroy(itemGridInst[i]);
+        }
+    }
+
+
+    private void Awake()
+    {
+        
     }
 
     private void Update()
@@ -75,7 +88,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         tempGrid.transform.SetParent(transform);
         tempGrid.transform.SetAsLastSibling();
         tempGrid.name = item.name;
-        //coreInventory.PushItem(item);                //是Inventory的pushitem....先调用再传入该前台，所以这样会造成无限递归
+        
         
     }
 
@@ -123,7 +136,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     public void AddMaterial()
     {
-        Item[] temp = PublicMethod.GenerateItem(231, 1);
+        Item[] temp = PublicMethod.GenerateItem(Random.Range(211,215), 3);
         for(int i=0; i<temp.Length; ++i)
             coreInventory.PushItem(temp[i]);
 
@@ -145,12 +158,12 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
                 itemGridInst[i].GetComponent<ItemGridCtrl>().item.currPileNum);
             World.getInstance().itemDataInTrain.Add(temp);
         }
-        Debug.Log("========================================================");
-        for(int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
-        {
-            Debug.Log(World.getInstance().itemDataInTrain[i].id + "  " + World.getInstance().itemDataInTrain[i].num);
-        }
-        Debug.Log("========================================================");
+        //Debug.Log("========================================================");
+        //for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
+        //{
+        //    Debug.Log(World.getInstance().itemDataInTrain[i].id + "  " + World.getInstance().itemDataInTrain[i].num);
+        //}
+        //Debug.Log("========================================================");
 
     }
 }
