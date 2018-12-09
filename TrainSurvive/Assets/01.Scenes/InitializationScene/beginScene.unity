@@ -696,7 +696,7 @@ Prefab:
     - target: {fileID: 114640446161120386, guid: 3f772e6af7a3eab48997b2fcb4a3f45d,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: MapScene
+      value: TrainScene
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f772e6af7a3eab48997b2fcb4a3f45d, type: 2}
