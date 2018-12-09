@@ -2035,9 +2035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orign: {x: 0, y: 0.7, z: 0}
-  battleMapLen: 40
-  personNum: 5
-  enemyNum: 5
+  battleMapLen: 5
+  personNum: 1
+  enemyNum: 1
   personWidth: 0.5
   playerActors: []
   enemyActors: []
