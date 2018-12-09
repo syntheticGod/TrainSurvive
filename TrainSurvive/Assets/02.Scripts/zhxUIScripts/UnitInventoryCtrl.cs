@@ -104,7 +104,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         }
     }
 
-    public bool GeneratorItem(int id,int num)
+    public bool GeneratorItem(int id,int num = 1)
     {
         if(grid != null)
         {
