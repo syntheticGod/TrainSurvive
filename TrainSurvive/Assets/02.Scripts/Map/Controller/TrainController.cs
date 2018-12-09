@@ -146,7 +146,7 @@ namespace WorldMap.Controller
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
                     Model.Town town;
-                    if(world.FindTown(train.MapPosTrain, out town))
+                    if (world.FindTown(train.MapPosTrain, out town))
                     {
                         TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
@@ -161,7 +161,7 @@ namespace WorldMap.Controller
                     Debug.Log("探险队行动");
                     //弹出框之后不能再操作列车
                     //teamOutDialog.Show();
-                    TeamOutPrepareDialog dialog = Utility.ForceGetComponentInChildren<TeamOutPrepareDialog>(GameObject.Find("Canvas"), "TeamOutPrepareDialog");
+                    TeamOutPrepareDialog dialog = BaseDialog.CreateDialog<TeamOutPrepareDialog>("TeamOutPrepareDialog");
                     dialog.DialogCallBack = this;
                     dialog.ShowDialog();
                     break;
