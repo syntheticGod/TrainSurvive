@@ -18,7 +18,7 @@ public class ResearchBench2Structure : Structure {
         Name = "2级研究台",
         Description = "研究台",
         WorkAll = 3 * 6,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 1,
         IsOnceFunction = true,

@@ -4,6 +4,7 @@
  * 创建时间：2018/11/29 0:14:15
  * 版本：v0.1
  */
+using Assets._02.Scripts.zhxUIScripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,19 +14,7 @@ using UnityEngine.Events;
 
 [Serializable]
 public abstract class Structure : ISerializable {
-
-    [Serializable]
-    public struct Cost {
-        /// <summary>
-        /// 物品ID
-        /// </summary>
-        public int ItemID;
-        /// <summary>
-        /// 耗材量
-        /// </summary>
-        public float Value;
-    }
-
+    
     public struct ButtonAction {
         public string Name { get; set; }
         public Action<Structure> Action { get; set; }
@@ -75,7 +64,7 @@ public abstract class Structure : ISerializable {
         /// <summary>
         /// 建造耗材
         /// </summary>
-        public Cost[] BuildCosts { get; set; }
+        public ItemData[] BuildCosts { get; set; }
         /// <summary>
         /// Sprite path.
         /// </summary>
@@ -281,8 +270,7 @@ public abstract class Structure : ISerializable {
     }
 
     private void CostItems() {
-        // TODO
-        Debug.Log("TODO: COST!");
+        PublicMethod.ConsumeItems(Info.BuildCosts);
     }
 
     private void ReturnCosts(bool isCancel) {

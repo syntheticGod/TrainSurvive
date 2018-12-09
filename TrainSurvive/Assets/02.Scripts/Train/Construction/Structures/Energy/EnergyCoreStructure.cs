@@ -20,7 +20,7 @@ public class EnergyCoreStructure : Structure {
         Name = "动能核心",
         Description = "存储动能的能源核心，获得初始动能上限2000",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[]{ },
+        BuildCosts = new ItemData[]{ },
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = true,
