@@ -67,7 +67,8 @@ namespace WorldMap {
 
             for (int i = 0; i < mapData.rowNum; i++) {
                 for (int j = 0; j < mapData.colNum; j++) {
-                    mapData.spowns[i, j].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.NONE);
+                    if (mapData.spowns[i, j].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL)
+                        mapData.spowns[i, j].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.NONE);
                 }
             }
 
