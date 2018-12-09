@@ -27,7 +27,7 @@ namespace WorldMap.UI
             //上部分
             RectTransform topLayout = new GameObject("TopLayout", typeof(Image)).GetComponent<RectTransform>();
             Utility.SetParent(topLayout, this);
-            Utility.Anchor(topLayout, new Vector2(0F, 0.7F), new Vector2(1F, 0.95F));
+            Utility.Anchor(topLayout, new Vector2(0F, 0.7F), new Vector2(1F, 1F), Vector2.zero, new Vector2(0F, -60F));
             //FoodEdit
             foodEditUI = Utility.CreateInputField("FoodEdit");
             foodEditUI.onEndEdit.AddListener(delegate
@@ -70,7 +70,7 @@ namespace WorldMap.UI
             herosGetReadyLV.ScrollDirection = ScrollType.Horizontal;
             herosGetReadyLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
             Utility.SetParent(herosGetReadyLV, this);
-            Utility.Anchor(herosGetReadyLV, new Vector2(0F, 0.2F), new Vector2(1F, 0.6F));
+            Utility.Anchor(herosGetReadyLV, new Vector2(0F, 0.2F), new Vector2(1F, 0.6F), new Vector2(0F, 60F), Vector2.zero);
             Debug.Assert(herosGetReadyLV != null);
             herosGetReadyLV.onItemClick = delegate (ListViewItem item, Person person)
             {
@@ -129,21 +129,32 @@ namespace WorldMap.UI
             return "TeamOutPrepareDialog";
         }
 
-        protected override void OK()
+        protected override bool OK()
         {
             if (GetSelectedCount() == 0)
             {
-                Debug.Log("未选择任何人");
-                return;
+                InfoDialog dialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                dialog.SetInfo("未选择任何人");
+                dialog.ShowDialog();
+                return false;
             }
             if (foodSelected == 0)
             {
-                Debug.Log("请选择食物");
-                return;
+                InfoDialog dialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                dialog.SetInfo("请选择食物");
+                dialog.ShowDialog();
+                return false;
+            }
+            if(GetSelectedCount() > 5)
+            {
+                InfoDialog dialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                dialog.SetInfo("至多选择5个英雄");
+                dialog.ShowDialog();
+                return false;
             }
             if (DialogCallBack != null)
                 DialogCallBack.OK(this);
-            CloseDialog();
+            return true;
         }
 
         protected override void Cancel()

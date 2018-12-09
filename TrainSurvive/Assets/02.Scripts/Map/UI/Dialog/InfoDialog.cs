@@ -1,0 +1,48 @@
+/*
+ * 描述：
+ * 作者：项叶盛
+ * 创建时间：2018/12/9 16:22:55
+ * 版本：v0.1
+ */
+using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+
+namespace WorldMap.UI
+{
+    public class InfoDialog : BaseDialog
+    {
+        private Text InfoText;
+        private string infoString;
+        protected override void CreateModel()
+        {
+            SetTitle("提示");
+            ColorBlock redColorBlock = GetOKBtn().colors;
+            redColorBlock.normalColor = new Color(1, 0, 0);
+            redColorBlock.highlightedColor = new Color(0.9F, 0, 0);
+            redColorBlock.pressedColor = new Color(0.8F, 0, 0);
+            redColorBlock.disabledColor = new Color(0.8F, 0.8F, 0.8F);
+            GetOKBtn().colors = redColorBlock;
+            SetBGColor(new Color(1F, 0.8F, 0.8F));
+            DialogSizeType = EDialogSizeType.SMALL7x6;
+            InfoText = Utility.CreateText("InfoText");
+            Utility.SetParent(InfoText, this);
+            Utility.Anchor(InfoText, new Vector2(0F, 0F), new Vector2(1F, 1F), new Vector2(0F, 60F), new Vector2(0F, -60F));
+        }
+        protected override void AfterDialogShow()
+        {
+            InfoText.text = infoString;
+        }
+        protected override bool OK()
+        {
+            return true;
+        }
+        protected override void Cancel()
+        { }
+        public void SetInfo(string info)
+        {
+            infoString = info;
+        }
+    }
+}
+

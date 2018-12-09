@@ -222,7 +222,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             return restNum;
         }
 
-        public int PushItemToLast(Item item, bool needSync = true)//已同步
+        public int PushItemToLast(Item item)//已同步
         {
             if (!controller)
             {
@@ -252,11 +252,18 @@ namespace Assets._02.Scripts.zhxUIScripts
                 controller.AddGrid(mappingItem);                 //为前台添加物品
             }
             controller.RefreshMaxSize();
-            if (needSync) {
-                controller.DataSynchronization();
-            }
-         
+            controller.DataSynchronization();
+
             return restNum;
+        }
+
+        public void LoadItem(Item item) {
+            Item mappingItem;
+            mappingItem = item.Clone();
+            _items.Add(mappingItem);
+            _curr_size += item.currPileNum * item.size;
+            controller.AddGrid(mappingItem);
+            controller.RefreshMaxSize();
         }
 
         public void PopItem(Item item)                          //弹出所有物体

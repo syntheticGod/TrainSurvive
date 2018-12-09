@@ -21,7 +21,7 @@ namespace WorldMap.Controller
         protected override void CreateModel()
         {
             m_titleString = "商店";
-            m_windowSizeType = WindowSizeType.MIDDLE14x12;
+            m_windowSizeType = EWindowSizeType.MIDDLE14x12;
             base.CreateModel();
             SetBackground("tavern_bg_01");
             //ListView

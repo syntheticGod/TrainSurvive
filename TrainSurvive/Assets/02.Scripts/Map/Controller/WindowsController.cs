@@ -16,14 +16,14 @@ namespace WorldMap.Controller
         //默认大小为 1920*1080 的 1/4
         protected Vector2 ScreenSize = new Vector2(1920F, 1080F);
         private const string ImageFloder = "WindowImage/";
-        public enum WindowSizeType
+        public enum EWindowSizeType
         {
             SMALL,             // 6:5     => 720*600 
             MIDDLE14x12,     //     => 840*720
             BIG26x14,          //     => 1560*840 
             FULL32x18         //    => 1920*1080 
         }
-        public WindowSizeType WinSizeType
+        public EWindowSizeType WinSizeType
         {
             set
             {
@@ -32,23 +32,23 @@ namespace WorldMap.Controller
                 float width, height;
                 switch (value)
                 {
-                    case WindowSizeType.SMALL:
+                    case EWindowSizeType.SMALL:
                         width = 6F * pixelEach;
                         height = 5F * pixelEach;
                         IsWinMovable = true;
                         break;
                     default:
-                    case WindowSizeType.MIDDLE14x12:
+                    case EWindowSizeType.MIDDLE14x12:
                         width = 14F * pixelEach;
                         height = 12F * pixelEach;
                         IsWinMovable = false;
                         break;
-                    case WindowSizeType.BIG26x14:
+                    case EWindowSizeType.BIG26x14:
                         width = 26F * pixelEach;
                         height = 14F * pixelEach;
                         IsWinMovable = false;
                         break;
-                    case WindowSizeType.FULL32x18:
+                    case EWindowSizeType.FULL32x18:
                         width = 32F * pixelEach;
                         height = 18F * pixelEach;
                         IsWinMovable = false;
@@ -77,7 +77,7 @@ namespace WorldMap.Controller
         protected Text titleText;
         //右上角关闭
         protected Button closeBtn;
-        protected WindowSizeType m_windowSizeType = WindowSizeType.MIDDLE14x12;
+        protected EWindowSizeType m_windowSizeType = EWindowSizeType.MIDDLE14x12;
         protected string m_titleString;
         protected sealed override void Awake()
         {
