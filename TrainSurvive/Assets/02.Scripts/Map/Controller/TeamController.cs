@@ -217,7 +217,6 @@ namespace WorldMap.Controller
             Team.STATE tState = (Team.STATE)state;
             if(tState != Team.STATE.GATHERING)
             {
-                Debug.Log("探险队：采集被打断，停止采集");
                 world.StopGather();
                 teamActionBtn.text = teamActionBtnStrs[0];
             }
