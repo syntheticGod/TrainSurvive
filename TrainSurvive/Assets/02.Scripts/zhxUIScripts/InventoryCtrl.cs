@@ -136,7 +136,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     public void AddMaterial()
     {
-        Item[] temp = PublicMethod.GenerateItem(231, 1);
+        Item[] temp = PublicMethod.GenerateItem(Random.Range(211,215), 3);
         for(int i=0; i<temp.Length; ++i)
             coreInventory.PushItem(temp[i]);
 
@@ -158,12 +158,12 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
                 itemGridInst[i].GetComponent<ItemGridCtrl>().item.currPileNum);
             World.getInstance().itemDataInTrain.Add(temp);
         }
-        Debug.Log("========================================================");
-        for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
-        {
-            Debug.Log(World.getInstance().itemDataInTrain[i].id + "  " + World.getInstance().itemDataInTrain[i].num);
-        }
-        Debug.Log("========================================================");
+        //Debug.Log("========================================================");
+        //for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
+        //{
+        //    Debug.Log(World.getInstance().itemDataInTrain[i].id + "  " + World.getInstance().itemDataInTrain[i].num);
+        //}
+        //Debug.Log("========================================================");
 
     }
 }

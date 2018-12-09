@@ -120,5 +120,74 @@ namespace Assets._02.Scripts.zhxUIScripts
             //return items.ToArray();
             return items.ToArray();
         }
+
+        private static bool CanConsumeItem(ItemData itemData)
+        {
+            int totalNum = 0;
+            List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
+            for (int i=0; i< itemDataInTrain.Count; ++i)
+            {   //算出目标物品在仓库内共有几个
+                if(itemDataInTrain[i].id == itemData.id)
+                {
+                    totalNum += itemDataInTrain[i].num;
+                }
+            }
+            if(totalNum >= itemData.num)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static void ConsumeItem(ItemData itemData)
+        {
+            List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
+            List<int> removeIndex = new List<int>();
+            int alreadyConsumeNum = 0;
+            for(int i=itemDataInTrain.Count-1; i>=0; --i)
+            {
+                if(itemDataInTrain[i].id == itemData.id)
+                {
+                    if(itemData.num - alreadyConsumeNum <= itemDataInTrain[i].num)
+                    {
+                        itemDataInTrain[i].num -= (itemData.num - alreadyConsumeNum);
+                        if(itemDataInTrain[i].num == 0)
+                        {
+                            removeIndex.Add(i);
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        removeIndex.Add(i);
+                        alreadyConsumeNum += itemDataInTrain[i].num;
+                    }
+                }
+            }
+            foreach (int index in removeIndex)
+            {
+                itemDataInTrain.RemoveAt(index);
+            }
+        }
+
+        public static bool ConsumeItems(ItemData[] consumeList)    //测试成功
+        {
+            for(int i=0; i< consumeList.Length; ++i)               //不能和消耗函数结合一起进行判断，因为一旦消耗掉前面的部分，后部分若不够则无法撤回
+            {
+                if (!CanConsumeItem(consumeList[i]))
+                {
+                    return false;
+                }
+            }
+            for(int i=0; i< consumeList.Length; ++i)
+            {
+                ConsumeItem(consumeList[i]);
+            }
+            return true;
+        }
+     
     }
 }
