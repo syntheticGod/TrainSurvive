@@ -979,6 +979,11 @@ Prefab:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114405955799365496, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+        type: 2}
+      propertyPath: WeaponGridCtrl
+      value: 
+      objectReference: {fileID: 1681221208}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4b5a61f6f8fc5b4f958e631519c43ed, type: 2}
   m_IsPrefabAsset: 0
@@ -1929,7 +1934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1338012034
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2604,6 +2609,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224183511581955424, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
     type: 2}
   m_PrefabInternal: {fileID: 862478155}
+--- !u!114 &1681221208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114377185676482794, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 862478155}
+  m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
 --- !u!1 &1708691405
 GameObject:
   m_ObjectHideFlags: 0

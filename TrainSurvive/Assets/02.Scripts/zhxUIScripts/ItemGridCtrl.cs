@@ -231,10 +231,10 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                 else
                 {   //非物品栏收到不同物品堆叠请求 -> 直接交换双方物品  （有些物品不能放在某些设备上，这个需要设备的脚本去把控）
                     //---------------------------------------------------------------------------------------------------------
-                    if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
-                    {
-                        return;
-                    }
+                    //if (!belongContainer.GetComponent<UnitInventoryCtrl>().ChargeIn(oriGridCtrl.item))  //调用所属容器的ChargeIn与设备对接
+                    //{
+                    //    return;
+                    //}
                     //----------------------------------------------------------------------------------------------------------
                     float restSize = oriGridCtrl.belongController.coreInventory.maxSize - oriGridCtrl.belongController.coreInventory.currSize;
                     float deltaSize = item.size * item.currPileNum - oriGridCtrl.item.size * oriGridCtrl.item.currPileNum;
