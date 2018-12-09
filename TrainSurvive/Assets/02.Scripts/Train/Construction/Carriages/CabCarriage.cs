@@ -19,7 +19,7 @@ public class CabCarriage : TrainCarriage {
     private static readonly FixedInfo _info = new FixedInfo {
         Name = "驾驶室",
         Description = "驾驶室",
-        Size = new Vector2(13.5f, 3),
+        Size = new Vector2(15.48f, 4.66f),
         BuildCosts = new Cost[] { },
         WorkAll = 0.01f,
         PrefabPath = "Prefabs/Train/Carriages/cab"
