@@ -17,7 +17,7 @@ using UnityEngine;
 namespace WorldMap {
     public class Map : IMapForTrain{
 
-        private static Map map = null;
+        public static Map map = null;
 
         //获取Map类的单例
         public static Map GetIntanstance() {
@@ -26,6 +26,7 @@ namespace WorldMap {
             }
             return map;
         }
+
 
         //大地图的宽高（rowNum为x轴地块的个数，colNum为z轴地块的个数）
         public int rowNum { get; private set; }

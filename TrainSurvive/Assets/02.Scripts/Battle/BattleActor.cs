@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace WorldBattle {
+
     public abstract class BattleActor : MonoBehaviour {
 
         //当前角色最大的生命值（假设出场是满的）

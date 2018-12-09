@@ -84,9 +84,6 @@ namespace WorldMap {
             //获取气候地形生成脚本
             climateTerrainGenerate = GameObject.Find("ClimateTerrainGenerate").GetComponent<ClimateTerrainGenerate>();
 
-            //对地图进行初始化处理
-            mapData = Map.GetIntanstance();
-            mapData.initMap(mapWidth, mapHeight);
 
             ////为每种地形赋予一个图标
             //mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
@@ -95,7 +92,7 @@ namespace WorldMap {
             //mapObject[(int)SpawnPoint.TerrainEnum.MOUNTAIN] = volcanoObject;
 
             ////将地图素材存放到同一object中
-            //mapRootObject = new GameObject("map");
+            mapRootObject = new GameObject("map");
             //mapParent = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
             //mapParent[(int)SpawnPoint.TerrainEnum.HILL] = new GameObject("hills");
             //mapParent[(int)SpawnPoint.TerrainEnum.FOREST] = new GameObject("froests");
@@ -104,10 +101,20 @@ namespace WorldMap {
             //    mapParent[i].transform.parent = mapRootObject.transform;
             //}
 
-            //先读取地图的信息
-            SaveReadMap.ReadMapInfo();
-            //获取是否保存地图
-            isCreateMap = SaveReadMap.isCreateMap;
+            //对地图进行初始化处理
+            if (Map.map == null) {
+                mapData = Map.GetIntanstance();
+                mapData.initMap(mapWidth, mapHeight);
+                //先读取地图的信息
+                SaveReadMap.ReadMapInfo();
+                //获取是否保存地图
+                isCreateMap = SaveReadMap.isCreateMap;
+            } else {
+                mapData = Map.GetIntanstance();
+                SaveReadMap.isCreateMap = false;
+                isCreateMap = false;
+            }
+            
 
             if (SaveReadMap.isCreateMap) {
                 //生成特殊地形的算法
