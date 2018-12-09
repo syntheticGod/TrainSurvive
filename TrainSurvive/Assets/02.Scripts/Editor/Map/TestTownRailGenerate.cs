@@ -16,7 +16,7 @@ using WorldMap;
 
 namespace TestWorldMap {
     [TestFixture]
-    public class TestIMapForTrain {
+    public class TestTownRailGenerate {
 
         private enum BLOCK_TYPE {
             NONE = -1,
@@ -88,7 +88,7 @@ namespace TestWorldMap {
 
             //设置城镇铁轨生成类
             //townsRailGenerate = new TownsRailGenerate();
-            townsRailGenerate = GameObject.Find("townsRailGenerate").GetComponent<TownsRailGenerate>();
+            townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
             townsRailGenerate.mapData = map;
             townsRailGenerate.towns = map.towns;
 

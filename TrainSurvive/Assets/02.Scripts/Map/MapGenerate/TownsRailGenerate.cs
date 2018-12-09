@@ -60,20 +60,17 @@ namespace WorldMap {
 
             //如果是第一次载入就生成城镇
             if (mapGenerate.isCreateMap) {
+                //生成城镇
                 BuildTowns();
+                //生成铁轨
+                BuildRails();
             }
+
             //对城镇进行绘画
             PaintTowns();
 
-            for (int i = 0; i < mapData.rowNum; i++) {
-                for (int j = 0; j < mapData.colNum; j++) {
-                    if (mapData.spowns[i, j].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL)
-                        mapData.spowns[i, j].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.NONE);
-                }
-            }
-
-            //生成铁轨
-            BuildRails();
+            //对铁轨进行绘画
+            PaintRails();
         }
 
         /**只生成城镇类
@@ -106,6 +103,9 @@ namespace WorldMap {
                     
                     //Debug.Log(mapData.data[posx, posz].townPos);
                     towns[i, j] = new Town(new Vector2Int(posx, posz));
+
+                    //设置城镇的逻辑属性
+                    SetTownProperty(new Vector2Int(i, j), towns[i, j].position);
                 }
             }
         }
@@ -133,9 +133,6 @@ namespace WorldMap {
 
                     //设置城镇的gameObject
                     mapData.spowns[mapPos.x, mapPos.y].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TOWN, o);
-
-                    //设置城镇的逻辑属性
-                    SetTownProperty(new Vector2Int(i, j), mapPos);
                 }
             }
         }
@@ -248,8 +245,56 @@ namespace WorldMap {
                 railPath.Add(new Vector2Int(to.x, from.y));
             }
 
-            //对铁轨进行绘制
-            PaintRailPath(railPath, xRailNum, railTurnAngle, fromTown, toTown);
+            //设置城镇之间的连接关系（当前城镇连接下一个城镇）
+            fromTown.AddConnectTown(toTown);
+
+            //增加一个新的铁轨连接路径，将相应信息保存
+            fromTown.railPaths.Add(new Town.RailPath());
+            //计算出最后一个下标
+            int lastIndex = fromTown.railPaths.Count - 1;
+            
+            //保存铁轨路径的三个信息
+            fromTown.railPaths[lastIndex].railPath = railPath;
+            fromTown.railPaths[lastIndex].xRailNum = xRailNum;
+            fromTown.railPaths[lastIndex].railTurnAngle = railTurnAngle;
+
+            //设置铁轨的属性
+            //记录起始和终止的城镇坐标
+            Vector2Int fromTownPos = mapData.spowns[from.x, from.y].townPos;
+            Vector2Int toTownPos = mapData.spowns[to.x, to.y].townPos;
+
+            //如果无拐弯的铁轨
+            int directRailNum = railTurnAngle == -1 ? railPath.Count : railPath.Count - 1;
+            //先绘画出x轴方向的铁轨
+            for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++) {
+                //设置铁轨属性
+                SetSpawnPointRailProperty(railPath[curRailIndex].x,
+                    railPath[curRailIndex].y,
+                    fromTownPos, toTownPos);
+            }
+
+            //x轴最后一段铁轨特殊处理（拐弯处）
+            if (railTurnAngle != -1) {
+                //设置铁轨属性
+                SetSpawnPointRailProperty(railPath[railPath.Count - 1].x,
+                    railPath[railPath.Count - 1].y,
+                    fromTownPos, toTownPos);
+            }
+        }
+
+        private void PaintRails() {
+            //获取城镇的行数和列数
+            int townRowNum = towns.GetLength(0);
+            int townColNum = towns.GetLength(1);
+
+            for (int i = 0; i < townRowNum; i++) {
+                for (int j = 0; j < townColNum; j++) {
+                    //根据是否有下一个城镇，对铁轨进行绘画
+                    for (int k = 0; k < towns[i, j].connectTowns.Count; k++) {
+                        PaintRailPath(towns[i, j].railPaths[k], towns[i, j], towns[i, j].connectTowns[k]);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -260,10 +305,11 @@ namespace WorldMap {
         /// <param name="railTurnAngle">如果有转弯的铁轨，这是转弯铁轨的角度；如果没有，则为-1</param>
         /// <param name="from">起点城镇位置</param>
         /// <param name="to">终点城镇的位置</param>
-        private void PaintRailPath(List<Vector2Int> railPath, int xRailNum, int railTurnAngle, Town fromTown, Town toTown) {
-            
-            //设置城镇之间的连接关系（当前城镇连接下一个城镇）
-            fromTown.AddConnectTown(toTown);
+        private void PaintRailPath(Town.RailPath townRailPaths, Town fromTown, Town toTown) {
+            //获取railPath三个属性
+            List<Vector2Int> railPath = townRailPaths.railPath;
+            int railTurnAngle = townRailPaths.railTurnAngle;
+            int xRailNum = townRailPaths.xRailNum;
 
             //获得城镇的坐标
             Vector2Int from = fromTown.position;
@@ -280,8 +326,6 @@ namespace WorldMap {
                 int posx = railPath[curRailIndex].x;
                 int posz = railPath[curRailIndex].y;
 
-                //设置铁轨属性
-                SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
                 if (curRailIndex < xRailNum) {
                     PaintSingleRail(posx, posz, true, new Vector3());
@@ -296,8 +340,6 @@ namespace WorldMap {
                 int posx = railPath[railPath.Count - 1].x;
                 int posz = railPath[railPath.Count - 1].y;
 
-                //设置铁轨属性
-                SetSpawnPointRailProperty(posx, posz, fromTownPos, toTownPos);
                 //对铁轨图标进行绘画
                 PaintSingleRail(posx, posz, false, new Vector3(0, 0, railTurnAngle));
             }
