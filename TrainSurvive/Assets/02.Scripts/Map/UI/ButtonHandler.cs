@@ -61,6 +61,7 @@ namespace WorldMap
         TEAM_RETRUN,//小队回车
         TEAM_GATHER,//小队采集
         TEAM_PACK,//小队背包
+        TEAM_CHARACTER,//小队人物
         TEAM_NUM,
 
         TRAIN_NONE,//列车模式显示的按钮

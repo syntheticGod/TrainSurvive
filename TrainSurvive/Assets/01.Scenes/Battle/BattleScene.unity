@@ -2035,9 +2035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orign: {x: 0, y: 0.7, z: 0}
-  battleMapLen: 5
+  battleMapLen: 40
   personNum: 1
-  enemyNum: 1
+  enemyNum: 5
   personWidth: 0.5
   playerActors: []
   enemyActors: []
@@ -2052,7 +2052,7 @@ MonoBehaviour:
   enemysRoot: {fileID: 0}
   winText: {fileID: 901313467}
   defeatText: {fileID: 461335921}
-  isTest: 1
+  isTest: 0
 --- !u!224 &1167222819
 RectTransform:
   m_ObjectHideFlags: 0

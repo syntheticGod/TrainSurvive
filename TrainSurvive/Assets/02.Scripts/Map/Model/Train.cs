@@ -37,6 +37,14 @@ namespace WorldMap.Model
             {
                 state = value;
                 this.Notify((int)state);
+                if(state == STATE.RUNNING)
+                {
+                    world.TrainMoving();
+                }
+                else if(state == STATE.STOP_RAIL || state == STATE.STOP_TOWN)
+                {
+                    world.TrainStop();
+                }
             }
         }
 

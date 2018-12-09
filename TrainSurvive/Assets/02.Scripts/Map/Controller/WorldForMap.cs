@@ -20,8 +20,8 @@ namespace WorldMap
         {
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
-
-            for (int i = 0; i < 3; i++)
+            world.numIn = 3;
+            for (int i = 0; i < world.numIn; i++)
             {
                 Person p = Person.CreatePerson();
                 p.name = StaticResource.RandomNPCName(true);
@@ -33,7 +33,6 @@ namespace WorldMap
                 p.ifOuting = false;
                 AddPerson(p);
             }
-            
             world.money = 9999;//9,999
         }
         public bool IfMoneyEnough(int cost)
@@ -240,6 +239,18 @@ namespace WorldMap
         public int TeamAddFoodIn(int food)
         {
             return world.addFoodIn(food);
+        }
+        public void TrainMoving()
+        {
+            world.ifMoving = true;
+            world.ifGather = false;
+            world.ifOuting = false;
+        }
+        public void TrainStop()
+        {
+            world.ifMoving = false;
+            world.ifGather = false;
+            world.ifOuting = false;
         }
         public int GetFoodIn()
         {

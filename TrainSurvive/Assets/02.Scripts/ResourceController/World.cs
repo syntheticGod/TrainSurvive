@@ -80,7 +80,7 @@ public class World {
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
     private uint energy = 0;
-    private uint foodInMax = 1000;
+    private uint foodInMax = 10000;
     private uint foodOutMax = 1000;
     private uint energyMax = 1000;
     public int money;

@@ -82,7 +82,6 @@ namespace WorldMap
             team.Init(world.TeamMapPos());
             teamObject.transform.parent = characterObject.transform;
             
-            trainObject.SetActive(!world.IfTeamOuting);
             teamObject.SetActive(world.IfTeamOuting);
         }
 

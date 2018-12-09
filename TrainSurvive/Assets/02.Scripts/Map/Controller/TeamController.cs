@@ -18,7 +18,7 @@ namespace WorldMap.Controller
         
         private RectTransform teamModeBTs;
         private TrainController trainController;
-        private static string[] bottomBtnsStrs = { "进入区域", "上车", "采集", "背包" };
+        private static string[] bottomBtnsStrs = { "进入区域", "上车", "采集", "背包","人物" };
         private Button[] bottomBtns;
         private static string[] teamActionBtnStrs = { "采集", "停止采集" };
         private Text teamActionBtn;
@@ -56,6 +56,12 @@ namespace WorldMap.Controller
         {
             base.Start();
             Debug.Log("TeamController Start");
+            if (world.IfTeamOuting)
+            {
+                Debug.Log("FOCUS TEAM");
+                transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
+                cameraFocus.focusLock(transform);
+            }
         }
         protected override void Update()
         {
@@ -122,6 +128,9 @@ namespace WorldMap.Controller
                 case BUTTON_ID.TEAM_PACK:
                     Debug.Log("背包指令");
                     ControllerManager.ShowWindow<PackController>("PackViewer");
+                    break;
+                case BUTTON_ID.TEAM_CHARACTER:
+
                     break;
             }
         }

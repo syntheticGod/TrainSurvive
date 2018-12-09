@@ -131,6 +131,8 @@ namespace WorldMap.Model
             world.TeamSetMapPos(position);
             if (StaticResource.RandomInt(5) == 0)
             {
+                //
+                TimeController.getInstance().changeScene(true);
                 //触发战斗
                 SceneManager.LoadScene("BattleScene");
             }
