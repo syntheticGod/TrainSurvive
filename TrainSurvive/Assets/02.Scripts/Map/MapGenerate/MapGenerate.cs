@@ -66,7 +66,7 @@ namespace WorldMap {
         public bool isCreateMap;
 
         //设置起始状态为迷雾状态还是明亮状态(测试)
-        public static bool isFogState = false;
+        public static bool isFogState = true;
 
         //构建地图
         private void Awake() {

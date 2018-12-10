@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WorldMap;
+using WorldMap.UI;
 
 namespace WorldMap.Model
 {
@@ -255,6 +256,9 @@ namespace WorldMap.Model
             if (!IsStopedTemporarily)
             {
                 Debug.Log("只能中途停车，才能开车");
+                InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                infoDialog.SetInfo("请选择铁轨");
+                infoDialog.ShowDialog();
                 return false;
             }
             State = STATE.RUNNING;

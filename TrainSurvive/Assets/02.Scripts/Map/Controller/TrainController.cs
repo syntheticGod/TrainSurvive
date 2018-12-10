@@ -154,16 +154,26 @@ namespace WorldMap.Controller
                     }
                     else
                     {
-                        Debug.Log("该区域不可触发");
+                        InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                        infoDialog.SetInfo("该区域不可进入，目前只能进城镇。");
+                        infoDialog.ShowDialog();
                     }
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
-                    //弹出框之后不能再操作列车
-                    //teamOutDialog.Show();
-                    TeamOutPrepareDialog dialog = BaseDialog.CreateDialog<TeamOutPrepareDialog>("TeamOutPrepareDialog");
-                    dialog.DialogCallBack = this;
-                    dialog.ShowDialog();
+                    if (train.IsRunning)
+                    {
+                        InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                        infoDialog.SetInfo("列车正在运行，无法出队");
+                        infoDialog.ShowDialog();
+                    }
+                    else
+                    {
+                        //弹出框之后不能再操作列车
+                        TeamOutPrepareDialog dialog = BaseDialog.CreateDialog<TeamOutPrepareDialog>("TeamOutPrepareDialog");
+                        dialog.DialogCallBack = this;
+                        dialog.ShowDialog();
+                    }
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
                     SceneManager.LoadScene("TrainScene");

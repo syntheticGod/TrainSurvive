@@ -27,9 +27,21 @@ public class PersonTextPanel : MonoBehaviour {
     }
 
 
-    public void updatePanel(int personIndex)
+    public void updatePanel(int personIndex, bool isSelectPeople = true)
     {
-        //WeaponGridCtrl.Clear();
+        if (isSelectPeople)
+        {
+            if (WeaponGridCtrl.grid)
+            {
+                int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
+                Person curPerson = World.getInstance().persons[personID];
+                GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID, false);
+                WeaponGridCtrl.grid.SetActive(false);
+                WeaponGridCtrl.ClearWithNotDestroyMyself();
+            }
+        }
+           
+        
         Person p = World.getInstance().persons[personIndex];
         //Weapon w = (Weapon)PublicMethod.GenerateItem(p.weaponId)[0];  
         vit.text = "体力：" + p.vitality;
@@ -42,10 +54,10 @@ public class PersonTextPanel : MonoBehaviour {
         hpRec.text = "hp恢复：" + p.getHpRec();
         apRec.text = "ap恢复：" + p.getApRec();
         indexOfpersonUsed = personIndex;
-        //if (p.hasWeapon)
-        //{
-        //    WeaponGridCtrl.GeneratorItem(p.weaponId);
-        //}
+        if (p.hasWeapon && isSelectPeople)
+        {
+            WeaponGridCtrl.GeneratorItem(p.weaponId);
+        }
     }
 
     /// <summary>

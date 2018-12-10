@@ -87,6 +87,7 @@ namespace WorldMap
                         if(item.num < 0)
                             Debug.LogError("系统：探险队售卖数量减扣错误");
                     }
+                    break;
                 }
             }
         }
