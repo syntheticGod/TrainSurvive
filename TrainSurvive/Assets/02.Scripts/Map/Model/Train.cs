@@ -289,7 +289,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("列车：招募到" + theOne.name);
-            theOne.ifOuting = false;
+            world.TrainRecruit(theOne);
         }
         //列车属性判断
         public bool IsRunning
@@ -313,11 +313,7 @@ namespace WorldMap.Model
         {
             get { return State == STATE.STOPING; }
         }
-        public bool IsMovable { private set; get; }
-        public void SetMovable(bool movable)
-        {
-            IsMovable = movable;
-        }
+        public bool IsMovable { set; get; }
         private bool IsMovePositive { set; get; }
         public enum STATE
         {

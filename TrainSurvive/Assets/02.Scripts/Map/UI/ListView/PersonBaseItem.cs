@@ -25,5 +25,9 @@ namespace WorldMap.UI
         {
             Utility.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
         }
+        public void ShowPerson(Person person)
+        {
+            text.text = person.name;
+        }
     }
 }

@@ -348,6 +348,10 @@ namespace WorldMap
             rect.offsetMin = vector + (size * -pivot);
             rect.offsetMax = rect.offsetMin + size;
         }
+        public static void LeftTop(Component comp, Vector2 pivot, Vector2 size)
+        {
+            LeftTop(comp, pivot, size, Vector2.zero);
+        }
     }
     public struct Matrix2x2Int
     {

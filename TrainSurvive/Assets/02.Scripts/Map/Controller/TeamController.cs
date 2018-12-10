@@ -73,7 +73,7 @@ namespace WorldMap.Controller
             {
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
             }
-            //FOR TEST
+            //FOR TEST：检测背包重量测试
             if(!Mathf.Approximately(lastSize, team.Inventory.GetWeight()))
             {
                 Debug.Log("探险队背包变化：" + team.Inventory.GetWeight());
@@ -91,6 +91,8 @@ namespace WorldMap.Controller
                     Model.Town town;
                     if (world.FindTown(Team.Instance.MapPosTeam, out town))
                     {
+                        //进入城镇后不能操作小队
+                        Team.Instance.IsMovable = false;
                         TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
                         townController.ShowWindow();
@@ -102,12 +104,12 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TEAM_RETRUN:
                     Debug.Log("回车指令");
-                    if (!ActiveTeam(false))
+                    if (!CanTeamGoBack())
                     {
                         Debug.Log("回车指令执行失败");
                         return;
                     }
-                    ActiveBTs(false);
+                    HideTeam();
                     ControllerManager.FocusController("Train", "Character");
                     break;
                 case BUTTON_ID.TEAM_GATHER:
@@ -123,13 +125,13 @@ namespace WorldMap.Controller
                         world.DoGather();
                         teamActionBtn.text = teamActionBtnStrs[1];
                     }
-                    
                     break;
                 case BUTTON_ID.TEAM_PACK:
                     Debug.Log("背包指令");
                     ControllerManager.ShowWindow<PackController>("PackViewer");
                     break;
                 case BUTTON_ID.TEAM_CHARACTER:
+                    Debug.Log("查看小队指令");
 
                     break;
             }
@@ -163,33 +165,36 @@ namespace WorldMap.Controller
             }
             return false;
         }
-        private bool ActiveTeam(bool active)
+        private bool CanTeamGoBack()
         {
-            if (gameObject.activeSelf == active)
-            {
-                Debug.Log("重复操作，无效");
-                return false;
-            }
             Team team = Team.Instance;
-            if (active)
-            {
-                transform.position = StaticResource.MapPosToWorldPos(team.PosTeam, levelOfTeam);
-            }
-            else
-            {
-                if (!team.CanTeamGoBack())
-                    return false;
-                if (!team.GoBackToTrain())
-                    return false;
-            }
-            gameObject.SetActive(active);
+            if (!team.CanTeamGoBack())
+                return false;
+            if (!team.GoBackToTrain())
+                return false;
             return true;
+        }
+        private void HideTeam()
+        {
+            if (gameObject.activeSelf == true)
+            {
+                gameObject.SetActive(false);
+            }
+            ActiveBTs(false);
+        }
+        private void ShowTeam()
+        {
+            if(gameObject.activeSelf == false)
+            {
+                gameObject.SetActive(true);
+            }
+            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.PosTeam, levelOfTeam);
+            ActiveBTs(true);
         }
         private bool ActiveBTs(bool active)
         {
             if (teamModeBTs.gameObject.activeInHierarchy == active)
             {
-
                 Debug.Log("重复激活按钮，无效");
                 return false;
             }
@@ -198,20 +203,10 @@ namespace WorldMap.Controller
         }
         protected override bool FocusBehaviour()
         {
-            ActiveTeam(true);
-            ActiveBTs(true);
-            cameraFocus.focusLock(transform);
+            Team.Instance.IsMovable = true;
+            ShowTeam();
             return true;
         }
-        protected override void UnfocusBehaviour()
-        {
-        }
-
-        public string GetName()
-        {
-            return "TeamController";
-        }
-
         public void ObserverUpdate(int state, int echo)
         {
             Team.STATE tState = (Team.STATE)state;

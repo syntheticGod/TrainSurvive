@@ -11,7 +11,7 @@ using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
-    public class SchoolController : WindowsController
+    public class SchoolController : WindowsController, DialogCallBack
     {
         private string[] attributeInfoStrs = new string[] { "体力", "力量", "敏捷", "技巧", "智力" };
         private string moneyInfoStr = "所需金钱：";
@@ -23,10 +23,10 @@ namespace WorldMap.Controller
         private Text[] attriViewsNew;
         //花费金额视图
         private Text moneyView;
-        //英雄显示列表
-        private HeroListView herosLayout;
         //被选中的英雄
         private Person heroChoosed;
+        private PersonBaseItem heroProfile;
+        private Text heroInfoContent;
         private int[] heroAttribute;
         private int cost;
         protected override void CreateModel()
@@ -40,23 +40,48 @@ namespace WorldMap.Controller
             attriViewsNew = new Text[attriCount];
             deltaAttri = new uint[attriCount];
             heroAttribute = new int[attriCount];
-            //属性窗口
-            RectTransform attributes = new GameObject("Attributes", typeof(Image)).GetComponent<RectTransform>();
-            Utility.SetParent(attributes, this);
-            Utility.CenterAt(attributes, anchor:new Vector2(0.2F, 0.4F), size:new Vector2(300F, 300F));
+            //英雄信息窗口
+            RectTransform heroInfoBorad = new GameObject("HeroInfoBorad", typeof(Image)).GetComponent<RectTransform>();
+            Utility.SetParent(heroInfoBorad, this);
+            Utility.Anchor(heroInfoBorad, new Vector2(0.083F, 0.1F), new Vector2(0.625F, 0.9F));
+            //英雄信息条
+            RectTransform heroInfoLayout = new GameObject("HeroInfoLayout").AddComponent<RectTransform>();
+            Utility.SetParent(heroInfoLayout, heroInfoBorad);
+            Utility.Anchor(heroInfoLayout, new Vector2(0F, 0.815F), new Vector2(1F, 1F));
+            //英雄头像框
+            heroProfile = new GameObject("HeroProfile", typeof(RectTransform)).AddComponent<PersonBaseItem>();
+            Utility.SetParent(heroProfile, heroInfoLayout);
+            Utility.LeftTop(heroProfile, new Vector2(0, 1), new Vector2(100F, 100F));
+            heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
+            {
+                HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
+                dialog.DialogCallBack = this;
+                dialog.ShowDialog();
+            });
+            //英雄简介
+            heroInfoContent = Utility.CreateText("HeroInfoContent");
+            heroInfoContent.alignment = TextAnchor.MiddleLeft;
+            Utility.SetParent(heroInfoContent, heroInfoLayout);
+            Utility.FullFillRectTransform(heroInfoContent, new Vector2(100F, 0), Vector2.zero);
+            //属性
+            RectTransform attributes = new GameObject("Attributes").AddComponent<RectTransform>();
+            Utility.SetParent(attributes, heroInfoBorad);
+            Utility.Anchor(attributes, new Vector2(0F, 0F), new Vector2(1F, 0.815F));
+            float delta = 1F / attributeInfoStrs.Length;
             for (int i = 0; i < attributeInfoStrs.Length; i++)
             {
                 RectTransform attribute = CreateAttribute(i);
                 Utility.SetParent(attribute, attributes);
-                attribute.anchorMin = new Vector2(0, 1 - (i + 1) / (float)attriCount);
-                attribute.anchorMax = new Vector2(1, 1 - i / (float)attriCount);
+                float tempDelta = delta * i;
+                attribute.anchorMin = new Vector2(0, tempDelta);
+                attribute.anchorMax = new Vector2(1, tempDelta + delta);
                 attribute.offsetMin = Vector2.zero;
                 attribute.offsetMax = Vector2.zero;
             }
             //结账区块
-            RectTransform payRect = new GameObject("Pay",typeof(Image)).GetComponent<RectTransform>();
-            Utility.SetParent(payRect, this);
-            Utility.CenterAt(payRect, anchor: new Vector2(0.2F, 0.4F), size: new Vector2(300F, 60F), vector: new Vector2(0F, -180F));
+            RectTransform payRect = new GameObject("Pay", typeof(Image)).GetComponent<RectTransform>();
+            Utility.SetParent(payRect, heroInfoBorad);
+            Utility.Anchor(payRect, new Vector2(0F, 0F), new Vector2(1F, 0.125F));
 
             Text moneyInfo = Utility.CreateText("MoneyInfo");
             Utility.SetParent(moneyInfo, payRect);
@@ -75,21 +100,17 @@ namespace WorldMap.Controller
             Button resetBtn = Utility.CreateBtn("ResetBtn", resetBtnStr);
             Utility.SetParent(resetBtn, payRect);
             Utility.Anchor(resetBtn, new Vector2(0.8F, 0.0F), new Vector2(1.0F, 1.0F));
-            resetBtn.onClick.AddListener(delegate () { InitAttribute();ShowAttributes();ShowMoney(); });
+            resetBtn.onClick.AddListener(delegate () { InitAttribute(); ShowAttributes(); ShowMoney(); });
             //注意：不能对ListView进行添加删除行为
-            herosLayout = Utility.ForceGetComponentInChildren<HeroListView>(this, "HerosLayout");
-            herosLayout.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            herosLayout.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
-            herosLayout.GridConstraintCount = 1;
-            RectTransform herosLayoutRect = herosLayout.GetComponent<RectTransform>();
-            Utility.HLineAt(herosLayoutRect, anchor:0.8F, height:100F);
-            herosLayout.onItemClick = delegate (ListViewItem item, Person person)
-            {
-                heroChoosed = person;
-                InitAttribute();
-                ShowAttributes();
-                ShowMoney();
-            };
+            //herosLayout = Utility.ForceGetComponentInChildren<HeroListView>(this, "HerosLayout");
+            //herosLayout.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            //herosLayout.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
+            //herosLayout.GridConstraintCount = 1;
+            //RectTransform herosLayoutRect = herosLayout.GetComponent<RectTransform>();
+            //Utility.HLineAt(herosLayoutRect, anchor:0.8F, height:100F);
+            //herosLayout.onItemClick = delegate (ListViewItem item, Person person)
+            //{
+            //};
 
         }
         private RectTransform CreateAttribute(int index)
@@ -107,7 +128,7 @@ namespace WorldMap.Controller
             Utility.SetParent(attriViews[index], attribute);
             Utility.Anchor(attriViews[index], new Vector2(0.2F, 0), new Vector2(0.35F, 1F));
             //数字
-            Text arrow = Utility.CreateText("abi" + index," -> ");
+            Text arrow = Utility.CreateText("abi" + index, " -> ");
             Utility.SetParent(arrow, attribute);
             Utility.Anchor(arrow, new Vector2(0.35F, 0), new Vector2(0.45F, 1F));
             //数字
@@ -127,7 +148,7 @@ namespace WorldMap.Controller
             Utility.SetParent(minus, attribute);
             Utility.RightCenter(minus, new Vector2(1F, 0.5F), btnSize, new Vector2(0, 0));
             minus.onClick.AddListener(delegate () { OnAttributeMinusBtnClick(index); });
-            
+
             return attribute;
         }
         protected override void Start()
@@ -142,19 +163,28 @@ namespace WorldMap.Controller
 
         protected override void AfterShowWindow()
         {
-            herosLayout.Datas = world.GetHeros();
-            if (herosLayout.Datas.Count != 0)
-                herosLayout.ClickManually(0);
+            //herosLayout.Datas = world.GetHeros();
+            //if (herosLayout.Datas.Count != 0)
+            //    herosLayout.ClickManually(0);
+            List<Person> heros = world.GetHeros();
+            if (heros.Count > 0)
+            {
+                ShowHero(heros[0]);
+            }
+        }
+        private void ShowHero(Person person)
+        {
+            heroProfile.ShowPerson(person);
+            heroInfoContent.text = person.name + "，其他简介待填充";
+            heroChoosed = person;
+            InitAttribute();
+            ShowAttributes();
+            ShowMoney();
         }
 
         protected override bool FocusBehaviour()
         {
             return true;
-        }
-
-        protected override void UnfocusBehaviour()
-        {
-
         }
         public void Show()
         {
@@ -257,10 +287,16 @@ namespace WorldMap.Controller
             ShowAttributes();
             ShowMoney();
         }
-        public void OnCancelBtnClick()
+
+        public void OK(BaseDialog dialog)
         {
-            Hide();
+            if (!(dialog is HeroSelectDialog)) return;
+            Person person = (dialog as HeroSelectDialog).GetSelectedHero();
+            ShowHero(person);
         }
 
+        public void Cancel()
+        {
+        }
     }
 }

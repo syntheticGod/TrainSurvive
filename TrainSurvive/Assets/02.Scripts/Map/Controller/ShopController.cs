@@ -52,7 +52,7 @@ namespace WorldMap.Controller
         {
             listView.SetCellSize(new Vector2(-1, 100F));
             listView.ScrollDirection = ScrollType.Vertical;
-            listView.m_selectable = false;
+            listView.IfSelectable = false;
             listView.StartAxis = GridLayoutGroup.Axis.Vertical;
             Utility.SetParent(listView, this);
         }
@@ -142,10 +142,6 @@ namespace WorldMap.Controller
         {
             return true;
         }
-
-        protected override void UnfocusBehaviour()
-        {
-
-        }
+        
     }
 }

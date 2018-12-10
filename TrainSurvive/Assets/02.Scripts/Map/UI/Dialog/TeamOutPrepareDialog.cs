@@ -52,7 +52,7 @@ namespace WorldMap.UI
             herosChoosedLV.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
             herosChoosedLV.SetCellSize(new Vector2(200F, 200F));
             herosChoosedLV.GridConstraintCount = 1;
-            herosChoosedLV.m_selectable = false;
+            herosChoosedLV.IfSelectable = false;
             herosChoosedLV.ScrollDirection = ScrollType.Horizontal;
             herosChoosedLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
             Utility.SetParent(herosChoosedLV, topLayout);
@@ -66,7 +66,7 @@ namespace WorldMap.UI
             herosGetReadyLV = new GameObject("TeamGetReadyLV").AddComponent<HeroListView>();
             herosGetReadyLV.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
             herosGetReadyLV.GridConstraintCount = 2;
-            herosGetReadyLV.m_selectable = false;
+            herosGetReadyLV.IfSelectable = false;
             herosGetReadyLV.ScrollDirection = ScrollType.Horizontal;
             herosGetReadyLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
             Utility.SetParent(herosGetReadyLV, this);

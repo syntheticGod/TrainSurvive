@@ -13,11 +13,11 @@ using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
-    public class TavernController : WindowsController, Observer
+    public class TavernController : WindowsController
     {
         private const int UNSELECTED = -1;
-        private static string[] chatBtnsStrs = { "大家好", "大家好", "大家好" };
-        private static string[] personalChatBtnsStrs = { "今日发生了什么？", "关于你", "招募你" };
+        private static string[] chatBtnsStrs = { "", "", "大家好" };
+        private static string[] personalChatBtnsStrs = { "", "请加入我", "最近过的怎么样" };
         private int selectedIndex = UNSELECTED;
 
         private TavernNPCListView tavernNPCListView;
@@ -30,15 +30,9 @@ namespace WorldMap.Controller
             currentTown = town;
         }
         protected override void OnEnable()
-        {
-            Train.Instance.Attach(obs: this);
-            Team.Instance.Attach(obs: this);
-        }
+        {}
         protected override void OnDisable()
-        {
-            Train.Instance.Detach(obs: this);
-            Team.Instance.Detach(obs: this);
-        }
+        {}
         protected override void CreateModel()
         {
             m_titleString = "酒馆";
@@ -62,7 +56,7 @@ namespace WorldMap.Controller
             townChatListView.StartAxis = GridLayoutGroup.Axis.Vertical;
             townChatListView.ScrollDirection = ScrollType.Vertical;
             townChatListView.SetCellSize(new Vector2(-1, 40F));
-            townChatListView.m_selectable = false;
+            townChatListView.IfSelectable = false;
             Utility.SetParent(townChatListView, this);
             Utility.Anchor(townChatListView, new Vector2(0.375F, 0.35F), new Vector2(0.792F, 0.8F));
             //中间选择按钮
@@ -122,8 +116,6 @@ namespace WorldMap.Controller
         {
             return true;
         }
-        protected override void UnfocusBehaviour()
-        { }
         public void OnItemClick(ListViewItem item, Person person)
         {
             selectedIndex = heros.IndexOf(person);
@@ -146,18 +138,42 @@ namespace WorldMap.Controller
             switch (id)
             {
                 case BUTTON_ID.TAVERN_BUTTON1:
+                    NPCChat chat = new NPCChat();
+                    if (selectedIndex != UNSELECTED)
+                    {
+                        //私聊：最近过的怎么样
+                        NPC npc = currentTown.NPCs[selectedIndex];
+                        chat.Name = npc.Name;
+                        chat.Content = "挺好的";
+                    }
+                    else
+                    {
+                        //公聊选项1：大家好
+                        List<NPC> npcs = currentTown.NPCs;
+                        if (npcs.Count == 0)
+                        {
+                            chat.Name = "回响";
+                            chat.Content = chatBtnsStrs[id- BUTTON_ID.TAVERN_NONE-1];
+                        }
+                        else
+                        {
+                            int randomIndex = StaticResource.RandomInt(npcs.Count);
+                            NPC randomNPC = npcs[randomIndex];
+                            chat.Name = randomNPC.Name;
+                            chat.Content = "你好";
+                        }
+                    }
+                    townChatListView.AddItem(chat);
+                    break;
+                case BUTTON_ID.TAVERN_BUTTON2:
                     if(selectedIndex != UNSELECTED)
                     {
+                        //私聊选项2：请加入我
                         Debug.Log("玩家：招募指令");
-                        if (selectedIndex == UNSELECTED)
-                        {
-                            Debug.Log("系统：未选择任何NPC");
-                            break;
-                        }
                         NPC currentNPC = currentTown.NPCs[selectedIndex];
                         if (!currentTown.RecruitNPC(currentNPC))
                         {
-                            Debug.Log("系统：招募NPC失败");
+                            Debug.LogError("系统：招募NPC失败");
                             break;
                         }
                         if (world.IfTeamOuting)
@@ -173,32 +189,9 @@ namespace WorldMap.Controller
                         Debug.Log("大家好");
                     }
                     break;
-                case BUTTON_ID.TAVERN_BUTTON2:
-                    if(selectedIndex != UNSELECTED)
-                    {
-
-                    }
-                    else
-                    {
-                        Debug.Log("大家好");
-                    }
-                    break;
                 case BUTTON_ID.TAVERN_BUTTON3:
                     break;
             }
         }
-        public void ObserverUpdate(int state, int echo)
-        {
-            if (state != (int)Train.STATE.STOP_TOWN || state != (int)Team.STATE.STOP_TOWN)
-            {
-                HideWindow();
-            }
-        }
-
-        public string GetName()
-        {
-            return "TavernController";
-        }
-
     }
 }

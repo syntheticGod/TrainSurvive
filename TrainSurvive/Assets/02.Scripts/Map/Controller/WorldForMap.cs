@@ -220,6 +220,16 @@ namespace WorldMap
             }
             world.ifOuting = true;
         }
+        public void TeamRecruit(Person person)
+        {
+            person.ifOuting = true;
+            world.persons.Add(person);
+        }
+        public void TrainRecruit(Person person)
+        {
+            person.ifOuting = false;
+            world.persons.Add(person);
+        }
         public void TeamSetMapPos(Vector2Int mapPos)
         {
             world.posTeamX = mapPos.x;
