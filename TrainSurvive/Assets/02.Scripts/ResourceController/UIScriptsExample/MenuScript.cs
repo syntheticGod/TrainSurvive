@@ -19,31 +19,11 @@ public class MenuScript : MonoBehaviour {
         rc = TimeController.getInstance();
     }
 	
-	// Update is called once per frame
-	void Update () {
-        timeText.text = rc.getDisplayTime().ToString();
-    }
+
     public void saveGame(){
         GameSave.getInstance().saveGame();
     }
-    public void pauseGame()
-    {
-        rc.setGameSpeedRate(TimeController.speedRate.stop);
-    }
-    public void setNormalSpeed()
-    {
-        rc.setGameSpeedRate(TimeController.speedRate.normal);
-  
-    }
-    public void setHighSpeed()
-    {
-        rc.setGameSpeedRate(TimeController.speedRate.fast);
-        
-    }
-    public void setMaxSpeed()
-    {
-        rc.setGameSpeedRate(TimeController.speedRate.veryfast);
-    }
+   
 
     public void changeToNoTimeScene(string sceneName)
     {

@@ -7,38 +7,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 using WorldMap.Model;
 
 namespace WorldMap.Controller
 {
-    public class TeamController : BaseController, OnClickListener
+    public class TeamController : BaseController, Observer
     {
         private int levelOfTeam = -2;
         
-        private GameObject teamModeBTs;
+        private RectTransform teamModeBTs;
         private TrainController trainController;
-        //主摄像机
-        private Camera mainCamera;
+        private static string[] bottomBtnsStrs = { "进入区域", "上车", "采集", "背包","人物" };
+        private Button[] bottomBtns;
+        private static string[] teamActionBtnStrs = { "采集", "停止采集" };
+        private Text teamActionBtn;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
         private float lastSize = 0;
-        public void Init()
+        protected override void OnEnable()
         {
-            ButtonHandler.Instance.AddListeners(this);
+            Team.Instance.Attach(this);
         }
         protected override void CreateModel()
         {
+            //Buttons
             Transform canvas = GameObject.Find("/Canvas").transform;
-            teamModeBTs = canvas.Find("TeamMode").gameObject;
-            mainCamera = Camera.main;
-            Debug.Assert(null != mainCamera, "需要将主摄像机的Tag改为MainCamera");
-            cameraFocus = mainCamera.GetComponent<ICameraFocus>();
+            teamModeBTs = new GameObject("TrainMode").AddComponent<RectTransform>();
+            Utility.SetParent(teamModeBTs, canvas);
+            Utility.RightBottom(teamModeBTs, new Vector2(1, 0), Vector2.zero, Vector2.zero);
+            Vector2 btnPivot = new Vector2(1, 0);
+            Vector2 btnSize = new Vector2(120, 120);
+            float btnSpace = 6;
+            bottomBtns = new Button[bottomBtnsStrs.Length];
+            for (int i = 0; i < bottomBtnsStrs.Length; i++)
+            {
+                bottomBtns[i] = Utility.CreateBtn("Btn" + i, bottomBtnsStrs[i]);
+                Utility.SetParent(bottomBtns[i], teamModeBTs);
+                Utility.RightBottom(bottomBtns[i], btnPivot, btnSize, new Vector2((btnSize.x + btnSpace) * -i, 0));
+                BUTTON_ID btnID = BUTTON_ID.TEAM_NONE + i + 1;
+                bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
+            }
+            teamActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
+            
+            cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
         protected override void Start()
         {
             base.Start();
             Debug.Log("TeamController Start");
+            if (world.IfTeamOuting)
+            {
+                Debug.Log("FOCUS TEAM");
+                transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
+                cameraFocus.focusLock(transform);
+            }
         }
         protected override void Update()
         {
@@ -58,14 +81,25 @@ namespace WorldMap.Controller
             }
             //---
         }
-        public bool IfAccepted(BUTTON_ID id)
-        {
-            return Utility.Between((int)BUTTON_ID.TEAM_NONE, (int)BUTTON_ID.TEAM_NUM, (int)id);
-        }
         public void OnClick(BUTTON_ID id)
         {
             switch (id)
             {
+                case BUTTON_ID.TEAM_ENTRY_AREA:
+                    Debug.Log("进入区域指令");
+                    //TODO：目前只有城镇
+                    Model.Town town;
+                    if (world.FindTown(Team.Instance.MapPosTeam, out town))
+                    {
+                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
+                        townController.SetTown(town);
+                        townController.ShowWindow();
+                    }
+                    else
+                    {
+                        Debug.Log("该区域不可触发");
+                    }
+                    break;
                 case BUTTON_ID.TEAM_RETRUN:
                     Debug.Log("回车指令");
                     if (!ActiveTeam(false))
@@ -77,12 +111,26 @@ namespace WorldMap.Controller
                     ControllerManager.FocusController("Train", "Character");
                     break;
                 case BUTTON_ID.TEAM_GATHER:
-                    Debug.Log("采集指令");
-                    world.DoGather();
+                    if (world.IfTeamGathering)
+                    {
+                        Debug.Log("停止采集指令");
+                        world.StopGather();
+                        teamActionBtn.text = teamActionBtnStrs[0];
+                    }
+                    else
+                    {
+                        Debug.Log("采集指令");
+                        world.DoGather();
+                        teamActionBtn.text = teamActionBtnStrs[1];
+                    }
+                    
                     break;
                 case BUTTON_ID.TEAM_PACK:
                     Debug.Log("背包指令");
                     ControllerManager.ShowWindow<PackController>("PackViewer");
+                    break;
+                case BUTTON_ID.TEAM_CHARACTER:
+
                     break;
             }
         }
@@ -139,9 +187,13 @@ namespace WorldMap.Controller
         }
         private bool ActiveBTs(bool active)
         {
-            if (teamModeBTs.activeInHierarchy == active)
+            if (teamModeBTs.gameObject.activeInHierarchy == active)
+            {
+
+                Debug.Log("重复激活按钮，无效");
                 return false;
-            teamModeBTs.SetActive(active);
+            }
+            teamModeBTs.gameObject.SetActive(active);
             return true;
         }
         protected override bool FocusBehaviour()
@@ -153,6 +205,21 @@ namespace WorldMap.Controller
         }
         protected override void UnfocusBehaviour()
         {
+        }
+
+        public string GetName()
+        {
+            return "TeamController";
+        }
+
+        public void ObserverUpdate(int state, int echo)
+        {
+            Team.STATE tState = (Team.STATE)state;
+            if(tState != Team.STATE.GATHERING)
+            {
+                world.StopGather();
+                teamActionBtn.text = teamActionBtnStrs[0];
+            }
         }
     }
 }

@@ -14,12 +14,13 @@ namespace WorldMap.Controller
     public class SchoolController : WindowsController
     {
         private string[] attributeInfoStrs = new string[] { "体力", "力量", "敏捷", "技巧", "智力" };
-        private string moneyInfoStr = "所需金额：";
-        private string payBtnStr = "训练";
-        private string cancelBtnStr = "退出";
+        private string moneyInfoStr = "所需金钱：";
+        private string payBtnStr = "确定";
+        private string resetBtnStr = "重置";
         //属性视图
         private uint[] deltaAttri;
         private Text[] attriViews;
+        private Text[] attriViewsNew;
         //花费金额视图
         private Text moneyView;
         //英雄显示列表
@@ -30,14 +31,17 @@ namespace WorldMap.Controller
         private int cost;
         protected override void CreateModel()
         {
+            m_windowSizeType = EWindowSizeType.MIDDLE14x12;
+            m_titleString = "学校";
             base.CreateModel();
-            WinSizeType = WindowSizeType.FULL;
+            SetBackground("tavern_bg_01");
             int attriCount = attributeInfoStrs.Length;
             attriViews = new Text[attriCount];
+            attriViewsNew = new Text[attriCount];
             deltaAttri = new uint[attriCount];
             heroAttribute = new int[attriCount];
             //属性窗口
-            RectTransform attributes = new GameObject("Attributes", typeof(RectTransform)).GetComponent<RectTransform>();
+            RectTransform attributes = new GameObject("Attributes", typeof(Image)).GetComponent<RectTransform>();
             Utility.SetParent(attributes, this);
             Utility.CenterAt(attributes, anchor:new Vector2(0.2F, 0.4F), size:new Vector2(300F, 300F));
             for (int i = 0; i < attributeInfoStrs.Length; i++)
@@ -50,31 +54,33 @@ namespace WorldMap.Controller
                 attribute.offsetMax = Vector2.zero;
             }
             //结账区块
-            RectTransform payRect = new GameObject("Pay").AddComponent<RectTransform>();
+            RectTransform payRect = new GameObject("Pay",typeof(Image)).GetComponent<RectTransform>();
             Utility.SetParent(payRect, this);
-            Utility.CenterAt(payRect, anchor:new Vector2(0.6F, 0.4F), size:new Vector2(380F, 100F), vector:new Vector2(0F, -100F));
+            Utility.CenterAt(payRect, anchor: new Vector2(0.2F, 0.4F), size: new Vector2(300F, 60F), vector: new Vector2(0F, -180F));
 
             Text moneyInfo = Utility.CreateText("MoneyInfo");
             Utility.SetParent(moneyInfo, payRect);
-            Utility.Anchor(moneyInfo, Vector2.zero, new Vector2(0.3F, 1.0F));
+            Utility.Anchor(moneyInfo, Vector2.zero, new Vector2(0.4F, 1.0F));
             moneyInfo.text = moneyInfoStr;
 
             moneyView = Utility.CreateText("Money");
             Utility.SetParent(moneyView, payRect);
-            Utility.Anchor(moneyView, new Vector2(0.3F, 0.0F), new Vector2(0.6F, 1.0F));
+            Utility.Anchor(moneyView, new Vector2(0.4F, 0.0F), new Vector2(0.6F, 1.0F));
 
             Button payBtn = Utility.CreateBtn("PayBtn", payBtnStr);
             Utility.SetParent(payBtn, payRect);
             Utility.Anchor(payBtn, new Vector2(0.6F, 0.0F), new Vector2(0.8F, 1.0F));
             payBtn.onClick.AddListener(delegate () { OnOKBtnClick(); });
 
-            Button cancelBtn = Utility.CreateBtn("CancelBtn", cancelBtnStr);
-            Utility.SetParent(cancelBtn, payRect);
-            Utility.Anchor(cancelBtn, new Vector2(0.8F, 0.0F), new Vector2(1.0F, 1.0F));
-            cancelBtn.onClick.AddListener(delegate () { OnCancelBtnClick(); });
+            Button resetBtn = Utility.CreateBtn("ResetBtn", resetBtnStr);
+            Utility.SetParent(resetBtn, payRect);
+            Utility.Anchor(resetBtn, new Vector2(0.8F, 0.0F), new Vector2(1.0F, 1.0F));
+            resetBtn.onClick.AddListener(delegate () { InitAttribute();ShowAttributes();ShowMoney(); });
             //注意：不能对ListView进行添加删除行为
             herosLayout = Utility.ForceGetComponentInChildren<HeroListView>(this, "HerosLayout");
             herosLayout.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            herosLayout.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
+            herosLayout.GridConstraintCount = 1;
             RectTransform herosLayoutRect = herosLayout.GetComponent<RectTransform>();
             Utility.HLineAt(herosLayoutRect, anchor:0.8F, height:100F);
             herosLayout.onItemClick = delegate (ListViewItem item, Person person)
@@ -89,35 +95,39 @@ namespace WorldMap.Controller
         private RectTransform CreateAttribute(int index)
         {
             RectTransform attribute = new GameObject("abi" + index).AddComponent<RectTransform>();
-
             //属性名
             Text attriInfoView = Utility.CreateText("Info");
             Utility.SetParent(attriInfoView, attribute);
             RectTransform attriInfo = attriInfoView.GetComponent<RectTransform>();
             attriInfo.anchorMin = Vector2.zero;
-            attriInfo.anchorMax = new Vector2(0.4F, 1F);
+            attriInfo.anchorMax = new Vector2(0.2F, 1F);
             attriInfoView.text = attributeInfoStrs[index];
-
             //数字
             attriViews[index] = Utility.CreateText("abi" + index);
             Utility.SetParent(attriViews[index], attribute);
-            RectTransform attriNum = attriViews[index].GetComponent<RectTransform>();
-            attriNum.anchorMin = new Vector2(0.4F, 0);
-            attriNum.anchorMax = new Vector2(0.6F, 1F);
-
-            //减号按钮
-            Vector2 btnSize = new Vector2(50F, 50F);
-            Button minus = Utility.CreateBtn("Minus", "-");
-            minus.GetComponentInChildren<Text>().fontSize = 30;
-            Utility.SetParent(minus, attribute);
-            Utility.RightCenter(minus, new Vector2(1F, 0.5F), btnSize, new Vector2(-btnSize.x, 0));
-            minus.onClick.AddListener(delegate () { OnAttributeMinusBtnClick(index); });
+            Utility.Anchor(attriViews[index], new Vector2(0.2F, 0), new Vector2(0.35F, 1F));
+            //数字
+            Text arrow = Utility.CreateText("abi" + index," -> ");
+            Utility.SetParent(arrow, attribute);
+            Utility.Anchor(arrow, new Vector2(0.35F, 0), new Vector2(0.45F, 1F));
+            //数字
+            attriViewsNew[index] = Utility.CreateText("abi" + index);
+            Utility.SetParent(attriViewsNew[index], attribute);
+            Utility.Anchor(attriViewsNew[index], new Vector2(0.45F, 0), new Vector2(0.6F, 1F));
             //加号按钮
+            Vector2 btnSize = new Vector2(50F, 50F);
             Button plus = Utility.CreateBtn("Plus", "+");
             plus.GetComponentInChildren<Text>().fontSize = 30;
             Utility.SetParent(plus, attribute);
-            Utility.RightCenter(plus, new Vector2(1F, 0.5F), btnSize, new Vector2(0, 0));
+            Utility.RightCenter(plus, new Vector2(1F, 0.5F), btnSize, new Vector2(-btnSize.x, 0));
             plus.onClick.AddListener(delegate () { OnAttributePlusBtnClick(index); });
+            //减号按钮
+            Button minus = Utility.CreateBtn("Minus", "-");
+            minus.GetComponentInChildren<Text>().fontSize = 30;
+            Utility.SetParent(minus, attribute);
+            Utility.RightCenter(minus, new Vector2(1F, 0.5F), btnSize, new Vector2(0, 0));
+            minus.onClick.AddListener(delegate () { OnAttributeMinusBtnClick(index); });
+            
             return attribute;
         }
         protected override void Start()
@@ -135,7 +145,6 @@ namespace WorldMap.Controller
             herosLayout.Datas = world.GetHeros();
             if (herosLayout.Datas.Count != 0)
                 herosLayout.ClickManually(0);
-            ShowAttributes();
         }
 
         protected override bool FocusBehaviour()
@@ -167,13 +176,16 @@ namespace WorldMap.Controller
         //TODO：有细节问题，训练次数是每点一次属性加一，还是点一次训练加一。
         private void ShowMoney()
         {
+            moneyView.text = GetMoney().ToString();
+        }
+        public int GetMoney()
+        {
             float money = 0F;
             for (int i = 0; i < attributeInfoStrs.Length; i++)
             {
                 money += deltaAttri[i] * 1000F * (1 + heroAttribute[i] * 0.05F) * (1 + heroChoosed.trainCnt * 0.05F);
             }
-            cost = (int)money;
-            moneyView.text = cost.ToString();
+            return (int)money;
         }
         /// <summary>
         /// 将加完之后的所有属性显示在属性板上
@@ -182,7 +194,8 @@ namespace WorldMap.Controller
         {
             for (int i = 0; i < attributeInfoStrs.Length; i++)
             {
-                attriViews[i].text = (heroAttribute[i] + deltaAttri[i]).ToString();
+                attriViews[i].text = heroAttribute[i].ToString();
+                attriViewsNew[i].text = (heroAttribute[i] + deltaAttri[i]).ToString();
             }
         }
         /// <summary>
@@ -210,7 +223,7 @@ namespace WorldMap.Controller
         {
             if (deltaAttri[index] != 0)
                 deltaAttri[index]--;
-            attriViews[index].text = (heroAttribute[index] + deltaAttri[index]).ToString();
+            attriViewsNew[index].text = (heroAttribute[index] + deltaAttri[index]).ToString();
             ShowMoney();
         }
         /// <summary>
@@ -220,7 +233,7 @@ namespace WorldMap.Controller
         public void OnAttributePlusBtnClick(int index)
         {
             deltaAttri[index]++;
-            attriViews[index].text = (heroAttribute[index] + deltaAttri[index]).ToString();
+            attriViewsNew[index].text = (heroAttribute[index] + deltaAttri[index]).ToString();
             ShowMoney();
         }
         /// <summary>
@@ -228,6 +241,12 @@ namespace WorldMap.Controller
         /// </summary>
         public void OnOKBtnClick()
         {
+            int money = GetMoney();
+            if (!world.IfMoneyEnough(money))
+            {
+                Debug.Log("金钱不足");
+                return;
+            }
             //TODO：检查金额是否足够
             heroChoosed.vitality += (int)deltaAttri[0];
             heroChoosed.strength += (int)deltaAttri[1];
@@ -235,6 +254,7 @@ namespace WorldMap.Controller
             heroChoosed.technique += (int)deltaAttri[3];
             heroChoosed.intelligence += (int)deltaAttri[4];
             InitAttribute();
+            ShowAttributes();
             ShowMoney();
         }
         public void OnCancelBtnClick()

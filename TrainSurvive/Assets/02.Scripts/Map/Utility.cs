@@ -202,6 +202,23 @@ namespace WorldMap
             rect.offsetMin = offsetMin;
             rect.offsetMax = offsetMax;
         }
+        public static void FullFillRectTransform(Component comp)
+        {
+            FullFillRectTransform(comp, Vector2.zero, Vector2.zero);
+        }
+        public static InputField CreateInputField(string name)
+        {
+            InputField inputField = new GameObject(name, typeof(Image)).AddComponent<InputField>();
+            Text text = CreateText("Text");
+            SetParent(text, inputField);
+            FullFillRectTransform(text);
+            Text placeHolder = CreateText("Placeholder");
+            SetParent(placeHolder, inputField);
+            FullFillRectTransform(placeHolder);
+            inputField.textComponent = text;
+            inputField.placeholder = placeHolder;
+            return inputField;
+        }
         public static Button CreateBtn(string name, string content, Transform parent)
         {
             Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();
@@ -235,13 +252,14 @@ namespace WorldMap
         {
             return new GameObject(name, typeof(Image)).GetComponent<Image>();
         }
-        public static Text CreateText(string name)
+        public static Text CreateText(string name, string content = "")
         {
             Text text = new GameObject(name, typeof(Text)).GetComponent<Text>();
             text.color = Color.black;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 20;
             text.alignment = TextAnchor.MiddleCenter;
+            text.text = content;
             return text;
         }
         public static void SetParent(Component child, Component parent)
@@ -312,7 +330,16 @@ namespace WorldMap
             rect.offsetMin = vector  + (size * -pivot);
             rect.offsetMax = rect.offsetMin + size;
         }
-        public static void TopLeft(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        public static void TopFull(Component comp, float height)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5F, 1F);
+            rect.anchorMin = new Vector2(0F, 1F);
+            rect.anchorMax = new Vector2(1F, 1F);
+            rect.offsetMin = new Vector2(0F, -height);
+            rect.offsetMax = Vector2.zero;
+        }
+        public static void LeftTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
             rect.pivot = pivot;

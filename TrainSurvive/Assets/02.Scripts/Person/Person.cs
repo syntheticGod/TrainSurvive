@@ -161,7 +161,7 @@ public class Person{
     }
     public double getValErate()
     {
-        double num = 1 * (1 + 0.02 * agile);
+        double num = 1 * (0 + 0.02 * agile);
         return Math.Round(num, numsLeft);
     }
     public double getRange()

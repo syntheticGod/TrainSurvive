@@ -4,59 +4,86 @@
  * 创建时间：2018/11/20 23:14:19
  * 版本：v0.1
  */
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using WorldMap.Controller;
+using WorldMap.Model;
+using WorldMap.UI;
 
-namespace WorldMap
+namespace WorldMap.Controller
 {
-    public class TownController : MonoBehaviour, OnClickListener, Observer
+    public class TownController : WindowsController, Observer
     {
-
-        private Text townInfoText;
-        private Model.Town currentTown;
-        private Model.Train train;
-        private Model.Team team;
-        private WorldForMap world;
         private const int ECHO_CODE_TRAIN = 1;
         private const int ECHO_CODE_TEAM = 2;
+        private static string[] btnsStrs = { "商店", "学校", "酒馆" };
         private TavernController tavernController;
-        public TownController()
+        private Model.Town currentTown;
+        private Text townInfoText;
+        protected override void OnEnable()
         {
-            Debug.Log("TownController Construct");
+            Train.Instance.Attach(obs: this, echo: ECHO_CODE_TRAIN);
+            Team.Instance.Attach(obs: this, echo: ECHO_CODE_TEAM);
         }
-        public void Init()
+        protected override void OnDisable()
         {
-            world = WorldForMap.Instance;
-            team = Model.Team.Instance;
-            train = Model.Train.Instance;
+            Train.Instance.Detach(obs: this);
+            Team.Instance.Detach(obs: this);
         }
-        void Awake()
+        protected override void CreateModel()
         {
-            Debug.Log("TownController Awake");
-            townInfoText = transform.Find("TownInfo").GetComponentInChildren<Text>();
-            Transform canvas = GameObject.Find("/Canvas").transform;
-            tavernController = canvas.Find("TavernViewer").GetComponent<TavernController>();
-            tavernController.Init();
-            
-            Debug.Assert(townInfoText != null);
-            ButtonHandler.Instance.AddListeners(this);
-            train.Attach(obs: this, echo: ECHO_CODE_TRAIN);
-            team.Attach(obs: this, echo: ECHO_CODE_TEAM);
+            m_windowSizeType = EWindowSizeType.BIG26x14;
+            m_titleString = "城镇";
+            base.CreateModel();
+            SetBackground("town_bg_02");
+            Image townInfoBG = Utility.CreateImage("TownInfo");
+            Utility.SetParent(townInfoBG, this);
+            Utility.Anchor(townInfoBG, new Vector2(0.2F, 0.2F), new Vector2(0.4F, 0.8F));
+            townInfoBG.color = containerColor;
+            //城镇信息框
+            townInfoText = Utility.CreateText("TownInfoText");
+            Utility.SetParent(townInfoText, townInfoBG);
+            Utility.Anchor(townInfoText, new Vector2(0, 0.4F), new Vector2(1.0F, 1.0F));
+            townInfoText.alignment = TextAnchor.UpperLeft;
+            //按钮
+            RectTransform btnsRect = new GameObject("Btns").AddComponent<RectTransform>();
+            Utility.SetParent(btnsRect, townInfoBG);
+            Utility.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1.0F, 0.4F));
+            Button[] btns = new Button[btnsStrs.Length];
+            for (int i = 0; i < btns.Length; i++)
+            {
+                btns[i] = Utility.CreateBtn("Btn" + i, btnsStrs[i]);
+                Utility.SetParent(btns[i], btnsRect);
+                Utility.Anchor(btns[i], new Vector2(0F, (float)i / btns.Length), new Vector2(1.0F, (float)(i + 1) / btns.Length));
+                BUTTON_ID bid = BUTTON_ID.TOWN_NONE + i + 1;
+                btns[i].onClick.AddListener(delegate () { OnClick(bid); });
+            }
         }
-        void Start()
+        public void SetTown(Model.Town town)
         {
-            Debug.Log("TownController Start");
+            currentTown = town;
+        }
+        protected override bool PrepareDataBeforeShowWindow()
+        {
+            return currentTown != null;
         }
 
-        void Update()
+        protected override void AfterShowWindow()
         {
-
+            townInfoText.text = currentTown.Info;
         }
+
+        protected override bool FocusBehaviour()
+        {
+            return true;
+        }
+
+        protected override void UnfocusBehaviour()
+        { }
         public bool TryShowTown(Vector2Int mapPos)
         {
             Model.Town town;
-            if(!world.FindTown(mapPos, out town))
+            if (!world.FindTown(mapPos, out town))
             {
                 Debug.Log("当前列车位置不在城镇");
                 return false;
@@ -74,12 +101,6 @@ namespace WorldMap
             gameObject.SetActive(true);
             Debug.Log("城镇：" + town.Info);
             currentTown = town;
-            townInfoText.text = town.Name;
-        }
-        private void Hide()
-        {
-            if (gameObject.activeInHierarchy)
-                gameObject.SetActive(false);
         }
         public void ObserverUpdate(int state, int echo)
         {
@@ -98,17 +119,17 @@ namespace WorldMap
             switch (state)
             {
                 case Model.Train.STATE.STOP_TOWN:
-                    Debug.Log("列车到达 城镇  通知显示城镇");
-                    Model.Town town;
-                    if(!world.FindTown(train.MapPosTrain, out town))
-                    {
-                        Debug.LogWarning("列车所在位置不是城镇");
-                        return;
-                    }
-                    ShowTwon(town);
+                    //Debug.Log("列车到达 城镇  通知显示城镇");
+                    //Model.Town town;
+                    //if(!world.FindTown(train.MapPosTrain, out town))
+                    //{
+                    //    Debug.LogWarning("列车所在位置不是城镇");
+                    //    return;
+                    //}
+                    //ShowTwon(town);
                     break;
                 default:
-                    Hide();
+                    HideWindow();
                     break;
             }
         }
@@ -117,43 +138,46 @@ namespace WorldMap
             switch (state)
             {
                 case Model.Team.STATE.STOP_TOWN:
-                    Debug.Log("探险队到达 城镇  通知显示城镇");
-                    Model.Town town;
-                    if (!world.FindTown(team.MapPosTeam, out town))
-                    {
-                        Debug.LogWarning("列车所在位置不是城镇");
-                        return;
-                    }
-                    ShowTwon(town);
+                    //Debug.Log("探险队到达 城镇  通知显示城镇");
+                    //Model.Town town;
+                    //if (!world.FindTown(team.MapPosTeam, out town))
+                    //{
+                    //    Debug.LogWarning("列车所在位置不是城镇");
+                    //    return;
+                    //}
+                    //ShowTwon(town);
                     break;
                 default:
-                    Hide();
+                    HideWindow();
                     break;
             }
-        }
-        public bool IfAccepted(BUTTON_ID id)
-        {
-            return Utility.Between((int)BUTTON_ID.TOWN_NONE, (int)BUTTON_ID.TOWN_NUM, (int)id);
         }
         public void OnClick(BUTTON_ID id)
         {
             switch (id)
             {
                 case BUTTON_ID.TOWN_TAVERN:
-                    Debug.Log("酒馆");
-                    tavernController.ShowTavern(currentTown);
+                    Debug.Log("进入酒馆");
+                    TavernController tavernController = ControllerManager.GetWindow<TavernController>("TavernViewer");
+                    tavernController.SetTown(currentTown);
+                    tavernController.ShowWindow();
                     break;
                 case BUTTON_ID.TOWN_SCHOOL:
-                    Debug.Log("学校");
+                    Debug.Log("进入学校");
                     ControllerManager.ShowWindow<SchoolController>("SchoolViewer");
                     break;
                 case BUTTON_ID.TOWN_SHOP:
-                    Debug.Log("商店");
+                    Debug.Log("进入商店");
                     ShopController shopController = ControllerManager.GetWindow<ShopController>("ShopController");
                     shopController.SetTown(currentTown);
                     shopController.ShowWindow();
                     break;
             }
+        }
+
+        public string GetName()
+        {
+            return "TownController";
         }
     }
 }

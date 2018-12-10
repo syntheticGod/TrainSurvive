@@ -47,6 +47,8 @@ namespace WorldMap.Controller
         { }
         protected virtual void OnEnable()
         { }
+        protected virtual void OnDisable()
+        { }
         protected virtual void Update()
         { }
         public bool Focus()

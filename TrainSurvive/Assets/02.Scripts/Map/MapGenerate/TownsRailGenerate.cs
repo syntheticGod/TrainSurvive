@@ -65,6 +65,13 @@ namespace WorldMap {
             //对城镇进行绘画
             PaintTowns();
 
+            for (int i = 0; i < mapData.rowNum; i++) {
+                for (int j = 0; j < mapData.colNum; j++) {
+                    if (mapData.spowns[i, j].specialTerrainType == SpawnPoint.SpecialTerrainEnum.RAIL)
+                        mapData.spowns[i, j].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.NONE);
+                }
+            }
+
             //生成铁轨
             BuildRails();
         }

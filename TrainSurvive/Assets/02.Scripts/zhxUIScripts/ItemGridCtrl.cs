@@ -105,6 +105,8 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
 
     public void Refresh()
     {
+        if (showPileNum == null) // 如果界面不存在了就不用更新界面了
+            return;
         showPileNum.text = item.currPileNum.ToString();
         mark.color = markColors[(int)_item.rarity];
         itemSprite.sprite = item.sprite;

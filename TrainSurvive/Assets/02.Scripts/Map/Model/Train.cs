@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WorldMap;
+using WorldMap.UI;
 
 namespace WorldMap.Model
 {
@@ -37,6 +38,14 @@ namespace WorldMap.Model
             {
                 state = value;
                 this.Notify((int)state);
+                if(state == STATE.RUNNING)
+                {
+                    world.TrainMoving();
+                }
+                else if(state == STATE.STOP_RAIL || state == STATE.STOP_TOWN)
+                {
+                    world.TrainStop();
+                }
             }
         }
 
@@ -247,6 +256,9 @@ namespace WorldMap.Model
             if (!IsStopedTemporarily)
             {
                 Debug.Log("只能中途停车，才能开车");
+                InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
+                infoDialog.SetInfo("请选择铁轨");
+                infoDialog.ShowDialog();
                 return false;
             }
             State = STATE.RUNNING;
@@ -277,6 +289,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("列车：招募到" + theOne.name);
+            theOne.ifOuting = false;
         }
         //列车属性判断
         public bool IsRunning

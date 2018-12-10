@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace WorldMap.UI
 {
-    public class GoodsItem : ItemBase
+    public class GoodsItem : ResourceItemBase
     {
         private Text numView;
         private Text priceView;
