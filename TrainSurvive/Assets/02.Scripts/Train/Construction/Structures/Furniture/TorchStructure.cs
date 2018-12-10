@@ -20,7 +20,7 @@ public class TorchStructure : Structure {
         Name = "火把",
         Description = "站立式大灯，自动点亮",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,
         IsOnceFunction = false,

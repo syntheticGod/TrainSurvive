@@ -20,7 +20,7 @@ public class KeroseneLampStructure : Structure {
         Name = "煤油灯",
         Description = "依附桌子，自动点亮",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,
         IsOnceFunction = false,

@@ -4,20 +4,13 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using WorldMap;
-
+using System;
 [System.Serializable]
 public class World {
     private World() {
+
         //测试用 xys
-        for(int i = 0; i < 3; i++)
-        {
-            Person p=Person.CreatePerson();
-            p.name = WorldMap.StaticResource.RandomNPCName(true);
-            //p.vitality= UnityEngine.Random.Range(0,10);
-            persons.Add(p);
-        }
         foodIn = (uint)foodInMax;
-        money = 9999;//9,999
         //----
     }
     private static World instance;
@@ -25,6 +18,7 @@ public class World {
     {
         if (instance == null)
         {
+            //TEST：加载测试 xys
             string path = PathManager.getInstance().getWorldPath();
 
             if (File.Exists(path))
@@ -82,26 +76,23 @@ public class World {
     public const int mapHeight = 300;
     //public const int trainWidth = 10;
     //public const int trainHeight = 5;
-    private uint foodIn = 0;
+    private uint foodIn = 800;
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
     private uint energy = 0;
-    private uint coal = 0;
-    private uint wood = 0;
-    private uint metal = 0;
-    public int foodInMax = 1000;
-    public int foodOutMax = 1000;
-    public int energyMax = 1000;
-    public int coalMax = 1000;
-    public int woodMax = 1000;
-    public int metalMax = 1000;
+    private uint foodInMax = 10000;
+    private uint foodOutMax = 1000;
+    private uint energyMax = 1000;
     public int money;
-
-
+    
     public string preDragName;
     public List<ItemData> itemDataInTrain = new List<ItemData>();
     public List<ItemData> itemDataInTeam = new List<ItemData>();
-    
+
+
+    public List<int> itemIDs;
+    public List<int> itemNums;
+
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt=1;
@@ -139,13 +130,19 @@ public class World {
     
 
     public List<Structure> buildInstArray = new List<Structure>();
+    public List<TrainCarriage> carriageInstArray = new List<TrainCarriage>();
     public bool[] buildUnlock;
-    public Tech[] techArray = TechTree.Techs;
+    public bool[] carriageUnlock;
+    public Tech[] techArray;
+    public int techUnlock;
 
     public int[] abiAllin;
     public int[] abiAllOut;
     public int numIn;
     public int numOut;
+
+    [NonSerialized]
+    public ResouceBaseUI resourceUI;
 
     public double getGame_time()
     {
@@ -155,9 +152,9 @@ public class World {
     {
         game_time = time;
     }
-    public uint getCoal()
+    public uint getEnergy()
     {
-        return coal;
+        return energy;
     }
     public uint getFoodIn()
     {
@@ -167,23 +164,96 @@ public class World {
     {
         return foodOut;
     }
-    public uint getWood()
+    public uint getFoodOutMax()
     {
-        return wood;
+        return foodOutMax;
     }
-    public uint getMetal()
+    public uint getFoodInMax()
     {
-        return metal;
+        return foodInMax;
     }
+    public uint getEnergyMax()
+    {
+        return energyMax;
+    }
+
+    /// <param name="food"></param>
+    /// <returns>返回false代表资源超过最大值</returns>
+    public bool setFoodIn(uint food)
+    {
+        bool result = true;
+        if (food > foodInMax)
+        {
+            foodIn = foodInMax;
+            result=false;
+        }
+        else
+           foodIn = food;
+        if (resourceUI != null)
+        {
+            resourceUI.setFoodIn(foodIn, foodInMax);
+        }
+        return result;
+    }
+    /// <param name="food"></param>
+    /// <returns>返回false代表资源超过最大值</returns>
     public bool setFoodOut(uint food)
     {
-        if(food > foodOutMax)
+        bool result = true;
+        if (food > foodOutMax)
         {
-            foodOut = (uint)foodOutMax;
-            return false;
+            foodOut = foodOutMax;
+            result = false;
         }
-        foodOut = food;
-        return true;
+        else
+            foodOut = food;
+        if (resourceUI != null)
+        {
+            resourceUI.setFoodOut(foodOut, foodOutMax);
+        }
+        return result;
+    }
+    /// <param name="food"></param>
+    /// <returns>返回false代表资源超过最大值</returns>
+    public bool setEnergy(uint energyNum)
+    {
+        bool result = true;
+        if (energyNum > energyMax)
+        {
+            energy = energyMax;
+            result = false;
+        }
+        else
+            energy = energyNum;
+        if (resourceUI != null)
+        {
+            resourceUI.setEnergy(energyNum, energyMax);
+        }
+        return result;
+    }
+    public void setFoodInMax(uint num)
+    {
+        foodInMax = num;
+        if (resourceUI != null)
+        {
+            resourceUI.setFoodIn(foodIn, foodInMax);
+        }
+    }
+    public void setFoodOutMax(uint num)
+    {
+        foodOutMax = num;
+        if (resourceUI != null)
+        {
+            resourceUI.setFoodOut(foodOut, foodOutMax);
+        }
+    }
+    public void setEnergyMax(uint num)
+    {
+        energyMax = num;
+        if (resourceUI != null)
+        {
+            resourceUI.setEnergy(energy, energyMax);
+        }
     }
     /// <summary>
     /// num可为负代表减少
@@ -192,18 +262,24 @@ public class World {
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addFoodIn(int num)
     {
+        int result = 1;
         if ((foodIn + num) < 0)
         {
             foodIn = 0;
-            return 0;
+            result=0;
         }
-        if ((foodIn + num) > foodInMax)
+        else if ((foodIn + num) > foodInMax)
         {
             foodIn = (uint)foodInMax;
-            return 2;
+            result= 2;
         }
-        foodIn = (uint)(foodIn + num);
-        return 1;
+        else
+          foodIn = (uint)(foodIn + num);
+        if (resourceUI != null)
+        {
+            resourceUI.setFoodIn(foodIn, foodInMax);
+        }
+        return result;
     }
     /// <summary>
     /// num可为负代表减少
@@ -212,18 +288,24 @@ public class World {
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addFoodOut(int num)
     {
+        int result = 1;
         if ((foodOut + num) < 0)
         {
             foodOut = 0;
-            return 0;
+            result = 0;
         }
-        if ((foodOut + num) > foodOutMax)
+        else if ((foodOut + num) > foodOutMax)
         {
             foodOut = (uint)foodOutMax;
-            return 2;
+            result= 2;
         }
-        foodOut = (uint)(foodOut + num);
-        return 1;
+        else
+            foodOut = (uint)(foodOut + num);
+        if (resourceUI != null)
+        {
+            resourceUI.setFoodOut(foodOut, foodOutMax);
+        }
+        return result;
     }
     /// <summary>
     /// num可为负代表减少
@@ -232,79 +314,26 @@ public class World {
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addEnergy(int num)
     {
+        int result = 1;
         if ((energy + num) < 0)
         {
             energy = 0;
-            return 0;
+            result = 0;
         }
-        if ((energy + num) > energyMax)
+        else if ((energy + num) > energyMax)
         {
             energy = (uint)energyMax;
-            return 2;
+            result = 2;
         }
-        energy = (uint)(energy + num);
-        return 1;
+        else
+            energy = (uint)(energy + num);
+        if (resourceUI != null)
+        {
+            resourceUI.setEnergy(energy, energyMax);
+        }
+        return result;
     }
-    /// <summary>
-    /// num可为负代表减少
-    /// </summary>
-    /// <param name="num"></param>
-    /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
-    public int addCoal(int num)
-    {
-        if ((coal + num) < 0)
-        {
-            coal = 0;
-            return 0;
-        }
-        if((coal + num) > coalMax)
-        {
-            coal = (uint)coalMax;
-            return 2;
-        }
-        coal = (uint)(coal+num);
-        return 1; 
-    }
-    /// <summary>
-    /// num可为负代表减少
-    /// </summary>
-    /// <param name="num"></param>
-    /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
-    public int addWood(int num)
-    {
-        if ((wood + num) < 0)
-        {
-            wood = 0;
-            return 0;
-        }
-        if ((wood + num) > woodMax)
-        {
-            wood = (uint)woodMax;
-            return 2;
-        }
-        wood = (uint)(wood + num);
-        return 1;
-    }
-    /// <summary>
-    /// num可为负代表减少
-    /// </summary>
-    /// <param name="num"></param>
-    /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
-    public int addMetal(int num)
-    {
-        if ((metal + num) < 0)
-        {
-            metal = 0;
-            return 0;
-        }
-        if ((metal + num) > metalMax)
-        {
-            metal = (uint)metalMax;
-            return 2;
-        }
-        metal = (uint)(metal + num);
-        return 1;
-    }
+   
     /// <summary>
     /// num可为负代表减少
     /// </summary>
@@ -352,7 +381,7 @@ public class World {
     /// <returns>0代表食物不足，1代表食物充足</returns>
     public int consumeFoodIn()
     {
-        return addFoodIn((int)-(foodConsumed_eachPerson * numIn));
+        return addFoodIn((int)-(foodConsumed_eachPerson * numIn));      
     }
     /// <summary>
     /// 探险队人员消耗食物

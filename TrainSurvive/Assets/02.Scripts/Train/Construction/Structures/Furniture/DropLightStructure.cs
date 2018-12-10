@@ -22,7 +22,7 @@ public class DropLightStructure : Structure {
         LayerOrientation = Vector2.up,
         RequiredLayerNames = new string[]{"Ceil"},
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,
         IsOnceFunction = false,

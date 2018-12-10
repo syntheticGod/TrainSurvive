@@ -17,8 +17,8 @@ public class TEST_Facility : Structure {
         Name = "TEST_Facility",
         Description = "TEST_TEST_TEST",
         WorkAll = 2,
-        BuildCosts = new Cost[]{
-            new Cost{ ItemID = 0, Value = 0 }
+        BuildCosts = new ItemData[]{
+            
         },
         SpritePath = "Sprite/map/building-inn",
         Class = 0

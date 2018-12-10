@@ -20,7 +20,7 @@ public class HeatingRoomStructure : Structure {
         Name = "加热室",
         Description = "加热室",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 3,
         IsOnceFunction = false,

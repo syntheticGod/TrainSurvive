@@ -20,7 +20,7 @@ public class CabCarriage : TrainCarriage {
         Name = "驾驶室",
         Description = "驾驶室",
         Size = new Vector2(15.48f, 4.66f),
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         WorkAll = 0.01f,
         PrefabPath = "Prefabs/Train/Carriages/cab"
     };

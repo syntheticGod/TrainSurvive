@@ -20,7 +20,7 @@ public class BigGeneratorStructure : GeneratorStructure {
         Name = "大发电机",
         Description = "按功率将核心中的热能转化为蓄电池的电能",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = true,
