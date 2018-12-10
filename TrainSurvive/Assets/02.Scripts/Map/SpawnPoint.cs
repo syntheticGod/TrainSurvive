@@ -203,7 +203,11 @@ namespace WorldMap {
                     curSpawnIndex--;
                 }
             }
-            this.spawnObjects.Insert(curSpawnIndex, spawnObject);
+            if (this.spawnObjects.Count <= curSpawnIndex) {
+                this.spawnObjects.Insert(curSpawnIndex, spawnObject);
+            } else {
+                this.spawnObjects[curSpawnIndex] = spawnObject;
+            }
             //设置当前地块的可见状态
             UpdateViewStateDisplay(spawnObject);
         }
@@ -235,7 +239,7 @@ namespace WorldMap {
             switch (viewState) {
                 case SpawnViewStateEnum.INVISIBLE:
                     //不可见状态
-                    render.color = Color.black;
+                    render.color = new Color(0.2f, 0.2f, 0.2f);
                     break;
 
                 case SpawnViewStateEnum.HALF_INVISIBLE:

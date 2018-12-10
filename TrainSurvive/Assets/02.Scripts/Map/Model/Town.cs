@@ -28,20 +28,20 @@ namespace WorldMap.Model
         {
             Town ret = new Town();
             ret.NPCs = new List<NPC>(MaxNPCCnt);
-            ret.Goods = new List<Good>(MaxGoodWeaponCnt+MaxGoodMaterialCnt);
+            ret.Goods = new List<Good>(MaxGoodWeaponCnt + MaxGoodMaterialCnt);
             for (int i = 0; i < MaxNPCCnt; ++i)
             {
                 ret.NPCs.Add(NPC.Random());
             }
-            for(int i = 0; i < MaxGoodWeaponCnt; ++i)
+            for (int i = 0; i < MaxGoodWeaponCnt; ++i)
             {
                 ret.Goods.Add(Good.RandomWeapon());
             }
-            for(int i = 0; i < MaxGoodMaterialCnt; ++i)
+            for (int i = 0; i < MaxGoodMaterialCnt; ++i)
             {
                 ret.Goods.Add(Good.RandomMaterial());
             }
-            for(int i = 0; i < MaxGoodSpecailCnt; ++i)
+            for (int i = 0; i < MaxGoodSpecailCnt; ++i)
             {
                 ret.Goods.Add(Good.RandomSpecail());
             }
@@ -74,10 +74,12 @@ namespace WorldMap.Model
         /// <returns></returns>
         public bool RecruitNPC(NPC theOne)
         {
-            if (!NPCs.Contains(theOne))
+            if (!NPCs.Remove(theOne))
+            {
+                Debug.Log("城镇：酒馆中没有该NPC：" + theOne.Name);
                 return false;
-            WorldForMap.Instance.AddPerson(theOne.PersonInfo);
-            NPCs.Remove(theOne);
+            }
+            Debug.Log("城镇：NPC：" + theOne.Name + "走了");
             return true;
         }
         /// <summary>
@@ -99,7 +101,7 @@ namespace WorldMap.Model
             }
             if (!goods.DecreaseNumber(number))
             {
-                Debug.Log("商店：商品数量不足，我有：" + goods.Number+" 需求："+number);
+                Debug.Log("商店：商品数量不足，我有：" + goods.Number + " 需求：" + number);
                 return false;
             }
             if (goods.Number == 0)
@@ -120,7 +122,7 @@ namespace WorldMap.Model
             get
             {
                 return "城镇名：" + Name + " " +
-                    "酒馆人数：" + NPCCnt + " "+
+                    "酒馆人数：" + NPCCnt + " " +
                     "商品数：" + GoodsCnt + " ";
             }
         }

@@ -43,6 +43,13 @@ namespace WorldMap.UI
         {
             infoString = info;
         }
+        public static InfoDialog Show(string content)
+        {
+            InfoDialog infoDialog = CreateDialog<InfoDialog>("DEFAULT_INFO_DIALOG_NAME");
+            infoDialog.SetInfo(content);
+            infoDialog.ShowDialog();
+            return infoDialog;
+        }
     }
 }
 

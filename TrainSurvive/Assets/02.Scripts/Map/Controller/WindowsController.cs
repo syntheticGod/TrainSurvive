@@ -191,8 +191,6 @@ namespace WorldMap.Controller
         {
             return true;
         }
-
-        protected override void UnfocusBehaviour()
-        { }
+        
     }
 }

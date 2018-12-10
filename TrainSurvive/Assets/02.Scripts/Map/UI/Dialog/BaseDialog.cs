@@ -23,6 +23,7 @@ namespace WorldMap.UI
         protected Vector2 m_dialogSize = new Vector2(840F, 720F);
         public enum EDialogSizeType {
             SMALL7x6,     //420*360
+            MIDDLE12x12, //720*720
             MIDDLE14x12   //840*720
         }
         protected EDialogSizeType m_dialogSizeType = EDialogSizeType.MIDDLE14x12;
@@ -39,6 +40,10 @@ namespace WorldMap.UI
                         case EDialogSizeType.SMALL7x6:
                             m_dialogSize.x = scale * 7;
                             m_dialogSize.y = scale * 6;
+                            break;
+                        case EDialogSizeType.MIDDLE12x12:
+                            m_dialogSize.x = scale * 12;
+                            m_dialogSize.y = m_dialogSize.x;
                             break;
                         default:
                         case EDialogSizeType.MIDDLE14x12:
@@ -104,8 +109,8 @@ namespace WorldMap.UI
                 Utility.CenterAt(btns[i], new Vector2(0.5F, 0.5F), btnSize, new Vector2((i-mid)*btnSize.x, 0));
                 btns[i].GetComponent<RectTransform>().pivot = new Vector2(0.5F, 0F);
             }
-            btns[0].onClick.AddListener(delegate () { if (OK()) CloseDialog(); });
-            btns[1].onClick.AddListener(delegate () { Cancel(); CloseDialog(); });
+            btns[0].onClick.AddListener(delegate () { if (OK()) { DialogCallBack?.OK(this); CloseDialog(); } });
+            btns[1].onClick.AddListener(delegate () { Cancel(); DialogCallBack?.Cancel(); CloseDialog(); });
         }
         public void SetTitle(string title)
         {

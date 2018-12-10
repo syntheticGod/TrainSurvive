@@ -12,7 +12,7 @@ using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
-    public class TownController : WindowsController, Observer
+    public class TownController : WindowsController
     {
         private const int ECHO_CODE_TRAIN = 1;
         private const int ECHO_CODE_TEAM = 2;
@@ -21,15 +21,9 @@ namespace WorldMap.Controller
         private Model.Town currentTown;
         private Text townInfoText;
         protected override void OnEnable()
-        {
-            Train.Instance.Attach(obs: this, echo: ECHO_CODE_TRAIN);
-            Team.Instance.Attach(obs: this, echo: ECHO_CODE_TEAM);
-        }
+        { }
         protected override void OnDisable()
-        {
-            Train.Instance.Detach(obs: this);
-            Team.Instance.Detach(obs: this);
-        }
+        { }
         protected override void CreateModel()
         {
             m_windowSizeType = EWindowSizeType.BIG26x14;
@@ -77,9 +71,7 @@ namespace WorldMap.Controller
         {
             return true;
         }
-
-        protected override void UnfocusBehaviour()
-        { }
+        
         public bool TryShowTown(Vector2Int mapPos)
         {
             Model.Town town;
@@ -101,56 +93,6 @@ namespace WorldMap.Controller
             gameObject.SetActive(true);
             Debug.Log("城镇：" + town.Info);
             currentTown = town;
-        }
-        public void ObserverUpdate(int state, int echo)
-        {
-            switch (echo)
-            {
-                case ECHO_CODE_TRAIN:
-                    UpdateByTrain((Model.Train.STATE)state);
-                    break;
-                case ECHO_CODE_TEAM:
-                    UpdateByTeam((Model.Team.STATE)state);
-                    break;
-            }
-        }
-        private void UpdateByTrain(Model.Train.STATE state)
-        {
-            switch (state)
-            {
-                case Model.Train.STATE.STOP_TOWN:
-                    //Debug.Log("列车到达 城镇  通知显示城镇");
-                    //Model.Town town;
-                    //if(!world.FindTown(train.MapPosTrain, out town))
-                    //{
-                    //    Debug.LogWarning("列车所在位置不是城镇");
-                    //    return;
-                    //}
-                    //ShowTwon(town);
-                    break;
-                default:
-                    HideWindow();
-                    break;
-            }
-        }
-        private void UpdateByTeam(Model.Team.STATE state)
-        {
-            switch (state)
-            {
-                case Model.Team.STATE.STOP_TOWN:
-                    //Debug.Log("探险队到达 城镇  通知显示城镇");
-                    //Model.Town town;
-                    //if (!world.FindTown(team.MapPosTeam, out town))
-                    //{
-                    //    Debug.LogWarning("列车所在位置不是城镇");
-                    //    return;
-                    //}
-                    //ShowTwon(town);
-                    break;
-                default:
-                    HideWindow();
-                    break;
-            }
         }
         public void OnClick(BUTTON_ID id)
         {

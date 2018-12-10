@@ -238,7 +238,7 @@ namespace WorldMap {
             //初始化城镇位置数组
             map.towns = new Town[townsRowNum, townsColNum];
 
-            //获取城镇数据
+            //获取城镇数据，设置城镇属性
             for (int lineCnt = 0; lineCnt < townsRowNum; lineCnt++) {
                 // 用“,”将每个字符分割开
                 string[] curLineData = lines[lineIndex++].Split(spliter, option);
@@ -247,8 +247,13 @@ namespace WorldMap {
                     int posz = int.Parse(curLineData[col * 2 + 1]);
                     //创建城镇类
                     map.towns[lineCnt, col] = new Town(new Vector2Int(posx, posz));
+                    //设置城镇的属性
+                    TownsRailGenerate.SetTownProperty(map, new Vector2Int(lineCnt, col), map.towns[lineCnt, col].position);
                 }
             }
+
+            //城镇之间连接铁轨
+            TownsRailGenerate.BuildRails(map);
         }
 
         //读取地图的动态数据
