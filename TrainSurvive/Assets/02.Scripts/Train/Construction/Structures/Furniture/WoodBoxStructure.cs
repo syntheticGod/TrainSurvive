@@ -20,7 +20,7 @@ public class WoodBoxStructure : Structure {
         Name = "木箱",
         Description = "仓库容量上限增加",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,
         IsOnceFunction = true,

@@ -20,7 +20,7 @@ public class MagicCoreStructure : Structure {
         Name = "魔法核心",
         Description = "魔法核心",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = true,

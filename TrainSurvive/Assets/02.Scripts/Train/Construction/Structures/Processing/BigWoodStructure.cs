@@ -18,7 +18,7 @@ public class BigWoodStructure : SmallWoodStructure {
         Name = "大型制木机",
         Description = "将木板精制为强化木板，1=1",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 3,
         IsOnceFunction = false,

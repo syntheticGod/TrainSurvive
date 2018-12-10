@@ -20,7 +20,7 @@ public class Bed2Structure : BedStructure {
         Name = "双层床",
         Description = "队伍人数上限+2",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,
         IsOnceFunction = true,

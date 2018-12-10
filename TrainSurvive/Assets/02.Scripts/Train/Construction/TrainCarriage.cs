@@ -4,6 +4,7 @@
  * 创建时间：2018/12/5 18:28:01
  * 版本：v0.1
  */
+using Assets._02.Scripts.zhxUIScripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ public abstract class TrainCarriage : ISerializable {
         /// <summary>
         /// 建造耗材
         /// </summary>
-        public Cost[] BuildCosts { get; set; }
+        public ItemData[] BuildCosts { get; set; }
         /// <summary>
         /// 车厢大小
         /// </summary>
@@ -199,8 +200,7 @@ public abstract class TrainCarriage : ISerializable {
     }
 
     private void CostItems() {
-        // TODO
-        Debug.Log("TODO: COST!");
+        PublicMethod.ConsumeItems(Info.BuildCosts);
     }
 
     private void ReturnCosts() {

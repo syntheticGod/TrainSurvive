@@ -147,8 +147,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
             Person curPerson = World.getInstance().persons[personID];
-            curPerson.unequipWeapon();
-            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
+            GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID, false);
         }
         Destroy(gameObject);
     }
@@ -264,8 +263,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                             Person curPerson = World.getInstance().persons[personID];
                             curPerson.unequipWeapon();
                             curPerson.equipWeapon((Weapon)item);
-                            Debug.Log("更换装备");
-                            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
+                            GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID,false);
                         }
                     }
                 }
@@ -281,6 +279,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        World.getInstance().preDragName = this.gameObject.name;
         draggingImg = new GameObject("tempDragImg");
 
         Image tempImg = draggingImg.AddComponent<Image>();
@@ -308,7 +307,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         Destroy(GameObject.Find("tempDragImg"));
         if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
-
+            Debug.Log("asdf00");
             DestroyMyself();
 
         }
@@ -361,4 +360,5 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
             temp.transform.SetAsLastSibling();
         }
     }
+
 }

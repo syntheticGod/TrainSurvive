@@ -21,7 +21,7 @@ public class WoodTableStructure : Structure {
         Description = "可摆放小物品",
         LayerName = "Table",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 2,
         IsOnceFunction = true,

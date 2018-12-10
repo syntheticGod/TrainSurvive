@@ -20,7 +20,7 @@ public class BatteryStructure : Structure {
         Name = "蓄电池",
         Description = "存储电能的能源核心，获得电能上限1000",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = true,

@@ -31,7 +31,7 @@ namespace WorldMap.Controller
         private int cost;
         protected override void CreateModel()
         {
-            m_windowSizeType = WindowSizeType.MIDDLE14x12;
+            m_windowSizeType = EWindowSizeType.MIDDLE14x12;
             m_titleString = "学校";
             base.CreateModel();
             SetBackground("tavern_bg_01");
@@ -79,6 +79,8 @@ namespace WorldMap.Controller
             //注意：不能对ListView进行添加删除行为
             herosLayout = Utility.ForceGetComponentInChildren<HeroListView>(this, "HerosLayout");
             herosLayout.StartAxis = GridLayoutGroup.Axis.Horizontal;
+            herosLayout.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
+            herosLayout.GridConstraintCount = 1;
             RectTransform herosLayoutRect = herosLayout.GetComponent<RectTransform>();
             Utility.HLineAt(herosLayoutRect, anchor:0.8F, height:100F);
             herosLayout.onItemClick = delegate (ListViewItem item, Person person)

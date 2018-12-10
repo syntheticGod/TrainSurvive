@@ -20,7 +20,7 @@ public class CoolingRoomStructure : Structure {
         Name = "冷藏室",
         Description = "冷藏室",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 3,
         IsOnceFunction = false,

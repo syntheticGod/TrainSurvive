@@ -12,7 +12,8 @@ using Assets._02.Scripts.zhxUIScripts;
 using System;
 
 public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
-    private GameObject grid;        //包含的物品格实例
+
+    public GameObject grid;        //包含的物品格实例
     private ItemGridCtrl gridCtrl;
     public Action<Item> OnItemIn;
     public bool isEquipmentGrid = false;
@@ -27,22 +28,24 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
         if (eventData.pointerDrag.GetComponent<ItemGridCtrl>().GetController() == null || !(ChargeIn?.Invoke(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item) ?? false))
-            return;
-        grid = eventData.pointerDrag;
-        gridCtrl = grid.GetComponent<ItemGridCtrl>();
+            return; 
+        Destroy(GameObject.Find("tempDragImg"));
 
+        grid = eventData.pointerDrag;
+        Debug.Log(grid.name);
+        gridCtrl = grid.GetComponent<ItemGridCtrl>();
         if (isEquipmentGrid)
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
             Person curPerson = World.getInstance().persons[personID];
             curPerson.equipWeapon((Weapon)gridCtrl.item);
-            GameObject.Find("gcTextPanel").SendMessage("updatePanel", personID);
+            GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID,false);    //这句话存在问题，导致原来的grid直接变成了itemGrid
         }
-        InventoryCtrl tempController = grid.GetComponent<ItemGridCtrl>().GetController();
-        tempController.coreInventory.PopItem(grid.GetComponent<ItemGridCtrl>().item);
+        InventoryCtrl tempController = gridCtrl.GetController();
+        tempController.coreInventory.PopItem(gridCtrl.item);
         tempController.RemoveGrid(grid);
-
-        grid.GetComponent<ItemGridCtrl>().BindContainer(gameObject);
+        
+        gridCtrl.BindContainer(gameObject);
         grid.transform.SetParent(gameObject.transform);
         //grid.GetComponent<RectTransform>().position = Vector2.zero;
 
@@ -57,6 +60,12 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
             gridCtrl = null;
         }
         
+    }
+
+    public void ClearWithNotDestroyMyself()
+    {
+        grid = null;
+        gridCtrl = null;
     }
 
     private bool AddNum(int num)    
@@ -104,7 +113,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         }
     }
 
-    public bool GeneratorItem(int id,int num)
+    public bool GeneratorItem(int id,int num = 1)
     {
         if(grid != null)
         {

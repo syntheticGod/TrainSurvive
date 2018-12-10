@@ -18,7 +18,7 @@ public class MediumWoodStructure : SmallWoodStructure {
         Name = "中型制木机",
         Description = "将木材加工为木板，1木材=4木板",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 3,
         IsOnceFunction = false,

@@ -18,7 +18,7 @@ public class GasEngineStructure : SteamEngineStructure {
         Name = "内燃机",
         Description = "内燃机",
         WorkAll = 0,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = false,

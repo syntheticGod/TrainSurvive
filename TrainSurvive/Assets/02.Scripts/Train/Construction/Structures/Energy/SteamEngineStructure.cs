@@ -35,7 +35,7 @@ public class SteamEngineStructure : Structure {
         Name = "蒸汽机",
         Description = "燃烧各种可燃物（木炭/煤炭、各种有机物等），转化为热能",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 0,
         IsOnceFunction = false,
@@ -50,7 +50,14 @@ public class SteamEngineStructure : Structure {
     /// 可接受可燃物及默认转化率
     /// </summary>
     public virtual Dictionary<int, Conversion> AcceptableGas { get; } = new Dictionary<int, Conversion> {
-        {231, new Conversion(3, 10) }
+        {201, new Conversion(5, 10) },
+        {211, new Conversion(4, 6) },
+        {212, new Conversion(10, 25) },
+        {213, new Conversion(4, 12) },
+        {214, new Conversion(5, 15) },
+        {221, new Conversion(6, 30) },
+        {222, new Conversion(6, 30) },
+        {223, new Conversion(4, 8) },
     };
     
     /// <summary>

@@ -39,7 +39,7 @@ public class SmallWoodStructure : Structure {
         Name = "小型制木机",
         Description = "将原木处理成木材，1原木=5木材",
         WorkAll = 0.01f,
-        BuildCosts = new Cost[] { },
+        BuildCosts = new ItemData[] { },
         SpritePath = "Sprite/map/building-inn",
         Class = 3,
         IsOnceFunction = false,
