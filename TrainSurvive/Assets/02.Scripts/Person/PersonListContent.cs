@@ -10,33 +10,46 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class PersonListContent : MonoBehaviour {
-    public GameObject content;
     public UnitInventoryCtrl EquipmentCtrl;
-    
+    public Toggle togTrain;
+    public Toggle togTeam;
+    public PersonTextPanel textPanel;
     // Use this for initialization
     void Start () {
         reloadData();
         EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void reloadData()
     {
+        clearCells();
+        textPanel.clearPanel();
+        bool trainPerson_display = togTrain.isOn;
+        bool teamPerson_display = togTeam.isOn;
         World world = World.getInstance();
         int index = 0;
         foreach (Person person in world.persons)
         {
-            GameObject personCell = Resources.Load("Prefabs/PersonList/cell") as GameObject;
-            GameObject cellInstance = Instantiate(personCell);
-            PersonCell cell = (PersonCell)cellInstance.GetComponent("PersonCell");
-            cell.index = index;
+            if((trainPerson_display&&!person.ifOuting)|| (teamPerson_display && person.ifOuting))
+            {
+                GameObject personCell = Resources.Load("Prefabs/PersonList/cell") as GameObject;
+                GameObject cellInstance = Instantiate(personCell);
+                PersonCell cell = (PersonCell)cellInstance.GetComponent("PersonCell");
+                cell.index = index;                
+                cell.setCellText("人物名：" + person.name);
+                cellInstance.transform.parent = gameObject.transform;
+            }
             index++;
-            cell.setCellText("人物名：" + person.name);
-            cellInstance.transform.parent = content.transform;
+        }
+    }
+
+    public void clearCells()
+    {
+        int childCount = transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
         }
     }
 }

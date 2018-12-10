@@ -38,6 +38,8 @@ public class PersonCell : MonoBehaviour {
     {
         PersonTextPanel panelCs=(PersonTextPanel)textPanel.GetComponent("PersonTextPanel");
         panelCs.updatePanel(index);
+        Button bt = (Button)gameObject.GetComponent("Button");
+        bt.Select();
     }
 
 }
