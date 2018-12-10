@@ -179,7 +179,6 @@ public class Person{
         this.weapon = (Weapon)weapon.Clone();
         weaponId = weapon.id;
         hasWeapon = true;
-        Debug.Log("装备武器");
     }
 
     public void unequipWeapon()

@@ -212,6 +212,7 @@ namespace Assets._02.Scripts.zhxUIScripts
                 mappingItem = item.Clone();               
                 mappingItem.currPileNum = allowNum;
                 _items.Add(mappingItem);
+                
                 controller.AddGrid(mappingItem);                 //为前台添加物品
                 
             }
