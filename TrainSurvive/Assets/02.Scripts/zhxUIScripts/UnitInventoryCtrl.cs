@@ -12,6 +12,7 @@ using Assets._02.Scripts.zhxUIScripts;
 using System;
 
 public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
+
     public GameObject grid;        //包含的物品格实例
     private ItemGridCtrl gridCtrl;
     public Action<Item> OnItemIn;
@@ -27,7 +28,7 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
     public void OnDrop(PointerEventData eventData)                                    //仅在本空间为空的情况下触发
     {
         if (eventData.pointerDrag.GetComponent<ItemGridCtrl>().GetController() == null || !(ChargeIn?.Invoke(eventData.pointerDrag.GetComponent<ItemGridCtrl>().item) ?? false))
-            return;
+            return; 
         Destroy(GameObject.Find("tempDragImg"));
 
         grid = eventData.pointerDrag;
