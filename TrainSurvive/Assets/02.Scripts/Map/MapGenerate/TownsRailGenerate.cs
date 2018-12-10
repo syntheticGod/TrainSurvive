@@ -63,7 +63,7 @@ namespace WorldMap {
                 //生成城镇
                 BuildTowns();
                 //生成铁轨
-                BuildRails();
+                BuildRails(mapData);
             }
 
             //对城镇进行绘画
@@ -105,7 +105,7 @@ namespace WorldMap {
                     towns[i, j] = new Town(new Vector2Int(posx, posz));
 
                     //设置城镇的逻辑属性
-                    SetTownProperty(new Vector2Int(i, j), towns[i, j].position);
+                    SetTownProperty(mapData, new Vector2Int(i, j), towns[i, j].position);
                 }
             }
         }
@@ -137,34 +137,36 @@ namespace WorldMap {
             }
         }
 
-        public void SetTownProperty(Vector2Int townPos, Vector2Int mapPos) {
+        public static void SetTownProperty(Map map, Vector2Int townPos, Vector2Int mapPos) {
             //设置城镇属性
-            mapData.spowns[mapPos.x, mapPos.y].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
-            mapData.spowns[mapPos.x, mapPos.y].SetTownId(townPos);
+            map.spowns[mapPos.x, mapPos.y].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
+            map.spowns[mapPos.x, mapPos.y].SetTownId(townPos);
         }
 
         /**生成铁轨
          *只在相邻大块的城镇生成铁轨
          * 城镇连接规律，TownPos的x轴或y轴越小为from，下一个为to
          */
-        public void BuildRails() {
+        public static void BuildRails(Map map) {
             //获取行数和列数
-            int townRowNum = mapData.towns.GetLength(0);
-            int townColNum = mapData.towns.GetLength(1);
+            int townRowNum = map.towns.GetLength(0);
+            int townColNum = map.towns.GetLength(1);
+            //获取城镇
+            Town[,] towns = map.towns;
 
             //先连接第一行
             for (int j = 1; j < townRowNum; j++) {
-                ConnectTown(towns[0, j - 1], towns[0, j]);
+                ConnectTown(map, towns[0, j - 1], towns[0, j]);
             }
 
             //在连接每一行
             for (int i = 1; i < townRowNum; i++) {
                 //连接每一行的第一个
-                ConnectTown(towns[i - 1, 0], towns[i, 0]);
+                ConnectTown(map, towns[i - 1, 0], towns[i, 0]);
 
                 for (int j = 1; j < townColNum; j++) {
-                    ConnectTown(towns[i, j - 1], towns[i, j]);
-                    ConnectTown(towns[i - 1, j], towns[i, j]);
+                    ConnectTown(map, towns[i, j - 1], towns[i, j]);
+                    ConnectTown(map, towns[i - 1, j], towns[i, j]);
                 }
             }
         }
@@ -173,7 +175,7 @@ namespace WorldMap {
          * 铁轨的生成算法是，先使x轴相等，再使y轴相等
          * 根据铁轨的路径和转折点绘画出当前铁轨
          */
-        private void ConnectTown(Town fromTown, Town toTown) {
+        private static void ConnectTown(Map map, Town fromTown, Town toTown) {
             //获得城镇的坐标
             Vector2Int from = fromTown.position;
             Vector2Int to = toTown.position;
@@ -194,7 +196,7 @@ namespace WorldMap {
 
                 for (posx = from.x + dir; posx != to.x; posx += dir) {
                     //去掉重复铁轨
-                    if (mapData.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
+                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
                     railPath.Add(new Vector2Int(posx, posz));
@@ -206,7 +208,7 @@ namespace WorldMap {
                 if (from.y != to.y) {
                     posx = to.x;
                     posz = from.y;
-                    if (mapData.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
+                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
 
@@ -233,7 +235,7 @@ namespace WorldMap {
                 int posx = (int)to.x;
                 for (int posz = (int)from.y + dir; posz != (int)to.y; posz += dir) {
                     //去掉重复铁轨
-                    if (mapData.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
+                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
                     railPath.Add(new Vector2Int(posx, posz));
@@ -260,15 +262,16 @@ namespace WorldMap {
 
             //设置铁轨的属性
             //记录起始和终止的城镇坐标
-            Vector2Int fromTownPos = mapData.spowns[from.x, from.y].townPos;
-            Vector2Int toTownPos = mapData.spowns[to.x, to.y].townPos;
+            Vector2Int fromTownPos = map.spowns[from.x, from.y].townPos;
+            Vector2Int toTownPos = map.spowns[to.x, to.y].townPos;
 
             //如果无拐弯的铁轨
             int directRailNum = railTurnAngle == -1 ? railPath.Count : railPath.Count - 1;
             //先绘画出x轴方向的铁轨
             for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++) {
                 //设置铁轨属性
-                SetSpawnPointRailProperty(railPath[curRailIndex].x,
+                SetSpawnPointRailProperty(map, 
+                    railPath[curRailIndex].x,
                     railPath[curRailIndex].y,
                     fromTownPos, toTownPos);
             }
@@ -276,7 +279,8 @@ namespace WorldMap {
             //x轴最后一段铁轨特殊处理（拐弯处）
             if (railTurnAngle != -1) {
                 //设置铁轨属性
-                SetSpawnPointRailProperty(railPath[railPath.Count - 1].x,
+                SetSpawnPointRailProperty(map,
+                    railPath[railPath.Count - 1].x,
                     railPath[railPath.Count - 1].y,
                     fromTownPos, toTownPos);
             }
@@ -352,10 +356,10 @@ namespace WorldMap {
         /// <param name="posz"></param>
         /// <param name="fromTownPos">起始城镇的位置</param>
         /// <param name="toTownPos">终点城镇的位置</param>
-        private void SetSpawnPointRailProperty(int posx, int posz, Vector2Int fromTownPos, Vector2Int toTownPos) {
-            mapData.spowns[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
-            mapData.spowns[posx, posz].SetStartTownId(fromTownPos);
-            mapData.spowns[posx, posz].SetTownId(toTownPos);
+        private static void SetSpawnPointRailProperty(Map map, int posx, int posz, Vector2Int fromTownPos, Vector2Int toTownPos) {
+            map.spowns[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
+            map.spowns[posx, posz].SetStartTownId(fromTownPos);
+            map.spowns[posx, posz].SetTownId(toTownPos);
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace TestWorldMap
         //设置城镇相应的属性
         private void SetTown(int x, int z)
         {
-            townsRailGenerate.SetTownProperty(new Vector2Int(x, z), town[x, z]);
+            TownsRailGenerate.SetTownProperty(map, new Vector2Int(x, z), town[x, z]);
             Debug.Log(x + " " + z);
         }
         [OneTimeSetUp]
@@ -87,7 +87,7 @@ namespace TestWorldMap
             }
 
             //连接城镇，构造铁轨
-            townsRailGenerate.BuildRails();
+            TownsRailGenerate.BuildRails(map);
         }
     }
 }
