@@ -17,6 +17,7 @@ public class PersonListContent : MonoBehaviour {
     // Use this for initialization
     void Start () {
         reloadData();
+        Debug.Log("asdf");
         //EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
     }
 	
@@ -24,6 +25,8 @@ public class PersonListContent : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    //public void WeaponChargeIn()
 
     public void reloadData()
     {
