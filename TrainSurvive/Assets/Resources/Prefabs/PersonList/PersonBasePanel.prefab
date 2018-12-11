@@ -441,6 +441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 1131899217210568}
+  EquipmentCtrl: {fileID: 114377185676482794}
 --- !u!114 &114117908532047032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -645,6 +646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   isEquipmentGrid: 1
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &114405955799365496
@@ -667,6 +669,7 @@ MonoBehaviour:
   ap: {fileID: 114126084944066684}
   hpRec: {fileID: 114925919176904608}
   apRec: {fileID: 114575543554121530}
+  WeaponGridCtrl: {fileID: 114377185676482794}
 --- !u!114 &114471870446905248
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1242,7 +1245,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 396, y: -110}
+  m_AnchoredPosition: {x: 107, y: -110}
   m_SizeDelta: {x: -879, y: -405.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224191242024664674

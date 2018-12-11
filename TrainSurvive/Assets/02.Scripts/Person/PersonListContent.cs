@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using Assets._02.Scripts.zhxUIScripts;
 
 public class PersonListContent : MonoBehaviour {
     public GameObject content;
@@ -16,7 +17,7 @@ public class PersonListContent : MonoBehaviour {
     // Use this for initialization
     void Start () {
         reloadData();
-        EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
+        //EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
     }
 	
 	// Update is called once per frame
