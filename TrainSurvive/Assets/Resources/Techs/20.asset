@@ -9,13 +9,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e5daadb8df7cf8479aa701891ae3d7e, type: 3}
-  m_Name: 1
+  m_Name: 20
   m_EditorClassIdentifier: 
-  ID: 1
-  Dependencies: 
-  Name: "\u79D1\u5B66\u539F\u7406I"
+  ID: 20
+  Dependencies: 0c000000
+  Name: "\u77F3\u5DE5\u5B66I"
   Description: 
-  TotalWorks: 0
+  TotalWorks: 6
   OnCompleted:
     Class: {fileID: 0}
     AcceptTypes: []

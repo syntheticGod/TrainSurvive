@@ -68,12 +68,10 @@ public class TechTreeManager : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-
-        // 初始化默认启用科技
-        if (Techs[0].TechState != Tech.State.COMPLETED)
-            Techs[0].StartWorking();
-
+        
         for (int i = 0; i < Techs.Length; i++) {
+            if (Techs[i] == null)
+                continue;
             if (Techs[i].TechState == Tech.State.WORKING) {
                 CurrentWorking = i;
             }

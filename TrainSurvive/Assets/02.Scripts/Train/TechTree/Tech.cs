@@ -82,6 +82,10 @@ public class Tech : ISerializable {
 
     public Tech(int id) {
         ID = id;
+        if (TechTreeManager.TechSettings[id].TotalWorks == 0) {
+            IsCompleted = true;
+            TechTreeManager.TechSettings[ID].OnCompleted.Invoke();
+        }
     }
 
     /// <summary>

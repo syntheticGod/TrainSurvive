@@ -14,6 +14,7 @@ public class TechUIButton : MonoBehaviour {
     }
 
     private IEnumerator ResearchProgressChange(ProgressButton progressButton) {
+        progressButton.MaxValue = 1;
         while (true) {
             while (TechTreeManager.Instance.CurrentWorking >= 0 && TechTreeManager.Instance.Techs[TechTreeManager.Instance.CurrentWorking].TechState == Tech.State.WORKING) {
                 progressButton.MaxValue = TechTreeManager.TechSettings[TechTreeManager.Instance.CurrentWorking].TotalWorks;

@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e5daadb8df7cf8479aa701891ae3d7e, type: 3}
-  m_Name: 1
+  m_Name: 8
   m_EditorClassIdentifier: 
-  ID: 1
+  ID: 8
   Dependencies: 
-  Name: "\u79D1\u5B66\u539F\u7406I"
+  Name: "\u84B8\u6C7D\u52A8\u529B"
   Description: 
   TotalWorks: 0
   OnCompleted:
