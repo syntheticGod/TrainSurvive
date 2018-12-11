@@ -2358,12 +2358,52 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: -60.55005
       objectReference: {fileID: 0}
+    - target: {fileID: 224828970548888820, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224183317346088358, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224798414638686800, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224048146476191786, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224836055288761086, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 749.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 224836055288761086, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -61.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 224836055288761086, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 1498.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 224836055288761086, guid: 37691c78af94465408544f14055f7a58,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 122.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37691c78af94465408544f14055f7a58, type: 2}
   m_IsPrefabAsset: 0
 --- !u!224 &415653494 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 224384656646802174, guid: 37691c78af94465408544f14055f7a58,
+  m_CorrespondingSourceObject: {fileID: 224836055288761086, guid: 37691c78af94465408544f14055f7a58,
     type: 2}
   m_PrefabInternal: {fileID: 415653493}
 --- !u!1 &426080440

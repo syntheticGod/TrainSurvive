@@ -102,17 +102,13 @@ namespace WorldBattle {
                     Quaternion.identity);
                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
-                //绑定gameObject
-                curPlayer.AddComponent<EnemyAI>();
+                MonsterInitializer mi = new MonsterInitializer();
+                mi.initializeMonster(ref curPlayer);
 
-                //将生成的脚本和person数组绑定
-                BattleActor battleActor = curPlayer.GetComponent<EnemyAI>();
-                //绑定对应的gameObject
-                battleActor.playerPrefab = curPlayer;
-
-                //初始化人物属性
-                initBattleEnemy(ref battleActor, i);
-
+                BattleActor battleActor = mi.getBattleActor();
+                battleActor.pos = battleMapLen;
+                battleActor.myId = i;
+                battleActor.isPlayer = false;
                 //创建一个新的panel
                 GameObject curPanel = Instantiate(enemyPanel);
                 //将panel增加到panel列表中
@@ -440,6 +436,7 @@ namespace WorldBattle {
 
         //敌人数值相应的削弱
         private float enemyPara = 0.2f;
+        /*
         //初始化出战对应的敌人，并初始化对应出场的位置
         void initBattleEnemy(ref BattleActor person, int i) {
             //初始化人物各属性值(随机)，只做测试使用
@@ -466,7 +463,7 @@ namespace WorldBattle {
             //初始化人物是否为玩家角色
             person.isPlayer = false;
         }
-
+        */
         /// <summary>
         /// 判断本次战斗是否结束
         /// 每次有角色死亡时调用
