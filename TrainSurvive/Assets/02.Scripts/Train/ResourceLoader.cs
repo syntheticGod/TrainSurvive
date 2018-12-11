@@ -10,14 +10,25 @@ using UnityEngine;
 
 public class ResourceLoader {
 
-    private static Dictionary<string, Object> Resources { get; } = new Dictionary<string, Object>();
+    private static Dictionary<string, object> Cache { get; } = new Dictionary<string, object>();
     
-    public static T GetResource<T>(string path) where T : Object {
-        if (Resources.ContainsKey(path)) {
-            return Resources[path] as T;
+    public static T GetResource<T>(string path, bool cache = true) where T : Object {
+        if (cache && Cache.ContainsKey(path)) {
+            return Cache[path] as T;
         }
-        T o = UnityEngine.Resources.Load<T>(path);
-        Resources.Add(path, o);
+        T o = Resources.Load<T>(path);
+        if (cache)
+            Cache.Add(path, o);
+        return o;
+    }
+
+    public static T[] GetResources<T>(string path, bool cache = true) where T : Object {
+        if (cache && Cache.ContainsKey(path)) {
+            return Cache[path] as T[];
+        }
+        T[] o = Resources.LoadAll<T>(path);
+        if (cache)
+            Cache.Add(path, o);
         return o;
     }
 }

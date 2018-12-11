@@ -47,8 +47,8 @@ public class ResearchBench2Structure : Structure {
                 max = Mathf.Max((structure as ResearchBench2Structure).Ratio, max);
             }
         }
-        for (int i = 0; i < TechTreeManager.Techs.Length; i++) {
-            TechTreeManager.Techs[i].WorkSpeedRatio = max;
-        }
+        //for (int i = 0; i < TechTreeManager.Techs.Length; i++) {
+        //    TechTreeManager.Techs[i].WorkSpeedRatio = max;
+        //}
     }
 }

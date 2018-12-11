@@ -11,17 +11,17 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 [Serializable]
-public class Carpentry2Tech : Tech {
-    public Carpentry2Tech() : base() { }
-    protected Carpentry2Tech(SerializationInfo info, StreamingContext context) : base(info, context) { }
+public class Carpentry2Tech  {
+    //public Carpentry2Tech() : base() { }
+    //protected Carpentry2Tech(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-    public override int[] Dependencies { get; } = { 4 };
-    public override string Name { get; } = "高等木工";
-    public override string Description { get; } = "高等木工";
-    public override float TotalWorks { get; } = 5 * 6;
+    //public override int[] Dependencies { get; } = { 4 };
+    //public override string Name { get; } = "高等木工";
+    //public override string Description { get; } = "高等木工";
+    //public override float TotalWorks { get; } = 5 * 6;
 
-    public override void OnCompleted() {
-        ConstructionManager.StructureUnlocks[14] = true;
-        ConstructionManager.StructureUnlocks[26] = true;
-    }
+    //public override void OnCompleted() {
+    //    ConstructionManager.StructureUnlocks[14] = true;
+    //    ConstructionManager.StructureUnlocks[26] = true;
+    //}
 }
