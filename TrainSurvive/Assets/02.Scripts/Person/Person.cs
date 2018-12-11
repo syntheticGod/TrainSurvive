@@ -60,8 +60,6 @@ public class Person{
     public Weapon weapon = null;
 
 
-    [NonSerialized]
-    private int lastWeaponId = -1;
     private Person()
     {
         //保留以后用
@@ -114,7 +112,7 @@ public class Person{
         double atk = 10 * (1 + 0.05 * strength);
         if (hasWeapon)
         {
-   
+            atk = atk * weapon.facAtk;
         }
         return Math.Round(atk, numsLeft);
     }
@@ -123,7 +121,7 @@ public class Person{
         double ats = 1 * (1 + 0.03 * agile);
         if (hasWeapon)
         {
-
+            ats = ats * weapon.facAts;
         }
         return Math.Round(ats, numsLeft);
     }
@@ -132,7 +130,7 @@ public class Person{
         double spd = 1 * (1 + 0.02 * agile);
         if (hasWeapon)
         {
-
+            spd = spd * weapon.facSpd;
         }
         return Math.Round(spd, numsLeft);
     }
@@ -141,16 +139,16 @@ public class Person{
         double crc = 0.02 * technique;
         if (hasWeapon)
         {
-
+            crc = crc + weapon.modCrc;
         }
         return Math.Round(crc, numsLeft);
     }
     public double getValCrd()
     {
-        double crd = 1.6 * (1 + 0.03 * technique);
+        double crd = 1.6  + 0.03 * technique;
         if (hasWeapon)
         {
-
+            crd = crd + weapon.modCrd;
         }
         return Math.Round(crd, numsLeft);
     }
@@ -161,7 +159,7 @@ public class Person{
     }
     public double getValErate()
     {
-        double num = 1 * (0 + 0.02 * agile);
+        double num =  0.02 * agile;
         return Math.Round(num, numsLeft);
     }
     public double getRange()
@@ -169,9 +167,18 @@ public class Person{
         double num = 1;
         if (hasWeapon)
         {
-            //num=..
+            num = weapon.range;
         }
         num = num * (1 + 0.03 * technique);
+        return Math.Round(num, numsLeft);
+    }
+    public double getValHit()
+    {
+        double num = 1;
+        if (hasWeapon)
+        {
+            num = weapon.modHit;
+        }
         return Math.Round(num, numsLeft);
     }
     public void equipWeapon(Weapon weapon)

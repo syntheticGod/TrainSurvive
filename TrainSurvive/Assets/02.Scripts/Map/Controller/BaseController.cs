@@ -12,7 +12,6 @@ namespace WorldMap.Controller
 {
     public abstract class BaseController : MonoBehaviour
     {
-        private static BaseController focusingController = null;
         protected WorldForMap world;
         protected RectTransform rectTransform { get { return gameObject.GetComponent<RectTransform>(); } }
         private Vector2 leftMouseDownPosition;
@@ -53,11 +52,8 @@ namespace WorldMap.Controller
         { }
         public bool Focus()
         {
-            if(focusingController != null && focusingController != this)
-                focusingController.UnfocusBehaviour();
             if (!FocusBehaviour())
                 return false;
-            focusingController = this;
             return true;
         }
         /// <summary>
@@ -69,7 +65,6 @@ namespace WorldMap.Controller
         /// TRUE：允许焦距
         /// </returns>
         protected abstract bool FocusBehaviour();
-        protected abstract void UnfocusBehaviour();
         protected abstract void CreateModel();
         /// <summary>
         /// 设置鼠标的状态

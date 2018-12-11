@@ -80,10 +80,11 @@ public class World {
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
     private uint energy = 0;
+    private uint money=100000;
     private uint foodInMax = 10000;
     private uint foodOutMax = 1000;
     private uint energyMax = 1000;
-    public int money;
+    
     
     public string preDragName;
     public List<ItemData> itemDataInTrain = new List<ItemData>();
@@ -164,6 +165,10 @@ public class World {
     {
         return foodOut;
     }
+    public uint getMoney()
+    {
+        return money;
+    } 
     public uint getFoodOutMax()
     {
         return foodOutMax;
@@ -333,7 +338,26 @@ public class World {
         }
         return result;
     }
-   
+    /// <summary>
+    /// num可为负代表减少
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns>false代表金钱不够，true代表金钱够</returns>
+    public bool addMoney(int num)
+    {
+        bool result = true;
+        if ((money + num) < 0)
+        {
+            result = false;
+        }
+        else
+            money = (uint)(money + num);
+        if (resourceUI != null)
+        {
+            resourceUI.setMoney(money);
+        }
+        return result;
+    }
     /// <summary>
     /// num可为负代表减少
     /// </summary>
@@ -413,6 +437,11 @@ public class World {
             return totalProperty;
     }
 
-    
+    public static void destroyWorld()
+    {
+        instance = null;
     }
+    }
+
+
 

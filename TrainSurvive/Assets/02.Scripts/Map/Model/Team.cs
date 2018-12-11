@@ -52,11 +52,8 @@ namespace WorldMap.Model
                 }
             }
         }
-        //人数
-        private List<Person> persons;
-        public int PersonCount { get { return persons==null?0:persons.Count; } }
-        //探险队的视野范围
-        private int distView;
+        //探险队是否可移动
+        public bool IsMovable { get; set; } = true;
         //探险队的移动速度
         private float velocity = 0.0F;
         //移动时下一临近块
@@ -102,7 +99,7 @@ namespace WorldMap.Model
         /// <returns></returns>
         public bool Run(ref Vector2 current)
         {
-            if (!IsMoving) return false;
+            if (!IsMoving || !IsMovable) return false;
             Vector2 currentNext = current;
             Vector2 direction = nextStopPosition - current;
             if (Utility.ApproximatelyInView(direction, Vector2.zero))
@@ -175,7 +172,6 @@ namespace WorldMap.Model
         public bool GoBackToTrain()
         {
             State = STATE.IN_TRAIN;
-            persons = null;
             return true;
         }
         /// <summary>
@@ -185,8 +181,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("探险队：招募到" + theOne.name);
-            theOne.ifOuting = true;
-            persons.Add(theOne);
+            world.TeamRecruit(theOne);
         }
         /// <summary>
         /// 移动到指定坐标
@@ -197,8 +192,8 @@ namespace WorldMap.Model
         {
             //判断目标坐标是否在地图内
             if (!map.IfInter(target)) return false;
-            //判断目标是否正在移动
-            if (IsMoving) return false;
+            //判断目标是否正在移动、或者不可移动
+            if (IsMoving || !IsMovable) return false;
             nextStopPosition = StaticResource.BlockCenter(target);
             //Debug.Log("Position：当前位置：" + PosTeam + " 移动到：" + nextStopPosition);
             //Debug.Log("Index：当前位置：" + StaticResource.BlockIndex(PosTeam) + " 移动到：" + target);

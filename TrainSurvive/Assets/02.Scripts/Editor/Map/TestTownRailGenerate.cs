@@ -16,7 +16,7 @@ using WorldMap;
 
 namespace TestWorldMap {
     [TestFixture]
-    public class TestIMapForTrain {
+    public class TestTownRailGenerate {
 
         private enum BLOCK_TYPE {
             NONE = -1,
@@ -70,7 +70,7 @@ namespace TestWorldMap {
 
         //设置城镇相应的属性
         private void SetTown(int x, int z) {
-            townsRailGenerate.SetTownProperty(new Vector2Int(x, z), town[x, z]);
+            TownsRailGenerate.SetTownProperty(map, new Vector2Int(x, z), town[x, z]);
             Debug.Log(x + " " + z);
         }
         private void SetRail(int x, int z) {
@@ -88,7 +88,7 @@ namespace TestWorldMap {
 
             //设置城镇铁轨生成类
             //townsRailGenerate = new TownsRailGenerate();
-            townsRailGenerate = GameObject.Find("townsRailGenerate").GetComponent<TownsRailGenerate>();
+            townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
             townsRailGenerate.mapData = map;
             townsRailGenerate.towns = map.towns;
 
@@ -101,7 +101,7 @@ namespace TestWorldMap {
             }
 
             //连接城镇，构造铁轨
-            townsRailGenerate.BuildRails();
+            TownsRailGenerate.BuildRails(map);
         }
 
         [OneTimeTearDown]

@@ -55,7 +55,26 @@ namespace WorldMap.UI
         public ScrollType m_scrollType = ScrollType.Horizontal;
         public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
         public GameObject m_itemContentPrefab;
-        public bool m_selectable = true;
+        private const int UNSELECTED = -1;
+        /// <summary>
+        /// 取消选择功能时，取消之前选择的。
+        /// 如果再次开启选择功能时，前一次选择的会再次亮起。
+        /// </summary>
+        public bool IfSelectable
+        {
+            set
+            {
+                m_ifSelectable = value;
+                if (!m_ifSelectable)
+                    lastClickedItem?.ShowBaseColor();
+                else
+                    lastClickedItem?.ShowSelectedColor();
+            }
+            get { return m_ifSelectable; }
+        }
+        public int SelectIndex { get; set; } = UNSELECTED;
+        private bool m_ifSelectable = true;
+        public bool IsSelectNothing { get { return !IfSelectable || SelectIndex == UNSELECTED; } }
         protected Vector2 cellSize = new Vector2(100.0F, 100.0F);
         public float defaultScrollRectSensitivity = 15F;
         /// <summary>
@@ -289,6 +308,13 @@ namespace WorldMap.UI
         public void CallbackItemClick(ListViewItem item)
         {
             int index = items.IndexOf(item);
+            if (IfSelectable)
+            {
+                SelectIndex = index;
+                if (lastClickedItem != null && item != lastClickedItem)
+                    lastClickedItem.ShowBaseColor();
+                item.ShowSelectedColor();
+            }
             if (index < GetPersistentCount())
             {
                 onPersistentItemClick?.Invoke(item, index);
@@ -297,12 +323,6 @@ namespace WorldMap.UI
             {
                 index -= GetPersistentCount();
                 onItemClick?.Invoke(item, Datas[index]);
-            }
-            if (m_selectable)
-            {
-                if (lastClickedItem != null && item != lastClickedItem)
-                    lastClickedItem.ShowBaseColor();
-                item.ShowSelectedColor();
             }
             lastClickedItem = item;
         }
@@ -439,13 +459,13 @@ namespace WorldMap.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("鼠标进入条款");
+            //Debug.Log("鼠标进入条款");
             callBackItemEnter?.Invoke(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("鼠标退出条款");
+            //Debug.Log("鼠标退出条款");
             callBackItemExit?.Invoke(this);
         }
     }

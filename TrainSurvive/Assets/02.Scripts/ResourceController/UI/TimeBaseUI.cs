@@ -22,6 +22,10 @@ public class TimeBaseUI : MonoBehaviour {
     public Text weeksAt;
     public Text curTime;
     public Text ampm;
+    public Button pauseBt;
+    public Button normalBt;
+    public Button fastBt;
+    public Button veryfaBt;
     // Use this for initialization
     void Start () {
         TimeController timeCon = TimeController.getInstance();
@@ -43,6 +47,11 @@ public class TimeBaseUI : MonoBehaviour {
         setDaysAtWeekText(daysAtWeek);
         setWeekText(weeksNum);
         setAmpm();
+
+        pauseBt.onClick.AddListener(timeCon.speed_pause);
+        normalBt.onClick.AddListener(timeCon.speed_normal);
+        fastBt.onClick.AddListener(timeCon.speed_fast);
+        veryfaBt.onClick.AddListener(timeCon.speed_veryfast);
     }
 	
 	// Update is called once per frame

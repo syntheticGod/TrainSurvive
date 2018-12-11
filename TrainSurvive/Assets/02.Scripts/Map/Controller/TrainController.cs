@@ -148,6 +148,8 @@ namespace WorldMap.Controller
                     Model.Town town;
                     if (world.FindTown(train.MapPosTrain, out town))
                     {
+                        //进入城镇后不能操作列车
+                        EnableTrain(false);
                         TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
                         townController.ShowWindow();
@@ -186,16 +188,16 @@ namespace WorldMap.Controller
             if (!(baseDialog is TeamOutPrepareDialog)) return;
             TeamOutPrepareDialog dialog = baseDialog as TeamOutPrepareDialog;
             //险队准备
-            ActiveTrain(false);
+            EnableTrain(false);
             ActiveBTs(false);
             Team.Instance.OutPrepare(Train.Instance.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
             ControllerManager.FocusController("Team", "Character");
         }
         public void Cancel()
         { }
-        private void ActiveTrain(bool active)
+        private void EnableTrain(bool active)
         {
-            Train.Instance.SetMovable(active);
+            Train.Instance.IsMovable = active;
         }
         private bool ActiveBTs(bool active)
         {
@@ -210,15 +212,11 @@ namespace WorldMap.Controller
         protected override bool FocusBehaviour()
         {
             ActiveBTs(true);
-            ActiveTrain(true);
+            EnableTrain(true);
             cameraFocus.focusLock(transform);
             return true;
         }
-
-        protected override void UnfocusBehaviour()
-        {
-        }
-
+        
         public void ObserverUpdate(int state, int echo)
         {
             switch (echo)

@@ -15,7 +15,7 @@ public class ResouceBaseUI : MonoBehaviour {
     public Slider foodOutSlider;
     public Text energyText;
     public Slider energySlider;
-
+    public Text moneyText;
     // Use this for initialization
     void Start () {
         World world = World.getInstance();
@@ -46,6 +46,9 @@ public class ResouceBaseUI : MonoBehaviour {
         energySlider.value = currentNum;
         energyText.text = currentNum + "/" + maxNum;
     }
+    public void setMoney(uint currentNum)
+    {
+        moneyText.text = currentNum.ToString();
+    }
 
-    
 }

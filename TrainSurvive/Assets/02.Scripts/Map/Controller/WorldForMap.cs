@@ -33,21 +33,22 @@ namespace WorldMap
                 p.ifOuting = false;
                 AddPerson(p);
             }
-            world.money = 9999;//9,999
+            //world.money = 9999;//9,999
         }
+        
         public bool IfMoneyEnough(int cost)
         {
-            return world.money >= cost;
+            return world.getMoney() >= cost;
         }
+        
         public bool Pay(int cost)
         {
-            if (world.money < cost) return false;
-            world.money -= cost;
-            return true;
+            return world.addMoney(-cost);
         }
         public void AddMoney(int money)
         {
-            world.money += money;
+            world.addMoney(money);
+            //world.money += money;
         }
         public void PushItemToTrain(int itemID, int numberBuy)
         {
@@ -113,7 +114,7 @@ namespace WorldMap
         {
             get
             {
-                return world.money;
+                return (int)world.getMoney();
             }
         }
         /// <summary>
@@ -219,6 +220,16 @@ namespace WorldMap
                 person.ifOuting = true;
             }
             world.ifOuting = true;
+        }
+        public void TeamRecruit(Person person)
+        {
+            person.ifOuting = true;
+            world.persons.Add(person);
+        }
+        public void TrainRecruit(Person person)
+        {
+            person.ifOuting = false;
+            world.persons.Add(person);
         }
         public void TeamSetMapPos(Vector2Int mapPos)
         {

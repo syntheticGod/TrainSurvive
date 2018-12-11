@@ -2037,7 +2037,7 @@ MonoBehaviour:
   orign: {x: 0, y: 0.7, z: 0}
   battleMapLen: 40
   personNum: 1
-  enemyNum: 5
+  enemyNum: 1
   personWidth: 0.5
   playerActors: []
   enemyActors: []
