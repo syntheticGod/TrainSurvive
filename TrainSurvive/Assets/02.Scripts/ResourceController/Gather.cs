@@ -14,10 +14,11 @@ public class Gather {
     private static int coalId = 221;
     private static int charcoalId = 222;//木炭
     private static int woodId = 223;
-    private static int copperOre = 231;
-    private static int copperIngot = 232;
-    private static int ironOre = 233;
-    private static int ironIngot = 234;
+    private static int copperOreId = 231;
+    private static int copperIngotId = 232;
+    private static int ironOreId = 233;
+    private static int ironIngotId = 234;
+    private static int rockId = 235;
     private Dictionary<int, int> possibilityMap = new Dictionary<int, int>();
     private int totalWeight=0;
     /// <summary>
@@ -41,8 +42,9 @@ public class Gather {
                 pushPossibility(wheatId, 40);
                 pushPossibility(woodId, 20);
                 pushPossibility(berryId, 20);
-                pushPossibility(copperOre, 15);
-                pushPossibility(ironOre, 5);
+                pushPossibility(copperOreId, 15);
+                pushPossibility(ironOreId, 5);
+                pushPossibility(rockId, 30);
                 break;
             case SpawnPoint.TerrainEnum.FOREST:
                 pushPossibility(woodId, 45);
@@ -51,10 +53,11 @@ public class Gather {
                 pushPossibility(coalId, 10);
                 break;
             case SpawnPoint.TerrainEnum.MOUNTAIN:
-                pushPossibility(copperOre, 45);
-                pushPossibility(ironOre, 15);
+                pushPossibility(copperOreId, 45);
+                pushPossibility(ironOreId, 15);
                 pushPossibility(coalId, 20);
                 pushPossibility(rawMeatId, 20);
+                pushPossibility(rockId, 50);
                 break;
         }
         result=calItem();

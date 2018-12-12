@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using Assets._02.Scripts.zhxUIScripts;
 
 public class PersonListContent : MonoBehaviour {
     public UnitInventoryCtrl EquipmentCtrl;
@@ -18,12 +17,9 @@ public class PersonListContent : MonoBehaviour {
     // Use this for initialization
     void Start () {
         reloadData();
-        Debug.Log("asdf");
-        //EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
+        EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
     }
 	
-
-    //public void WeaponChargeIn()
 
     public void reloadData()
     {

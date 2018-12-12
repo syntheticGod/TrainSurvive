@@ -81,11 +81,13 @@ public class World {
     public uint foodConsumed_eachPerson = 20;
     private uint energy = 0;
     private uint money=100000;
+    private uint electricity = 0;
     private uint foodInMax = 10000;
     private uint foodOutMax = 1000;
     private uint energyMax = 1000;
-    
-    
+    private uint electricityMax = 1000;
+
+
     public string preDragName;
     public List<ItemData> itemDataInTrain = new List<ItemData>();
     public List<ItemData> itemDataInTeam = new List<ItemData>();
@@ -140,6 +142,7 @@ public class World {
     public int[] abiAllOut;
     public int numIn;
     public int numOut;
+    public int personNumMax=15;
 
     [NonSerialized]
     public ResouceBaseUI resourceUI;
@@ -167,7 +170,11 @@ public class World {
     public uint getMoney()
     {
         return money;
-    } 
+    }
+    public uint getElectricity()
+    {
+        return electricity;
+    }
     public uint getFoodOutMax()
     {
         return foodOutMax;
@@ -180,7 +187,10 @@ public class World {
     {
         return energyMax;
     }
-
+    public uint getElectricityMax()
+    {
+        return electricityMax;
+    }
     /// <param name="food"></param>
     /// <returns>返回false代表资源超过最大值</returns>
     public bool setFoodIn(uint food)
@@ -362,6 +372,32 @@ public class World {
     /// </summary>
     /// <param name="num"></param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
+    public int addElectricity(int num)
+    {
+        int result = 1;
+        if ((electricity + num) < 0)
+        {
+            electricity = 0;
+            result = 0;
+        }
+        else if ((electricity + num) > electricityMax)
+        {
+            electricity = (uint)electricityMax;
+            result = 2;
+        }
+        else
+            electricity = (uint)(electricity + num);
+        if (resourceUI != null)
+        {
+            resourceUI.setElectricity(electricity, electricityMax);
+        }
+        return result;
+    }
+    /// <summary>
+    /// num可为负代表减少
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addOutMood(float num)
     {
         if ((outMood + num) < 0)
@@ -397,6 +433,7 @@ public class World {
         outVit = (uint)(outVit + num);
         return 1;
     }
+
     //食物管理
     /// <summary>
     /// 列车内人员消耗食物
