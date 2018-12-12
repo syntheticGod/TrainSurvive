@@ -30,10 +30,10 @@ public class TechSettingEditor : Editor {
         EditorGUILayout.PropertyField(descriptionProperty);
         EditorGUILayout.PropertyField(totalWorksProperty);
         
-        EditorGUILayout.LabelField(dependenciesProperty.name);
+        EditorGUILayout.LabelField(dependenciesProperty.displayName);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.Space();
-        TechSetting[] techs = GetAllTechSettings();
+        TechSetting[] techs = Resources.LoadAll<TechSetting>("Techs");
         Array.Sort(techs, (a, b) => a.ID.CompareTo(b.ID));
         mScrollPos = EditorGUILayout.BeginScrollView(mScrollPos, GUILayout.Height(Mathf.Min(10, techs.Length) * EditorGUI.GetPropertyHeight(idProperty)));
         for (int i = 0; i < techs.Length; i++) {
@@ -66,9 +66,5 @@ public class TechSettingEditor : Editor {
         EditorGUILayout.EndVertical();
 
         serializedObject.ApplyModifiedProperties();
-    }
-
-    private TechSetting[] GetAllTechSettings() {
-        return Resources.LoadAll<TechSetting>("Techs");
     }
 }

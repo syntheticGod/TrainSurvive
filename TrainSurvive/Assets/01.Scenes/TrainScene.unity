@@ -3933,8 +3933,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c49226b96b1ff944c958ad500bf70aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gas: {fileID: 90191019}
-  Slider: {fileID: 541501272}
 --- !u!114 &507910065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15145,9 +15143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1dde494657525a4181d6be7c71d1a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Raw: {fileID: 139845914}
-  Output: {fileID: 724269188}
-  Slider: {fileID: 334912499}
 --- !u!114 &1865594319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15693,9 +15688,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1dde494657525a4181d6be7c71d1a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Raw: {fileID: 1887456307}
-  Output: {fileID: 39181652}
-  Slider: {fileID: 24892514}
 --- !u!114 &1949072051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16011,8 +16003,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c49226b96b1ff944c958ad500bf70aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gas: {fileID: 1597129032}
-  Slider: {fileID: 980543532}
 --- !u!224 &2025407281
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16381,9 +16371,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1dde494657525a4181d6be7c71d1a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Raw: {fileID: 1731433356}
-  Output: {fileID: 2135498147}
-  Slider: {fileID: 2131245619}
 --- !u!114 &2105402715
 MonoBehaviour:
   m_ObjectHideFlags: 0

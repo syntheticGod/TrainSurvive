@@ -130,9 +130,8 @@ public class World {
     public int[] personTeamIDArray;
     
 
-    public List<Structure> buildInstArray = new List<Structure>();
-    public List<TrainCarriage> carriageInstArray = new List<TrainCarriage>();
-    public bool[] buildUnlock;
+    public LinkedList<Structure> buildInstArray = new LinkedList<Structure>();
+    public LinkedList<TrainCarriage> carriageInstArray = new LinkedList<TrainCarriage>();
     public bool[] carriageUnlock;
     public Tech[] techArray;
     public int techUnlock;

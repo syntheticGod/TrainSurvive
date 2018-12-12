@@ -175,12 +175,8 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         public static bool ConsumeItems(ItemData[] consumeList)    //测试成功
         {
-            for(int i=0; i< consumeList.Length; ++i)               //不能和消耗函数结合一起进行判断，因为一旦消耗掉前面的部分，后部分若不够则无法撤回
-            {
-                if (!CanConsumeItem(consumeList[i]))
-                {
-                    return false;
-                }
+            if (!CanConsumeItems(consumeList)) {              //不能和消耗函数结合一起进行判断，因为一旦消耗掉前面的部分，后部分若不够则无法撤回
+                return false;
             }
             for(int i=0; i< consumeList.Length; ++i)
             {
@@ -188,6 +184,16 @@ namespace Assets._02.Scripts.zhxUIScripts
             }
             return true;
         }
-     
+
+        public static bool CanConsumeItems(ItemData[] consumeList)    //测试成功
+        {
+            for (int i = 0; i < consumeList.Length; ++i)
+            {
+                if (!CanConsumeItem(consumeList[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

@@ -58,3 +58,11 @@ public class SerializableAction<T> : SerializableAction {
         AcceptTypes = new string[]{ typeof(T).FullName };
     }
 }
+
+[Serializable]
+public class SerializableActionForResult<T> : SerializableAction {
+
+    public new T Invoke() {
+        return (T) Method?.Invoke(null, null);
+    }
+}
