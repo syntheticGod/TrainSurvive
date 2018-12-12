@@ -121,11 +121,7 @@ public class Person
         double atk = 10 * (1 + 0.05 * strength);
         if (hasWeapon)
         {
-<<<<<<< HEAD:TrainSurvive/Assets/02.Scripts/Person/Person.cs
-
-=======
             atk = atk * weapon.facAtk;
->>>>>>> develop:TrainSurvive/Assets/02.Scripts/Character/Person/Person.cs
         }
         return Math.Round(atk, numsLeft);
     }
