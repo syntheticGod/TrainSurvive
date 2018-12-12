@@ -18,8 +18,7 @@ public class PersonListContent : MonoBehaviour {
     // Use this for initialization
     void Start () {
         reloadData();
-        Debug.Log("asdf");
-        //EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
+        EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
     }
 	
 
@@ -38,6 +37,7 @@ public class PersonListContent : MonoBehaviour {
             if((trainPerson_display&&!person.ifOuting)|| (teamPerson_display && person.ifOuting))
             {
                 GameObject personCell = Resources.Load("Prefabs/PersonList/cell") as GameObject;
+                
                 GameObject cellInstance = Instantiate(personCell);
                 PersonCell cell = (PersonCell)cellInstance.GetComponent("PersonCell");
                 cell.index = index;                

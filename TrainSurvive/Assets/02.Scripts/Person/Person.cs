@@ -71,16 +71,17 @@ public class Person{
     public static Person CreatePerson()
     {
         Person p = new Person();
-        /*
+        
         //名字随机生成(暂用数字代替）
         //p.name = UnityEngine.Random.value.ToString();
         //待添加随机逻辑（每个人物的初始属性范围？）
-        p.vitality = UnityEngine.Random.Range(0, 10);//左闭右开
-        p.strength= UnityEngine.Random.Range(0, 10);
-        p.agile= UnityEngine.Random.Range(0, 10);
-        p.technique= UnityEngine.Random.Range(0, 10);
-        p.intellgence= UnityEngine.Random.Range(0, 10);
-        */
+
+        //p.vitality = UnityEngine.Random.Range(0, 10);//左闭右开
+        //p.strength= UnityEngine.Random.Range(0, 10);
+        //p.agile= UnityEngine.Random.Range(0, 10);
+        //p.technique= UnityEngine.Random.Range(0, 10);
+        //p.intellgence= UnityEngine.Random.Range(0, 10);
+        
         return p;
     }
     //以下获取的属性均保留numsLeft位小数

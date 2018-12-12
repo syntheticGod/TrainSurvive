@@ -21,6 +21,7 @@ namespace WorldMap
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
             world.numIn = 3;
+            Debug.Log("生成人物数据");
             for (int i = 0; i < world.numIn; i++)
             {
                 Person p = Person.CreatePerson();
