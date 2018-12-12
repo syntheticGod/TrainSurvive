@@ -4,10 +4,9 @@
  * 创建时间：2018/12/5 4:06:31
  * 版本：v0.1
  */
-using UnityEngine;
-using System.Collections;
-using WorldMap.Model;
 using UnityEngine.UI;
+using WorldMap.Model;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -22,7 +21,7 @@ namespace WorldMap.UI
         }
         protected override void OnItemView(ListViewItem item, Good data)
         {
-            GoodsItem view = Utility.ForceGetComponent<GoodsItem>(item);
+            GoodsItem view = ViewTool.ForceGetComponent<GoodsItem>(item);
             ActionClickEvent buyClickEvent = new ActionClickEvent(data);
             buyClickEvent.callBackGoodsAction = callBackGoodsAction;
             view.SetActionBtnContent(ActionBtnString);

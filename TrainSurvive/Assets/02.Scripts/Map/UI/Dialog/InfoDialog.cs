@@ -5,8 +5,9 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -25,9 +26,9 @@ namespace WorldMap.UI
             GetOKBtn().colors = redColorBlock;
             SetBGColor(new Color(1F, 0.8F, 0.8F));
             DialogSizeType = EDialogSizeType.SMALL7x6;
-            InfoText = Utility.CreateText("InfoText");
-            Utility.SetParent(InfoText, this);
-            Utility.Anchor(InfoText, new Vector2(0F, 0F), new Vector2(1F, 1F), new Vector2(0F, 60F), new Vector2(0F, -60F));
+            InfoText = ViewTool.CreateText("InfoText");
+            ViewTool.SetParent(InfoText, this);
+            ViewTool.Anchor(InfoText, new Vector2(0F, 0F), new Vector2(1F, 1F), new Vector2(0F, 60F), new Vector2(0F, -60F));
         }
         protected override void AfterDialogShow()
         {

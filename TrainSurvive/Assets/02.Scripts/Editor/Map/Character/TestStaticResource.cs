@@ -5,9 +5,8 @@
  * 版本：v0.1
  */
 using NUnit.Framework;
-using UnityEngine;
 
-using WorldMap;
+using TTT.Utility;
 
 namespace TestWorldMap
 {
@@ -20,7 +19,7 @@ namespace TestWorldMap
             int maxLoop = 100;
             while (maxLoop-- > 0)
             {
-                int random = StaticResource.RandomInt(10);
+                int random = MathTool.RandomInt(10);
                 Assert.IsTrue(random < 10, "随机数大于10了");
                 Assert.IsTrue(random >= 0, "随机数小于0了");
             }

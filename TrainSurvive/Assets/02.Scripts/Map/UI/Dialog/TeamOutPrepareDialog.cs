@@ -4,10 +4,11 @@
  * 创建时间：2018/11/26 22:05:50
  * 版本：v0.1
  */
-using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -26,27 +27,27 @@ namespace WorldMap.UI
             SetTitle("选择英雄");
             //上部分
             RectTransform topLayout = new GameObject("TopLayout", typeof(Image)).GetComponent<RectTransform>();
-            Utility.SetParent(topLayout, this);
-            Utility.Anchor(topLayout, new Vector2(0F, 0.7F), new Vector2(1F, 1F), Vector2.zero, new Vector2(0F, -60F));
+            ViewTool.SetParent(topLayout, this);
+            ViewTool.Anchor(topLayout, new Vector2(0F, 0.7F), new Vector2(1F, 1F), Vector2.zero, new Vector2(0F, -60F));
             //FoodEdit
-            foodEditUI = Utility.CreateInputField("FoodEdit");
+            foodEditUI = ViewTool.CreateInputField("FoodEdit");
             foodEditUI.onEndEdit.AddListener(delegate
             {
                 Debug.Assert(int.TryParse(foodEditUI.text, out foodSelected));
                 TryShowFood();
             });
-            Utility.SetParent(foodEditUI, topLayout);
-            Utility.Anchor(foodEditUI, Vector2.zero, new Vector2(0.2F, 1F));
+            ViewTool.SetParent(foodEditUI, topLayout);
+            ViewTool.Anchor(foodEditUI, Vector2.zero, new Vector2(0.2F, 1F));
             //Plus
-            Button plus = Utility.CreateBtn("Plus", "+");
+            Button plus = ViewTool.CreateBtn("Plus", "+");
             plus.onClick.AddListener(delegate () { OnClick(BUTTON_ID.TEAM_SELECT_FOOD_PLUS); });
-            Utility.SetParent(plus, topLayout);
-            Utility.Anchor(plus, new Vector2(0.2F, 0F), new Vector2(0.3F, 1F));
+            ViewTool.SetParent(plus, topLayout);
+            ViewTool.Anchor(plus, new Vector2(0.2F, 0F), new Vector2(0.3F, 1F));
             //Utility.Anchor(plus, )
-            Button minus = Utility.CreateBtn("Minus", "-");
+            Button minus = ViewTool.CreateBtn("Minus", "-");
             minus.onClick.AddListener(delegate () { OnClick(BUTTON_ID.TEAM_SELECT_FOOD_SUBTRCT); });
-            Utility.SetParent(minus, topLayout);
-            Utility.Anchor(minus, new Vector2(0.3F, 0F), new Vector2(0.4F, 1F));
+            ViewTool.SetParent(minus, topLayout);
+            ViewTool.Anchor(minus, new Vector2(0.3F, 0F), new Vector2(0.4F, 1F));
             //已选
             herosChoosedLV = new GameObject("TeamChoosedLV").AddComponent<HeroListView>();
             herosChoosedLV.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
@@ -55,8 +56,8 @@ namespace WorldMap.UI
             herosChoosedLV.IfSelectable = false;
             herosChoosedLV.ScrollDirection = ScrollType.Horizontal;
             herosChoosedLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            Utility.SetParent(herosChoosedLV, topLayout);
-            Utility.Anchor(herosChoosedLV, new Vector2(0.4F, 0F), new Vector2(1F, 1F));
+            ViewTool.SetParent(herosChoosedLV, topLayout);
+            ViewTool.Anchor(herosChoosedLV, new Vector2(0.4F, 0F), new Vector2(1F, 1F));
             herosChoosedLV.onItemClick = delegate (ListViewItem item, Person person)
             {
                 if (herosChoosedLV.RemoveItem(person))
@@ -69,8 +70,8 @@ namespace WorldMap.UI
             herosGetReadyLV.IfSelectable = false;
             herosGetReadyLV.ScrollDirection = ScrollType.Horizontal;
             herosGetReadyLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            Utility.SetParent(herosGetReadyLV, this);
-            Utility.Anchor(herosGetReadyLV, new Vector2(0F, 0.2F), new Vector2(1F, 0.6F), new Vector2(0F, 60F), Vector2.zero);
+            ViewTool.SetParent(herosGetReadyLV, this);
+            ViewTool.Anchor(herosGetReadyLV, new Vector2(0F, 0.2F), new Vector2(1F, 0.6F), new Vector2(0F, 60F), Vector2.zero);
             Debug.Assert(herosGetReadyLV != null);
             herosGetReadyLV.onItemClick = delegate (ListViewItem item, Person person)
             {

@@ -5,8 +5,8 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
-using UnityEngine.EventSystems;
+
+using TTT.Utility;
 
 namespace WorldMap.Controller
 {
@@ -87,17 +87,17 @@ namespace WorldMap.Controller
             }
             else if ((leftMouse = Input.GetKey(KeyCode.Mouse0)) | (rightMouse = Input.GetKey(KeyCode.Mouse1)))
             {
-                if (leftMouse && !Utility.Approximately(leftMouseDownPosition, Input.mousePosition))
+                if (leftMouse && !MathTool.Approximately(leftMouseDownPosition, Input.mousePosition))
                     LeftMouseState = MouseState.Draging;
-                if (rightMouse && !Utility.Approximately(rightMouseDownPosition, Input.mousePosition))
+                if (rightMouse && !MathTool.Approximately(rightMouseDownPosition, Input.mousePosition))
                     RightMouseState = MouseState.Draging;
             }
             else if ((leftMouse = Input.GetKeyUp(KeyCode.Mouse0)) | (rightMouse = Input.GetKeyUp(KeyCode.Mouse1)))
             {
                 if (leftMouse)
-                    LeftMouseState = Utility.Approximately(leftMouseDownPosition, Input.mousePosition) ? MouseState.Click : MouseState.Up;
+                    LeftMouseState = MathTool.Approximately(leftMouseDownPosition, Input.mousePosition) ? MouseState.Click : MouseState.Up;
                 if (rightMouse)
-                    RightMouseState = Utility.Approximately(rightMouseDownPosition, Input.mousePosition) ? MouseState.Click : MouseState.Up;
+                    RightMouseState = MathTool.Approximately(rightMouseDownPosition, Input.mousePosition) ? MouseState.Click : MouseState.Up;
             }
             else
             {

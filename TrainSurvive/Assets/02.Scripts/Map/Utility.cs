@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * 描述：工具类。包含数学、视图、矩阵
+ * 作者：项叶盛
+ * 创建时间：2018/11/12 21:46:39
+ * 版本：v0.1
+ */
+
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace WorldMap
+namespace TTT.Utility
 {
     //功能类函数
-    public static class Utility
+    public static class MathTool
     {
         public static void Swap<T>(ref T my, ref T other)
         {
@@ -123,6 +127,33 @@ namespace WorldMap
         {
             return value >= left && value <= right;
         }
+
+        private static System.Random rand = new System.Random();
+        /// <summary>
+        /// 生成 [0,maxValue) 范围内的整数
+        /// </summary>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
+        public static int RandomInt(int maxValue)
+        {
+            return rand.Next(maxValue);
+        }
+        /// <summary>
+        /// 生成[minValue,maxValue)范围的整数
+        /// 如果minValue等于maxValue，则返回minValue
+        /// maxValue必须大于等于minValue
+        /// 否则异常 ArgumentOutOfRangeException
+        /// </summary>
+        /// <param name="minValue"></param>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
+        public static int RandomRange(int minValue, int maxValue)
+        {
+            return rand.Next(minValue, maxValue);
+        }
+    }
+    public static class ViewTool
+    {
         public static T ForceGetComponent<T>(GameObject gameo)
             where T : Component
         {
@@ -149,7 +180,7 @@ namespace WorldMap
         {
             Transform transform = gameo.transform.Find(name);
             T t;
-            if(transform == null)
+            if (transform == null)
             {
                 RectTransform child = new GameObject(name).AddComponent<RectTransform>();
                 child.gameObject.SetActive(active);
@@ -273,7 +304,7 @@ namespace WorldMap
             rect.pivot = new Vector2(0.5F, 0.5F);
             rect.anchorMin = anchor;
             rect.anchorMax = anchor;
-            rect.offsetMax = size/2;
+            rect.offsetMax = size / 2;
             rect.offsetMin = -rect.offsetMax;
         }
         public static void CenterAt(Component comp, Vector2 anchor, Vector2 size, Vector2 vector)
@@ -283,7 +314,7 @@ namespace WorldMap
             rect.anchorMin = anchor;
             rect.anchorMax = anchor;
             rect.offsetMin = vector - size / 2;
-            rect.offsetMax = vector +size / 2;
+            rect.offsetMax = vector + size / 2;
         }
         public static void HLineAt(Component comp, float anchor, float height)
         {
@@ -291,7 +322,7 @@ namespace WorldMap
             rect.pivot = new Vector2(0.5F, 0.5F);
             rect.anchorMin = new Vector2(0, anchor);
             rect.anchorMax = new Vector2(1, anchor);
-            rect.offsetMax = new Vector2(0, height/2);
+            rect.offsetMax = new Vector2(0, height / 2);
             rect.offsetMin = -rect.offsetMax;
         }
         public static void VLineAt(Component comp, float anchor, float top, float bottom, float width)
@@ -300,7 +331,7 @@ namespace WorldMap
             rect.pivot = new Vector2(0.5F, 0.5F);
             rect.anchorMax = new Vector2(anchor, top);
             rect.anchorMin = new Vector2(anchor, bottom);
-            rect.offsetMax = new Vector2(width/2, 0);
+            rect.offsetMax = new Vector2(width / 2, 0);
             rect.offsetMin = -rect.offsetMax;
         }
         public static void RightTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
@@ -327,7 +358,7 @@ namespace WorldMap
             rect.pivot = pivot;
             rect.anchorMin = new Vector2(1, 0);
             rect.anchorMax = new Vector2(1, 0);
-            rect.offsetMin = vector  + (size * -pivot);
+            rect.offsetMin = vector + (size * -pivot);
             rect.offsetMax = rect.offsetMin + size;
         }
         public static void TopFull(Component comp, float height)
@@ -375,8 +406,10 @@ namespace WorldMap
         /// </summary>
         private static Matrix2x2Int roate90Clockwise = new Matrix2x2Int
         {
-            m00 = 0, m01 = -1,
-            m10 = 1, m11 = 0
+            m00 = 0,
+            m01 = -1,
+            m10 = 1,
+            m11 = 0
         };
         /// <summary>
         /// 逆时针旋转90度
@@ -385,8 +418,10 @@ namespace WorldMap
         /// </summary>
         private static Matrix2x2Int roate90Anticlockwise = new Matrix2x2Int
         {
-            m00 = 0, m01 = 1,
-            m10 = -1, m11 = 0
+            m00 = 0,
+            m01 = 1,
+            m10 = -1,
+            m11 = 0
         };
         /// <summary>
         /// 旋转180度
@@ -395,8 +430,10 @@ namespace WorldMap
         /// </summary>
         private static Matrix2x2Int roate180 = new Matrix2x2Int
         {
-            m00 = -1, m01 = 0,
-            m10 = 0, m11 = -1
+            m00 = -1,
+            m01 = 0,
+            m10 = 0,
+            m11 = -1
         };
         /// <summary>
         /// 矩阵右乘向量 

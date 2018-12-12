@@ -4,10 +4,11 @@
  * 创建时间：2018/12/2 21:05:17
  * 版本：v0.1
  */
-using Assets._02.Scripts.zhxUIScripts;
 using UnityEngine;
 using UnityEngine.UI;
-using WorldMap;
+
+using Assets._02.Scripts.zhxUIScripts;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -30,22 +31,22 @@ namespace WorldMap.UI
         };
         protected override void CreateModel()
         {
-            backgroudImage = Utility.CreateImage("Backgroud");
-            markImage = Utility.CreateImage("Mark");
+            backgroudImage = ViewTool.CreateImage("Backgroud");
+            markImage = ViewTool.CreateImage("Mark");
             markImage.sprite = Resources.Load<Sprite>(spriteFloder + "RarityMark");
-            targetImage = Utility.CreateImage("Target");
+            targetImage = ViewTool.CreateImage("Target");
         }
         protected override void InitModel()
         {
-            Utility.SetParent(backgroudImage, this);
-            Utility.SetParent(targetImage, this);
-            Utility.SetParent(markImage, this);
+            ViewTool.SetParent(backgroudImage, this);
+            ViewTool.SetParent(targetImage, this);
+            ViewTool.SetParent(markImage, this);
         }
         protected override void PlaceModel()
         {
-            Utility.FullFillRectTransform(backgroudImage, Vector2.zero, Vector2.zero);
-            Utility.FullFillRectTransform(markImage, Vector2.zero, Vector2.zero);
-            Utility.FullFillRectTransform(targetImage, Vector2.zero, Vector2.zero);
+            ViewTool.FullFillRectTransform(backgroudImage, Vector2.zero, Vector2.zero);
+            ViewTool.FullFillRectTransform(markImage, Vector2.zero, Vector2.zero);
+            ViewTool.FullFillRectTransform(targetImage, Vector2.zero, Vector2.zero);
         }
         public void SetMarkLevel(int level)
         {

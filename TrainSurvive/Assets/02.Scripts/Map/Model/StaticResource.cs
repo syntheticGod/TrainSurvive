@@ -1,12 +1,13 @@
 /*
- * 描述：静态变量
+ * 描述：静态资源
  * 作者：项叶盛
  * 创建时间：2018/11/12 21:46:39
  * 版本：v0.1
  */
+using TTT.Utility;
 using UnityEngine;
 
-namespace WorldMap
+namespace TTT.Resource
 {
     public class StaticResource
     {
@@ -73,7 +74,7 @@ namespace WorldMap
         /// <returns></returns>
         public static Vector2 WorldPosToMapPos(Vector3 worldPosition)
         {
-            return Utility.IgnoreZ(worldPosition);
+            return MathTool.IgnoreZ(worldPosition);
         }
         /// <summary>
         /// 地图平面的2D世界坐标转化为3D世界坐标
@@ -82,10 +83,9 @@ namespace WorldMap
         /// <returns></returns>
         public static Vector3 MapPosToWorldPos(Vector2 mapPosition, int level)
         {
-            return Utility.AcceptZ(mapPosition, level);
+            return MathTool.AcceptZ(mapPosition, level);
         }
 
-        private static System.Random rand = new System.Random();
         private static string[] TOWN_NAME = {
             "香格里拉", "枫丹白露", "翡冷翠", "米兰", "墨尔本",
             "爱丁堡", "普罗旺斯", "哥本哈根", "耶路撒冷", "柏林", "布达佩斯",
@@ -101,36 +101,14 @@ namespace WorldMap
         };
         public static string RandomTownName()
         {
-            return TOWN_NAME[rand.Next(TOWN_NAME.Length)];
+            return TOWN_NAME[MathTool.RandomInt(TOWN_NAME.Length)];
         }
         public static string RandomNPCName(bool man)
         {
             if (man)
-                return NPC_NAME_MAN[rand.Next(NPC_NAME_MAN.Length)];
+                return NPC_NAME_MAN[MathTool.RandomInt(NPC_NAME_MAN.Length)];
             else
-                return NPC_NAME_WOMAN[rand.Next(NPC_NAME_WOMAN.Length)];
-        }
-        /// <summary>
-        /// 生成 [0,maxValue) 范围内的整数
-        /// </summary>
-        /// <param name="maxValue"></param>
-        /// <returns></returns>
-        public static int RandomInt(int maxValue)
-        {
-            return rand.Next(maxValue);
-        }
-        /// <summary>
-        /// 生成[minValue,maxValue)范围的整数
-        /// 如果minValue等于maxValue，则返回minValue
-        /// maxValue必须大于等于minValue
-        /// 否则异常 ArgumentOutOfRangeException
-        /// </summary>
-        /// <param name="minValue"></param>
-        /// <param name="maxValue"></param>
-        /// <returns></returns>
-        public static int RandomRange(int minValue, int maxValue)
-        {
-            return rand.Next(minValue, maxValue);
+                return NPC_NAME_WOMAN[MathTool.RandomInt(NPC_NAME_WOMAN.Length)];
         }
     }
 }

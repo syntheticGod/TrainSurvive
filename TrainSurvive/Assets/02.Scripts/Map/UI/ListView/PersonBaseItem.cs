@@ -5,8 +5,8 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -15,15 +15,15 @@ namespace WorldMap.UI
         private Text text;
         protected override void CreateModel()
         {
-            text = Utility.CreateText("Name");
+            text = ViewTool.CreateText("Name");
         }
         protected override void InitModel()
         {
-            Utility.SetParent(text, this);
+            ViewTool.SetParent(text, this);
         }
         protected override void PlaceModel()
         {
-            Utility.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
+            ViewTool.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
         }
         public void ShowPerson(Person person)
         {

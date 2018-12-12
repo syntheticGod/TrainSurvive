@@ -10,6 +10,7 @@ using System;
 using UnityEngine;
 using Assets._02.Scripts.zhxUIScripts;
 
+
 [System.Serializable]
 public class Person{
     /// <summary>
@@ -58,8 +59,8 @@ public class Person{
     /// 人物所持有的武器对象
     /// </summary>
     public Weapon weapon = null;
-
-
+    private EProfession[] professions;
+    
     [NonSerialized]
     private int lastWeaponId = -1;
     private Person()

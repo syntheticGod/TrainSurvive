@@ -6,8 +6,10 @@
  */
 using UnityEngine;
 using System.Collections.Generic;
-using Assets._02.Scripts.zhxUIScripts;
+
 using WorldMap.Model;
+using TTT.Utility;
+using TTT.Resource;
 
 namespace WorldMap
 {
@@ -25,11 +27,11 @@ namespace WorldMap
             {
                 Person p = Person.CreatePerson();
                 p.name = StaticResource.RandomNPCName(true);
-                p.vitality = StaticResource.RandomRange(0, 10);
-                p.strength = StaticResource.RandomRange(0, 10);
-                p.agile = StaticResource.RandomRange(0, 10);
-                p.technique = StaticResource.RandomRange(0, 10);
-                p.intelligence = StaticResource.RandomRange(0, 10);
+                p.vitality = MathTool.RandomRange(0, 10);
+                p.strength = MathTool.RandomRange(0, 10);
+                p.agile = MathTool.RandomRange(0, 10);
+                p.technique = MathTool.RandomRange(0, 10);
+                p.intelligence = MathTool.RandomRange(0, 10);
                 p.ifOuting = false;
                 AddPerson(p);
             }

@@ -5,9 +5,9 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using WorldMap.Model;
 using UnityEngine.UI;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -27,13 +27,13 @@ namespace WorldMap.UI
             contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
             contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            infoText = Utility.CreateText("InfoText");
-            Utility.SetParent(infoText, panelContent);
+            infoText = ViewTool.CreateText("InfoText");
+            ViewTool.SetParent(infoText, panelContent);
             infoText.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
             infoText.alignment = TextAnchor.UpperLeft;
 
-            detailText = Utility.CreateText("DetailText");
-            Utility.SetParent(detailText, panelContent);
+            detailText = ViewTool.CreateText("DetailText");
+            ViewTool.SetParent(detailText, panelContent);
             detailText.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
             detailText.alignment = TextAnchor.UpperLeft;
         }
@@ -41,7 +41,7 @@ namespace WorldMap.UI
         {
             base.OnHoverPanelShow(panel, data);
             panel.DetachChildren();
-            Utility.SetParent(panelContent, panel);
+            ViewTool.SetParent(panelContent, panel);
             infoText.text = data.item.ToString();
             detailText.text = data.item.description;
         }

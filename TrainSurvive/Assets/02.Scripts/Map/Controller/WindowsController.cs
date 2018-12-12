@@ -5,9 +5,10 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
+using TTT.Utility;
 
 namespace WorldMap.Controller
 {
@@ -98,7 +99,7 @@ namespace WorldMap.Controller
         protected override void CreateModel()
         {
             RectTransform rect = rectTransform;
-            backgroundImage = Utility.ForceGetComponent<Image>(gameObject);
+            backgroundImage = ViewTool.ForceGetComponent<Image>(gameObject);
             rect.anchorMin = defaultMinAnchor;
             rect.anchorMax = defaultMaxAnchor;
             WinSizeType = m_windowSizeType;
@@ -106,21 +107,21 @@ namespace WorldMap.Controller
             {
                 //TitleBar
                 RectTransform titleBar = new GameObject("TitleBar").AddComponent<RectTransform>();
-                Utility.SetParent(titleBar, this);
-                Utility.TopFull(titleBar, 60F);
+                ViewTool.SetParent(titleBar, this);
+                ViewTool.TopFull(titleBar, 60F);
                 //Title
-                Image titleBg = Utility.CreateImage("TitleBG");
-                Utility.SetParent(titleBg, titleBar);
-                Utility.LeftTop(titleBg, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
+                Image titleBg = ViewTool.CreateImage("TitleBG");
+                ViewTool.SetParent(titleBg, titleBar);
+                ViewTool.LeftTop(titleBg, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
                 titleBg.color = new Color(0.9F, 0.9F, 0.9F);
-                titleText = Utility.CreateText("Title", m_titleString);
-                Utility.SetParent(titleText, titleBg);
-                Utility.LeftTop(titleText, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
+                titleText = ViewTool.CreateText("Title", m_titleString);
+                ViewTool.SetParent(titleText, titleBg);
+                ViewTool.LeftTop(titleText, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
                 //Close Button
-                closeBtn = Utility.CreateBtn("Close", "X");
+                closeBtn = ViewTool.CreateBtn("Close", "X");
                 closeBtn.onClick.AddListener(delegate () { HideWindow(); });
-                Utility.SetParent(closeBtn, titleBar);
-                Utility.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
+                ViewTool.SetParent(closeBtn, titleBar);
+                ViewTool.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
                 ColorBlock redColorBlock = closeBtn.colors;
                 redColorBlock.normalColor = new Color(1, 0, 0);
                 redColorBlock.highlightedColor = new Color(0.9F, 0, 0);
@@ -191,6 +192,6 @@ namespace WorldMap.Controller
         {
             return true;
         }
-        
+
     }
 }

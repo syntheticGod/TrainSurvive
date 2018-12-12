@@ -5,8 +5,11 @@
  * 版本：v0.1
  */
 using UnityEngine;
+
 using WorldMap.Model;
 using WorldMap.Controller;
+using TTT.Resource;
+
 namespace WorldMap
 {
     public class CharacterBuild : MonoBehaviour

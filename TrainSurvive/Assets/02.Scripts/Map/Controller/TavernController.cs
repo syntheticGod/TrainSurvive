@@ -4,10 +4,11 @@
  * 创建时间：2018/11/25 1:14:15
  * 版本：v0.1
  */
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
+using TTT.Utility;
 using WorldMap.Model;
 using WorldMap.UI;
 
@@ -47,8 +48,8 @@ namespace WorldMap.Controller
             tavernNPCListView.ScrollDirection = ScrollType.Vertical;
             tavernNPCListView.onItemClick = OnItemClick;
             tavernNPCListView.onPersistentItemClick = OnPersistentClick;
-            Utility.SetParent(tavernNPCListView, this);
-            Utility.Anchor(tavernNPCListView, new Vector2(0.0417F, 0.2F), new Vector2(0.292F, 0.8F));
+            ViewTool.SetParent(tavernNPCListView, this);
+            ViewTool.Anchor(tavernNPCListView, new Vector2(0.0417F, 0.2F), new Vector2(0.292F, 0.8F));
             //中间聊天窗
             townChatListView = new GameObject("TownChatListView").AddComponent<TownChatListView>();
             townChatListView.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
@@ -57,25 +58,25 @@ namespace WorldMap.Controller
             townChatListView.ScrollDirection = ScrollType.Vertical;
             townChatListView.SetCellSize(new Vector2(-1, 40F));
             townChatListView.IfSelectable = false;
-            Utility.SetParent(townChatListView, this);
-            Utility.Anchor(townChatListView, new Vector2(0.375F, 0.35F), new Vector2(0.792F, 0.8F));
+            ViewTool.SetParent(townChatListView, this);
+            ViewTool.Anchor(townChatListView, new Vector2(0.375F, 0.35F), new Vector2(0.792F, 0.8F));
             //中间选择按钮
             RectTransform chatBtnsRect = new GameObject("ChatBtns").AddComponent<RectTransform>();
             chatBtns = new Button[chatBtnsStrs.Length];
-            Utility.SetParent(chatBtnsRect, this);
-            Utility.Anchor(chatBtnsRect, new Vector2(0.375F, 0.2F), new Vector2(0.792F, 0.35F));
+            ViewTool.SetParent(chatBtnsRect, this);
+            ViewTool.Anchor(chatBtnsRect, new Vector2(0.375F, 0.2F), new Vector2(0.792F, 0.35F));
             for (int i = 0; i < chatBtns.Length; i++)
             {
-                chatBtns[i] = Utility.CreateBtn("ChatBtn" + i, chatBtnsStrs[i]);
-                Utility.SetParent(chatBtns[i], chatBtnsRect);
-                Utility.Anchor(chatBtns[i], new Vector2(0, (float)i / chatBtns.Length), new Vector2(1, (float)(i + 1) / chatBtns.Length));
+                chatBtns[i] = ViewTool.CreateBtn("ChatBtn" + i, chatBtnsStrs[i]);
+                ViewTool.SetParent(chatBtns[i], chatBtnsRect);
+                ViewTool.Anchor(chatBtns[i], new Vector2(0, (float)i / chatBtns.Length), new Vector2(1, (float)(i + 1) / chatBtns.Length));
                 BUTTON_ID bid = BUTTON_ID.TAVERN_NONE + i + 1;
                 chatBtns[i].onClick.AddListener(delegate () { OnClick(bid); });
             }
             //右边待开发区
             nullListView = new GameObject("NullListView").AddComponent<NullListView>();
-            Utility.SetParent(nullListView, this);
-            Utility.Anchor(nullListView, new Vector2(0.875F, 0.2F), new Vector2(0.958F, 0.8F));
+            ViewTool.SetParent(nullListView, this);
+            ViewTool.Anchor(nullListView, new Vector2(0.875F, 0.2F), new Vector2(0.958F, 0.8F));
             
         }
         List<Person> heros;
@@ -157,7 +158,7 @@ namespace WorldMap.Controller
                         }
                         else
                         {
-                            int randomIndex = StaticResource.RandomInt(npcs.Count);
+                            int randomIndex = MathTool.RandomInt(npcs.Count);
                             NPC randomNPC = npcs[randomIndex];
                             chat.Name = randomNPC.Name;
                             chat.Content = "你好";

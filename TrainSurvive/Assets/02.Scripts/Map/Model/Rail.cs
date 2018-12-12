@@ -5,9 +5,11 @@
  * 版本：v0.1
  */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+
+using TTT.Utility;
+using TTT.Resource;
 
 namespace WorldMap.Model
 {
@@ -55,7 +57,7 @@ namespace WorldMap.Model
         public bool CalRemanentRoad(Vector2 position, bool movePositive, ref float remanentRoad)
         {
             remanentRoad = 0.0F;
-            if (Utility.Approximately(position, movePositive ? End : Start))
+            if (MathTool.Approximately(position, movePositive ? End : Start))
                 return true;
             int start = 0, end = 0;
             if(!FindRailByPos(position, movePositive, ref start, ref end))
@@ -110,7 +112,7 @@ namespace WorldMap.Model
             else
             {
                 //刚好抵达终点处理
-                if (Utility.ApproximatelyInView(delta, remanentRoad))
+                if (MathTool.ApproximatelyInView(delta, remanentRoad))
                 {
                     Debug.Log("到达拐点或终点——刚好");
                     passCenterOfBlock = true;
@@ -158,8 +160,8 @@ namespace WorldMap.Model
         /// <returns></returns>
         private bool IfPosOnTheRail(Vector2 start, Vector2 end, Vector2 position)
         {
-            return Utility.IfBetweenLeft(start.x, end.x, position.x) &&
-                    Utility.IfBetweenLeft(start.y, end.y, position.y);
+            return MathTool.IfBetweenLeft(start.x, end.x, position.x) &&
+                    MathTool.IfBetweenLeft(start.y, end.y, position.y);
         }
         /// <summary>
         /// 通过坐标点查找铁轨路段
