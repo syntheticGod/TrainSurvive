@@ -9,80 +9,80 @@
   abi 4：智力
   -->
   <!--第一专精-->
-  <profession name="骑士" sprite="knight_icon_01">
+  <profession name="骑士" sprite="knight_icon_01" type="0">
     <abiReq abi="0" Number="10" costFix="0.8"/>
   </profession>
-  <profession  name="战士" sprite="warrior_icon_01">
+  <profession  name="战士" sprite="warrior_icon_01" type="1">
     <abiReq abi="1" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="刺客" sprite="assassin_icon_01">
+  <profession name="刺客" sprite="assassin_icon_01" type="2">
     <abiReq abi="2" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="枪手" sprite="shooter_icon_01">
+  <profession name="枪手" sprite="shooter_icon_01" type="3">
     <abiReq abi="3" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="法师" sprite="enchanter_icon_01">
+  <profession name="法师" sprite="enchanter_icon_01" type="4">
     <abiReq abi="4" Number="10" costFix="0.8"/>
   </profession>
   <!--第二专精-->
   <!--split========================-->
-  <profession name="坚壁">
+  <profession name="坚壁" sprite="knight_icon_01" type="5">
     <abiReq abi="0" Number="30" costFix="0.5"/>
   </profession>
-  <profession  name="野蛮人">
+  <profession  name="野蛮人" sprite="knight_icon_01" type="6">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="1" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="后勤？">
+  <profession name="后勤？" sprite="knight_icon_01" type="7">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="2" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="铁匠？">
+  <profession name="铁匠？" sprite="knight_icon_01" type="8">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="医师？">
+  <profession name="医师？" sprite="knight_icon_01" type="9">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="勇士">
+  <profession name="勇士" sprite="knight_icon_01" type="10">
     <abiReq abi="1" Number="30" costFix="0.5"/>
   </profession>
-  <profession  name="双剑士">
+  <profession  name="双剑士" sprite="knight_icon_01" type="11">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="2" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="游侠">
+  <profession name="游侠" sprite="knight_icon_01" type="12">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="魔剑士">
+  <profession name="魔剑士" sprite="knight_icon_01" type="13">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="快攻手">
+  <profession name="快攻手" sprite="knight_icon_01" type="14">
     <abiReq abi="2" Number="30" costFix="0.5"/>
   </profession>
-  <profession name="潜行者">
+  <profession name="潜行者" sprite="knight_icon_01" type="15">
     <abiReq abi="2" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="风行者">
+  <profession name="风行者" sprite="knight_icon_01" type="16">
     <abiReq abi="2" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="鹰隼">
+  <profession name="鹰隼" sprite="knight_icon_01" type="17">
     <abiReq abi="3" Number="30" costFix="0.5"/>
   </profession>
-  <profession name="工程师">
+  <profession name="工程师" sprite="knight_icon_01" type="18">
     <abiReq abi="3" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="魔导师">
+  <profession name="魔导师" sprite="knight_icon_01" type="19">
     <abiReq abi="4" Number="30" costFix="0.5"/>
   </profession>
 </professions>

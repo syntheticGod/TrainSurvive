@@ -4,14 +4,51 @@
  * 创建时间：2018/11/12 21:46:39
  * 版本：v0.1
  */
-using TTT.Utility;
 using UnityEngine;
+using System.Xml;
+
+using TTT.Utility;
 
 namespace TTT.Resource
 {
-    public class StaticResource
+    public static class StaticResource
     {
-        private StaticResource() { }
+        private static Profession[] professions;
+        public static Profession GetProfession(EProfession professionType)
+        {
+            if (professions == null)
+            {
+                professions = new Profession[(int)EProfession.NUM];
+                string xmlString = Resources.Load("xml/profession").ToString();
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(xmlString);
+
+                XmlNode root = document.SelectSingleNode("professions");
+                string spriteFloder = root.SelectSingleNode("spriteFloder").InnerText + "/";
+
+                XmlNodeList professionList = root.SelectNodes("profession");
+                int indexOfProf = 0;
+                foreach (XmlNode professionNode in professionList)
+                {
+                    XmlNodeList abiReqList = professionNode.SelectNodes("abiReq");
+                    Profession.AbiReq[] abiReq = new Profession.AbiReq[abiReqList.Count];
+                    int indexOfAbi = 0;
+                    foreach (XmlNode abiReqNode in abiReqList)
+                    {
+                        Profession.AbiReq tempAbi = new Profession.AbiReq();
+                        tempAbi.Abi = EPersonAttribute.NONE + 1 + int.Parse(abiReqNode.Attributes["abi"].Value);
+                        tempAbi.Number = int.Parse(abiReqNode.Attributes["Number"].Value);
+                        tempAbi.costFix = float.Parse(abiReqNode.Attributes["costFix"].Value);
+                        abiReq[indexOfAbi++] = tempAbi;
+                    }
+                    EProfession eProfession = EProfession.NONE + 1 + int.Parse(professionNode.Attributes["type"].Value);
+                    string iconFile = spriteFloder + professionNode.Attributes["sprite"].Value;
+                    string name = professionNode.Attributes["name"].Value;
+                    professions[indexOfProf++] = new Profession(abiReq, name, eProfession, iconFile);
+                }
+            }
+            return professions[(int)professionType];
+        }
         //方块大小
         public static Vector2 BlockSize
         {

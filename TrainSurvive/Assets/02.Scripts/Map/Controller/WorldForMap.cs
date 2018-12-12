@@ -23,17 +23,10 @@ namespace WorldMap
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
             world.numIn = 3;
+            //在列车内部随机生成人物
             for (int i = 0; i < world.numIn; i++)
             {
-                Person p = Person.CreatePerson();
-                p.name = StaticResource.RandomNPCName(true);
-                p.vitality = MathTool.RandomRange(0, 10);
-                p.strength = MathTool.RandomRange(0, 10);
-                p.agile = MathTool.RandomRange(0, 10);
-                p.technique = MathTool.RandomRange(0, 10);
-                p.intelligence = MathTool.RandomRange(0, 10);
-                p.ifOuting = false;
-                AddPerson(p);
+                AddPerson(Person.RandomPerson());
             }
             world.money = 9999;//9,999
         }

@@ -18,14 +18,7 @@ namespace WorldMap.Model
         public int Strength { get { return PersonInfo.strength; } }
         private NPC()
         {
-            PersonInfo = Person.CreatePerson();
-            bool sex = MathTool.RandomInt(2) != 0;
-            PersonInfo.name = StaticResource.RandomNPCName(sex);
-            PersonInfo.vitality = MathTool.RandomInt(10) + 1;
-            PersonInfo.strength = MathTool.RandomInt(10) + 1;
-            PersonInfo.agile = MathTool.RandomInt(10) + 1;
-            PersonInfo.technique = MathTool.RandomInt(10) + 1;
-            PersonInfo.intelligence = MathTool.RandomInt(10) + 1;
+            PersonInfo = Person.RandomPerson();
         }
         public static NPC Random()
         {
