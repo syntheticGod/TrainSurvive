@@ -58,7 +58,7 @@ public class StructureSetting : ScriptableObject {
     [Tooltip("设施描述")]
     public string Description;
     [Tooltip("总建造工作量")]
-    public float WorkAll;
+    public float WorkAll = 0.01f;
     [Tooltip("建造耗材")]
     public ItemData[] BuildCosts;
     [Tooltip("Sprite")]
