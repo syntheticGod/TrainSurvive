@@ -45,7 +45,7 @@ public class SceneZoomer : MonoBehaviour {
                 }else if(transform.position.y - value < -MaxZoom) {
                     transform.Translate(0, value - Camera.main.orthographicSize, 0, Space.World);
                 }
-                float x = World.getInstance().carriageInstArray[World.getInstance().carriageInstArray.Count - 1].Position.x - LeftPadding;
+                float x = ConstructionManager.Instance.Carriages.Last.Value.Position.x - LeftPadding;
                 if (transform.position.y + value * Camera.main.aspect > RightBound) {
                     transform.Translate(Camera.main.orthographicSize - value * Camera.main.aspect, 0, 0, Space.World);
                 } else if (transform.position.y - value * Camera.main.aspect < x) {
@@ -63,7 +63,7 @@ public class SceneZoomer : MonoBehaviour {
                 if ((newPos.y + Camera.main.orthographicSize <= MaxZoom || v > 0) && (newPos.y - Camera.main.orthographicSize >= -MaxZoom || v < 0)) {
                     transform.Translate(0, -v, 0, Space.World);
                 }
-                float x = World.getInstance().carriageInstArray[World.getInstance().carriageInstArray.Count - 1].Position.x - LeftPadding;
+                float x = ConstructionManager.Instance.Carriages.Last.Value.Position.x - LeftPadding;
                 if ((newPos.x + Camera.main.orthographicSize * Camera.main.aspect <= RightBound || h > 0) && (newPos.x - Camera.main.orthographicSize * Camera.main.aspect >= x || h < 0)) {
                     transform.Translate(-h, 0, 0, Space.World);
                 }

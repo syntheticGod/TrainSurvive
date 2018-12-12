@@ -5,6 +5,7 @@
  * 版本：v0.1
  */
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ConstructionManager : MonoBehaviour {
@@ -35,77 +36,71 @@ public class ConstructionManager : MonoBehaviour {
     [Tooltip("注册的设施Prefab")]
     [SerializeField]
     private Facility FacilityPrefab;
-
+    
     /// <summary>
-    /// 分类名称
+    /// 结构实体
     /// </summary>
-    public static string[] Classes { get; } = {
-      //  0       1      2       3      4
-        "能源", "研究", "家具", "加工", "农业",
-        "车厢"
-    };
-
-    /// <summary>
-    /// 编译时注册的车厢
-    /// </summary>
-    public static TrainCarriage[] Carriages { get; } = {
-        /* 0 */ new CabCarriage()
-    };
-
-    /// <summary>
-    /// 编译时注册的结构
-    /// </summary>
-    public static Structure[] Structures { get; } = {
-        /* 0 */ new EnergyCoreStructure(),
-        /* 1 */ new SteamEngineStructure(),
-        /* 2 */ new GasEngineStructure(),
-        /* 3 */ new BatteryStructure(),
-        /* 4 */ new GeneratorStructure(),
-        /* 5 */ new BigGeneratorStructure(),
-        /* 6 */ new MagicCoreStructure(),
-        /* 7 */ new ResearchBenchStructure(),
-        /* 8 */ new ResearchBench2Structure(),
-        /* 9 */ new ResearchBench3Structure(),
-        /* 10 */ new ResearchBench4Structure(),
-        /* 11 */ new ResearchBench5Structure(),
-        /* 12 */ new BedStructure(),
-        /* 13 */ new Bed2Structure(),
-        /* 14 */ new Bed3Structure(),
-        /* 15 */ new WoodTableStructure(),
-        /* 16 */ new WoodChairStructure(),
-        /* 17 */ new WoodBoxStructure(),
-        /* 18 */ new TorchStructure(),
-        /* 19 */ new KeroseneLampStructure(),
-        /* 20 */ new DropLightStructure(),
-        /* 21 */ new TableLampStructure(),
-        /* 22 */ new HeatingRoomStructure(),
-        /* 23 */ new CoolingRoomStructure(),
-        /* 24 */ new SmallWoodStructure(),
-        /* 25 */ new MediumWoodStructure(),
-        /* 26 */ new BigWoodStructure()
-    };
-
-    /// <summary>
-    /// 建筑解锁情况，与world同步。
-    /// </summary>
-    public static bool[] StructureUnlocks {
+    public LinkedList<Structure> Structures {
         get {
-            if (World.getInstance().buildUnlock == null) {
-                World.getInstance().buildUnlock = new bool[Structures.Length];
-            }
-            return World.getInstance().buildUnlock;
+            return World.getInstance().buildInstArray;
         }
     }
 
     /// <summary>
-    /// 车厢解锁情况，与world同步。
+    /// 结构实体
     /// </summary>
-    public static bool[] CarriageUnlocks {
+    public LinkedList<TrainCarriage> Carriages {
         get {
-            if (World.getInstance().carriageUnlock == null) {
-                World.getInstance().carriageUnlock = new bool[Carriages.Length];
+            return World.getInstance().carriageInstArray;
+        }
+    }
+
+    /// <summary>
+    /// 建筑分类
+    /// </summary>
+    public static string[] Classes {
+        get {
+            return ResourceLoader.GetResource<StructureClassSetting>("Structures/Classes").Classes;
+        }
+    }
+
+    /// <summary>
+    /// 编译时注册的结构
+    /// </summary>
+    public static StructureSetting[] StructureSettings {
+        get {
+            if (_structureSettings == null) {
+                StructureSetting[] structureSettings = ResourceLoader.GetResources<StructureSetting>("Structures", false);
+                int max = -1;
+                for (int i = 0; i < structureSettings.Length; i++) {
+                    max = Mathf.Max(structureSettings[i].ID, max);
+                }
+                _structureSettings = new StructureSetting[max + 1];
+                for (int i = 0; i < structureSettings.Length; i++) {
+                    _structureSettings[structureSettings[i].ID] = structureSettings[i];
+                }
             }
-            return World.getInstance().carriageUnlock;
+            return _structureSettings;
+        }
+    }
+
+    /// <summary>
+    /// 编译时注册的车厢
+    /// </summary>
+    public static CarriageSetting[] CarriageSettings {
+        get {
+            if (_carriageSetting == null) {
+                CarriageSetting[] structureSettings = ResourceLoader.GetResources<CarriageSetting>("Carriages", false);
+                int max = -1;
+                for (int i = 0; i < structureSettings.Length; i++) {
+                    max = Mathf.Max(structureSettings[i].ID, max);
+                }
+                _carriageSetting = new CarriageSetting[max + 1];
+                for (int i = 0; i < structureSettings.Length; i++) {
+                    _carriageSetting[structureSettings[i].ID] = structureSettings[i];
+                }
+            }
+            return _carriageSetting;
         }
     }
 
@@ -113,7 +108,10 @@ public class ConstructionManager : MonoBehaviour {
     /// 当前是否处于放置模式。
     /// </summary>
     public State PlaceState { get; private set; } = State.IDLE;
-    
+
+    private static StructureSetting[] _structureSettings;
+    private static CarriageSetting[] _carriageSetting;
+
     private void Awake() {
         Instance = this;
         
@@ -130,11 +128,11 @@ public class ConstructionManager : MonoBehaviour {
     /// 当设施与在ProjectSettings/Physics2D中设置的允许与Facility层碰撞的层发生碰撞时将自动标红并阻止放置。
     /// 采用NonAlloc优化GC，因此同时发生的碰撞不得超过缓冲大小（现在是50，大部分情况应该够用了）。
     /// </summary>
-    /// <param name="index">要放置的物体编号（见Structures）。</param>
-    public void Place(int index) {
+    /// <param name="id">要放置的物体编号（见StructureSettings）。</param>
+    public void Place(int id) {
         PlaceState = State.PLACING;
         Facility facility = Instantiate(FacilityPrefab.gameObject).GetComponent<Facility>();
-        facility.Structure = Structures[index].Instantiate();
+        facility.Structure = StructureSettings[id].Instantiate();
         StartCoroutine(moveFacility(facility));
     }
 
@@ -142,11 +140,11 @@ public class ConstructionManager : MonoBehaviour {
     /// 调用该方法以开始放置一个列车车厢，左键放置，右键退出。
     /// 材料不足时将自动标红并阻止放置。
     /// </summary>
-    /// <param name="facility">要放置的车厢编号（见Carriages）。</param>
-    public void PlaceCarriage(int index) {
+    /// <param name="id">要放置的车厢编号（见CarriageSettings）。</param>
+    public void PlaceCarriage(int id) {
         PlaceState = State.PLACING;
-        TrainCarriage carriage = Carriages[index].Instantiate();
-        TrainCarriageObject carriageObject = Instantiate(carriage.Info.Object).GetComponent<TrainCarriageObject>();
+        TrainCarriage carriage = new TrainCarriage(id);
+        TrainCarriageObject carriageObject = Instantiate(CarriageSettings[id].Prefab).GetComponent<TrainCarriageObject>();
         carriageObject.TrainCarriage = carriage;
         carriageObject.gameObject.SetActive(true);
         StartCoroutine(placingCarriage(carriageObject));
@@ -163,25 +161,23 @@ public class ConstructionManager : MonoBehaviour {
     /// 读档！
     /// </summary>
     private void Load() {
-        if (World.getInstance().carriageInstArray.Count == 0) {
-            TrainCarriage carriage = new CabCarriage();
+        if (Carriages.Count == 0) {
+            TrainCarriage carriage = new TrainCarriage(0);
             carriage.Place(new Vector3(0.8f, -0.3f, 0), true);
-            World.getInstance().carriageInstArray.Add(carriage);
-            carriage = new CabCarriage();
+            Carriages.AddLast(carriage);
+            carriage = new TrainCarriage(0);
             carriage.Place(GetPlacablePointForTrainCarriage(carriage), true);
-            World.getInstance().carriageInstArray.Add(carriage);
+            Carriages.AddLast(carriage);
         }
-        for (int i = 0; i < World.getInstance().carriageInstArray.Count; i++) {
-            TrainCarriage carriage = World.getInstance().carriageInstArray[i];
-            TrainCarriageObject carriageObj = Instantiate(carriage.Info.Object, carriage.Position, Quaternion.identity).GetComponent<TrainCarriageObject>();
+        foreach (TrainCarriage carriage in Carriages) {
+            TrainCarriageObject carriageObj = Instantiate(CarriageSettings[carriage.ID].Prefab, carriage.Position, Quaternion.identity).GetComponent<TrainCarriageObject>();
             carriageObj.TrainCarriage = carriage;
             if (carriage.CarriageState == TrainCarriage.State.BUILDING) {
                 carriage.OnStateChange += OnCarriageStateChange;
             }
             carriageObj.gameObject.SetActive(true);
         }
-        for (int i = 0; i < World.getInstance().buildInstArray.Count; i++) {
-            Structure structure = World.getInstance().buildInstArray[i];
+        foreach (Structure structure in Structures) {
             Facility facility = Instantiate(FacilityPrefab.gameObject, structure.Position, Quaternion.identity).GetComponent<Facility>();
             facility.Structure = structure;
             structure.OnStateChange += OnStructureStateChange;
@@ -194,7 +190,7 @@ public class ConstructionManager : MonoBehaviour {
         Vector3 point = GetPlacablePointForTrainCarriage(carriageObject.TrainCarriage);
         carriageTransform.SetPositionAndRotation(point, Quaternion.identity);
 
-        UIManager.Instance?.ShowInfoPanel(carriageObject.TrainCarriage.Info.Name, carriageObject.TrainCarriage.Info.Description);
+        UIManager.Instance?.ShowInfoPanel(CarriageSettings[carriageObject.TrainCarriage.ID].Name, CarriageSettings[carriageObject.TrainCarriage.ID].Description);
 
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
         float vOrthographicSize = 0;
@@ -256,11 +252,11 @@ public class ConstructionManager : MonoBehaviour {
         Transform fTransform = facility.GetComponent<Transform>();
         SpriteRenderer fSpriteRenderer = facility.GetComponent<SpriteRenderer>();
 
-        UIManager.Instance?.ShowInfoPanel(facility.Structure.Info.Name, facility.Structure.Info.Description);
+        UIManager.Instance?.ShowInfoPanel(StructureSettings[facility.Structure.ID].Name, StructureSettings[facility.Structure.ID].Description);
 
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
         while (PlaceState == State.PLACING) {
-            RaycastHit2D? hit = getPlacablePointByMousePosition(facility.Structure.Info.RequiredLayers, facility.Structure.Info.LayerOrientation);
+            RaycastHit2D? hit = getPlacablePointByMousePosition(StructureSettings[facility.Structure.ID].RequiredLayers, StructureSettings[facility.Structure.ID].LayerOrientation);
             bool isCollided = false;
             if (hit.HasValue) {
                 fTransform.SetPositionAndRotation(hit.Value.point, Quaternion.identity);
@@ -337,11 +333,11 @@ public class ConstructionManager : MonoBehaviour {
         switch (structure.FacilityState) {
             case Structure.State.CANCLE:
             case Structure.State.REMOVING:
-                World.getInstance().buildInstArray.Remove(structure);
+                Structures.Remove(structure);
                 structure.OnStateChange -= OnStructureStateChange;
                 break;
             case Structure.State.BUILDING:
-                World.getInstance().buildInstArray.Add(structure);
+                Structures.AddLast(structure);
                 break;
         }
     }
@@ -352,11 +348,11 @@ public class ConstructionManager : MonoBehaviour {
                 carriage.OnStateChange -= OnCarriageStateChange;
                 break;
             case TrainCarriage.State.CANCLE:
-                World.getInstance().carriageInstArray.Remove(carriage);
+                Carriages.Remove(carriage);
                 carriage.OnStateChange -= OnCarriageStateChange;
                 break;
             case TrainCarriage.State.BUILDING:
-                World.getInstance().carriageInstArray.Add(carriage);
+                Carriages.AddLast(carriage);
                 break;
         }
     }
@@ -379,9 +375,9 @@ public class ConstructionManager : MonoBehaviour {
     }
 
     private Vector3 GetPlacablePointForTrainCarriage(TrainCarriage carriage) {
-        TrainCarriage last = World.getInstance().carriageInstArray[World.getInstance().carriageInstArray.Count - 1];
-        float x = last.Position.x - last.Info.Size.x / 2 - carriage.Info.Size.x / 2;
-        float y = carriage.Info.Size.y / 2 - last.Info.Size.y / 2 + last.Position.y;
+        TrainCarriage last = Carriages.Last.Value;
+        float x = last.Position.x - CarriageSettings[last.ID].Size.x / 2 - CarriageSettings[last.ID].Size.x / 2;
+        float y = CarriageSettings[last.ID].Size.y / 2 - CarriageSettings[last.ID].Size.y / 2 + last.Position.y;
         return new Vector3(x, y, carriage.Position.z);
     }
 }

@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public class TechTree : MonoBehaviour {
     
     [Serializable]
-    public struct Line {
+    public class Line {
         public Image[] Lines;
     }
 
@@ -49,10 +49,10 @@ public class TechTree : MonoBehaviour {
             return _currentSelect;
         }
         set {
-            if (_currentSelect >= 0 && TechObjects.Length > _currentSelect) {
+            if (_currentSelect >= 0 && TechObjects[_currentSelect] != null) {
                 TechObjects[_currentSelect].Outline.enabled = false;
             }
-            if (value >= 0 && TechObjects.Length > value) {
+            if (value >= 0 && TechObjects[value] != null) {
                 TechObjects[value].Outline.enabled = true;
                 UpdateInfoPanel(value);
             }
@@ -94,18 +94,22 @@ public class TechTree : MonoBehaviour {
     private void Awake() {
         // 初始化各种ProgressButton
         for (int i = 0; i < TechObjects.Length; i++) {
+            if (TechObjects[i] == null)
+                continue;
             int index = i;
             TechObjects[index].Action = () => {
                 CurrentSelect = index;
             };
-            TechObjects[index].MaxValue = TechTreeManager.Techs[index].TotalWorks;
+            TechObjects[index].MaxValue = TechTreeManager.TechSettings[index].TotalWorks;
         }
         ResearchButton.Action = ClickResearch;
     }
     
     private void OnEnable() {
         for (int i = 0; i < TechObjects.Length; i++) {
-            TechObjects[i].Value = TechTreeManager.Techs[i].CurrentWorks;
+            if (TechObjects[i] == null)
+                continue;
+            TechObjects[i].Value = TechTreeManager.Instance.Techs[i].CurrentWorks;
             UpdateColorState(i);
         }
         CurrentSelect = TechTreeManager.Instance.CurrentWorking == -1 ? 0 : TechTreeManager.Instance.CurrentWorking;
@@ -125,11 +129,11 @@ public class TechTree : MonoBehaviour {
     /// </summary>
     /// <param name="tech">ID</param>
     public void UpdateInfoPanel(int tech) {
-        if (tech < 0 || TechObjects.Length <= tech) {
+        if (tech < 0 || TechObjects[tech] == null) {
             return;
         }
-        Title.text = TechTreeManager.Techs[tech].Name;
-        Description.text = TechTreeManager.Techs[tech].Description;
+        Title.text = TechTreeManager.TechSettings[tech].Name;
+        Description.text = TechTreeManager.TechSettings[tech].Description;
     }
 
     /// <summary>
@@ -137,11 +141,11 @@ public class TechTree : MonoBehaviour {
     /// </summary>
     /// <param name="tech">ID</param>
     public void UpdateColorState(int tech) {
-        if (tech < 0 || TechObjects.Length <= tech) {
+        if (tech < 0 || TechObjects[tech] == null) {
             return;
         }
         Color lineColor = LockedColor;
-        switch (TechTreeManager.Techs[tech].TechState) {
+        switch (TechTreeManager.Instance.Techs[tech].TechState) {
             case Tech.State.COMPLETED:
                 TechObjects[tech].Value = TechObjects[tech].MaxValue;
                 TechObjects[tech].ButtonColor = UnlockedColor;
@@ -159,16 +163,20 @@ public class TechTree : MonoBehaviour {
                 break;
         }
         
-        for (int i = 0; i < TechTreeManager.Techs.Length; i++) { // 依赖的连接线
-            for (int j = 0; j < TechTreeManager.Techs[i].Dependencies.Length; j++) {
-                if (TechTreeManager.Techs[i].Dependencies[j] == tech) {
+        for (int i = 0; i < TechTreeManager.Instance.Techs.Length; i++) { // 依赖的连接线
+            if (TechTreeManager.TechSettings[i] == null)
+                continue;
+            for (int j = 0; j < TechTreeManager.TechSettings[i].Dependencies.Length; j++) {
+                if (TechTreeManager.TechSettings[i].Dependencies[j] == tech) {
                     TechLines[i].Lines[j].color = lineColor;
                 }
-                if(TechTreeManager.Techs[i].TechState == Tech.State.UNLOCKED) {
+                if(TechTreeManager.Instance.Techs[i].TechState == Tech.State.UNLOCKED) {
                     TechObjects[i].ButtonColor = UnlockedColor;
-                    for (int k = 0; k < TechTreeManager.Techs.Length; k++) { // 间接依赖的连接线
-                        for (int l = 0; l < TechTreeManager.Techs[k].Dependencies.Length; l++) {
-                            if (TechTreeManager.Techs[k].Dependencies[l] == i) {
+                    for (int k = 0; k < TechTreeManager.Instance.Techs.Length; k++) { // 间接依赖的连接线
+                        if (TechTreeManager.TechSettings[k] == null)
+                            continue;
+                        for (int l = 0; l < TechTreeManager.TechSettings[k].Dependencies.Length; l++) {
+                            if (TechTreeManager.TechSettings[k].Dependencies[l] == i) {
                                 TechLines[k].Lines[l].color = UnlockedColor;
                             }
                         }
@@ -179,9 +187,9 @@ public class TechTree : MonoBehaviour {
     }
 
     public void ClickResearch() {
-        if (TechTreeManager.Techs[CurrentSelect].TechState == Tech.State.WORKING) {
+        if (TechTreeManager.Instance.Techs[CurrentSelect].TechState == Tech.State.WORKING) {
             TechTreeManager.Instance.CurrentWorking = -1;
-        } else if (TechTreeManager.Techs[CurrentSelect].TechState == Tech.State.UNLOCKED) {
+        } else if (TechTreeManager.Instance.Techs[CurrentSelect].TechState == Tech.State.UNLOCKED) {
             TechTreeManager.Instance.CurrentWorking = CurrentSelect;
         }
     }
@@ -189,29 +197,29 @@ public class TechTree : MonoBehaviour {
     private IEnumerator ResearchStateChange() {
         while (true) {
             int prevSelect = CurrentSelect;
-            Tech.State state = TechTreeManager.Techs[prevSelect].TechState;
-            ResearchButton.MaxValue = TechTreeManager.Techs[prevSelect].TotalWorks;
+            Tech.State state = TechTreeManager.Instance.Techs[prevSelect].TechState;
+            ResearchButton.MaxValue = TechTreeManager.TechSettings[prevSelect].TotalWorks;
             switch (state) {
                 case Tech.State.COMPLETED:
                     ResearchButton.Value = ResearchButton.MaxValue;
                     ResearchButton.Text.text = "已研究";
                     ResearchButton.IsEnabled = false;
-                    yield return new WaitWhile(() => prevSelect == CurrentSelect && state == TechTreeManager.Techs[CurrentSelect].TechState);
+                    yield return new WaitWhile(() => prevSelect == CurrentSelect && state == TechTreeManager.Instance.Techs[CurrentSelect].TechState);
                     break;
                 case Tech.State.LOCKED:
                     ResearchButton.Value = 0;
                     ResearchButton.Text.text = "未解锁";
                     ResearchButton.IsEnabled = false;
-                    yield return new WaitWhile(() => prevSelect == CurrentSelect && state == TechTreeManager.Techs[CurrentSelect].TechState);
+                    yield return new WaitWhile(() => prevSelect == CurrentSelect && state == TechTreeManager.Instance.Techs[CurrentSelect].TechState);
                     break;
                 case Tech.State.UNLOCKED:
-                    ResearchButton.Value = TechTreeManager.Techs[prevSelect].CurrentWorks;
+                    ResearchButton.Value = TechTreeManager.Instance.Techs[prevSelect].CurrentWorks;
                     ResearchButton.Text.text = "研究";
                     ResearchButton.IsEnabled = true;
-                    yield return new WaitWhile(() => prevSelect == CurrentSelect && state == TechTreeManager.Techs[CurrentSelect].TechState);
+                    yield return new WaitWhile(() => prevSelect == CurrentSelect && state == TechTreeManager.Instance.Techs[CurrentSelect].TechState);
                     break;
                 case Tech.State.WORKING:
-                    ResearchButton.Value = TechTreeManager.Techs[prevSelect].CurrentWorks;
+                    ResearchButton.Value = TechTreeManager.Instance.Techs[prevSelect].CurrentWorks;
                     ResearchButton.Text.text = "研究中";
                     if (!ResearchButton.IsEnabled) ResearchButton.IsEnabled = true;
                     yield return 1;
@@ -222,20 +230,20 @@ public class TechTree : MonoBehaviour {
 
     private IEnumerator TreeStateChange() {
         while (true) {
-            while (TechTreeManager.Instance.CurrentWorking >= 0 && TechTreeManager.Techs.Length > TechTreeManager.Instance.CurrentWorking && TechTreeManager.Techs[TechTreeManager.Instance.CurrentWorking].TechState == Tech.State.WORKING) {
-                TechObjects[TechTreeManager.Instance.CurrentWorking].Value = TechTreeManager.Techs[TechTreeManager.Instance.CurrentWorking].CurrentWorks;
+            while (TechTreeManager.Instance.CurrentWorking >= 0 && TechTreeManager.Instance.Techs[TechTreeManager.Instance.CurrentWorking].TechState == Tech.State.WORKING) {
+                TechObjects[TechTreeManager.Instance.CurrentWorking].Value = TechTreeManager.Instance.Techs[TechTreeManager.Instance.CurrentWorking].CurrentWorks;
                 yield return 1;
             }
             UpdateColorState(TechTreeManager.Instance.CurrentWorking);
             TechTreeManager.Instance.CurrentWorking = -1;
-            yield return new WaitWhile(() => TechTreeManager.Instance.CurrentWorking < 0 || TechTreeManager.Techs.Length <= TechTreeManager.Instance.CurrentWorking);
+            yield return new WaitWhile(() => TechTreeManager.Instance.CurrentWorking < 0);
         }
     }
 
     private IEnumerator CheckTechUnlock() {
         yield return new WaitUntil(() => World.getInstance().techUnlock > 0);
         for (int i = 0; i < TechObjects.Length; i++) {
-            TechObjects[i].Value = TechTreeManager.Techs[i].CurrentWorks;
+            TechObjects[i].Value = TechTreeManager.Instance.Techs[i].CurrentWorks;
             UpdateColorState(i);
         }
     }

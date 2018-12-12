@@ -15,13 +15,17 @@ public class ResouceBaseUI : MonoBehaviour {
     public Slider foodOutSlider;
     public Text energyText;
     public Slider energySlider;
-
+    public Text electricityText;
+    public Slider electricitySlider;
+    public Text moneyText;
     // Use this for initialization
     void Start () {
         World world = World.getInstance();
         setFoodIn(world.getFoodIn(), world.getFoodInMax());
         setFoodOut(world.getFoodOut(), world.getFoodOutMax());
         setEnergy(world.getEnergy(), world.getEnergyMax());
+        setElectricity(world.getElectricity(), world.getElectricityMax());
+        setMoney(world.getMoney());
         world.resourceUI = this;
     }
 	
@@ -46,6 +50,16 @@ public class ResouceBaseUI : MonoBehaviour {
         energySlider.value = currentNum;
         energyText.text = currentNum + "/" + maxNum;
     }
+    public void setElectricity(uint currentNum, uint maxNum)
+    {
+        electricitySlider.minValue = 0;
+        electricitySlider.maxValue = maxNum;
+        electricitySlider.value = currentNum;
+        electricityText.text = currentNum + "/" + maxNum;
+    }
+    public void setMoney(uint currentNum)
+    {
+        moneyText.text = currentNum.ToString();
+    }
 
-    
 }

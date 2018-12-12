@@ -50,46 +50,67 @@ public class StructMenu : MonoBehaviour {
     }
 
     private GameObject[] Structures { get; set; }
+    private GameObject[] Carriages { get; set; }
 
     private int _activeGroup;
 
     private void Awake() {
-        VerticalGroups = new GameObject[ConstructionManager.Classes.Length];
-        for (int i = 0; i < ConstructionManager.Classes.Length; i++) {
+        VerticalGroups = new GameObject[ConstructionManager.Classes.Length + 1];
+        for (int i = 0; i < VerticalGroups.Length; i++) {
             int index = i;
-            GameObject buttonGO = Instantiate(ButtonPrefab, ClassContent);
-            buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Classes[index];
             VerticalGroups[index] = Instantiate(VerticalGroupPrefab, StructureContent);
             VerticalGroups[index].SetActive(false);
-            buttonGO.GetComponent<Button>().onClick.AddListener(() => {
-                if (index == ConstructionManager.Classes.Length - 1) {
-                    bool flag = World.getInstance().carriageInstArray[World.getInstance().carriageInstArray.Count - 1].CarriageState == TrainCarriage.State.IDLE;
-                    for (int j = 0; j < ConstructionManager.CarriageUnlocks.Length; j++) {
-                        Structures[ConstructionManager.StructureUnlocks.Length + j].SetActive(ConstructionManager.CarriageUnlocks[j]);
-                        Structures[ConstructionManager.StructureUnlocks.Length + j].GetComponent<Button>().interactable = flag;
+            GameObject buttonGO = Instantiate(ButtonPrefab, ClassContent);
+            if(i < ConstructionManager.Classes.Length) {
+                buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Classes[index];
+                buttonGO.GetComponent<Button>().onClick.AddListener(() => {
+                    for (int j = 0; j < ConstructionManager.StructureSettings.Length; j++) {
+                        if (ConstructionManager.StructureSettings[j] == null) {
+                            continue;
+                        }
+                        Structures[j].SetActive(ConstructionManager.StructureSettings[j].HasUnlocked());
                     }
-                } else {
-                    for (int j = 0; j < ConstructionManager.StructureUnlocks.Length; j++) {
-                        Structures[j].SetActive(ConstructionManager.StructureUnlocks[j]);
+                    ActiveGroup = index;
+                    StructuresScrollRect.SetActive(true);
+                });
+            } else {
+                buttonGO.GetComponentInChildren<Text>().text = "车厢";
+                buttonGO.GetComponent<Button>().onClick.AddListener(() => {
+                    bool flag = ConstructionManager.Instance.Carriages.Last.Value.CarriageState == TrainCarriage.State.IDLE;
+                    for (int j = 0; j < ConstructionManager.CarriageSettings.Length; j++) {
+                        if (ConstructionManager.CarriageSettings[j] == null) {
+                            continue;
+                        }
+                        Carriages[j].SetActive(ConstructionManager.CarriageSettings[j].HasUnlocked());
+                        Carriages[j].GetComponent<Button>().interactable = flag;
                     }
-                }
-                ActiveGroup = index;
-                StructuresScrollRect.SetActive(true);
-            });
+                    ActiveGroup = index;
+                    StructuresScrollRect.SetActive(true);
+                });
+            }
         }
-        Structures = new GameObject[ConstructionManager.Structures.Length + ConstructionManager.Carriages.Length];
-        for (int i = 0; i < ConstructionManager.Structures.Length; i++) {
+        
+        Structures = new GameObject[ConstructionManager.StructureSettings.Length];
+        for (int i = 0; i < ConstructionManager.StructureSettings.Length; i++) {
+            if (ConstructionManager.StructureSettings[i] == null) {
+                continue;
+            }
             int index = i;
-            GameObject buttonGO = Instantiate(ButtonPrefab, VerticalGroups[ConstructionManager.Structures[index].Info.Class].transform);
+            GameObject buttonGO = Instantiate(ButtonPrefab, VerticalGroups[ConstructionManager.StructureSettings[i].Class].transform);
             buttonGO.GetComponent<Button>().onClick.AddListener(() => {
                 ConstructionManager.Instance.Place(index);
                 StructuresScrollRect.SetActive(false);
                 ConstructionObject.SetActive(false);
             });
-            buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Structures[index].Info.Name;
+            buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.StructureSettings[index].Name;
             Structures[index] = buttonGO;
         }
-        for (int i = 0; i < ConstructionManager.Carriages.Length; i++) {
+
+        Carriages = new GameObject[ConstructionManager.CarriageSettings.Length];
+        for (int i = 0; i < ConstructionManager.CarriageSettings.Length; i++) {
+            if (ConstructionManager.CarriageSettings[i] == null) {
+                continue;
+            }
             int index = i;
             GameObject buttonGO = Instantiate(ButtonPrefab, VerticalGroups[VerticalGroups.Length - 1].transform);
             buttonGO.GetComponent<Button>().onClick.AddListener(() => {
@@ -97,8 +118,8 @@ public class StructMenu : MonoBehaviour {
                 StructuresScrollRect.SetActive(false);
                 ConstructionObject.SetActive(false);
             });
-            buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.Carriages[index].Info.Name;
-            Structures[index + ConstructionManager.Structures.Length] = buttonGO;
+            buttonGO.GetComponentInChildren<Text>().text = ConstructionManager.CarriageSettings[index].Name;
+            Carriages[index] = buttonGO;
         }
     }
 }

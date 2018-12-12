@@ -123,8 +123,10 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     //  仅测试用代码  ---------------------------------------------------------
     public void AddWeapon()
     {
-        Item temp = PublicMethod.GenerateItem(Random.Range(0,2),1)[0];
-        coreInventory.PushItem(temp);
+        //Item temp = PublicMethod.GenerateItem(Random.Range(0,2),1)[0];
+        ItemData temp = new ItemData(Random.Range(0, 2), 1);
+        World.getInstance().itemDataInTrain.Add(temp);
+        //coreInventory.PushItem(temp);
     }
 
     //public void AddConsumable()

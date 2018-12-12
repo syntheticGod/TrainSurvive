@@ -27,7 +27,7 @@ public class Facility : MonoBehaviour {
         get {
             if (_indicator == null) {
                 _indicator = GetComponentInChildren<Indicator>();
-                _indicator.GetComponent<RectTransform>().localPosition = new Vector3(0, Structure.Info.Sprite.bounds.size.y - Structure.Info.Sprite.pivot.y / Structure.Info.Sprite.pixelsPerUnit, 0);
+                _indicator.GetComponent<RectTransform>().localPosition = new Vector3(0, ConstructionManager.StructureSettings[Structure.ID].Sprite.bounds.size.y - ConstructionManager.StructureSettings[Structure.ID].Sprite.pivot.y / ConstructionManager.StructureSettings[Structure.ID].Sprite.pixelsPerUnit, 0);
             }
             return _indicator;
         }
@@ -54,13 +54,13 @@ public class Facility : MonoBehaviour {
     }
 
     private void Awake() {
-        gameObject.layer = Structure.Info.Layer;
+        gameObject.layer = ConstructionManager.StructureSettings[Structure.ID].Layer;
     }
 
     private void Start() {
-        spriteRenderer.sprite = Structure.Info.Sprite;
-        BoxCollider.offset = Structure.Info.Sprite.bounds.center;
-        BoxCollider.size = Structure.Info.Sprite.bounds.size;
+        spriteRenderer.sprite = ConstructionManager.StructureSettings[Structure.ID].Sprite;
+        BoxCollider.offset = ConstructionManager.StructureSettings[Structure.ID].Sprite.bounds.center;
+        BoxCollider.size = ConstructionManager.StructureSettings[Structure.ID].Sprite.bounds.size;
     }
 
     private void OnEnable() {
@@ -112,7 +112,7 @@ public class Facility : MonoBehaviour {
                     contextMenu.Render(mousePos);
                 }
                 if (Input.GetMouseButtonUp(0)) {
-                    UIManager.Instance?.ShowInfoPanel(Structure.Info.Name, Structure.Info.Description);
+                    UIManager.Instance?.ShowInfoPanel(ConstructionManager.StructureSettings[Structure.ID].Name, ConstructionManager.StructureSettings[Structure.ID].Description);
                 }
             }
         }
@@ -127,10 +127,10 @@ public class Facility : MonoBehaviour {
                 contextMenu.PutButton("停止", 0, () => Structure.FacilityState = Structure.State.CANCLE);
                 break;
             case Structure.State.WORKING:
-                Structure.ButtonAction[] actions = Structure.GetActions();
+                Structure.ButtonAction[] actions = Structure.GetButtonActions();
                 for (int i = 0; i < actions.Length; i++) {
                     int index = i;
-                    contextMenu.PutButton(actions[index].Name, index, () => actions[index].Action(Structure));
+                    contextMenu.PutButton(actions[index].Title, index, () => actions[index].Action(Structure));
                 }
                 break;
             default:

@@ -121,6 +121,7 @@ public class SavePanel : MonoBehaviour {
     void Start () {
         pageindex = 1;
         reloadData();
+        gameObject.SetActive(false);
     }
 
     public void createGame()
@@ -144,7 +145,7 @@ public class SavePanel : MonoBehaviour {
         reloadData();
     }
 
-    public void LoadNextScene(string nextSceneName)
+    public void LoadGame_outGame(string nextSceneName)
     {
         GameSave saveCondition = GameSave.getInstance();
         if (saveCondition.presentIndexHasData())
@@ -152,5 +153,23 @@ public class SavePanel : MonoBehaviour {
             saveCondition.save();
             SceneManager.LoadScene(nextSceneName);
         }   
+    }
+
+    public void LoadGame_inGame(string nextSceneName)
+    {
+        GameSave saveCondition = GameSave.getInstance();
+        if (saveCondition.presentIndexHasData())
+        {
+            saveCondition.save();
+            Destroy(TimeController.getInstance());
+            World.destroyWorld();
+            //地图及其它用单例模式实现的控件也需要重新加载
+            SceneManager.LoadScene(nextSceneName);
+        }
+    }
+
+    public void changeActive()
+    {    
+            gameObject.SetActive(!gameObject.activeSelf);
     }
 }

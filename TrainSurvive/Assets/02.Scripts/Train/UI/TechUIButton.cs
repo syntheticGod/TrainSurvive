@@ -14,14 +14,15 @@ public class TechUIButton : MonoBehaviour {
     }
 
     private IEnumerator ResearchProgressChange(ProgressButton progressButton) {
+        progressButton.MaxValue = 1;
         while (true) {
-            while (TechTreeManager.Instance.CurrentWorking >= 0 && TechTreeManager.Techs.Length > TechTreeManager.Instance.CurrentWorking && TechTreeManager.Techs[TechTreeManager.Instance.CurrentWorking].TechState == Tech.State.WORKING) {
-                progressButton.MaxValue = TechTreeManager.Techs[TechTreeManager.Instance.CurrentWorking].TotalWorks;
-                progressButton.Value = TechTreeManager.Techs[TechTreeManager.Instance.CurrentWorking].CurrentWorks;
+            while (TechTreeManager.Instance.CurrentWorking >= 0 && TechTreeManager.Instance.Techs[TechTreeManager.Instance.CurrentWorking].TechState == Tech.State.WORKING) {
+                progressButton.MaxValue = TechTreeManager.TechSettings[TechTreeManager.Instance.CurrentWorking].TotalWorks;
+                progressButton.Value = TechTreeManager.Instance.Techs[TechTreeManager.Instance.CurrentWorking].CurrentWorks;
                 yield return 1;
             }
             progressButton.Value = 0;
-            yield return new WaitWhile(() => TechTreeManager.Instance.CurrentWorking < 0 || TechTreeManager.Techs.Length <= TechTreeManager.Instance.CurrentWorking);
+            yield return new WaitWhile(() => TechTreeManager.Instance.CurrentWorking < 0);
         }
     }
 }

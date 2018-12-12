@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 [Serializable]
-public abstract class Tech : ISerializable {
+public class Tech : ISerializable {
     
     public enum State {
         LOCKED,
@@ -39,8 +39,8 @@ public abstract class Tech : ISerializable {
             if (World.getInstance().techUnlock <= 0 && !IsCompleted) {
                 return State.LOCKED;
             }
-            for (int i = 0; i < Dependencies.Length; i++) {
-                if (TechTreeManager.Techs[Dependencies[i]].TechState != State.COMPLETED) {
+            for (int i = 0; i < TechTreeManager.TechSettings[ID].Dependencies.Length; i++) {
+                if (TechTreeManager.Instance.Techs[TechTreeManager.TechSettings[ID].Dependencies[i]].TechState != State.COMPLETED) {
                     return State.LOCKED;
                 }
             }
@@ -53,29 +53,11 @@ public abstract class Tech : ISerializable {
             return State.UNLOCKED;
         }
     }
-
     /// <summary>
-    /// 依赖关系，使用ID表示依赖的科技。ID定义见<see cref="TechTree.Techs"/>下标。
+    /// ID
     /// </summary>
-    public abstract int[] Dependencies { get; }
-    /// <summary>
-    /// 名称
-    /// </summary>
-    public abstract string Name { get; }
-    /// <summary>
-    /// 描述
-    /// </summary>
-    public abstract string Description { get; }
-    /// <summary>
-    /// 总工作量
-    /// </summary>
-    public abstract float TotalWorks { get; }
-
-    /// <summary>
-    /// 完成研究
-    /// </summary>
-    public abstract void OnCompleted();
-
+    public int ID { get; private set; }
+    
     /// <summary>
     /// 开始研究
     /// </summary>
@@ -98,7 +80,13 @@ public abstract class Tech : ISerializable {
         }
     }
 
-    public Tech() { }
+    public Tech(int id) {
+        ID = id;
+        if (TechTreeManager.TechSettings[id].TotalWorks == 0) {
+            IsCompleted = true;
+            TechTreeManager.TechSettings[ID].OnCompleted.Invoke(this);
+        }
+    }
 
     /// <summary>
     /// 序列化恢复时，根据序列化前的状态自动启动研究过程。
@@ -106,6 +94,7 @@ public abstract class Tech : ISerializable {
     /// <param name="info"></param>
     /// <param name="context"></param>
     protected Tech(SerializationInfo info, StreamingContext context) {
+        ID = info.GetInt32("ID");
         IsCompleted = info.GetBoolean("IsCompleted");
         IsWorking = info.GetBoolean("IsWorking");
         WorkSpeedRatio = (float)info.GetValue("WorkSpeedRatio", typeof(float));
@@ -125,14 +114,15 @@ public abstract class Tech : ISerializable {
         info.AddValue("IsWorking", IsWorking);
         info.AddValue("WorkSpeedRatio", WorkSpeedRatio);
         info.AddValue("CurrentWorks", CurrentWorks);
+        info.AddValue("ID", ID);
     }
 
     private IEnumerator RunResearch() {
-        while (CurrentWorks < TotalWorks) {
+        while (CurrentWorks < TechTreeManager.TechSettings[ID].TotalWorks) {
             CurrentWorks += Time.deltaTime * WorkSpeedRatio;
             yield return 1;
         }
         IsCompleted = true;
-        OnCompleted();
+        TechTreeManager.TechSettings[ID].OnCompleted.Invoke(this);
     }
 }

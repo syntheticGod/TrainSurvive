@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<monsterlist>
+  <monster id="0" name="木桩">
+    <property vitality="1000" strength="0" agile="0" technique="0" intelligence="0" />
+  </monster>
+  <monster id="1" name="狼">
+    <property vitality="5" strength="5" agile="5" technique="5" intelligence="5" />
+    <AI>BeatFarAI</AI>
+  </monster>
+  <monster id="2" name="熊">
+    <property vitality="5" strength="5" agile="5" technique="5" intelligence="5" />
+    <AI>BeatNearAI</AI>
+  </monster>
+</monsterlist>
