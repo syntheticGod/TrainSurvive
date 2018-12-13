@@ -45,6 +45,10 @@ namespace Assets._02.Scripts.zhxUIScripts
             set
             {
                 _curr_size = value;
+                if(controller != null)
+                {
+                    controller.RefreshMaxSize();
+                }
             }
         }
         public List<Item> items
@@ -62,7 +66,7 @@ namespace Assets._02.Scripts.zhxUIScripts
                 _max_size = maxsize;
             else
                 _max_size = World.getInstance().trainInventoryMaxSize;
-            _curr_size = 0f;
+            currSize = 0f;
             _items = new List<Item>();
             controller = _controler;
         }
@@ -105,7 +109,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         //{
         //    int itemId = item.id;
         //    int itemPileNum = item.currPileNum;
-        //    float restSize = _max_size - _curr_size;
+        //    float restSize = _max_size - currSize;
         //    int restNum = 0;
         //    int allowNum = itemPileNum;
         //    int index;
@@ -116,7 +120,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         //            return 0;
         //        restNum = itemPileNum - allowNum;
         //    }
-        //    _curr_size += item.size * allowNum;
+        //    currSize += item.size * allowNum;
         //    List<int> existIndex = new List<int>();
         //    for(int i=0; i<_items.Count; ++i)
         //    {
@@ -175,7 +179,7 @@ namespace Assets._02.Scripts.zhxUIScripts
                 allowNum = (int)(restSize / item.size);
                 restNum = itemPileNum - allowNum;
             }
-            _curr_size += item.size * allowNum;
+            currSize += item.size * allowNum;
             if(allowNum == 0)                               //一个物品都放不下就直接原路返回
             {
                 return restNum;
@@ -243,7 +247,7 @@ namespace Assets._02.Scripts.zhxUIScripts
            
             mappingItem.currPileNum = allowNum;
             _items.Add(mappingItem);
-            _curr_size += allowNum * item.size;
+            currSize += allowNum * item.size;
             
             if (controller != null)
             {
@@ -272,7 +276,8 @@ namespace Assets._02.Scripts.zhxUIScripts
             }
             else
             {
-                _curr_size -= item.size * item.currPileNum;
+                currSize -= item.size * item.currPileNum;
+                controller.RefreshMaxSize();
             }
             if (controller != null)
             {
@@ -288,7 +293,7 @@ namespace Assets._02.Scripts.zhxUIScripts
                 return;
             }
             item.currPileNum -= num;
-            _curr_size -= item.size * num;
+            currSize -= item.size * num;
             if (controller != null)
             {
                 controller.DataSynchronization();

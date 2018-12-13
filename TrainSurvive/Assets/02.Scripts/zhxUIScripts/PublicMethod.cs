@@ -174,14 +174,17 @@ namespace Assets._02.Scripts.zhxUIScripts
         }
 
         public static bool ConsumeItems(ItemData[] consumeList)    //测试成功
-        {
+        { 
             if (!CanConsumeItems(consumeList)) {              //不能和消耗函数结合一起进行判断，因为一旦消耗掉前面的部分，后部分若不够则无法撤回
                 return false;
             }
+            float consumeSize = 0f;
             for(int i=0; i< consumeList.Length; ++i)
             {
                 ConsumeItem(consumeList[i]);
+                consumeSize += consumeList[i].item.size * consumeList[i].item.currPileNum;
             }
+            World.getInstance().trainInventoryCurSize -= consumeSize;
             return true;
         }
 

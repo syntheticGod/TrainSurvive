@@ -310,7 +310,6 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         Destroy(GameObject.Find("tempDragImg"));
         if(eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name == "Discard")
         {
-            Debug.Log("asdf00");
             DestroyMyself();
 
         }
