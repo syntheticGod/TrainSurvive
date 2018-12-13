@@ -43,19 +43,19 @@ public class ResouceBaseUI : MonoBehaviour {
         foodOutSlider.value = currentNum;
         foodOutText.text = currentNum + "/" + maxNum;
     }
-    public void setEnergy(uint currentNum, uint maxNum)
+    public void setEnergy(float currentNum, float maxNum)
     {
         energySlider.minValue = 0;
         energySlider.maxValue = maxNum;
         energySlider.value = currentNum;
-        energyText.text = currentNum + "/" + maxNum;
+        energyText.text = (int)currentNum + "/" + (int)maxNum;
     }
-    public void setElectricity(uint currentNum, uint maxNum)
+    public void setElectricity(float currentNum, float maxNum)
     {
         electricitySlider.minValue = 0;
         electricitySlider.maxValue = maxNum;
         electricitySlider.value = currentNum;
-        electricityText.text = currentNum + "/" + maxNum;
+        electricityText.text = (int)currentNum + "/" + (int)maxNum;
     }
     public void setMoney(uint currentNum)
     {

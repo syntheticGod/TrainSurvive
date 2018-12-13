@@ -16,7 +16,7 @@ MonoBehaviour:
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
-    m_Bits: 16640
+    m_Bits: 256
   Name: "\u52A8\u80FD\u6838\u5FC3"
   Description: "\u5B58\u50A8\u52A8\u80FD\u7684\u80FD\u6E90\u6838\u5FC3\uFF0C\u63D0\u4F9B2000\u52A8\u80FD\u5B58\u50A8\u4E0A\u9650"
   WorkAll: 0.01
@@ -24,5 +24,41 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 0
   RequiredTech: 1
-  Initializer: {fileID: 11500000, guid: b6632dcc460747b4291bc15ed01af0b3, type: 3}
-  InitializeValues: []
+  Initializer: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}
+  InitializeValues:
+  - Name: _addElectMax
+    TypeName: System.Single
+    IntValue: 0
+    BoolValue: 0
+    FloatValue: 0
+    StringValue: 
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+  - Name: _addEnergyMax
+    TypeName: System.Single
+    IntValue: 0
+    BoolValue: 0
+    FloatValue: 2000
+    StringValue: 
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+  - Name: _addInventoryMax
+    TypeName: System.Single
+    IntValue: 0
+    BoolValue: 0
+    FloatValue: 0
+    StringValue: 
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+  - Name: _addMemberMax
+    TypeName: System.Int32
+    IntValue: 0
+    BoolValue: 0
+    FloatValue: 0
+    StringValue: 
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}

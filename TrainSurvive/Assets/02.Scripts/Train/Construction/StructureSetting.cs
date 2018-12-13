@@ -17,7 +17,7 @@ public class StructureSetting : ScriptableObject {
     [Serializable]
     public struct InitializeValue {
         public string Name;
-        public Type Type;
+        public string TypeName;
         public int IntValue;
         public bool BoolValue;
         public float FloatValue;
@@ -27,20 +27,22 @@ public class StructureSetting : ScriptableObject {
         public Color ColorValue;
 
         public object GetValue() {
-            if (Type == typeof(int))
+            if (TypeName == typeof(int).FullName)
                 return IntValue;
-            if (Type == typeof(bool))
+            if (TypeName == typeof(bool).FullName)
                 return BoolValue;
-            if (Type == typeof(float))
+            if (TypeName == typeof(float).FullName)
                 return FloatValue;
-            if (Type == typeof(string))
+            if (TypeName == typeof(string).FullName)
                 return StringValue;
-            if (Type == typeof(Vector2))
+            if (TypeName == typeof(Vector2).FullName)
                 return Vector2Value;
-            if (Type == typeof(Vector3))
+            if (TypeName == typeof(Vector3).FullName)
                 return Vector3Value;
-            if (Type == typeof(Color))
+            if (TypeName == typeof(Color).FullName)
                 return ColorValue;
+            if (Type.GetType(TypeName).IsEnum)
+                return Enum.GetValues(Type.GetType(TypeName)).GetValue(IntValue);
             return null;
         }
     }
@@ -77,11 +79,16 @@ public class StructureSetting : ScriptableObject {
     public Structure Instantiate() {
         object o = Initializer.GetClass().GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { ID });
         foreach (InitializeValue value in InitializeValues) {
-            o.GetType().GetField(value.Name).SetValue(o, value.GetValue());
+            foreach (FieldInfo info in o.GetType().GetRuntimeFields()) {
+                if (info.Name == value.Name) {
+                    info.SetValue(o, value.GetValue());
+                    break;
+                }
+            }
         }
         return (Structure)o;
     }
-
+    
     public bool HasUnlocked() {
         return TechTreeManager.Instance.Techs[RequiredTech].TechState == Tech.State.COMPLETED;
     }

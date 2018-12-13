@@ -11,6 +11,7 @@ using UnityEngine;
 
 [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
 public class StructurePublicFieldAttribute : Attribute {
-    
+
+    public string Tooltip { get; set; } = "";
 
 }

@@ -107,7 +107,8 @@ public class StructureSettingEditor : Editor {
             bool found = false;
             foreach (FieldInfo info in fieldInfos) {
                 if (!info.IsStatic && info.GetCustomAttribute<StructurePublicFieldAttribute>() != null) {
-                    if (info.Name == initializeValuesProperty.GetArrayElementAtIndex(i).FindPropertyRelative("Name").stringValue) {
+                    SerializedProperty p = initializeValuesProperty.GetArrayElementAtIndex(i);
+                    if (info.Name == p.FindPropertyRelative("Name").stringValue && info.FieldType.FullName == p.FindPropertyRelative("TypeName").stringValue) {
                         found = true;
                     }
                 }
@@ -117,8 +118,10 @@ public class StructureSettingEditor : Editor {
                 i--;
             }
         }
+        EditorGUILayout.BeginVertical();
         foreach (FieldInfo info in fieldInfos) {
-            if (!info.IsStatic && info.GetCustomAttribute<StructurePublicFieldAttribute>() != null) {
+            StructurePublicFieldAttribute attr = info.GetCustomAttribute<StructurePublicFieldAttribute>();
+            if (!info.IsStatic && attr != null) {
                 if (info.FieldType == typeof(int)) {
                     int o = default(int);
                     SerializedProperty property = null;
@@ -134,11 +137,12 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (int)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.IntField(info.Name, o);
+                    o = EditorGUILayout.IntField(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("IntValue").intValue = o;
                 } else if (info.FieldType == typeof(string)) {
@@ -156,11 +160,12 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (string)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.TextField(info.Name, o);
+                    o = EditorGUILayout.TextField(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("StringValue").stringValue = o;
                 } else if (info.FieldType == typeof(float)) {
@@ -178,11 +183,12 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (float)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.FloatField(info.Name, o);
+                    o = EditorGUILayout.FloatField(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("FloatValue").floatValue = o;
                 } else if (info.FieldType == typeof(bool)) {
@@ -200,11 +206,12 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (bool)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.Toggle(info.Name, o);
+                    o = EditorGUILayout.Toggle(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("BoolValue").boolValue = o;
                 } else if (info.FieldType == typeof(Vector2)) {
@@ -222,11 +229,12 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (Vector2)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.Vector2Field(info.Name, o);
+                    o = EditorGUILayout.Vector2Field(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("Vector2Value").vector2Value = o;
                 } else if (info.FieldType == typeof(Vector3)) {
@@ -244,11 +252,12 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (Vector3)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.Vector3Field(info.Name, o);
+                    o = EditorGUILayout.Vector3Field(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("Vector3Value").vector3Value = o;
                 } else if (info.FieldType == typeof(Color)) {
@@ -266,18 +275,44 @@ public class StructureSettingEditor : Editor {
                         object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
                         o = (Color)info.GetValue(instance);
                     }
-                    o = EditorGUILayout.ColorField(info.Name, o);
+                    o = EditorGUILayout.ColorField(new GUIContent(info.Name, attr.Tooltip), o);
                     if (property == null) {
                         initializeValuesProperty.arraySize++;
                         property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
                         property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
                     }
                     property.FindPropertyRelative("ColorValue").colorValue = o;
+                } else if (info.FieldType.IsEnum) {
+                    string[] enums = Enum.GetNames(info.FieldType);
+                    int o = 0;
+                    SerializedProperty property = null;
+                    for (int i = 0; i < initializeValuesProperty.arraySize; i++) {
+                        SerializedProperty p = initializeValuesProperty.GetArrayElementAtIndex(i);
+                        if (p.FindPropertyRelative("Name").stringValue == info.Name) {
+                            o = p.FindPropertyRelative("IntValue").intValue;
+                            property = p;
+                            break;
+                        }
+                    }
+                    if (property == null) {
+                        object instance = scriptType.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { 0 });
+                        o = (int)info.GetValue(instance);
+                    }
+                    o = EditorGUILayout.Popup(new GUIContent(info.Name, attr.Tooltip), o, enums);
+                    if (property == null) {
+                        initializeValuesProperty.arraySize++;
+                        property = initializeValuesProperty.GetArrayElementAtIndex(initializeValuesProperty.arraySize - 1);
+                        property.FindPropertyRelative("Name").stringValue = info.Name;
+                        property.FindPropertyRelative("TypeName").stringValue = info.FieldType.FullName;
+                    }
+                    property.FindPropertyRelative("IntValue").intValue = o;
                 } else {
                     Debug.LogError("Not Defined: " + info.FieldType);
                 }
             }
         }
+        EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
     }
 }
