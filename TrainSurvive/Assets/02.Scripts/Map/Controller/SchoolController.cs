@@ -372,10 +372,14 @@ namespace WorldMap.Controller
             int money = GetMoney();
             if (!world.IfMoneyEnough(money))
             {
-                Debug.Log("金钱不足");
+                InfoDialog.Show("金钱不足");
                 return;
             }
-            //TODO：检查金额是否足够
+            if (!world.Pay(money))
+            {
+                Debug.LogError("扣款失败");
+                return;
+            }
             heroChoosed.vitality += (int)deltaAttri[0];
             heroChoosed.strength += (int)deltaAttri[1];
             heroChoosed.agile += (int)deltaAttri[2];
