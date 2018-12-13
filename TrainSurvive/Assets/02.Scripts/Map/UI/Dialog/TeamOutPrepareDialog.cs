@@ -60,7 +60,7 @@ namespace WorldMap.UI
             ViewTool.Anchor(herosChoosedLV, new Vector2(0.4F, 0F), new Vector2(1F, 1F));
             herosChoosedLV.onItemClick = delegate (ListViewItem item, Person person)
             {
-                if (herosChoosedLV.RemoveItem(person))
+                if (herosChoosedLV.RemoveData(person))
                     herosGetReadyLV.AddItem(person);
             };
             //下部分 待选
@@ -75,7 +75,7 @@ namespace WorldMap.UI
             Debug.Assert(herosGetReadyLV != null);
             herosGetReadyLV.onItemClick = delegate (ListViewItem item, Person person)
             {
-                if (herosGetReadyLV.RemoveItem(person))
+                if (herosGetReadyLV.RemoveData(person))
                     herosChoosedLV.AddItem(person);
             };
         }

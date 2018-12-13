@@ -7,6 +7,7 @@
 using UnityEngine.UI;
 using WorldMap.Model;
 using TTT.Utility;
+using UnityEngine;
 
 namespace WorldMap.UI
 {
@@ -15,12 +16,8 @@ namespace WorldMap.UI
         public delegate void CallBackGoodsBuy(Good good);
         public CallBackGoodsBuy callBackGoodsAction;
         public string ActionBtnString { set; get; } = "购买";
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-        protected override void OnItemView(ListViewItem item, Good data)
-        {
+        protected override ResourceItemBase GetResourceItemBase(ListViewItem item, Good data)
+        { 
             GoodsItem view = ViewTool.ForceGetComponent<GoodsItem>(item);
             ActionClickEvent buyClickEvent = new ActionClickEvent(data);
             buyClickEvent.callBackGoodsAction = callBackGoodsAction;
@@ -29,11 +26,17 @@ namespace WorldMap.UI
             view.SetTarget(data.item);
             view.SetNumber(data.Number);
             view.SetPrice(data.Price);
+            return view;
         }
+        
         public class ActionClickEvent : Button.ButtonClickedEvent
         {
             public Good goods;
             public CallBackGoodsBuy callBackGoodsAction;
+            public ActionClickEvent()
+            {
+
+            }
             public ActionClickEvent(Good goods)
             {
                 this.goods = goods;

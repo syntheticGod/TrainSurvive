@@ -123,7 +123,7 @@ namespace TTT.Utility
                 return false;
             return (value > edge1 && value < edge2) || (value > edge2 && value < edge1);
         }
-        public static bool Between(int left, int right, int value)
+        public static bool IfBetweenBoth(int left, int right, int value)
         {
             return value >= left && value <= right;
         }

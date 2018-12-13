@@ -31,8 +31,7 @@ namespace WorldMap.Model
         }
         public bool CanPushItemToPack(Good good)
         {
-            Inventory.CanPushAllItem(good.item);
-            return true;
+            return Inventory.CanPushAllItem(good.item);
         }
         public void PushItemFromShop(Good good)
         {

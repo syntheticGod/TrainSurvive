@@ -66,7 +66,7 @@ namespace WorldMap.Controller
         protected override void AfterShowWindow()
         {
             goodsInShopLV.Datas = new List<Good>(currentTown.Goods);
-            if(world.IfTeamOuting)
+            if (world.IfTeamOuting)
                 goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTeam());
             else
                 goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTrain());
@@ -81,12 +81,12 @@ namespace WorldMap.Controller
             int numberBuy = good.Number;
             if (!world.Pay(good.Price * numberBuy))
             {
-                Debug.Log("商店：金额不足");
+                InfoDialog.Show("你的金额不足");
                 return;
             }
-            if(numberBuy > good.Number)
+            if (numberBuy > good.Number)
             {
-                Debug.Log("商店：物品数量不足，另寻他处");
+                InfoDialog.Show("物品数量不足，另寻他处");
                 return;
             }
             Good goodInPack = good.Clone();
@@ -96,7 +96,7 @@ namespace WorldMap.Controller
                 InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
                 if (!inventoryForTeam.CanPushItemToPack(goodInPack))
                 {
-                    Debug.Log("系统：购买物品失败");
+                    InfoDialog.Show("背包已满");
                     return;
                 }
                 inventoryForTeam.PushItemFromShop(goodInPack);
@@ -110,8 +110,8 @@ namespace WorldMap.Controller
             {
                 Debug.LogError("系统：物品购买失败");
             }
-            Debug.Log("商店：你成功购买了"+goodInPack.Name+" 花费："+ good.Price * numberBuy+" 剩余："+world.Money);
-            //城镇中的Good被修改，ListView中的Good会被一起修改，所以直接刷新。
+            Debug.Log("商店：你成功购买了" + goodInPack.Name + " 花费：" + good.Price * numberBuy + " 剩余：" + world.Money);
+            //ListView会自动清楚数量为0的条款
             goodsInShopLV.Refresh();
             goodsInPackLV.AddItem(goodInPack);
         }
@@ -119,9 +119,9 @@ namespace WorldMap.Controller
         {
             //TODO：弹出选择窗口
             int numberSell = good.Number;
-            if(numberSell > good.Number)
+            if (numberSell > good.Number)
             {
-                Debug.Log("系统：库存数量不足");
+                InfoDialog.Show("库存数量不足");
                 return;
             }
             Good goodsInTown = good.Clone();
@@ -136,7 +136,9 @@ namespace WorldMap.Controller
                 world.SellGoodsFromTrain(good.ItemID, numberSell);
             }
             world.AddMoney(numberSell * good.Price);
-            Debug.Log("商店：你出售了" + good.Name +" 获得："+numberSell * good.Price +" 现有："+world.Money);
+            good.DecreaseNumber(numberSell);
+            Debug.Log("商店：你出售了" + numberSell + "个" + good.Name + " 剩余：" + good.Number + " 获得金币：" + numberSell * good.Price + " 现有金币：" + world.Money);
+            //ListView会自动清楚数量为0的条款
             goodsInPackLV.Refresh();
             goodsInShopLV.AddItem(goodsInTown);
         }
@@ -144,6 +146,6 @@ namespace WorldMap.Controller
         {
             return true;
         }
-        
+
     }
 }

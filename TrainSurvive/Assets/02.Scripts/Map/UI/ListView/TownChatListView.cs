@@ -12,7 +12,7 @@ namespace WorldMap.UI
 {
     public class TownChatListView : BaseListView<NPCChat>
     {
-        protected override void OnItemView(ListViewItem item, NPCChat data)
+        protected override void OnItemView(ListViewItem item, NPCChat data, int itemIndex)
         {
             TownChatItem view = ViewTool.ForceGetComponent<TownChatItem>(item);
             view.SetProfile(data.Name);

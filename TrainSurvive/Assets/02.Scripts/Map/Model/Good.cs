@@ -28,30 +28,18 @@ namespace WorldMap.Model
         public int MaxNumber { get { return item.maxPileNum; } }
         public string Name { get { return item.name; } }
         public PublicData.ItemType ItemType { get { return item.itemType; } }
-        [NonSerialized]
-        private Item itemClone;
-        public Item item
-        {
-            get
-            {
-                if (itemClone == null)
-                    itemClone = itemData.item.Clone();
-                return itemClone;
-            }
-        }
-        public Good()
-        {
-            itemData = new ItemData(0, 0);
-        }
+        public Item item { private set; get; }
         public Good(ItemData itemData)
         {
             this.itemData = itemData;
+            item = itemData.item;
             //TODO：读取价格
             Price = 1000;
         }
         public Good(SerializationInfo info, StreamingContext context)
         {
             itemData = info.GetValue("ItemData", typeof(ItemData)) as ItemData;
+            item = itemData.item;
             Price = info.GetInt32("Price");
         }
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -61,10 +49,9 @@ namespace WorldMap.Model
         }
         public Good Clone()
         {
-            Good good = new Good();
+            Good good = new Good(new ItemData(ItemID, Number));
             good.Price = Price;
-            good.itemData = new ItemData(ItemID, Number);
-            good.itemClone = itemClone;
+            good.item = item.Clone();
             return good;
         }
         public override bool Equals(object goods)
@@ -99,7 +86,6 @@ namespace WorldMap.Model
                 number = item.maxPileNum;
                 Debug.LogError("商品：数量大于最大数量，" + item.name);
             }
-                
             Number = item.currPileNum = number;
         }
         /// <summary>
@@ -150,26 +136,21 @@ namespace WorldMap.Model
         //----------
         public static Good RandomMaterial()
         {
-            Good good = new Good();
-            good.ItemID = materialIDPool[MathTool.RandomInt(materialIDPool.Length)];
-            //这里随机数量，在最后生成Item的时候，会工具最大数量裁剪
-            good.Number = MathTool.RandomRange(1, 5);
+            //这里随机数量，在最后生成Item的时候，会根据最大数量裁剪
+            ItemData itemData = new ItemData(materialIDPool[MathTool.RandomInt(materialIDPool.Length)], MathTool.RandomRange(1, 5));
+            Good good = new Good(itemData);
             good.Price = MathTool.RandomInt(500) + 500;
             return good;
         }
         public static Good RandomWeapon()
         {
-            Good good = new Good();
-            good.ItemID = weaponIDPool[MathTool.RandomInt(weaponIDPool.Length)];
-            good.Number = 1;
+            Good good = new Good(new ItemData(weaponIDPool[MathTool.RandomInt(weaponIDPool.Length)], 1));
             good.Price = MathTool.RandomRange(1000, 2001);
             return good;
         }
         public static Good RandomSpecail()
         {
-            Good good = new Good();
-            good.ItemID = specailIDPool[MathTool.RandomInt(specailIDPool.Length)];
-            good.Number = 1;
+            Good good = new Good(new ItemData(specailIDPool[MathTool.RandomInt(weaponIDPool.Length)], 1));
             good.Price = MathTool.RandomRange(10000, 20001);
             return good;
         }

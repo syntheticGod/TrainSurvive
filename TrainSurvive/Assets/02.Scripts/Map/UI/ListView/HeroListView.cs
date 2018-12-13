@@ -11,7 +11,7 @@ namespace WorldMap.UI
 {
     public class HeroListView : BaseListView<Person>
     {
-        protected override void OnItemView(ListViewItem item, Person data)
+        protected override void OnItemView(ListViewItem item, Person data, int itemIndex)
         {
             ViewTool.ForceGetComponentInChildren<PersonBaseItem>(item, "Hero").GetComponentInChildren<Text>().text = data.name;
             item.Tag = data;
