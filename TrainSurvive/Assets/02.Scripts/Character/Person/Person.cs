@@ -68,6 +68,31 @@ public class Person
             return null;
         return StaticResource.GetProfession(professions[index]);
     }
+    /// <summary>
+    /// 获取最高级的专精
+    /// </summary>
+    /// <returns>
+    /// NOT NULL：最高级专精
+    /// NULL：没有修过专精
+    /// </returns>
+    public Profession getTopProfession()
+    {
+        for(int i = professions.Length-1; i >= 0; i--)
+        {
+            if (professions[i] != EProfession.NONE)
+                return StaticResource.GetProfession(professions[i]);
+        }
+        return null;
+    }
+    public void setProfession(Profession profession)
+    {
+        if(profession.Level == EProfessionLevel.NONE)
+        {
+            Debug.LogError("专精错误");
+            return;
+        }
+        professions[(int)profession.Level] = profession.Type;
+    }
     [NonSerialized]
     private int lastWeaponId = -1;
     private Person()

@@ -13,41 +13,109 @@ namespace TTT.Resource
 {
     public static class StaticResource
     {
+        /// <summary>
+        /// 根据EProfession的序号排序
+        /// </summary>
         private static Profession[] professions;
+        /// <summary>
+        /// 一级专精映射
+        /// </summary>
+        private static Profession[] firstProfessions;
+        /// <summary>
+        /// 二级专精映射
+        /// </summary>
+        private static Profession[,] secondProfessions;
+        private static void LoadProfessionFromXml()
+        {
+            professions = new Profession[(int)EProfession.NUM];
+            firstProfessions = new Profession[NumOfAttribute];
+            secondProfessions = new Profession[NumOfAttribute, NumOfAttribute];
+            string xmlString = Resources.Load("xml/profession").ToString();
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+
+            XmlNode root = document.SelectSingleNode("professions");
+            string spriteFloder = root.SelectSingleNode("spriteFloder").InnerText + "/";
+
+            XmlNodeList professionList = root.SelectNodes("profession");
+            int indexOfProf = 0;
+            foreach (XmlNode professionNode in professionList)
+            {
+                XmlNodeList abiReqList = professionNode.SelectNodes("abiReq");
+                Profession.AbiReq[] abiReq = new Profession.AbiReq[abiReqList.Count];
+                EProfession eProfession = EProfession.NONE + 1 + int.Parse(professionNode.Attributes["type"].Value);
+                int indexOfAbi = 0;
+                foreach (XmlNode abiReqNode in abiReqList)
+                {
+                    Profession.AbiReq tempAbi = new Profession.AbiReq();
+                    tempAbi.Abi = EAttribute.NONE + 1 + int.Parse(abiReqNode.Attributes["abi"].Value);
+                    tempAbi.Number = int.Parse(abiReqNode.Attributes["Number"].Value);
+                    tempAbi.costFix = float.Parse(abiReqNode.Attributes["costFix"].Value);
+                    abiReq[indexOfAbi++] = tempAbi;
+                }
+                string iconFile = spriteFloder + professionNode.Attributes["sprite"].Value;
+                string name = professionNode.Attributes["name"].Value;
+                string info = professionNode.Attributes["info"].Value;
+                Profession profession = new Profession(abiReq, name, eProfession, iconFile, info);
+                professions[indexOfProf] = profession;
+                if (indexOfProf < NumOfAttribute)
+                {
+                    //一级专精
+                    firstProfessions[indexOfProf] = profession;
+                }
+                else
+                {
+                    //二级专精
+                    if (profession.AbiReqs.Length == 1)
+                    {
+                        int x = (int)profession.AbiReqs[0].Abi;
+                        secondProfessions[x, x] = profession;
+                    }
+                    else
+                    {
+                        int x = (int)profession.AbiReqs[0].Abi;
+                        int y = (int)profession.AbiReqs[1].Abi;
+                        secondProfessions[y, x] = secondProfessions[x, y] = profession;
+                    }
+                }
+                indexOfProf++;
+            }
+        }
+        private const int NumOfAttribute = 5;
         public static Profession GetProfession(EProfession professionType)
         {
             if (professions == null)
             {
-                professions = new Profession[(int)EProfession.NUM];
-                string xmlString = Resources.Load("xml/profession").ToString();
-                XmlDocument document = new XmlDocument();
-                document.LoadXml(xmlString);
-
-                XmlNode root = document.SelectSingleNode("professions");
-                string spriteFloder = root.SelectSingleNode("spriteFloder").InnerText + "/";
-
-                XmlNodeList professionList = root.SelectNodes("profession");
-                int indexOfProf = 0;
-                foreach (XmlNode professionNode in professionList)
-                {
-                    XmlNodeList abiReqList = professionNode.SelectNodes("abiReq");
-                    Profession.AbiReq[] abiReq = new Profession.AbiReq[abiReqList.Count];
-                    int indexOfAbi = 0;
-                    foreach (XmlNode abiReqNode in abiReqList)
-                    {
-                        Profession.AbiReq tempAbi = new Profession.AbiReq();
-                        tempAbi.Abi = EPersonAttribute.NONE + 1 + int.Parse(abiReqNode.Attributes["abi"].Value);
-                        tempAbi.Number = int.Parse(abiReqNode.Attributes["Number"].Value);
-                        tempAbi.costFix = float.Parse(abiReqNode.Attributes["costFix"].Value);
-                        abiReq[indexOfAbi++] = tempAbi;
-                    }
-                    EProfession eProfession = EProfession.NONE + 1 + int.Parse(professionNode.Attributes["type"].Value);
-                    string iconFile = spriteFloder + professionNode.Attributes["sprite"].Value;
-                    string name = professionNode.Attributes["name"].Value;
-                    professions[indexOfProf++] = new Profession(abiReq, name, eProfession, iconFile);
-                }
+                LoadProfessionFromXml();
             }
             return professions[(int)professionType];
+        }
+        public static Profession[] GetNextProfessions(Profession profession)
+        {
+            if (firstProfessions == null) LoadProfessionFromXml();
+            Profession[] result = new Profession[NumOfAttribute];
+            if (profession == null)
+            {
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = firstProfessions[i];
+            }
+            else if (profession.Level == EProfessionLevel.LEVEL1)
+            {
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = secondProfessions[(int)profession.Type, i];
+            }
+            else if(profession.Level == EProfessionLevel.LEVEL2)
+            {
+                //TODO 三级专精
+                Debug.LogError("三级专精——待扩展");
+                return null;
+            }
+            else if(profession.Level == EProfessionLevel.LEVEL3)
+            {
+                //顶级专精
+                return null;
+            }
+            return result;
         }
         //方块大小
         public static Vector2 BlockSize
@@ -136,6 +204,17 @@ namespace TTT.Resource
         {
             "阿比盖尔","艾比","艾达","阿德莱德","艾德","亚伦","亚伯","亚伯拉罕","亚当","艾德里安","阿尔瓦","亚历克斯","亚历山大","艾伦","艾伯特","阿尔弗雷德","安德鲁","安迪","安格斯","安东尼","亚瑟","奥斯汀","本","本森","比尔","鲍伯","布兰登","布兰特","布伦特","布莱恩","布鲁斯","卡尔","凯里","卡斯帕","查尔斯","采尼","克里斯","克里斯蒂安","克里斯多夫","科林","科兹莫","丹尼尔","丹尼斯","德里克","唐纳德","道格拉斯","大卫","丹尼","埃德加","爱德华","艾德文","艾略特","埃尔维斯","埃里克","埃文","弗朗西斯","弗兰克","富兰克林","弗瑞德","加百利","加比","加菲尔德","加里","加文","乔治","基诺","格林","格林顿","哈里森","雨果","汉克","霍华德","亨利","伊格纳缇伍兹","伊凡","艾萨克","杰克","杰克逊","雅各布","詹姆士","詹森","杰弗瑞","杰罗姆","杰瑞","杰西","吉姆","吉米","乔","约翰","约翰尼","约瑟夫","约书亚","贾斯汀","凯斯","肯","肯尼斯","肯尼","凯文","兰斯","拉里","劳伦特","劳伦斯","利安德尔","李","雷欧","雷纳德","利奥波特","劳伦","劳瑞","劳瑞恩","卢克","马库斯","马西","马克","马科斯","马尔斯","马丁","马修","迈克尔","麦克","尼尔","尼古拉斯","奥利弗","奥斯卡","保罗","帕特里克","彼得","菲利普","菲比","昆廷","兰德尔","伦道夫","兰迪","列得","雷克斯","理查德","里奇","罗伯特","罗宾","罗宾逊","洛克","罗杰","罗伊","赖安","阿比盖尔","艾比","艾达","阿德莱德","艾德"
         };
+        private static string[] AttributeName { get; } = new string[] { "体力", "力量", "敏捷", "技巧", "智力" };
+        public static int AttributeCount { get { return AttributeName.Length; } }
+        public static string GetAttributeName(int index)
+        {
+            if (index >= AttributeName.Length)
+            {
+                Debug.LogError("获取属性名失败，index=" + index);
+                return "";
+            }
+            return AttributeName[index];
+        }
         public static string RandomTownName()
         {
             return TOWN_NAME[MathTool.RandomInt(TOWN_NAME.Length)];
@@ -147,5 +226,15 @@ namespace TTT.Resource
             else
                 return NPC_NAME_WOMAN[MathTool.RandomInt(NPC_NAME_WOMAN.Length)];
         }
+    }
+    public enum EAttribute
+    {
+        NONE = -1,
+        VITALITY,//体力
+        STRENGTH,//力量
+        AGILE,//敏捷
+        TECHNIQUE,//技巧
+        INTELLIGENCE,//智力
+        NUM
     }
 }

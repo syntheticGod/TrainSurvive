@@ -5,18 +5,10 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 
-public enum EPersonAttribute
-{
-    NONE = -1,
-    VITALITY,//体力
-    STRENGTH,//力量
-    AGILE,//敏捷
-    TECHNIQUE,//技巧
-    INTELLIGENCE,//智力
-    NUM
-}
+using TTT.Utility;
+using TTT.Resource;
+
 public enum EProfession
 {
     NONE = -1,
@@ -42,11 +34,19 @@ public enum EProfession
     FORCE_USER,//魔导师
     NUM
 }
+public enum EProfessionLevel
+{
+    NONE = -1,
+    LEVEL1,
+    LEVEL2,
+    LEVEL3,
+    NUM
+}
 public class Profession
 {
     public class AbiReq
     {
-        public EPersonAttribute Abi;//属性
+        public EAttribute Abi;//属性
         public int Number;//数值
         public float costFix;//折扣
     }
@@ -61,7 +61,15 @@ public class Profession
     /// 120*120像素
     /// </summary>
     public Sprite IconBig { get; }
-    public Profession(AbiReq[] abiReqs, string name, EProfession eProfession, string iconFile)
+    /// <summary>
+    /// -1：无专精
+    /// 0：一级专精
+    /// 1：二级专精
+    /// 2：三级专精
+    /// </summary>
+    public EProfessionLevel Level { get; }
+    public string Info { get; }
+    public Profession(AbiReq[] abiReqs, string name, EProfession eProfession, string iconFile, string info)
     {
         AbiReqs = abiReqs;
         Name = name;
@@ -72,5 +80,41 @@ public class Profession
         {
             throw new System.Exception("文件" + iconFile + "未找到");
         }
+        Info = info;
+        if (Type == EProfession.NONE)
+            Level = EProfessionLevel.NONE;
+        if (MathTool.IfBetweenBoth((int)EProfession.KNIGHT, (int)EProfession.ENCHANTER, (int)Type))
+            Level = EProfessionLevel.LEVEL1;
+        else
+            Level = EProfessionLevel.LEVEL2;
+    }
+    /// <summary>
+    /// 判断一个属性是否满足专精要求
+    /// 注意：如果传入专精不要求的属性，返回TRUE。也被认为满足。
+    /// </summary>
+    /// <param name="attribute"></param>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    public bool CheckRequires(EAttribute attribute, int number, ref int requireNumber)
+    {
+        requireNumber = 0;
+        foreach (AbiReq abiReq in AbiReqs)
+        {
+            if (abiReq.Abi == attribute && abiReq.Number > number)
+            {
+                requireNumber = abiReq.Number;
+                return false;
+            }
+        }
+        return true;
+    }
+    public float GetCostFixByAttribute(EAttribute attribute)
+    {
+        foreach (AbiReq abiReq in AbiReqs)
+        {
+            if (abiReq.Abi == attribute)
+                return abiReq.costFix;
+        }
+        return 1.0F;
     }
 }

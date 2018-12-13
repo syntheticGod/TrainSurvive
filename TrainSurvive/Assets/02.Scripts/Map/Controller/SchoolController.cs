@@ -10,12 +10,12 @@ using System.Collections.Generic;
 
 using TTT.Utility;
 using WorldMap.UI;
+using TTT.Resource;
 
 namespace WorldMap.Controller
 {
     public class SchoolController : WindowsController, DialogCallBack
     {
-        private string[] attributeInfoStrs = new string[] { "体力", "力量", "敏捷", "技巧", "智力" };
         private string moneyInfoStr = "所需金钱：";
         private string payBtnStr = "确定";
         private string resetBtnStr = "重置";
@@ -31,8 +31,9 @@ namespace WorldMap.Controller
         private Text heroInfoContent;
         //专精
         private Text advanceTitle;
-        private Image[] professionIcon;
-        private Text[] professionInfo;
+        private ProfessionListView professionListView;
+        private Profession currentProfession;
+        private Profession[] nextProfessions;
         private int[] heroAttribute;
         private int cost;
         protected override void CreateModel()
@@ -41,7 +42,7 @@ namespace WorldMap.Controller
             m_titleString = "学校";
             base.CreateModel();
             SetBackground("tavern_bg_01");
-            int attriCount = attributeInfoStrs.Length;
+            int attriCount = StaticResource.AttributeCount;
             attriViews = new Text[attriCount];
             attriViewsNew = new Text[attriCount];
             deltaAttri = new uint[attriCount];
@@ -76,15 +77,16 @@ namespace WorldMap.Controller
                 {
                     RectTransform attributes = new GameObject("Attributes").AddComponent<RectTransform>();
                     ViewTool.SetParent(attributes, heroInfoBorad);
-                    ViewTool.Anchor(attributes, new Vector2(0F, 0F), new Vector2(1F, 0.815F));
-                    float delta = 1F / attributeInfoStrs.Length;
-                    for (int i = 0; i < attributeInfoStrs.Length; i++)
+                    ViewTool.Anchor(attributes, new Vector2(0F, 0.125F), new Vector2(1F, 0.815F));
+                    float delta = 1F / attriCount;
+                    for (int i = 0; i < attriCount; i++)
                     {
                         RectTransform attribute = CreateAttribute(i);
                         ViewTool.SetParent(attribute, attributes);
-                        float tempDelta = delta * i;
+                        float tempDelta = delta * (attriCount - i);
+                        attribute.anchorMax = new Vector2(1, tempDelta);
+                        tempDelta -= delta;
                         attribute.anchorMin = new Vector2(0, tempDelta);
-                        attribute.anchorMax = new Vector2(1, tempDelta + delta);
                         attribute.offsetMin = Vector2.zero;
                         attribute.offsetMax = Vector2.zero;
                     }
@@ -128,41 +130,18 @@ namespace WorldMap.Controller
                     advanceTitle.text = "选择专精";
                 }
                 {
-                    professionIcon = new Image[attributeInfoStrs.Length];
-                    professionInfo = new Text[attributeInfoStrs.Length];
-                    float delta = 0.667F / attributeInfoStrs.Length;
-                    for(int i = 0; i < attributeInfoStrs.Length; i++)
-                    {
-                        Vector2 maxAnchor = new Vector2(0.285F, 0.800F - delta * i);
-                        Vector2 minAnchor = new Vector2(0F, maxAnchor.y - delta);
-                        professionIcon[i] = ViewTool.CreateImage("Icon" + i);
-                        ViewTool.SetParent(professionIcon[i], advanceLayout);
-                        ViewTool.Anchor(professionIcon[i], minAnchor, maxAnchor);
-                        minAnchor.x = maxAnchor.x;
-                        maxAnchor.x = 1F;
-                        professionInfo[i] = ViewTool.CreateText("Info" + i);
-                        professionInfo[i].alignment = TextAnchor.MiddleLeft;
-                        ViewTool.SetParent(professionInfo[i], advanceLayout);
-                        ViewTool.Anchor(professionInfo[i], minAnchor, maxAnchor);
-                    }
+                    professionListView = ViewTool.ForceGetComponentInChildren<ProfessionListView>(advanceLayout, "ProfessionsLV");
+                    ViewTool.SetParent(professionListView, advanceLayout);
+                    ViewTool.Anchor(professionListView, new Vector2(0F, 0.133F), new Vector2(1F, 0.800F));
                 }
                 {
                     //确定按钮
                     Button ok = ViewTool.CreateBtn("OK", "确定");
+                    ok.onClick.AddListener(OnProfessionOKBtn);
                     ViewTool.SetParent(ok, advanceLayout);
                     ViewTool.Anchor(ok, new Vector2(0F, 0F), new Vector2(1F, 0.133F));
                 }
             }
-            //herosLayout = Utility.ForceGetComponentInChildren<HeroListView>(this, "HerosLayout");
-            //herosLayout.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            //herosLayout.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
-            //herosLayout.GridConstraintCount = 1;
-            //RectTransform herosLayoutRect = herosLayout.GetComponent<RectTransform>();
-            //Utility.HLineAt(herosLayoutRect, anchor:0.8F, height:100F);
-            //herosLayout.onItemClick = delegate (ListViewItem item, Person person)
-            //{
-            //};
-
         }
         private RectTransform CreateAttribute(int index)
         {
@@ -173,7 +152,7 @@ namespace WorldMap.Controller
             RectTransform attriInfo = attriInfoView.GetComponent<RectTransform>();
             attriInfo.anchorMin = Vector2.zero;
             attriInfo.anchorMax = new Vector2(0.2F, 1F);
-            attriInfoView.text = attributeInfoStrs[index];
+            attriInfoView.text = StaticResource.GetAttributeName(index);
             //数字
             attriViews[index] = ViewTool.CreateText("abi" + index);
             ViewTool.SetParent(attriViews[index], attribute);
@@ -214,9 +193,7 @@ namespace WorldMap.Controller
 
         protected override void AfterShowWindow()
         {
-            //herosLayout.Datas = world.GetHeros();
-            //if (herosLayout.Datas.Count != 0)
-            //    herosLayout.ClickManually(0);
+            professionListView.SetData(new List<Profession>());
             List<Person> heros = world.GetHeros();
             if (heros.Count > 0)
             {
@@ -226,11 +203,13 @@ namespace WorldMap.Controller
         private void ShowHero(Person person)
         {
             heroProfile.ShowPerson(person);
-            heroInfoContent.text = person.name + "，其他简介待填充";
             heroChoosed = person;
             InitAttribute();
             ShowAttributes();
             ShowMoney();
+            //专精
+            InitProfessions();
+            ShowProfession();
         }
 
         protected override bool FocusBehaviour()
@@ -262,9 +241,13 @@ namespace WorldMap.Controller
         public int GetMoney()
         {
             float money = 0F;
-            for (int i = 0; i < attributeInfoStrs.Length; i++)
+            for (EAttribute iAttribute = EAttribute.NONE + 1; iAttribute < EAttribute.NUM; iAttribute++)
             {
-                money += deltaAttri[i] * 1000F * (1 + heroAttribute[i] * 0.05F) * (1 + heroChoosed.trainCnt * 0.05F);
+                int i = (int)iAttribute;
+                float oneAttributeMoney = deltaAttri[i] * 1000F * (1 + heroAttribute[i] * 0.05F) * (1 + heroChoosed.trainCnt * 0.05F);
+                if (currentProfession != null)
+                    oneAttributeMoney *= currentProfession.GetCostFixByAttribute(iAttribute);
+                money += oneAttributeMoney;
             }
             return (int)money;
         }
@@ -273,11 +256,75 @@ namespace WorldMap.Controller
         /// </summary>
         private void ShowAttributes()
         {
-            for (int i = 0; i < attributeInfoStrs.Length; i++)
+            for (int i = 0; i < StaticResource.AttributeCount; i++)
             {
                 attriViews[i].text = heroAttribute[i].ToString();
                 attriViewsNew[i].text = (heroAttribute[i] + deltaAttri[i]).ToString();
             }
+        }
+        private void ShowHeroInfo()
+        {
+            string content = heroChoosed.name + (heroChoosed.ismale ? "，男" : "，女") + "\n";
+            if (currentProfession != null)
+                content += currentProfession.Name;
+            heroInfoContent.text = content;
+        }
+        /// <summary>
+        /// 初始化专精所需要的数组
+        /// currentProfession和nextProfessions
+        /// </summary>
+        private void InitProfessions()
+        {
+            currentProfession = heroChoosed.getTopProfession();
+            nextProfessions = StaticResource.GetNextProfessions(currentProfession);
+        }
+        /// <summary>
+        /// 根据专精所需要的数据显示专精
+        /// </summary>
+        private void ShowProfession()
+        {
+            professionListView.RemoveAllDatas();
+            if (nextProfessions != null)
+            {
+                for (int i = 0; i < nextProfessions.Length; i++)
+                {
+                    professionListView.AddItem(nextProfessions[i]);
+                }
+            }
+            else
+            {
+                Debug.Log("已到达顶级专精");
+            }
+            //更新英雄信息
+            ShowHeroInfo();
+        }
+        private void OnProfessionOKBtn()
+        {
+            if (professionListView.IsSelectNothing)
+            {
+                InfoDialog.Show("未选择");
+                return;
+            }
+            if (nextProfessions == null)
+            {
+                InfoDialog.Show("已到达顶级专精");
+                return;
+            }
+            Profession selectedProfession = nextProfessions[professionListView.SelectIndex];
+            for (EAttribute i = EAttribute.NONE + 1; i < EAttribute.NUM; i++)
+            {
+                int requireNumber = 0;
+                if (!selectedProfession.CheckRequires(i, heroAttribute[(int)i], ref requireNumber))
+                {
+                    InfoDialog.Show(StaticResource.GetAttributeName((int)i) + "必须大于等于" + requireNumber);
+                    return;
+                }
+            }
+            heroChoosed.setProfession(selectedProfession);
+            InitProfessions();
+            ShowProfession();
+            //重新计算金钱
+            ShowMoney();
         }
         /// <summary>
         /// 初始化数值变量
@@ -291,7 +338,7 @@ namespace WorldMap.Controller
             heroAttribute[2] = heroChoosed.agile;
             heroAttribute[3] = heroChoosed.technique;
             heroAttribute[4] = heroChoosed.intelligence;
-            for (int i = 0; i < attributeInfoStrs.Length; i++)
+            for (int i = 0; i < StaticResource.AttributeCount; i++)
             {
                 deltaAttri[i] = 0;
             }
@@ -325,10 +372,14 @@ namespace WorldMap.Controller
             int money = GetMoney();
             if (!world.IfMoneyEnough(money))
             {
-                Debug.Log("金钱不足");
+                InfoDialog.Show("金钱不足");
                 return;
             }
-            //TODO：检查金额是否足够
+            if (!world.Pay(money))
+            {
+                Debug.LogError("扣款失败");
+                return;
+            }
             heroChoosed.vitality += (int)deltaAttri[0];
             heroChoosed.strength += (int)deltaAttri[1];
             heroChoosed.agile += (int)deltaAttri[2];

@@ -181,7 +181,7 @@ namespace WorldMap.Controller
                             Team.Instance.CallBackRecruit(currentNPC.PersonInfo);
                         else
                             Train.Instance.CallBackRecruit(currentNPC.PersonInfo);
-                        tavernNPCListView.RemoveItem(currentNPC.PersonInfo);
+                        tavernNPCListView.RemoveData(currentNPC.PersonInfo);
                         tavernNPCListView.ClickManually(0);
                         break;
                     }

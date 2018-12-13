@@ -7,82 +7,89 @@
   abi 2：敏捷
   abi 3：技巧
   abi 4：智力
+  
+  要求：
+  1、abiReq：必须按abi的大小 从小到大排序
+  2、一级专精的type必须小于二级专精的type
+  3、二级专精之间的abi要求不能相同。例如：野蛮人要求abi(0,1)，那么壁垒就不能也要求abi(0,1)。
+  4、专精的type需要和Eprofession相对应
+  如果不满足要求，会造成读取数据混乱。
   -->
   <!--第一专精-->
-  <profession name="骑士" sprite="knight_icon_01" type="0">
+  <profession name="骑士" sprite="knight_icon_01" type="0" info="无特殊能力">
     <abiReq abi="0" Number="10" costFix="0.8"/>
   </profession>
-  <profession  name="战士" sprite="warrior_icon_01" type="1">
+  <profession  name="战士" sprite="warrior_icon_01" type="1" info="无特殊能力">
     <abiReq abi="1" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="刺客" sprite="assassin_icon_01" type="2">
+  <profession name="刺客" sprite="assassin_icon_01" type="2" info="无特殊能力">
     <abiReq abi="2" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="枪手" sprite="shooter_icon_01" type="3">
+  <profession name="枪手" sprite="shooter_icon_01" type="3" info="无特殊能力">
     <abiReq abi="3" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="法师" sprite="enchanter_icon_01" type="4">
+  <profession name="法师" sprite="enchanter_icon_01" type="4" info="获得能力：允许学习2阶法术">
     <abiReq abi="4" Number="10" costFix="0.8"/>
   </profession>
   <!--第二专精-->
   <!--split========================-->
-  <profession name="坚壁" sprite="knight_icon_01" type="5">
+  <profession name="坚壁" sprite="knight_icon_01" type="5" info="无特殊能力">
     <abiReq abi="0" Number="30" costFix="0.5"/>
   </profession>
-  <profession  name="野蛮人" sprite="knight_icon_01" type="6">
+  <profession  name="野蛮人" sprite="knight_icon_01" type="6" info="无特殊能力">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="1" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="后勤？" sprite="knight_icon_01" type="7">
+  <profession name="后勤？" sprite="knight_icon_01" type="7" info="无特殊能力">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="2" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="铁匠？" sprite="knight_icon_01" type="8">
+  <profession name="铁匠？" sprite="knight_icon_01" type="8" info="无特殊能力">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="医师？" sprite="knight_icon_01" type="9">
+  <profession name="医师？" sprite="knight_icon_01" type="9" info="无特殊能力">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="勇士" sprite="knight_icon_01" type="10">
+  <profession name="勇士" sprite="knight_icon_01" type="10" info="无特殊能力">
     <abiReq abi="1" Number="30" costFix="0.5"/>
   </profession>
-  <profession  name="双剑士" sprite="knight_icon_01" type="11">
+  <profession  name="双剑士" sprite="knight_icon_01" type="11" info="解锁技能：双刀">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="2" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="游侠" sprite="knight_icon_01" type="12">
+  <profession name="游侠" sprite="knight_icon_01" type="12" info="解锁技能：淬毒">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="魔剑士" sprite="knight_icon_01" type="13">
+  <profession name="魔剑士" sprite="knight_icon_01" type="13" info="解锁技能：魔能之力">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="快攻手" sprite="knight_icon_01" type="14">
+  <profession name="快攻手" sprite="knight_icon_01" type="14" info="无特殊能力">
     <abiReq abi="2" Number="30" costFix="0.5"/>
   </profession>
-  <profession name="潜行者" sprite="knight_icon_01" type="15">
+  <profession name="潜行者" sprite="knight_icon_01" type="15" info="解锁技能：隐身">
     <abiReq abi="2" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="风行者" sprite="knight_icon_01" type="16">
+  <profession name="风行者" sprite="knight_icon_01" type="16" info="解锁技能：御风">
     <abiReq abi="2" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="鹰隼" sprite="knight_icon_01" type="17">
+  <profession name="鹰隼" sprite="knight_icon_01" type="17" info="获得能力：视野+1">
     <abiReq abi="3" Number="30" costFix="0.5"/>
   </profession>
-  <profession name="工程师" sprite="knight_icon_01" type="18">
+  <profession name="工程师" sprite="knight_icon_01" type="18" info="无特殊能力">
     <abiReq abi="3" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="魔导师" sprite="knight_icon_01" type="19">
+  <profession name="魔导师" sprite="knight_icon_01" type="19" info="获得能力：允许学习3阶法术">
     <abiReq abi="4" Number="30" costFix="0.5"/>
   </profession>
 </professions>

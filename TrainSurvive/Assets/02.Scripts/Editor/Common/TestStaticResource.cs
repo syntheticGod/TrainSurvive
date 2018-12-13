@@ -5,6 +5,7 @@
  * 版本：v0.1
  */
 using NUnit.Framework;
+using UnityEngine;
 
 using TTT.Resource;
 
@@ -20,9 +21,10 @@ namespace TTT.Test.Resource
             Assert.AreEqual("骑士", profession.Name);
             Assert.AreEqual(EProfession.KNIGHT, profession.Type);
             Profession.AbiReq abiReq = profession.AbiReqs[0];
-            Assert.AreEqual(EPersonAttribute.NONE + 1 + 0, abiReq.Abi);
+            Assert.AreEqual(EAttribute.NONE + 1 + 0, abiReq.Abi);
             Assert.AreEqual(10, abiReq.Number);
             Assert.AreEqual(0.8F, abiReq.costFix);
+            Debug.Log(profession.Info);
         }
     }
 }

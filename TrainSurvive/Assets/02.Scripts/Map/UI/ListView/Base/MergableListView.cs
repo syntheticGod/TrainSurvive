@@ -39,7 +39,7 @@ namespace WorldMap.UI
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override bool RemoveItem(M data)
+        public override bool RemoveData(M data)
         {
             int i;
             for (i = 0; i < Datas.Count; ++i)
@@ -65,14 +65,15 @@ namespace WorldMap.UI
         /// </summary>
         protected override void RefreshData()
         {
-            List<M> tempDatas = new List<M>(Datas);
-            Datas.Clear();
-            for (int i = 0; i < tempDatas.Count; i++)
+            for (int i = 0; i < Datas.Count; i++)
             {
-                if (tempDatas[i].Number() <= 0) continue;
-                Datas.Add(tempDatas[i]);
+                if (Datas[i].Number() <= 0)
+                {
+                    Datas.RemoveAt(i--);
+                    continue;
+                }
                 if (onItemFilter == null || !onItemFilter(Datas[i]))
-                    OnItemView(AppendItem(), tempDatas[i]);
+                    OnItemView(AppendItem(), Datas[i], i);
             }
         }
     }
