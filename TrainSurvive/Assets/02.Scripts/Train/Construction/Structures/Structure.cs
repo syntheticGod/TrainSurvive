@@ -137,10 +137,10 @@ public class Structure : ISerializable {
     /// <summary>
     /// 返回上下文菜单按钮项。
     /// </summary>
-    public virtual List<ButtonAction> GetButtonActions() {
-        return new List<ButtonAction> {
-            new ButtonAction("拆除", (structure) => structure.FacilityState = State.REMOVING)
-        };
+    public virtual LinkedList<ButtonAction> GetButtonActions() {
+        LinkedList<ButtonAction> actions = new LinkedList<ButtonAction>();
+        actions.AddLast(new ButtonAction("拆除", (structure) => structure.FacilityState = State.REMOVING));
+        return actions;
     }
 
     /// <summary>

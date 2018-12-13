@@ -18,31 +18,19 @@ public class StructureSetting : ScriptableObject {
     public struct InitializeValue {
         public string Name;
         public string TypeName;
-        public int IntValue;
-        public bool BoolValue;
-        public float FloatValue;
-        public string StringValue;
-        public Vector2 Vector2Value;
-        public Vector3 Vector3Value;
-        public Color ColorValue;
+
+        public int System_Int32Value;
+        public bool System_BooleanValue;
+        public float System_SingleValue;
+        public string System_StringValue;
+        public Item2EnergyStructure.Conversion[] Item2EnergyStructure_ConversionArrayValue;
 
         public object GetValue() {
-            if (TypeName == typeof(int).FullName)
-                return IntValue;
-            if (TypeName == typeof(bool).FullName)
-                return BoolValue;
-            if (TypeName == typeof(float).FullName)
-                return FloatValue;
-            if (TypeName == typeof(string).FullName)
-                return StringValue;
-            if (TypeName == typeof(Vector2).FullName)
-                return Vector2Value;
-            if (TypeName == typeof(Vector3).FullName)
-                return Vector3Value;
-            if (TypeName == typeof(Color).FullName)
-                return ColorValue;
-            if (Type.GetType(TypeName).IsEnum)
-                return Enum.GetValues(Type.GetType(TypeName)).GetValue(IntValue);
+            foreach (FieldInfo info in GetType().GetRuntimeFields()) {
+                if (info.FieldType.FullName == TypeName && info.Name.EndsWith("Value")) {
+                    return info.GetValue(this);
+                }
+            }
             return null;
         }
     }
@@ -79,12 +67,19 @@ public class StructureSetting : ScriptableObject {
     public Structure Instantiate() {
         object o = Initializer.GetClass().GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { ID });
         foreach (InitializeValue value in InitializeValues) {
-            foreach (FieldInfo info in o.GetType().GetRuntimeFields()) {
-                if (info.Name == value.Name) {
-                    info.SetValue(o, value.GetValue());
-                    break;
+            Type t = Initializer.GetClass();
+            do {
+                bool flag = false;
+                foreach (FieldInfo info in t.GetRuntimeFields()) {
+                    if (info.Name == value.Name) {
+                        info.SetValue(o, value.GetValue());
+                        flag = true;
+                        break;
+                    }
                 }
-            }
+                if (flag) break;
+                t = t.BaseType;
+            } while (t != null);
         }
         return (Structure)o;
     }

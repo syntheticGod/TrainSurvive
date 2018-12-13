@@ -127,10 +127,10 @@ public class Facility : MonoBehaviour {
                 contextMenu.PutButton("停止", 0, () => Structure.FacilityState = Structure.State.CANCLE);
                 break;
             case Structure.State.WORKING:
-                List<Structure.ButtonAction> actions = Structure.GetButtonActions();
-                for (int i = 0; i < actions.Count; i++) {
-                    int index = i;
-                    contextMenu.PutButton(actions[index].Title, index, () => actions[index].Action(Structure));
+                LinkedList<Structure.ButtonAction> actions = Structure.GetButtonActions();
+                int i = 0;
+                foreach (Structure.ButtonAction action in actions) {
+                    contextMenu.PutButton(action.Title, i++, () => action.Action(Structure));
                 }
                 break;
             default:
