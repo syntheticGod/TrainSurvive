@@ -1,15 +1,4 @@
-/*
- * 描述：
- * 作者：����
- * 创建时间：2018/11/6 23:29:41
- * 版本：v0.1
- */
-/*
- * 描述：物品栏类——所有管理物品的对象由其生成（入资源采集队伍的物品记录）
- * 作者：张皓翔
- * 创建时间：2018/11/1 14:39:45
- * 版本：v0.1
- */
+
 /*
  * 描述：物品栏（后台控制区）
  * 作者：张皓翔
@@ -53,6 +42,10 @@ namespace Assets._02.Scripts.zhxUIScripts
             {
                 return _curr_size;
             }
+            set
+            {
+                _curr_size = value;
+            }
         }
         public List<Item> items
         {
@@ -63,10 +56,12 @@ namespace Assets._02.Scripts.zhxUIScripts
         }
 
         //  构造  ---------------------------------
-        public Inventory(float maxsize, InventoryCtrl _controler = null)
+        public Inventory(float maxsize = 0, InventoryCtrl _controler = null)
         {
-            
-            _max_size = maxsize;
+            if (maxsize == 0)
+                _max_size = maxsize;
+            else
+                _max_size = World.getInstance().trainInventoryMaxSize;
             _curr_size = 0f;
             _items = new List<Item>();
             controller = _controler;
@@ -98,59 +93,61 @@ namespace Assets._02.Scripts.zhxUIScripts
         public void PushItemWithNoGrid(Item item)
         {
             items.Add(item);
+            currSize += item.currPileNum * item.size;
             if(controller != null)
             {
                 controller.DataSynchronization();
             }
         }
 
-        private int PushItemWithNoController(Item item)         //该函数可以与PushItem集成，减少代码冗余，后续版本待优化
-        {
-            int itemId = item.id;
-            int itemPileNum = item.currPileNum;
-            float restSize = _max_size - _curr_size;
-            int restNum = 0;
-            int allowNum = itemPileNum;
-            int index;
-            if(restSize < item.size * itemPileNum)
-            {
-                allowNum = (int)(restSize / item.size);
-                if (allowNum == 0)
-                    return 0;
-                restNum = itemPileNum - allowNum;
-            }
-            _curr_size += item.size * allowNum;
-            List<int> existIndex = new List<int>();
-            for(int i=0; i<_items.Count; ++i)
-            {
-                if(itemId == _items[i].id)
-                {
-                    existIndex.Add(i);
-                }
-            }
-            for (int i = 0; i < existIndex.Count; ++i)
-            {
-                index = existIndex[i];
-                if (items[index].maxPileNum - items[index].currPileNum >= allowNum)
-                {
-                    items[index].currPileNum += allowNum;
-                    allowNum = 0;   
-                    break;
-                }
-                else
-                {
-                    allowNum -= (items[index].maxPileNum - items[index].currPileNum);
-                    items[index].currPileNum = items[index].maxPileNum;
-                }
-            }
-            if (allowNum != 0)
-            {
-                Item mappingItem = item.Clone();
-                mappingItem.currPileNum = allowNum;
-                PushItemWithNoGrid(mappingItem);
-            }
-            return restNum;
-        }
+        //其他地方直接改World的后台数据即可，这个函数目前来看是没必要加上了
+        //private int PushItemWithNoController(Item item)         //该函数可以与PushItem集成，减少代码冗余，后续版本待优化
+        //{
+        //    int itemId = item.id;
+        //    int itemPileNum = item.currPileNum;
+        //    float restSize = _max_size - _curr_size;
+        //    int restNum = 0;
+        //    int allowNum = itemPileNum;
+        //    int index;
+        //    if(restSize < item.size * itemPileNum)
+        //    {
+        //        allowNum = (int)(restSize / item.size);
+        //        if (allowNum == 0)
+        //            return 0;
+        //        restNum = itemPileNum - allowNum;
+        //    }
+        //    _curr_size += item.size * allowNum;
+        //    List<int> existIndex = new List<int>();
+        //    for(int i=0; i<_items.Count; ++i)
+        //    {
+        //        if(itemId == _items[i].id)
+        //        {
+        //            existIndex.Add(i);
+        //        }
+        //    }
+        //    for (int i = 0; i < existIndex.Count; ++i)
+        //    {
+        //        index = existIndex[i];
+        //        if (items[index].maxPileNum - items[index].currPileNum >= allowNum)
+        //        {
+        //            items[index].currPileNum += allowNum;
+        //            allowNum = 0;   
+        //            break;
+        //        }
+        //        else
+        //        {
+        //            allowNum -= (items[index].maxPileNum - items[index].currPileNum);
+        //            items[index].currPileNum = items[index].maxPileNum;
+        //        }
+        //    }
+        //    if (allowNum != 0)
+        //    {
+        //        Item mappingItem = item.Clone();
+        //        mappingItem.currPileNum = allowNum;
+        //        PushItemWithNoGrid(mappingItem);
+        //    }
+        //    return restNum;
+        //}
 
         public bool CanPushAllItem(Item item)
         {
@@ -159,11 +156,11 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         public int PushItem(Item item)                      //增加物品、自动堆叠并返回放不下的该物品数
         {
-            if (!controller)                                //在非绑定外壳的情况下进行增加物品
-            {
-                return PushItemWithNoController(item);
-                //throw new Exception("该内核无绑定的前端控制器");
-            }
+            //if (!controller)                                //在非绑定外壳的情况下进行增加物品
+            //{
+            //    return PushItemWithNoController(item);
+            //    //throw new Exception("该内核无绑定的前端控制器");
+            //}
             int itemId = item.id;
             int itemPileNum = item.currPileNum;
             float restSize = _max_size - _curr_size;
@@ -262,7 +259,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             Item mappingItem;
             mappingItem = item.Clone();
             _items.Add(mappingItem);
-            _curr_size += item.currPileNum * item.size;
+            
             controller.AddGrid(mappingItem);
             controller.RefreshMaxSize();
         }
@@ -285,6 +282,11 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         public void PopItem(Item item, int num)                 //弹出部分物体
         {
+            if(num == item.currPileNum)
+            {
+                PopItem(item);
+                return;
+            }
             item.currPileNum -= num;
             _curr_size -= item.size * num;
             if (controller != null)

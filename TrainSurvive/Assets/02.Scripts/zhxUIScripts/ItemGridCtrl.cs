@@ -131,7 +131,6 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                 belongController.DataSynchronization();
             }
         }
-        
     }
 
     public void DestroyMyself()
@@ -258,6 +257,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
 
                         Refresh();
                         oriGridCtrl.Refresh();
+
                         if (belongContainer.name == "WeaponGrid")            //更换装备需要做的信息更新
                         {
                             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
@@ -274,13 +274,15 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         {
             belongController.DataSynchronization();
         }    
-        
+        if(oriGridCtrl.belongController != null)
+        {
+            oriGridCtrl.belongController.RefreshMaxSize();
+        }
         
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        World.getInstance().preDragName = this.gameObject.name;
         draggingImg = new GameObject("tempDragImg");
 
         Image tempImg = draggingImg.AddComponent<Image>();

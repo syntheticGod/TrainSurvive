@@ -195,5 +195,65 @@ namespace Assets._02.Scripts.zhxUIScripts
             }
             return true;
         }
+
+        private static void appendAItem(ItemData item)
+        {
+            List<int> indexes = new List<int>();
+            int max = World.getInstance().itemDataInTrain.Count;
+            for (int i=0; i<max; ++i)
+            {
+                if (World.getInstance().itemDataInTrain[i].id == item.id)
+                    indexes.Add(i);
+            }
+         
+            for (int i = 0; i<indexes.Count; ++i)
+            {
+                int index = indexes[i];
+                Item aimItem = World.getInstance().itemDataInTrain[index].item;
+                
+                if (aimItem.maxPileNum - aimItem.currPileNum >= item.num)
+                {
+                    World.getInstance().itemDataInTrain[index].num += item.num;
+                    return;
+                }
+                else
+                {
+                    World.getInstance().itemDataInTrain[index].num = aimItem.maxPileNum;
+                    item.num -= aimItem.maxPileNum - aimItem.currPileNum;
+                }
+            }
+            World.getInstance().itemDataInTrain.Add(item);  
+        }
+
+        public static bool AppendItemsInBackEnd(ItemData[] appendList)
+        {
+            float appendSize = 0f;
+            foreach(ItemData itemData in appendList)
+            {
+                Item[] tempItem = GenerateItem(itemData.id, itemData.num);
+                for(int i=0; i<tempItem.Length; ++i)
+                {
+                    appendSize += tempItem[i].size;
+                }
+            }
+            if(appendSize > World.getInstance().trainInventoryMaxSize - World.getInstance().trainInventoryCurSize)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (ItemData itemData in appendList)
+                {
+                    Item[] tempItem = GenerateItem(itemData.id, itemData.num);
+                    for (int i = 0; i < tempItem.Length; ++i)
+                    {
+                        World.getInstance().trainInventoryCurSize += tempItem[i].size * tempItem[i].currPileNum;
+                        appendAItem(itemData);
+                    }
+                }
+            }
+            
+            return true;
+        }
     }
 }
