@@ -147,6 +147,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
             Person curPerson = World.getInstance().persons[personID];
+            curPerson.unequipWeapon();
             GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID, false);
         }
         Destroy(gameObject);

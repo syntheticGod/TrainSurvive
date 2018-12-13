@@ -32,7 +32,6 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         Destroy(GameObject.Find("tempDragImg"));
 
         grid = eventData.pointerDrag;
-        Debug.Log(grid.name);
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
         if (isEquipmentGrid)
         {
