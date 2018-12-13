@@ -82,19 +82,7 @@ public class Person
     public static Person RandomPerson()
     {
         Person p = new Person();
-<<<<<<< HEAD
-        
-        //名字随机生成(暂用数字代替）
-        //p.name = UnityEngine.Random.value.ToString();
-        //待添加随机逻辑（每个人物的初始属性范围？）
 
-        //p.vitality = UnityEngine.Random.Range(0, 10);//左闭右开
-        //p.strength= UnityEngine.Random.Range(0, 10);
-        //p.agile= UnityEngine.Random.Range(0, 10);
-        //p.technique= UnityEngine.Random.Range(0, 10);
-        //p.intellgence= UnityEngine.Random.Range(0, 10);
-        
-=======
         p.ismale = MathTool.RandomInt(2) == 0;
         p.name = StaticResource.RandomNPCName(p.ismale);
         p.vitality = MathTool.RandomRange(0, 10);
@@ -103,7 +91,6 @@ public class Person
         p.technique = MathTool.RandomRange(0, 10);
         p.intelligence = MathTool.RandomRange(0, 10);
         p.ifOuting = false;
->>>>>>> UI_Debug
         return p;
     }
     //以下获取的属性均保留numsLeft位小数
