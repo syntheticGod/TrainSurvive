@@ -31,8 +31,8 @@ public class Test : MonoBehaviour {
 
     public void AppendTestFun()
     {
-        ItemData[] appendList = new ItemData[] {new ItemData(211,2),   //本次消耗中，ID为111的物品消耗2个
-                                                 new ItemData(212,5),   //           ID为222的物品消耗5个
+        ItemData[] appendList = new ItemData[] {new ItemData(211,2),   //本次添加中，ID为111的物品添加2个
+                                                 new ItemData(212,5),   //           ID为222的物品添加5个
                                                  new ItemData(213,6),   //  ..........................
                                                  new ItemData(214,1)};  //  ..........................
         if (PublicMethod.AppendItemsInBackEnd(appendList))
