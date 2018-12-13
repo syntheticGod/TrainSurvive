@@ -20,10 +20,12 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
+
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -188,20 +190,20 @@ namespace WorldMap.UI
         {
             gameObject.AddComponent<RectTransform>();
             //ScrollRect
-            scrollRect = Utility.ForceGetComponent<ScrollRect>(this);
+            scrollRect = ViewTool.ForceGetComponent<ScrollRect>(this);
             //Viewport
             Transform viewportTransform = transform.Find("Viewport");
             if (viewportTransform == null)
             {
                 viewport = new GameObject("Viewport", typeof(Mask), typeof(Image)).GetComponent<RectTransform>();
                 viewport.GetComponent<Image>().color = new Color(0, 0, 0, 0.1F);
-                Utility.SetParent(viewport, scrollRect);
+                ViewTool.SetParent(viewport, scrollRect);
             }
             else
             {
                 viewport = viewportTransform.GetComponent<RectTransform>();
             }
-            Utility.FullFillRectTransform(viewport);
+            ViewTool.FullFillRectTransform(viewport);
             //Content
             Transform contentTransform = viewport.Find("Content");
             if (contentTransform == null)
@@ -210,20 +212,20 @@ namespace WorldMap.UI
                 contentSizeFitter = content.GetComponent<ContentSizeFitter>();
                 contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
                 contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
-                Utility.SetParent(content, viewport);
+                ViewTool.SetParent(content, viewport);
             }
             else
             {
-                content = Utility.ForceGetComponent<RectTransform>(contentTransform);
-                contentSizeFitter = Utility.ForceGetComponent<ContentSizeFitter>(contentTransform);
+                content = ViewTool.ForceGetComponent<RectTransform>(contentTransform);
+                contentSizeFitter = ViewTool.ForceGetComponent<ContentSizeFitter>(contentTransform);
             }
-            Utility.FullFillRectTransform(content);
+            ViewTool.FullFillRectTransform(content);
             content.pivot = new Vector2(0, 1);
             //Hover Panel
             hoverPanel = new GameObject("ListViewItemPanel").AddComponent<RectTransform>();
-            Utility.SetParent(hoverPanel, this);
+            ViewTool.SetParent(hoverPanel, this);
             hoverPanel.pivot = new Vector2(0, 1);
-            Utility.Anchor(hoverPanel, new Vector2(0, 1), new Vector2(0, 1));
+            ViewTool.Anchor(hoverPanel, new Vector2(0, 1), new Vector2(0, 1));
             hoverPanel.gameObject.SetActive(false);
 
             //Config ScrollRect
@@ -251,7 +253,7 @@ namespace WorldMap.UI
         }
         public void SetBackgroudColor(Color color)
         {
-            Utility.ForceGetComponent<Image>(gameObject).color = color;
+            ViewTool.ForceGetComponent<Image>(gameObject).color = color;
         }
         public void Refresh()
         {

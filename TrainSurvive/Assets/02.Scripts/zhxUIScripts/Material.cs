@@ -116,7 +116,6 @@ namespace Assets._02.Scripts.zhxUIScripts
         {
             string xmlString = Resources.Load("xml/items").ToString();
             string XPath = string.Format("./material[@id='{0:D3}']", id);
-            Debug.Log(XPath);
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
             XmlNode root = document.SelectSingleNode("items");

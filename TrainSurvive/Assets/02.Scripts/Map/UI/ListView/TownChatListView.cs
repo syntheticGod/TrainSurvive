@@ -5,9 +5,8 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
-using WorldMap.Model;
 using UnityEngine.UI;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -15,7 +14,7 @@ namespace WorldMap.UI
     {
         protected override void OnItemView(ListViewItem item, NPCChat data)
         {
-            TownChatItem view = Utility.ForceGetComponent<TownChatItem>(item);
+            TownChatItem view = ViewTool.ForceGetComponent<TownChatItem>(item);
             view.SetProfile(data.Name);
             view.SetContent(data.Content);
         }
@@ -26,20 +25,20 @@ namespace WorldMap.UI
         protected Text content;
         protected override void CreateModel()
         {
-            profile = Utility.CreateText("Profile");
-            content = Utility.CreateText("Content");
+            profile = ViewTool.CreateText("Profile");
+            content = ViewTool.CreateText("Content");
         }
 
         protected override void InitModel()
         {
-            Utility.SetParent(profile, this);
-            Utility.SetParent(content, this);
+            ViewTool.SetParent(profile, this);
+            ViewTool.SetParent(content, this);
         }
 
         protected override void PlaceModel()
         {
-            Utility.Anchor(profile, new Vector2(0F, 0F), new Vector2(0.2F, 1F));
-            Utility.Anchor(content, new Vector2(0.2F, 0F), new Vector2(1F, 1F));
+            ViewTool.Anchor(profile, new Vector2(0F, 0F), new Vector2(0.2F, 1F));
+            ViewTool.Anchor(content, new Vector2(0.2F, 0F), new Vector2(1F, 1F));
         }
         public void SetProfile(string name)
         {

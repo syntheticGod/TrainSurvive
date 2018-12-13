@@ -7,6 +7,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+
+using TTT.Utility;
 using WorldMap.UI;
 
 namespace WorldMap.Controller
@@ -27,6 +29,10 @@ namespace WorldMap.Controller
         private Person heroChoosed;
         private PersonBaseItem heroProfile;
         private Text heroInfoContent;
+        //专精
+        private Text advanceTitle;
+        private Image[] professionIcon;
+        private Text[] professionInfo;
         private int[] heroAttribute;
         private int cost;
         protected override void CreateModel()
@@ -41,67 +47,112 @@ namespace WorldMap.Controller
             deltaAttri = new uint[attriCount];
             heroAttribute = new int[attriCount];
             //英雄信息窗口
-            RectTransform heroInfoBorad = new GameObject("HeroInfoBorad", typeof(Image)).GetComponent<RectTransform>();
-            Utility.SetParent(heroInfoBorad, this);
-            Utility.Anchor(heroInfoBorad, new Vector2(0.083F, 0.1F), new Vector2(0.625F, 0.9F));
-            //英雄信息条
-            RectTransform heroInfoLayout = new GameObject("HeroInfoLayout").AddComponent<RectTransform>();
-            Utility.SetParent(heroInfoLayout, heroInfoBorad);
-            Utility.Anchor(heroInfoLayout, new Vector2(0F, 0.815F), new Vector2(1F, 1F));
-            //英雄头像框
-            heroProfile = new GameObject("HeroProfile", typeof(RectTransform)).AddComponent<PersonBaseItem>();
-            Utility.SetParent(heroProfile, heroInfoLayout);
-            Utility.LeftTop(heroProfile, new Vector2(0, 1), new Vector2(100F, 100F));
-            heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
             {
-                HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
-                dialog.DialogCallBack = this;
-                dialog.ShowDialog();
-            });
-            //英雄简介
-            heroInfoContent = Utility.CreateText("HeroInfoContent");
-            heroInfoContent.alignment = TextAnchor.MiddleLeft;
-            Utility.SetParent(heroInfoContent, heroInfoLayout);
-            Utility.FullFillRectTransform(heroInfoContent, new Vector2(100F, 0), Vector2.zero);
-            //属性
-            RectTransform attributes = new GameObject("Attributes").AddComponent<RectTransform>();
-            Utility.SetParent(attributes, heroInfoBorad);
-            Utility.Anchor(attributes, new Vector2(0F, 0F), new Vector2(1F, 0.815F));
-            float delta = 1F / attributeInfoStrs.Length;
-            for (int i = 0; i < attributeInfoStrs.Length; i++)
-            {
-                RectTransform attribute = CreateAttribute(i);
-                Utility.SetParent(attribute, attributes);
-                float tempDelta = delta * i;
-                attribute.anchorMin = new Vector2(0, tempDelta);
-                attribute.anchorMax = new Vector2(1, tempDelta + delta);
-                attribute.offsetMin = Vector2.zero;
-                attribute.offsetMax = Vector2.zero;
+                RectTransform heroInfoBorad = new GameObject("HeroInfoBorad", typeof(Image)).GetComponent<RectTransform>();
+                ViewTool.SetParent(heroInfoBorad, this);
+                ViewTool.Anchor(heroInfoBorad, new Vector2(0.107F, 0.125F), new Vector2(0.571F, 0.875F));
+                //英雄信息条
+                {
+                    RectTransform heroInfoLayout = new GameObject("HeroInfoLayout").AddComponent<RectTransform>();
+                    ViewTool.SetParent(heroInfoLayout, heroInfoBorad);
+                    ViewTool.Anchor(heroInfoLayout, new Vector2(0F, 0.815F), new Vector2(1F, 1F));
+                    //英雄头像框
+                    heroProfile = new GameObject("HeroProfile", typeof(RectTransform)).AddComponent<PersonBaseItem>();
+                    ViewTool.SetParent(heroProfile, heroInfoLayout);
+                    ViewTool.LeftTop(heroProfile, new Vector2(0, 1), new Vector2(100F, 100F));
+                    heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
+                    {
+                        HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
+                        dialog.DialogCallBack = this;
+                        dialog.ShowDialog();
+                    });
+                    //英雄简介
+                    heroInfoContent = ViewTool.CreateText("HeroInfoContent");
+                    heroInfoContent.alignment = TextAnchor.MiddleLeft;
+                    ViewTool.SetParent(heroInfoContent, heroInfoLayout);
+                    ViewTool.FullFillRectTransform(heroInfoContent, new Vector2(100F, 0), Vector2.zero);
+                }
+                //属性
+                {
+                    RectTransform attributes = new GameObject("Attributes").AddComponent<RectTransform>();
+                    ViewTool.SetParent(attributes, heroInfoBorad);
+                    ViewTool.Anchor(attributes, new Vector2(0F, 0F), new Vector2(1F, 0.815F));
+                    float delta = 1F / attributeInfoStrs.Length;
+                    for (int i = 0; i < attributeInfoStrs.Length; i++)
+                    {
+                        RectTransform attribute = CreateAttribute(i);
+                        ViewTool.SetParent(attribute, attributes);
+                        float tempDelta = delta * i;
+                        attribute.anchorMin = new Vector2(0, tempDelta);
+                        attribute.anchorMax = new Vector2(1, tempDelta + delta);
+                        attribute.offsetMin = Vector2.zero;
+                        attribute.offsetMax = Vector2.zero;
+                    }
+                }
+                //结账区块
+                {
+                    RectTransform payRect = new GameObject("Pay", typeof(Image)).GetComponent<RectTransform>();
+                    ViewTool.SetParent(payRect, heroInfoBorad);
+                    ViewTool.Anchor(payRect, new Vector2(0F, 0F), new Vector2(1F, 0.125F));
+
+                    Text moneyInfo = ViewTool.CreateText("MoneyInfo");
+                    ViewTool.SetParent(moneyInfo, payRect);
+                    ViewTool.Anchor(moneyInfo, Vector2.zero, new Vector2(0.4F, 1.0F));
+                    moneyInfo.text = moneyInfoStr;
+
+                    moneyView = ViewTool.CreateText("Money");
+                    ViewTool.SetParent(moneyView, payRect);
+                    ViewTool.Anchor(moneyView, new Vector2(0.4F, 0.0F), new Vector2(0.6F, 1.0F));
+
+                    Button payBtn = ViewTool.CreateBtn("PayBtn", payBtnStr);
+                    ViewTool.SetParent(payBtn, payRect);
+                    ViewTool.Anchor(payBtn, new Vector2(0.6F, 0.0F), new Vector2(0.8F, 1.0F));
+                    payBtn.onClick.AddListener(delegate () { OnOKBtnClick(); });
+
+                    Button resetBtn = ViewTool.CreateBtn("ResetBtn", resetBtnStr);
+                    ViewTool.SetParent(resetBtn, payRect);
+                    ViewTool.Anchor(resetBtn, new Vector2(0.8F, 0.0F), new Vector2(1.0F, 1.0F));
+                    resetBtn.onClick.AddListener(delegate () { InitAttribute(); ShowAttributes(); ShowMoney(); });
+                }
             }
-            //结账区块
-            RectTransform payRect = new GameObject("Pay", typeof(Image)).GetComponent<RectTransform>();
-            Utility.SetParent(payRect, heroInfoBorad);
-            Utility.Anchor(payRect, new Vector2(0F, 0F), new Vector2(1F, 0.125F));
-
-            Text moneyInfo = Utility.CreateText("MoneyInfo");
-            Utility.SetParent(moneyInfo, payRect);
-            Utility.Anchor(moneyInfo, Vector2.zero, new Vector2(0.4F, 1.0F));
-            moneyInfo.text = moneyInfoStr;
-
-            moneyView = Utility.CreateText("Money");
-            Utility.SetParent(moneyView, payRect);
-            Utility.Anchor(moneyView, new Vector2(0.4F, 0.0F), new Vector2(0.6F, 1.0F));
-
-            Button payBtn = Utility.CreateBtn("PayBtn", payBtnStr);
-            Utility.SetParent(payBtn, payRect);
-            Utility.Anchor(payBtn, new Vector2(0.6F, 0.0F), new Vector2(0.8F, 1.0F));
-            payBtn.onClick.AddListener(delegate () { OnOKBtnClick(); });
-
-            Button resetBtn = Utility.CreateBtn("ResetBtn", resetBtnStr);
-            Utility.SetParent(resetBtn, payRect);
-            Utility.Anchor(resetBtn, new Vector2(0.8F, 0.0F), new Vector2(1.0F, 1.0F));
-            resetBtn.onClick.AddListener(delegate () { InitAttribute(); ShowAttributes(); ShowMoney(); });
-            //注意：不能对ListView进行添加删除行为
+            //专精
+            {
+                RectTransform advanceLayout = new GameObject("AdvanceLayout", typeof(Image)).GetComponent<RectTransform>();
+                ViewTool.SetParent(advanceLayout, this);
+                ViewTool.Anchor(advanceLayout, new Vector2(0.642F, 0.250F), new Vector2(0.893F, 0.875F));
+                {
+                    //标题
+                    advanceTitle = ViewTool.CreateText("AdvanceTitle");
+                    ViewTool.SetParent(advanceTitle, advanceLayout);
+                    ViewTool.Anchor(advanceTitle, new Vector2(0F, 0.800F), new Vector2(1F, 1F));
+                    advanceTitle.text = "选择专精";
+                }
+                {
+                    professionIcon = new Image[attributeInfoStrs.Length];
+                    professionInfo = new Text[attributeInfoStrs.Length];
+                    float delta = 0.667F / attributeInfoStrs.Length;
+                    for(int i = 0; i < attributeInfoStrs.Length; i++)
+                    {
+                        Vector2 maxAnchor = new Vector2(0.285F, 0.800F - delta * i);
+                        Vector2 minAnchor = new Vector2(0F, maxAnchor.y - delta);
+                        professionIcon[i] = ViewTool.CreateImage("Icon" + i);
+                        ViewTool.SetParent(professionIcon[i], advanceLayout);
+                        ViewTool.Anchor(professionIcon[i], minAnchor, maxAnchor);
+                        minAnchor.x = maxAnchor.x;
+                        maxAnchor.x = 1F;
+                        professionInfo[i] = ViewTool.CreateText("Info" + i);
+                        professionInfo[i].alignment = TextAnchor.MiddleLeft;
+                        ViewTool.SetParent(professionInfo[i], advanceLayout);
+                        ViewTool.Anchor(professionInfo[i], minAnchor, maxAnchor);
+                    }
+                }
+                {
+                    //确定按钮
+                    Button ok = ViewTool.CreateBtn("OK", "确定");
+                    ViewTool.SetParent(ok, advanceLayout);
+                    ViewTool.Anchor(ok, new Vector2(0F, 0F), new Vector2(1F, 0.133F));
+                }
+            }
             //herosLayout = Utility.ForceGetComponentInChildren<HeroListView>(this, "HerosLayout");
             //herosLayout.StartAxis = GridLayoutGroup.Axis.Horizontal;
             //herosLayout.GridConstraint = GridLayoutGroup.Constraint.FixedRowCount;
@@ -117,36 +168,36 @@ namespace WorldMap.Controller
         {
             RectTransform attribute = new GameObject("abi" + index).AddComponent<RectTransform>();
             //属性名
-            Text attriInfoView = Utility.CreateText("Info");
-            Utility.SetParent(attriInfoView, attribute);
+            Text attriInfoView = ViewTool.CreateText("Info");
+            ViewTool.SetParent(attriInfoView, attribute);
             RectTransform attriInfo = attriInfoView.GetComponent<RectTransform>();
             attriInfo.anchorMin = Vector2.zero;
             attriInfo.anchorMax = new Vector2(0.2F, 1F);
             attriInfoView.text = attributeInfoStrs[index];
             //数字
-            attriViews[index] = Utility.CreateText("abi" + index);
-            Utility.SetParent(attriViews[index], attribute);
-            Utility.Anchor(attriViews[index], new Vector2(0.2F, 0), new Vector2(0.35F, 1F));
+            attriViews[index] = ViewTool.CreateText("abi" + index);
+            ViewTool.SetParent(attriViews[index], attribute);
+            ViewTool.Anchor(attriViews[index], new Vector2(0.2F, 0), new Vector2(0.35F, 1F));
             //数字
-            Text arrow = Utility.CreateText("abi" + index, " -> ");
-            Utility.SetParent(arrow, attribute);
-            Utility.Anchor(arrow, new Vector2(0.35F, 0), new Vector2(0.45F, 1F));
+            Text arrow = ViewTool.CreateText("abi" + index, " -> ");
+            ViewTool.SetParent(arrow, attribute);
+            ViewTool.Anchor(arrow, new Vector2(0.35F, 0), new Vector2(0.45F, 1F));
             //数字
-            attriViewsNew[index] = Utility.CreateText("abi" + index);
-            Utility.SetParent(attriViewsNew[index], attribute);
-            Utility.Anchor(attriViewsNew[index], new Vector2(0.45F, 0), new Vector2(0.6F, 1F));
+            attriViewsNew[index] = ViewTool.CreateText("abi" + index);
+            ViewTool.SetParent(attriViewsNew[index], attribute);
+            ViewTool.Anchor(attriViewsNew[index], new Vector2(0.45F, 0), new Vector2(0.6F, 1F));
             //加号按钮
             Vector2 btnSize = new Vector2(50F, 50F);
-            Button plus = Utility.CreateBtn("Plus", "+");
+            Button plus = ViewTool.CreateBtn("Plus", "+");
             plus.GetComponentInChildren<Text>().fontSize = 30;
-            Utility.SetParent(plus, attribute);
-            Utility.RightCenter(plus, new Vector2(1F, 0.5F), btnSize, new Vector2(-btnSize.x, 0));
+            ViewTool.SetParent(plus, attribute);
+            ViewTool.RightCenter(plus, new Vector2(1F, 0.5F), btnSize, new Vector2(-btnSize.x, 0));
             plus.onClick.AddListener(delegate () { OnAttributePlusBtnClick(index); });
             //减号按钮
-            Button minus = Utility.CreateBtn("Minus", "-");
+            Button minus = ViewTool.CreateBtn("Minus", "-");
             minus.GetComponentInChildren<Text>().fontSize = 30;
-            Utility.SetParent(minus, attribute);
-            Utility.RightCenter(minus, new Vector2(1F, 0.5F), btnSize, new Vector2(0, 0));
+            ViewTool.SetParent(minus, attribute);
+            ViewTool.RightCenter(minus, new Vector2(1F, 0.5F), btnSize, new Vector2(0, 0));
             minus.onClick.AddListener(delegate () { OnAttributeMinusBtnClick(index); });
 
             return attribute;

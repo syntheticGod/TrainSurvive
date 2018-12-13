@@ -9,25 +9,28 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Assets._02.Scripts.zhxUIScripts;
+using TTT.Resource;
+using TTT.Utility;
 
 [System.Serializable]
-public class Person{
+public class Person
+{
     /// <summary>
     /// 体力
     /// </summary>
-    public int vitality=0;
+    public int vitality = 0;
     /// <summary>
     /// 力量
     /// </summary>
-    public int strength=0;
+    public int strength = 0;
     /// <summary>
     /// 敏捷
     /// </summary>
-    public int agile=0;
+    public int agile = 0;
     /// <summary>
     /// 技巧
     /// </summary>
-    public int technique=0;
+    public int technique = 0;
     /// <summary>
     /// 智力
     /// </summary>
@@ -35,14 +38,14 @@ public class Person{
     /// <summary>
     /// 已训练次数
     /// </summary>
-    public int trainCnt=0;
+    public int trainCnt = 0;
     public bool hasWeapon = false;
-    public int weaponId=0;
+    public int weaponId = 0;
     /// <summary>
     /// 是否外出，即是否在探险队里（探险队不一定处于出动状态）
     /// </summary>
     public bool ifOuting = false;
-    public string name="张三";
+    public string name = "张三";
     /// <summary>
     /// 性别用ismale代替
     /// </summary>
@@ -52,25 +55,34 @@ public class Person{
     /// <summary>
     /// 小数属性保留的位数
     /// </summary>
-    private const int numsLeft=3;
+    private const int numsLeft = 3;
 
     /// <summary>
     /// 人物所持有的武器对象
     /// </summary>
     public Weapon weapon = null;
-
-
+    private EProfession[] professions;
+    public Profession getProfession(int index)
+    {
+        if (professions[index] == EProfession.NONE)
+            return null;
+        return StaticResource.GetProfession(professions[index]);
+    }
+    [NonSerialized]
+    private int lastWeaponId = -1;
     private Person()
     {
         //保留以后用
+        professions = new EProfession[3] { EProfession.NONE, EProfession.NONE, EProfession.NONE };
     }
     /// <summary>
     /// 生成一个随机属性的人物（未持有武器）
     /// </summary>
     /// <returns></returns>
-    public static Person CreatePerson()
+    public static Person RandomPerson()
     {
         Person p = new Person();
+<<<<<<< HEAD
         
         //名字随机生成(暂用数字代替）
         //p.name = UnityEngine.Random.value.ToString();
@@ -82,6 +94,16 @@ public class Person{
         //p.technique= UnityEngine.Random.Range(0, 10);
         //p.intellgence= UnityEngine.Random.Range(0, 10);
         
+=======
+        p.ismale = MathTool.RandomInt(2) == 0;
+        p.name = StaticResource.RandomNPCName(p.ismale);
+        p.vitality = MathTool.RandomRange(0, 10);
+        p.strength = MathTool.RandomRange(0, 10);
+        p.agile = MathTool.RandomRange(0, 10);
+        p.technique = MathTool.RandomRange(0, 10);
+        p.intelligence = MathTool.RandomRange(0, 10);
+        p.ifOuting = false;
+>>>>>>> UI_Debug
         return p;
     }
     //以下获取的属性均保留numsLeft位小数
@@ -103,7 +125,7 @@ public class Person{
     {
         double apRec = 5 * (1 + 0.05 * intelligence);
         if (hasWeapon)
-        {  
+        {
             apRec = apRec * weapon.facArec;
         }
         return Math.Round(apRec, numsLeft);
@@ -155,7 +177,7 @@ public class Person{
     }
     public double getValHrate()
     {
-        double num = 1*(1+ 0.025 * technique);
+        double num = 1 * (1 + 0.025 * technique);
         return Math.Round(num, numsLeft);
     }
     public double getValErate()

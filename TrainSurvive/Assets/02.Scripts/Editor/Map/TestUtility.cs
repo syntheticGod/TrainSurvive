@@ -7,7 +7,8 @@
 using NUnit.Framework;
 using UnityEngine;
 
-using WorldMap;
+using TTT.Utility;
+
 namespace TestWorldMap
 {
     [TestFixture]
@@ -19,29 +20,29 @@ namespace TestWorldMap
             //float类型参数
             float a = 1.0F, b = 1.1F, c = 0.9F;
             float d = 1.00001F, e = 0.99999F;
-            Assert.IsFalse(Utility.ApproximatelyInView(a, b));
-            Assert.IsFalse(Utility.ApproximatelyInView(a, c));
-            Assert.IsTrue(Utility.ApproximatelyInView(a, d));
-            Assert.IsTrue(Utility.ApproximatelyInView(a, e));
+            Assert.IsFalse(MathTool.ApproximatelyInView(a, b));
+            Assert.IsFalse(MathTool.ApproximatelyInView(a, c));
+            Assert.IsTrue(MathTool.ApproximatelyInView(a, d));
+            Assert.IsTrue(MathTool.ApproximatelyInView(a, e));
             //向量类型参数
             Vector2 va = new Vector2(a, a);
             Vector2 vaYF = new Vector2(a, b);
             Vector2 vaYN = new Vector2(a, d);
             Vector2 vaXF = new Vector2(b, a);
             Vector2 vaXN = new Vector2(d, a);
-            Assert.IsFalse(Utility.ApproximatelyInView(va, vaYF));
-            Assert.IsTrue(Utility.ApproximatelyInView(va, vaYN));
-            Assert.IsFalse(Utility.ApproximatelyInView(va, vaXF));
-            Assert.IsTrue(Utility.ApproximatelyInView(va, vaXN));
+            Assert.IsFalse(MathTool.ApproximatelyInView(va, vaYF));
+            Assert.IsTrue(MathTool.ApproximatelyInView(va, vaYN));
+            Assert.IsFalse(MathTool.ApproximatelyInView(va, vaXF));
+            Assert.IsTrue(MathTool.ApproximatelyInView(va, vaXN));
         }
         [Test]
         public void TestIgnoreAndAcceptY()
         {
             Vector3 a = new Vector3(1.0F, 1.0F, 1.0F);
-            Vector2 a2 = Utility.IgnoreY(a);
+            Vector2 a2 = MathTool.IgnoreY(a);
             Assert.AreEqual(a.x, a2.x);
             Assert.AreEqual(a.z, a2.y);
-            Assert.AreEqual(a, Utility.AcceptY(a2, a.y));
+            Assert.AreEqual(a, MathTool.AcceptY(a2, a.y));
         }
         [Test]
         public void TestIfBetween()
@@ -50,17 +51,17 @@ namespace TestWorldMap
             float value1 = edge1, value2 = edge2;
             float value3 = 1.0F, value4 = 3.0F, value5 = -2.0F;
             //IfBetweenBoth
-            Assert.IsTrue(Utility.IfBetweenBoth(edge1, edge2, value1));
-            Assert.IsTrue(Utility.IfBetweenBoth(edge1, edge2, value2));
-            Assert.IsTrue(Utility.IfBetweenBoth(edge1, edge2, value3));
-            Assert.IsFalse(Utility.IfBetweenBoth(edge1, edge2, value4));
-            Assert.IsFalse(Utility.IfBetweenBoth(edge1, edge2, value5));
+            Assert.IsTrue(MathTool.IfBetweenBoth(edge1, edge2, value1));
+            Assert.IsTrue(MathTool.IfBetweenBoth(edge1, edge2, value2));
+            Assert.IsTrue(MathTool.IfBetweenBoth(edge1, edge2, value3));
+            Assert.IsFalse(MathTool.IfBetweenBoth(edge1, edge2, value4));
+            Assert.IsFalse(MathTool.IfBetweenBoth(edge1, edge2, value5));
             //IfBetweenLeft
-            Assert.IsTrue(Utility.IfBetweenLeft(edge1, edge2, value1));
-            Assert.IsFalse(Utility.IfBetweenLeft(edge1, edge2, value2));
-            Assert.IsTrue(Utility.IfBetweenLeft(edge1, edge2, value3));
-            Assert.IsFalse(Utility.IfBetweenLeft(edge1, edge2, value4));
-            Assert.IsFalse(Utility.IfBetweenLeft(edge1, edge2, value5));
+            Assert.IsTrue(MathTool.IfBetweenLeft(edge1, edge2, value1));
+            Assert.IsFalse(MathTool.IfBetweenLeft(edge1, edge2, value2));
+            Assert.IsTrue(MathTool.IfBetweenLeft(edge1, edge2, value3));
+            Assert.IsFalse(MathTool.IfBetweenLeft(edge1, edge2, value4));
+            Assert.IsFalse(MathTool.IfBetweenLeft(edge1, edge2, value5));
         }
     }
     [TestFixture]

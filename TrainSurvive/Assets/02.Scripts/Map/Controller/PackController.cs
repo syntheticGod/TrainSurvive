@@ -8,10 +8,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+using TTT.Utility;
 using WorldMap.UI;
-using Assets._02.Scripts.zhxUIScripts;
-using Material = Assets._02.Scripts.zhxUIScripts.Material;
 using WorldMap.Model;
+using Assets._02.Scripts.zhxUIScripts;
 
 namespace WorldMap.Controller
 {
@@ -37,26 +37,26 @@ namespace WorldMap.Controller
             enableTitileBar = false;
             base.CreateModel();
             //PackListView
-            packLV = Utility.ForceGetComponentInChildren<TeamPackListView>(gameObject, "PackListViewLayout");
+            packLV = ViewTool.ForceGetComponentInChildren<TeamPackListView>(gameObject, "PackListViewLayout");
             packLV.SetBackgroudColor(containerColor);
             packLV.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
             packLV.GridConstraintCount = 8;
             packLV.ScrollDirection = ScrollType.Vertical;
             packLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            Utility.FullFillRectTransform(packLV, new Vector2(20, 20), new Vector2(-20, -20));
+            ViewTool.FullFillRectTransform(packLV, new Vector2(20, 20), new Vector2(-20, -20));
             packLV.gameObject.SetActive(true);
             //Buttons
             RectTransform btns = new GameObject("Btns", typeof(RectTransform)).GetComponent<RectTransform>();
-            Utility.SetParent(btns, this);
-            Utility.FullFillRectTransform(btns, Vector2.zero, Vector2.zero);
+            ViewTool.SetParent(btns, this);
+            ViewTool.FullFillRectTransform(btns, Vector2.zero, Vector2.zero);
             Vector2 pivotOfRightUp = new Vector2(0, 1);
             Vector2 sizeOfRightUp = new Vector2(80, 50);
             Vector2 direction = Vector2.zero;
             rightTopBtns = new Button[rightUpBtnsName.Length];
             for (int i = 0; i < rightUpBtnsName.Length; i++)
             {
-                rightTopBtns[i] = Utility.CreateBtn(rightUpBtnsName[i], rightUpBtnsContent[i], btns);
-                Utility.RightTop(rightTopBtns[i], pivotOfRightUp, sizeOfRightUp, direction);
+                rightTopBtns[i] = ViewTool.CreateBtn(rightUpBtnsName[i], rightUpBtnsContent[i], btns);
+                ViewTool.RightTop(rightTopBtns[i], pivotOfRightUp, sizeOfRightUp, direction);
                 direction.y -= sizeOfRightUp.y;
             }
             rightTopBtns[0].onClick.AddListener(delegate () { OnRightTopBtnClick(0); });
@@ -69,8 +69,8 @@ namespace WorldMap.Controller
             rightBottomBtns = new Button[rightBottomBtnsName.Length];
             for (int i = 0; i < rightBottomBtnsName.Length; i++)
             {
-                rightBottomBtns[i] = Utility.CreateBtn(rightBottomBtnsName[i], rightBottomBtnsContent[i], btns);
-                Utility.RightBottom(rightBottomBtns[i], pivotOfRightBottom, sizeOfRightBottom, direction);
+                rightBottomBtns[i] = ViewTool.CreateBtn(rightBottomBtnsName[i], rightBottomBtnsContent[i], btns);
+                ViewTool.RightBottom(rightBottomBtns[i], pivotOfRightBottom, sizeOfRightBottom, direction);
                 direction.y += sizeOfRightBottom.y;
             }
             rightBottomBtns[0].onClick.AddListener(delegate () { OnRightBottomBtnClick(0); });
@@ -80,8 +80,8 @@ namespace WorldMap.Controller
             topLeftBtns = new Button[topLeftBtnsName.Length];
             for (int i = 0; i < topLeftBtnsName.Length; i++)
             {
-                topLeftBtns[i] = Utility.CreateBtn(topLeftBtnsName[i], topLeftBtnsContent[i], btns);
-                Utility.LeftTop(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
+                topLeftBtns[i] = ViewTool.CreateBtn(topLeftBtnsName[i], topLeftBtnsContent[i], btns);
+                ViewTool.LeftTop(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
                 direction.x += sizeOfTopLeft.x;
                 int index = i;
                 topLeftBtns[i].onClick.AddListener(delegate () { OnTopLeftBtnClick(index); });

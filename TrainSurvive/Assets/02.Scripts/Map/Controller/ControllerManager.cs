@@ -5,8 +5,8 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
+
+using TTT.Utility;
 
 namespace WorldMap.Controller
 {
@@ -29,19 +29,19 @@ namespace WorldMap.Controller
         public static T GetWindow<T>(string windowName)
             where T : WindowsController
         {
-            return Utility.ForceGetComponentInChildren<T>(GameObject.Find("Canvas"), windowName, false);
+            return ViewTool.ForceGetComponentInChildren<T>(GameObject.Find("Canvas"), windowName, false);
         }
         public static bool LoadWindow(string prefabName)
         {
             GameObject load = Resources.Load<GameObject>(prefabName);
             if (load = null) return false;
             load.name = prefabName;
-            RectTransform window = Utility.ForceGetComponent<RectTransform>(load);
+            RectTransform window = ViewTool.ForceGetComponent<RectTransform>(load);
             Transform canvas = GameObject.Find("Canvas").transform;
             window.SetParent(canvas);
             window.anchorMax = window.anchorMin = new Vector2(0.5F, 0.5F);
             window.localPosition = new Vector3(0.0F, 0.0F, 0.0F);
-            Utility.ForceGetComponent<WindowsController, NullWindowsController>(window);
+            ViewTool.ForceGetComponent<WindowsController, NullWindowsController>(window);
             return true;
         }
         public static bool HideWindow(WindowsController windows)

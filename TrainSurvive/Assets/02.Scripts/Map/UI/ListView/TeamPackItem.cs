@@ -5,9 +5,8 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
-using System;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -17,12 +16,12 @@ namespace WorldMap.UI
         protected override void CreateModel()
         {
             base.CreateModel();
-            numView = Utility.CreateText("Number");
+            numView = ViewTool.CreateText("Number");
         }
         protected override void InitModel()
         {
             base.InitModel();
-            Utility.SetParent(numView, this);
+            ViewTool.SetParent(numView, this);
         }
         
         protected override void PlaceModel()

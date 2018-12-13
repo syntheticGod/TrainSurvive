@@ -39,6 +39,10 @@ public class ItemData
                 if (items.Length > 1)
                     num = m_item.currPileNum;
             }
+            else
+            {
+                m_item.currPileNum = num;
+            }
             return m_item;
         }
     }

@@ -4,10 +4,11 @@
  * 创建时间：2018/11/10 16:06:56
  * 版本：v0.1
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+using TTT.Resource;
+using TTT.Utility;
 using WorldMap.Model;
 
 namespace WorldMap.Controller
@@ -34,17 +35,17 @@ namespace WorldMap.Controller
             //Buttons
             Transform canvas = GameObject.Find("/Canvas").transform;
             teamModeBTs = new GameObject("TrainMode").AddComponent<RectTransform>();
-            Utility.SetParent(teamModeBTs, canvas);
-            Utility.RightBottom(teamModeBTs, new Vector2(1, 0), Vector2.zero, Vector2.zero);
+            ViewTool.SetParent(teamModeBTs, canvas);
+            ViewTool.RightBottom(teamModeBTs, new Vector2(1, 0), Vector2.zero, Vector2.zero);
             Vector2 btnPivot = new Vector2(1, 0);
             Vector2 btnSize = new Vector2(120, 120);
             float btnSpace = 6;
             bottomBtns = new Button[bottomBtnsStrs.Length];
             for (int i = 0; i < bottomBtnsStrs.Length; i++)
             {
-                bottomBtns[i] = Utility.CreateBtn("Btn" + i, bottomBtnsStrs[i]);
-                Utility.SetParent(bottomBtns[i], teamModeBTs);
-                Utility.RightBottom(bottomBtns[i], btnPivot, btnSize, new Vector2((btnSize.x + btnSpace) * -i, 0));
+                bottomBtns[i] = ViewTool.CreateBtn("Btn" + i, bottomBtnsStrs[i]);
+                ViewTool.SetParent(bottomBtns[i], teamModeBTs);
+                ViewTool.RightBottom(bottomBtns[i], btnPivot, btnSize, new Vector2((btnSize.x + btnSpace) * -i, 0));
                 BUTTON_ID btnID = BUTTON_ID.TEAM_NONE + i + 1;
                 bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
             }

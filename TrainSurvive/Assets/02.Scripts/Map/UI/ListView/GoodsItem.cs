@@ -6,6 +6,7 @@
  */
 using UnityEngine;
 using UnityEngine.UI;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -17,40 +18,32 @@ namespace WorldMap.UI
         private Button actionBtn;
         private Transform itemView;
         private Vector2 defaultSize = new Vector2(500F, 200F);
-        void Start()
-        {
-            //For Test
-            //MarkLevel(2);
-            //SetTargetByName("Weapon_img");
-            //SetNumber(1000);
-            //SetPrice(99999);
-        }
         protected override void CreateModel()
         {
             base.CreateModel();
-            numView = Utility.CreateText("Number");
-            priceView = Utility.CreateText("Price");
-            actionBtn = Utility.CreateBtn("Action", "", transform);
+            numView = ViewTool.CreateText("Number");
+            priceView = ViewTool.CreateText("Price");
+            actionBtn = ViewTool.CreateBtn("Action", "", transform);
             itemView = new GameObject("Item", typeof(RectTransform)).transform;
         }
         protected override void InitModel()
         {
-            Utility.SetParent(backgroudImage, itemView);
-            Utility.SetParent(targetImage, itemView);
-            Utility.SetParent(markImage, itemView);
-            Utility.SetParent(itemView, this);
-            Utility.SetParent(numView, this);
-            Utility.SetParent(priceView, this);
-            Utility.SetParent(actionBtn, this);
+            ViewTool.SetParent(backgroudImage, itemView);
+            ViewTool.SetParent(targetImage, itemView);
+            ViewTool.SetParent(markImage, itemView);
+            ViewTool.SetParent(itemView, this);
+            ViewTool.SetParent(numView, this);
+            ViewTool.SetParent(priceView, this);
+            ViewTool.SetParent(actionBtn, this);
         }
         protected override void PlaceModel()
         {
             base.PlaceModel();
-            Utility.CenterAt(itemView, new Vector2(0.2F, 0.5F), new Vector2(100F, 100F));
-            Utility.CenterAt(priceView, new Vector2(0.4F, 0.5F), new Vector2(80F, 40F));
-            Utility.CenterAt(numView, new Vector2(0.6F, 0.5F), new Vector2(80F, 40F));
-            Utility.CenterAt(actionBtn, new Vector2(0.8F, 0.5F), new Vector2(90F, 40F));
-            Utility.CenterAt(this, new Vector2(0.5F, 0.5F), defaultSize);
+            ViewTool.CenterAt(itemView, new Vector2(0.2F, 0.5F), new Vector2(100F, 100F));
+            ViewTool.CenterAt(priceView, new Vector2(0.4F, 0.5F), new Vector2(80F, 40F));
+            ViewTool.CenterAt(numView, new Vector2(0.6F, 0.5F), new Vector2(80F, 40F));
+            ViewTool.CenterAt(actionBtn, new Vector2(0.8F, 0.5F), new Vector2(90F, 40F));
+            ViewTool.CenterAt(this, new Vector2(0.5F, 0.5F), defaultSize);
         }
         public void SetNumber(int num)
         {
@@ -66,7 +59,7 @@ namespace WorldMap.UI
         }
         public void SetActionBtnContent(string content)
         {
-            Utility.SetBtnContent(actionBtn, content);
+            ViewTool.SetBtnContent(actionBtn, content);
         }
     }
 }

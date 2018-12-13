@@ -4,10 +4,10 @@
  * 创建时间：2018/11/9 20:42:50
  * 版本：v0.1
  */
-using System;
-using System.Collections.Generic;
+
 using UnityEngine;
-using WorldMap;
+
+using TTT.Resource;
 using WorldMap.UI;
 
 namespace WorldMap.Model

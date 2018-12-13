@@ -4,12 +4,13 @@
  * 创建时间：2018/11/10 14:39:08
  * 版本：v0.1
  */
-using System.Collections.Generic;
-using UnityEngine;
 
-using WorldMap;
-using Assets._02.Scripts.zhxUIScripts;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+
+using TTT.Resource;
+using TTT.Utility;
 
 namespace WorldMap.Model
 {
@@ -102,7 +103,7 @@ namespace WorldMap.Model
             if (!IsMoving || !IsMovable) return false;
             Vector2 currentNext = current;
             Vector2 direction = nextStopPosition - current;
-            if (Utility.ApproximatelyInView(direction, Vector2.zero))
+            if (MathTool.ApproximatelyInView(direction, Vector2.zero))
             {
                 //到达目的地
                 Debug.Log("到达目的地");
@@ -126,7 +127,7 @@ namespace WorldMap.Model
         {
             map.MoveToThisSpawn(StaticResource.BlockIndex(position));
             world.TeamSetMapPos(position);
-            if (StaticResource.RandomInt(5) == 0)
+            if (MathTool.RandomInt(5) == 0)
             {
                 //
                 TimeController.getInstance().changeScene(true);

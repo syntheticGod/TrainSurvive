@@ -6,6 +6,9 @@
  * 版本：v0.1
  */
 using UnityEngine;
+
+using TTT.Utility;
+
 namespace WorldMap
 {
     public class CameraFocus : MonoBehaviour, ICameraFocus
@@ -43,8 +46,8 @@ namespace WorldMap
         private bool ifFocused(Vector3 foscus)
         {
             //忽略y轴
-            return Utility.ApproximatelyInView(Utility.IgnoreZ
-                (transform.position), Utility.IgnoreZ
+            return MathTool.ApproximatelyInView(MathTool.IgnoreZ
+                (transform.position), MathTool.IgnoreZ
                 (foscus));
         }
 

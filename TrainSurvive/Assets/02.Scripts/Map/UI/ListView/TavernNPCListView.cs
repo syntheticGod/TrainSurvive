@@ -5,8 +5,8 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -19,9 +19,9 @@ namespace WorldMap.UI
         }
         protected override void OnPersistentItemView(ListViewItem item, int index)
         {
-            Text text = Utility.CreateText("Persistent" + index, persistentStrs[index]);
-            Utility.SetParent(text, item);
-            Utility.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
+            Text text = ViewTool.CreateText("Persistent" + index, persistentStrs[index]);
+            ViewTool.SetParent(text, item);
+            ViewTool.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
         }
 
     }

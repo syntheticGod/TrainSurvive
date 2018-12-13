@@ -5,8 +5,9 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -51,7 +52,7 @@ namespace WorldMap.UI
                             m_dialogSize.y = scale * 12;
                             break;
                     }
-                    Utility.CenterAt(bgImage, new Vector2(0.5F, 0.5F), m_dialogSize);
+                    ViewTool.CenterAt(bgImage, new Vector2(0.5F, 0.5F), m_dialogSize);
                 }
             }
             get
@@ -78,7 +79,7 @@ namespace WorldMap.UI
         public static T CreateDialog<T>(string name)
             where T : BaseDialog
         {
-            T dialog = Utility.ForceGetComponentInChildren<T>(GameObject.Find("Canvas"), name, false);
+            T dialog = ViewTool.ForceGetComponentInChildren<T>(GameObject.Find("Canvas"), name, false);
             return dialog;
         }
         public Button GetOKBtn()
@@ -88,25 +89,25 @@ namespace WorldMap.UI
         private void CreateBG()
         {
             //背景
-            bgImage = Utility.ForceGetComponent<Image>(this);
+            bgImage = ViewTool.ForceGetComponent<Image>(this);
             DialogSizeType = m_dialogSizeType;
             //标题
-            titleText = Utility.CreateText("Title", "TTT");
-            Utility.SetParent(titleText, this);
-            Utility.TopFull(titleText, 60F);
+            titleText = ViewTool.CreateText("Title", "TTT");
+            ViewTool.SetParent(titleText, this);
+            ViewTool.TopFull(titleText, 60F);
             //按钮
             RectTransform btnsRect = new GameObject("Btns").AddComponent<RectTransform>();
-            Utility.SetParent(btnsRect, this);
-            Utility.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1, 0));
+            ViewTool.SetParent(btnsRect, this);
+            ViewTool.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1, 0));
             btns = new Button[btnStrs.Length];
             Vector2 btnSize = new Vector2(120F, 60F);
             float mid = (btns.Length-1) / 2F;
             for(int i = 0; i < btns.Length; i++)
             {
-                btns[i] = Utility.CreateBtn("Btn" + i, btnStrs[i]);
-                Utility.SetParent(btns[i], btnsRect);
+                btns[i] = ViewTool.CreateBtn("Btn" + i, btnStrs[i]);
+                ViewTool.SetParent(btns[i], btnsRect);
                 //居中排序
-                Utility.CenterAt(btns[i], new Vector2(0.5F, 0.5F), btnSize, new Vector2((i-mid)*btnSize.x, 0));
+                ViewTool.CenterAt(btns[i], new Vector2(0.5F, 0.5F), btnSize, new Vector2((i-mid)*btnSize.x, 0));
                 btns[i].GetComponent<RectTransform>().pivot = new Vector2(0.5F, 0F);
             }
             btns[0].onClick.AddListener(delegate () { if (OK()) { DialogCallBack?.OK(this); CloseDialog(); } });

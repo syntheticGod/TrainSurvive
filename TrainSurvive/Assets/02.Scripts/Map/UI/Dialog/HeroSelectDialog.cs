@@ -5,8 +5,9 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+
+using TTT.Utility;
 
 namespace WorldMap.UI
 {
@@ -17,11 +18,11 @@ namespace WorldMap.UI
         {
             SetTitle("请选择人物");
             DialogSizeType = EDialogSizeType.MIDDLE12x12;
-            heroListView = Utility.ForceGetComponentInChildren<HeroListView>(this, "HeroListView");
+            heroListView = ViewTool.ForceGetComponentInChildren<HeroListView>(this, "HeroListView");
             heroListView.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
             heroListView.GridConstraintCount = 7;
-            Utility.SetParent(heroListView, this);
-            Utility.FullFillRectTransform(heroListView, new Vector2(0, 60F), new Vector2(0, -60F));
+            ViewTool.SetParent(heroListView, this);
+            ViewTool.FullFillRectTransform(heroListView, new Vector2(0, 60F), new Vector2(0, -60F));
         }
         protected override void AfterDialogShow()
         {

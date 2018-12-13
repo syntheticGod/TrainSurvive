@@ -11,6 +11,7 @@ using Assets._02.Scripts.zhxUIScripts;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using WorldMap.UI;
+using TTT.Utility;
 
 namespace WorldMap.Model
 {
@@ -150,26 +151,26 @@ namespace WorldMap.Model
         public static Good RandomMaterial()
         {
             Good good = new Good();
-            good.ItemID = materialIDPool[StaticResource.RandomInt(materialIDPool.Length)];
+            good.ItemID = materialIDPool[MathTool.RandomInt(materialIDPool.Length)];
             //这里随机数量，在最后生成Item的时候，会工具最大数量裁剪
-            good.Number = StaticResource.RandomRange(1, 5);
-            good.Price = StaticResource.RandomInt(500) + 500;
+            good.Number = MathTool.RandomRange(1, 5);
+            good.Price = MathTool.RandomInt(500) + 500;
             return good;
         }
         public static Good RandomWeapon()
         {
             Good good = new Good();
-            good.ItemID = weaponIDPool[StaticResource.RandomInt(weaponIDPool.Length)];
+            good.ItemID = weaponIDPool[MathTool.RandomInt(weaponIDPool.Length)];
             good.Number = 1;
-            good.Price = StaticResource.RandomRange(1000, 2001);
+            good.Price = MathTool.RandomRange(1000, 2001);
             return good;
         }
         public static Good RandomSpecail()
         {
             Good good = new Good();
-            good.ItemID = specailIDPool[StaticResource.RandomInt(specailIDPool.Length)];
+            good.ItemID = specailIDPool[MathTool.RandomInt(specailIDPool.Length)];
             good.Number = 1;
-            good.Price = StaticResource.RandomRange(10000, 20001);
+            good.Price = MathTool.RandomRange(10000, 20001);
             return good;
         }
         public static List<Good> AddGood(List<Good> storage, Good goods)

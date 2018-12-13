@@ -6,8 +6,10 @@
  */
 using UnityEngine;
 using System.Collections.Generic;
-using Assets._02.Scripts.zhxUIScripts;
+
 using WorldMap.Model;
+using TTT.Utility;
+using TTT.Resource;
 
 namespace WorldMap
 {
@@ -21,18 +23,14 @@ namespace WorldMap
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
             world.numIn = 3;
+<<<<<<< HEAD
             Debug.Log("生成人物数据");
+=======
+            //在列车内部随机生成人物
+>>>>>>> UI_Debug
             for (int i = 0; i < world.numIn; i++)
             {
-                Person p = Person.CreatePerson();
-                p.name = StaticResource.RandomNPCName(true);
-                p.vitality = StaticResource.RandomRange(0, 10);
-                p.strength = StaticResource.RandomRange(0, 10);
-                p.agile = StaticResource.RandomRange(0, 10);
-                p.technique = StaticResource.RandomRange(0, 10);
-                p.intelligence = StaticResource.RandomRange(0, 10);
-                p.ifOuting = false;
-                AddPerson(p);
+                AddPerson(Person.RandomPerson());
             }
             //world.money = 9999;//9,999
         }

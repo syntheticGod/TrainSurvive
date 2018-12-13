@@ -5,6 +5,8 @@
  * 版本：v0.1
  */
 using System;
+using TTT.Resource;
+using TTT.Utility;
 
 namespace WorldMap.Model
 {
@@ -16,14 +18,7 @@ namespace WorldMap.Model
         public int Strength { get { return PersonInfo.strength; } }
         private NPC()
         {
-            PersonInfo = Person.CreatePerson();
-            bool sex = StaticResource.RandomInt(2) != 0;
-            PersonInfo.name = StaticResource.RandomNPCName(sex);
-            PersonInfo.vitality = StaticResource.RandomInt(10) + 1;
-            PersonInfo.strength = StaticResource.RandomInt(10) + 1;
-            PersonInfo.agile = StaticResource.RandomInt(10) + 1;
-            PersonInfo.technique = StaticResource.RandomInt(10) + 1;
-            PersonInfo.intelligence = StaticResource.RandomInt(10) + 1;
+            PersonInfo = Person.RandomPerson();
         }
         public static NPC Random()
         {

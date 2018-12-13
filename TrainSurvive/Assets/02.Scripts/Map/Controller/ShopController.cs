@@ -7,6 +7,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+
+using TTT.Utility;
 using WorldMap.UI;
 using WorldMap.Model;
 
@@ -29,23 +31,23 @@ namespace WorldMap.Controller
             goodsInShopLV.ActionBtnString = "购买";
             goodsInShopLV.callBackGoodsAction = CallBackGoodsBuy;
             ConfigListView(goodsInShopLV, 0.25F);
-            Utility.Anchor(goodsInShopLV, new Vector2(0.0417F, 0.2F), new Vector2(0.3481F, 0.8F));
+            ViewTool.Anchor(goodsInShopLV, new Vector2(0.0417F, 0.2F), new Vector2(0.3481F, 0.8F));
 
             goodsInPackLV = new GameObject("GoodsInPackLayout").AddComponent<GoodsListView>();
             goodsInPackLV.ActionBtnString = "售卖";
             goodsInPackLV.callBackGoodsAction = CallBackGoodsSell;
             ConfigListView(goodsInPackLV, 0.75F);
-            Utility.Anchor(goodsInPackLV, new Vector2(0.6522F, 0.2F), new Vector2(0.9572F, 0.8F));
+            ViewTool.Anchor(goodsInPackLV, new Vector2(0.6522F, 0.2F), new Vector2(0.9572F, 0.8F));
 
             //Buttons
             RectTransform btns = new GameObject("Btns").AddComponent<RectTransform>();
-            Utility.SetParent(btns, this);
-            Utility.Anchor(btns, Vector2.zero, new Vector2(1F, 0.2F));
+            ViewTool.SetParent(btns, this);
+            ViewTool.Anchor(btns, Vector2.zero, new Vector2(1F, 0.2F));
 
             Vector2 btnSize = new Vector2(120, 80);
-            Button cancel = Utility.CreateBtn("Cancel", btnStrs[0]);
-            Utility.SetParent(cancel, btns);
-            Utility.CenterAt(cancel, new Vector2(0.5F, 0.5F), btnSize);
+            Button cancel = ViewTool.CreateBtn("Cancel", btnStrs[0]);
+            ViewTool.SetParent(cancel, btns);
+            ViewTool.CenterAt(cancel, new Vector2(0.5F, 0.5F), btnSize);
             cancel.onClick.AddListener(delegate () { HideWindow(); });
         }
         private void ConfigListView(GoodsListView listView, float xAnchor)
@@ -54,7 +56,7 @@ namespace WorldMap.Controller
             listView.ScrollDirection = ScrollType.Vertical;
             listView.IfSelectable = false;
             listView.StartAxis = GridLayoutGroup.Axis.Vertical;
-            Utility.SetParent(listView, this);
+            ViewTool.SetParent(listView, this);
         }
         protected override bool PrepareDataBeforeShowWindow()
         {

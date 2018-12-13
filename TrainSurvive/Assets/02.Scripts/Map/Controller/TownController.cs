@@ -4,11 +4,10 @@
  * 创建时间：2018/11/20 23:14:19
  * 版本：v0.1
  */
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using WorldMap.Model;
-using WorldMap.UI;
+
+using TTT.Utility;
 
 namespace WorldMap.Controller
 {
@@ -30,25 +29,25 @@ namespace WorldMap.Controller
             m_titleString = "城镇";
             base.CreateModel();
             SetBackground("town_bg_02");
-            Image townInfoBG = Utility.CreateImage("TownInfo");
-            Utility.SetParent(townInfoBG, this);
-            Utility.Anchor(townInfoBG, new Vector2(0.2F, 0.2F), new Vector2(0.4F, 0.8F));
+            Image townInfoBG = ViewTool.CreateImage("TownInfo");
+            ViewTool.SetParent(townInfoBG, this);
+            ViewTool.Anchor(townInfoBG, new Vector2(0.2F, 0.2F), new Vector2(0.4F, 0.8F));
             townInfoBG.color = containerColor;
             //城镇信息框
-            townInfoText = Utility.CreateText("TownInfoText");
-            Utility.SetParent(townInfoText, townInfoBG);
-            Utility.Anchor(townInfoText, new Vector2(0, 0.4F), new Vector2(1.0F, 1.0F));
+            townInfoText = ViewTool.CreateText("TownInfoText");
+            ViewTool.SetParent(townInfoText, townInfoBG);
+            ViewTool.Anchor(townInfoText, new Vector2(0, 0.4F), new Vector2(1.0F, 1.0F));
             townInfoText.alignment = TextAnchor.UpperLeft;
             //按钮
             RectTransform btnsRect = new GameObject("Btns").AddComponent<RectTransform>();
-            Utility.SetParent(btnsRect, townInfoBG);
-            Utility.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1.0F, 0.4F));
+            ViewTool.SetParent(btnsRect, townInfoBG);
+            ViewTool.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1.0F, 0.4F));
             Button[] btns = new Button[btnsStrs.Length];
             for (int i = 0; i < btns.Length; i++)
             {
-                btns[i] = Utility.CreateBtn("Btn" + i, btnsStrs[i]);
-                Utility.SetParent(btns[i], btnsRect);
-                Utility.Anchor(btns[i], new Vector2(0F, (float)i / btns.Length), new Vector2(1.0F, (float)(i + 1) / btns.Length));
+                btns[i] = ViewTool.CreateBtn("Btn" + i, btnsStrs[i]);
+                ViewTool.SetParent(btns[i], btnsRect);
+                ViewTool.Anchor(btns[i], new Vector2(0F, (float)i / btns.Length), new Vector2(1.0F, (float)(i + 1) / btns.Length));
                 BUTTON_ID bid = BUTTON_ID.TOWN_NONE + i + 1;
                 btns[i].onClick.AddListener(delegate () { OnClick(bid); });
             }

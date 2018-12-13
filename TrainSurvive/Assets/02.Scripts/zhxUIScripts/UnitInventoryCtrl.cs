@@ -32,8 +32,9 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         Destroy(GameObject.Find("tempDragImg"));
 
         grid = eventData.pointerDrag;
-        Debug.Log(grid.name);
         gridCtrl = grid.GetComponent<ItemGridCtrl>();
+
+        
         if (isEquipmentGrid)
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
@@ -44,7 +45,8 @@ public class UnitInventoryCtrl : MonoBehaviour, IDropHandler{
         InventoryCtrl tempController = gridCtrl.GetController();
         tempController.coreInventory.PopItem(gridCtrl.item);
         tempController.RemoveGrid(grid);
-        
+
+        gridCtrl.GetController().RefreshMaxSize();
         gridCtrl.BindContainer(gameObject);
         grid.transform.SetParent(gameObject.transform);
         //grid.GetComponent<RectTransform>().position = Vector2.zero;

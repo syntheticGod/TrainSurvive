@@ -87,7 +87,11 @@ public class ProgressButton : MonoBehaviour {
         }
         set {
             _value = value;
-            MaskRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Clamp01(value / MaxValue) * Transform.rect.width);
+            if (MaxValue == 0) {
+                MaskRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Transform.rect.width);
+            } else {
+                MaskRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Clamp01(value / MaxValue) * Transform.rect.width);
+            }
         }
     }
 
