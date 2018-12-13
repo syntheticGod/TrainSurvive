@@ -82,7 +82,6 @@ public class Person
     public static Person RandomPerson()
     {
         Person p = new Person();
-
         p.ismale = MathTool.RandomInt(2) == 0;
         p.name = StaticResource.RandomNPCName(p.ismale);
         p.vitality = MathTool.RandomRange(0, 10);

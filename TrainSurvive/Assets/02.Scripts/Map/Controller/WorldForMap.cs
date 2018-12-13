@@ -23,7 +23,6 @@ namespace WorldMap
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
             world.numIn = 3;
-            Debug.Log("生成人物数据");
             //在列车内部随机生成人物
             for (int i = 0; i < world.numIn; i++)
             {
