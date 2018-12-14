@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
+  m_Name: 45
+  m_EditorClassIdentifier: 
+  ID: 45
+  LayerOrientation: {x: 0, y: -1}
+  Layer: 9
+  RequiredLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  Name: "\u57FA\u7840\u79CD\u690D\u76C6"
+  Description: "\u7B80\u6613\u7684\u79CD\u690D\u76C6\uFF0C\u53EF\u4EE5\u4E0D\u65AD\u5730\u83B7\u53D6\u98DF\u7269"
+  WorkAll: 6
+  BuildCosts: []
+  Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
+  Class: 4
+  RequiredTech: 30
+  Initializer: {fileID: 11500000, guid: 7fdf148e5dfa7624c81151859dc89172, type: 3}
+  InitializeValues:
+  - Name: _addElect
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _addEnergy
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _addFood
+    TypeName: System.Int32
+    System_Int32Value: 10
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _deltaTime
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 1
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []

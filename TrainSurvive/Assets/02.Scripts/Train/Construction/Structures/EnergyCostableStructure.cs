@@ -87,8 +87,8 @@ public class EnergyCostableStructure : Structure {
         WaitUntil wait = new WaitUntil(() => IsCosting);
         while(FacilityState == State.WORKING) {
             yield return wait;
-            bool energyRunningOut = World.getInstance().addEnergy(-CostEnergy * CostEnergyRatio * Time.deltaTime) == 0;
-            bool electRunningOut = World.getInstance().addElectricity(-CostElect * CostElectRatio * Time.deltaTime) == 0;
+            bool energyRunningOut = World.getInstance().addEnergy(-CostEnergy * CostEnergyRatio * Time.deltaTime) != 1;
+            bool electRunningOut = World.getInstance().addElectricity(-CostElect * CostElectRatio * Time.deltaTime) != 1;
             IsRunningOut = energyRunningOut || electRunningOut;
             yield return 1;
         }
