@@ -224,6 +224,8 @@ public class ConstructionManager : MonoBehaviour {
             // 左键放置
             if (Input.GetMouseButton(0) && canPlace) {
                 placeCarriage(carriageObject, carriageTransform.position);
+            } else if (Input.GetMouseButton(0)) {
+                UIManager.Instance?.ShowInfoPanel(CarriageSettings[carriageObject.TrainCarriage.ID].Name, CarriageSettings[carriageObject.TrainCarriage.ID].Description);
             }
             yield return wait;
         }
@@ -281,6 +283,8 @@ public class ConstructionManager : MonoBehaviour {
             // 左键放置
             if (Input.GetMouseButton(0) && facility.gameObject.activeSelf && !isCollided) {
                 place(facility, fTransform.position, fSpriteRenderer);
+            } else if (Input.GetMouseButton(0)) {
+                UIManager.Instance?.ShowInfoPanel(StructureSettings[facility.Structure.ID].Name, StructureSettings[facility.Structure.ID].Description);
             }
             yield return wait;
         }

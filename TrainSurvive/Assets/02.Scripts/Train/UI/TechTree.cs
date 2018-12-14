@@ -243,6 +243,8 @@ public class TechTree : MonoBehaviour {
     private IEnumerator CheckTechUnlock() {
         yield return new WaitUntil(() => World.getInstance().techUnlock > 0);
         for (int i = 0; i < TechObjects.Length; i++) {
+            if (TechObjects[i] == null)
+                continue;
             TechObjects[i].Value = TechTreeManager.Instance.Techs[i].CurrentWorks;
             UpdateColorState(i);
         }
