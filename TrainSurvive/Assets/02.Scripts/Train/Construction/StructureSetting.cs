@@ -24,6 +24,7 @@ public class StructureSetting : ScriptableObject {
         public float System_SingleValue;
         public string System_StringValue;
         public Item2EnergyStructure.Conversion[] Item2EnergyStructure_ConversionArrayValue;
+        public Item2ItemStructure.Conversion[] Item2ItemStructure_ConversionArrayValue;
 
         public object GetValue() {
             foreach (FieldInfo info in GetType().GetRuntimeFields()) {

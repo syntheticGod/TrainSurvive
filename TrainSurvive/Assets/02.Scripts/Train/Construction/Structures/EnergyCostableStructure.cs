@@ -64,6 +64,8 @@ public class EnergyCostableStructure : Structure {
     /// 资源耗尽？
     /// </summary>
     public bool IsRunningOut { get; private set; }
+    
+    private Coroutine RunningCoroutine { get; set; }
 
     [StructurePublicField(Tooltip = "消耗电能")]
     private float _costElect;
@@ -72,7 +74,13 @@ public class EnergyCostableStructure : Structure {
 
     protected override void OnStart() {
         base.OnStart();
-        TimeController.getInstance().StartCoroutine(RunCost());
+        RunningCoroutine = TimeController.getInstance().StartCoroutine(RunCost());
+    }
+
+    protected override void OnRemoving() {
+        base.OnRemoving();
+        if (RunningCoroutine != null)
+            TimeController.getInstance().StopCoroutine(RunningCoroutine);
     }
 
     private IEnumerator RunCost() {

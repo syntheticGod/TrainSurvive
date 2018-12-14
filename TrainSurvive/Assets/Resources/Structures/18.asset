@@ -9,14 +9,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
-  m_Name: New Structure Setting
+  m_Name: 18
   m_EditorClassIdentifier: 
   ID: 18
   LayerOrientation: {x: 0, y: -1}
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4352
   Name: "\u706B\u70AC\u706F"
   Description: "\u7AD9\u7ACB\u5F0F\u7684\u706B\u70AC\u706F"
   WorkAll: 3

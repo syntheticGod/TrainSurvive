@@ -52,6 +52,7 @@ public class ResearchableStructure : EnergyCostableStructure {
     
     protected override void OnStart() {
         base.OnStart();
+        IsCosting = true;
         SpeedRatio = 1;
         World.getInstance().techUnlock += 1;
     }

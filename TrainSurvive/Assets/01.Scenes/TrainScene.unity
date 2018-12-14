@@ -13888,7 +13888,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5C0F\u578B\u5236\u6728\u673A"
+  m_Text: "\u52A0\u70ED\u5BA4"
 --- !u!222 &1772504340
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16648,7 +16648,7 @@ GameObject:
   - component: {fileID: 2105402715}
   - component: {fileID: 2105402714}
   m_Layer: 5
-  m_Name: SmallWoodFactory
+  m_Name: sui_22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16688,6 +16688,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1dde494657525a4181d6be7c71d1a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Output: {fileID: 2135498147}
+  Raw: {fileID: 1731433356}
+  Slider: {fileID: 2131245619}
 --- !u!114 &2105402715
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 /*
- * 描述：物品转换能源建筑类
+ * 描述：物品转物品建筑类型
  * 作者：刘旭涛
- * 创建时间：2018/12/13 17:10:33
+ * 创建时间：2018/12/14 11:23:18
  * 版本：v0.1
  */
 using System;
@@ -11,36 +11,25 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 [Serializable]
-public class Item2EnergyStructure : Structure {
+public class Item2ItemStructure : EnergyCostableStructure {
 
     [Serializable]
     public struct Conversion {
-        public int ItemID;
-        public float EnergyRate;
-        public float ProcessTimeRatio;
-        public float ProduceEnergyRatio;
-
-        public float ProcessTime {
-            get {
-                return ProcessTimeRatio * EnergyRate;
-            }
-        }
-        public float ProduceEnergy {
-            get {
-                return ProduceEnergyRatio * EnergyRate;
-            }
-        }
+        public int FromItemID;
+        public int FromItemNum;
+        public int ToItemID;
+        public int ToItemNum;
+        public float ProcessTime;
     }
 
-    public Item2EnergyStructure(int id) : base(id) { }
+    public Item2ItemStructure(int id) : base(id) { }
 
-    protected Item2EnergyStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
+    protected Item2ItemStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
         _conversions = (Conversion[])info.GetValue("_conversions", typeof(Conversion[]));
-        _conversionRate = (float)info.GetValue("_conversionRate", typeof(float));
         _processSpeed = (float)info.GetValue("_processSpeed", typeof(float));
-        _isElect = info.GetBoolean("_isElect");
         Progress = (float)info.GetValue("Progress", typeof(float));
-        Gas = (ItemData)info.GetValue("Gas", typeof(ItemData));
+        Raw = (ItemData)info.GetValue("Raw", typeof(ItemData));
+        Output = (ItemData)info.GetValue("Output", typeof(ItemData));
         ConversionRateRatio = (float)info.GetValue("ConversionRateRatio", typeof(float));
         ProcessSpeedRatio = (float)info.GetValue("ProcessSpeedRatio", typeof(float));
     }
@@ -48,13 +37,12 @@ public class Item2EnergyStructure : Structure {
     public override void GetObjectData(SerializationInfo info, StreamingContext context) {
         base.GetObjectData(info, context);
         info.AddValue("Progress", Progress);
-        info.AddValue("Gas", Gas);
+        info.AddValue("Raw", Raw);
+        info.AddValue("Output", Output);
         info.AddValue("ConversionRateRatio", ConversionRateRatio);
         info.AddValue("ProcessSpeedRatio", ProcessSpeedRatio);
         info.AddValue("_conversions", _conversions);
-        info.AddValue("_conversionRate", _conversionRate);
         info.AddValue("_processSpeed", _processSpeed);
-        info.AddValue("_isElect", _isElect);
     }
 
     /// <summary>
@@ -64,19 +52,11 @@ public class Item2EnergyStructure : Structure {
         get {
             if (_conversionsDic == null) {
                 _conversionsDic = new Dictionary<int, Conversion>();
-                foreach(Conversion conversion in _conversions) {
-                    _conversionsDic.Add(conversion.ItemID, conversion);
+                foreach (Conversion conversion in _conversions) {
+                    _conversionsDic.Add(conversion.FromItemID, conversion);
                 }
             }
             return _conversionsDic;
-        }
-    }
-    /// <summary>
-    /// 转化率
-    /// </summary>
-    public float ConversionRate {
-        get {
-            return _conversionRate;
         }
     }
     /// <summary>
@@ -85,14 +65,6 @@ public class Item2EnergyStructure : Structure {
     public float ProcessSpeed {
         get {
             return _processSpeed;
-        }
-    }
-    /// <summary>
-    /// 能源类型，是电能吗？
-    /// </summary>
-    public bool IsElect {
-        get {
-            return _isElect;
         }
     }
     /// <summary>
@@ -112,43 +84,54 @@ public class Item2EnergyStructure : Structure {
         }
         private set {
             _progress = value;
-            if (Gas == null) {
+            if (Raw == null) {
                 CallOnProgressChange(0, 0, value);
             } else {
-                CallOnProgressChange(0, Conversions[Gas.id].ProcessTime, value);
+                CallOnProgressChange(0, Conversions[Raw.id].ProcessTime, value);
             }
         }
     }
     /// <summary>
     /// 材料
     /// </summary>
-    public ItemData Gas {
+    public ItemData Raw {
         get {
-            OnAcquireGas?.Invoke(ref _gas);
-            return _gas;
+            OnAcquireRaw?.Invoke(ref _raw);
+            return _raw;
         }
         set {
-            _gas = value;
+            _raw = value;
+        }
+    }
+    /// <summary>
+    /// 输出
+    /// </summary>
+    public ItemData Output {
+        get {
+            OnAcquireOutput?.Invoke(ref _output);
+            return _output;
+        }
+        set {
+            _output = value;
         }
     }
 
-    public Action<ItemData> OnGasUpdate;
-    public RefAction<ItemData> OnAcquireGas;
+    public Action<ItemData> OnRawUpdate;
+    public Action<ItemData> OnOutputUpdate;
+    public RefAction<ItemData> OnAcquireRaw;
+    public RefAction<ItemData> OnAcquireOutput;
 
     private Coroutine RunningCoroutine { get; set; }
 
     [StructurePublicField(Tooltip = "转化列表")]
     private Conversion[] _conversions;
-    [StructurePublicField(Tooltip = "转化率")]
-    private float _conversionRate;
     [StructurePublicField(Tooltip = "处理速度")]
     private float _processSpeed;
-    [StructurePublicField(Tooltip = "能源类型，是电能吗？")]
-    private bool _isElect;
 
     private Dictionary<int, Conversion> _conversionsDic;
     private float _progress;
-    private ItemData _gas;
+    private ItemData _raw;
+    private ItemData _output;
 
     protected override void OnStart() {
         base.OnStart();
@@ -168,21 +151,33 @@ public class Item2EnergyStructure : Structure {
     }
 
     private IEnumerator Run() {
-        WaitUntil wait = new WaitUntil(() => Gas != null && Gas.num >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax());
+        WaitUntil wait = new WaitUntil(() => Raw != null && Raw.num >= Conversions[Raw.id].FromItemNum && (Output == null || (Output.id == Conversions[Raw.id].ToItemID && Output.item.maxPileNum - Output.num >= (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio))));
+        WaitWhile waitCosts = new WaitWhile(() => IsRunningOut);
         while (FacilityState == State.WORKING) {
-            if (!(Gas != null && Gas.num >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax())) {
+            if (!(Raw != null && Raw.num >= 1 && (Output == null || (Output.id == Conversions[Raw.id].ToItemID && Output.item.maxPileNum - Output.num >= (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio))))) {
                 Progress = 0;
+                IsCosting = false;
                 yield return wait;
+                IsCosting = true;
             }
-            if (Progress < Conversions[Gas.id].ProcessTime) {
+            yield return waitCosts;
+            if (Progress < Conversions[Raw.id].ProcessTime) {
                 Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
             } else {
                 Progress = 0;
-                World.getInstance().addEnergy(Conversions[Gas.id].ProduceEnergy * ConversionRate * ConversionRateRatio);
-                if (--Gas.num == 0) {
-                    Gas = null;
+                if (Output == null) {
+                    Output = new ItemData(Conversions[Raw.id].ToItemID, (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio));
+                } else {
+                    Output.num += (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio);
                 }
-                OnGasUpdate?.Invoke(_gas);
+                int newNum = Raw.num - Conversions[Raw.id].FromItemNum;
+                if (newNum <= 0) {
+                    Raw = null;
+                } else {
+                    Raw.num = newNum;
+                }
+                OnOutputUpdate?.Invoke(_output);
+                OnRawUpdate?.Invoke(_raw);
             }
             yield return 1;
         }
