@@ -72,11 +72,19 @@ namespace WorldMap.UI
             ViewTool.FullFillRectTransform(markImage, Vector2.zero, Vector2.zero);
             ViewTool.FullFillRectTransform(targetImage, Vector2.zero, Vector2.zero);
         }
+        /// <summary>
+        /// 设置物品的稀有度
+        /// </summary>
+        /// <param name="level">取值范围[0,1,2,3,4] 4是最高稀有度</param>
         public void SetMarkLevel(int level)
         {
             if (level < markColors.Length)
                 markImage.color = markColors[level];
         }
+        /// <summary>
+        /// 设置物品的图片，图片需要存在ItemSprite目录下
+        /// </summary>
+        /// <param name="name">图片文件名，不需要后缀</param>
         public void SetTargetByName(string name)
         {
             if (name.Equals(targetImageFN))
@@ -85,10 +93,19 @@ namespace WorldMap.UI
             Sprite sprite = Resources.Load<Sprite>(spriteFloder + name);
             targetImage.sprite = sprite;
         }
+        /// <summary>
+        /// 通过item设置图片
+        /// </summary>
+        /// <param name="item"></param>
         public void SetTarget(Item item)
         {
             SetTargetByName(GetSpriteFileName(item));
         }
+        /// <summary>
+        /// 根据Item的itemType获取图片文件名
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public string GetSpriteFileName(Item item)
         {
             string filename;

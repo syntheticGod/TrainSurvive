@@ -23,7 +23,6 @@ namespace WorldMap.UI
             base.InitModel();
             ViewTool.SetParent(numView, this);
         }
-        
         protected override void PlaceModel()
         {
             base.PlaceModel();
@@ -31,6 +30,10 @@ namespace WorldMap.UI
             rect.anchorMin = new Vector2(0.6F, 0.2F);
             rect.anchorMax = new Vector2(0.9F, 0.4F);
         }
+        /// <summary>
+        /// 设置物品的数量
+        /// </summary>
+        /// <param name="number"></param>
         public void SetNumber(int number)
         {
             numView.text = number.ToString();
