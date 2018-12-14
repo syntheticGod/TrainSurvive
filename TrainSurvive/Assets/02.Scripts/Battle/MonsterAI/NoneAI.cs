@@ -21,14 +21,10 @@ namespace WorldBattle
 
         protected override void otherInit()
         {
-            
-        }
-
-        // Use this for initialization
-        void Start()
-        {
             changeSubState(ActionStateEnum.NONE);
         }
+
+        
 
     }
 }
