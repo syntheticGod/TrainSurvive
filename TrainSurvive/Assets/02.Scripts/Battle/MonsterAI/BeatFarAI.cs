@@ -11,10 +11,11 @@ namespace WorldBattle
 { //一直攻击最远玩家的AI，怪物AI里selectedAtkTarget字段无效
     public class BeatFarAI : BattleActor
     {
+        private bool targetFound = false;
         protected override void AIStrategy()
         {
-            //如果当前处于攻击状态，等这次攻击完
-            if (subStateController.curActionState == ActionStateEnum.ATTACK)
+            //如果当前处于攻击状态，等这次攻击完/或者找到了目标正在移动
+            if (subStateController.curActionState == ActionStateEnum.ATTACK|| targetFound)
             {
                 return;
             }
@@ -48,11 +49,13 @@ namespace WorldBattle
             if (Mathf.Abs(enemyActors[atkTarget].pos - pos) <= atkRange)
             {
                 changeSubState(ActionStateEnum.ATTACK);
+                targetFound = false;
             }
             else
             {
                 //进入移动状态
                 changeSubState(ActionStateEnum.MOTION);
+                targetFound = true;
             }
 
             return;

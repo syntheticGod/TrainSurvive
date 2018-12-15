@@ -14,12 +14,14 @@ using UnityEngine;
 public class PersonCell : MonoBehaviour {
     public int index;
     public Text cellText;
-    public GameObject textPanel;
+    private GameObject textPanel;
+    private GameObject professionPanel;
     // Use this for initialization
     void Start () {
         Button btn = this.GetComponent<Button>();
         btn.onClick.AddListener(OnClick);
         textPanel = GameObject.Find("gcTextPanel");
+        professionPanel= GameObject.Find("gcProfessionPanel");
     }
 
     // Update is called once per frame
@@ -38,6 +40,9 @@ public class PersonCell : MonoBehaviour {
     {
         PersonTextPanel panelCs=(PersonTextPanel)textPanel.GetComponent("PersonTextPanel");
         panelCs.updatePanel(index);
+        ProfessionPanel professionpanelCs = textPanel.GetComponent<ProfessionPanel>();
+        professionpanelCs.updatePanel(index);
+        
         Button bt = (Button)gameObject.GetComponent("Button");
         bt.Select();
     }

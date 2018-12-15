@@ -47,20 +47,42 @@ namespace WorldMap.UI
 
         private RectTransform content;
         private RectTransform viewport;
+        /// <summary>
+        /// 存放正在显示的Item脚本（GameObject）
+        /// </summary>
         private List<ListViewItem> items;
+        /// <summary>
+        /// 被回收的Item，删除添加时会再次利用之前创建的GameObject。
+        /// 不过位置不一定在最后，这个以后再修改吧。
+        /// </summary>
         private List<ListViewItem> recycal;
+        /// <summary>
+        /// 上一次点击的item
+        /// 用途：当点击其他item时，将上一次点击的item颜色变为正常。
+        /// </summary>
         private ListViewItem lastClickedItem;
+        /// <summary>
+        /// 存放item的GridLayoutGroup
+        /// </summary>
         private GridLayoutGroup gridLayout;
+        /// <summary>
+        /// 上下左右滑动的脚本
+        /// </summary>
         private ScrollRect scrollRect;
+        /// <summary>
+        /// Content的大小根据item数量自适应
+        /// </summary>
         private ContentSizeFitter contentSizeFitter;
-
-        public ScrollType m_scrollType = ScrollType.Horizontal;
         public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
+        /// <summary>
+        /// 也可以手动设置Item的Prefab，如果未设置就创建
+        /// </summary>
         public GameObject m_itemContentPrefab;
         private const int UNSELECTED = -1;
         /// <summary>
-        /// 取消选择功能时，取消之前选择的。
-        /// 如果再次开启选择功能时，前一次选择的会再次亮起。
+        /// 是否允许item被选择（点一下item会显示灰色，点其他item时变回正常色）
+        /// 当IfSelectable设值成False时，所有的item会变为正常色。
+        /// 如果再次开启选择功能时，前一次选择的会再次变为灰色。
         /// </summary>
         public bool IfSelectable
         {
@@ -74,13 +96,53 @@ namespace WorldMap.UI
             }
             get { return m_ifSelectable; }
         }
-        public int SelectIndex { get; set; } = UNSELECTED;
         private bool m_ifSelectable = true;
+        /// <summary>
+        /// 选择的索引
+        /// </summary>
+        public int SelectIndex { get; set; } = UNSELECTED;
+        /// <summary>
+        /// 判断是否没有选择
+        /// </summary>
         public bool IsSelectNothing { get { return !IfSelectable || SelectIndex == UNSELECTED; } }
+        /// <summary>
+        /// item的大小
+        /// </summary>
         protected Vector2 cellSize = new Vector2(100.0F, 100.0F);
+        protected void ConfigCellSize()
+        {
+            if (cellSize.x < 0)
+            {
+                cellSize.x = viewPortSize.x;
+            }
+            if (cellSize.y < 0)
+            {
+                cellSize.y = viewPortSize.y;
+            }
+            gridLayout.cellSize = cellSize;
+        }
+        public void SetCellSize(Vector2 cellSize)
+        {
+            this.cellSize = cellSize;
+        }
+        /// <summary>
+        /// 视图的大小
+        /// </summary>
         protected Vector2 viewPortSize;
+        /// <summary>
+        /// 默认的滑动灵敏度
+        /// </summary>
         public float defaultScrollRectSensitivity = 15F;
+        /// <summary>
+        /// 静态不变的Item数量。（再item前面加若干条一直存在的item，不会被销毁）
+        /// 子类继承设置个数。意味着这个个数不一开始需要设置的参数。
+        /// </summary>
         private int m_persistentCount;
+        protected virtual int GetPersistentCount()
+        { return 0; }
+        /// <summary>
+        /// 存放数据引用，内部不会重新拷贝一份
+        /// </summary>
         private List<D> m_datas;
         public List<D> Datas
         {
@@ -95,6 +157,14 @@ namespace WorldMap.UI
         {
             m_datas = datas;
         }
+        /// <summary>
+        /// 设置滑动方向
+        ///DISABLE,//禁止滑动
+        ///Horizontal,//水平滑动
+        ///Vertical,//垂直滑动
+        ///Both//四周滑动
+        /// </summary>
+        public ScrollType m_scrollType = ScrollType.Horizontal;
         public ScrollType ScrollDirection
         {
             set
@@ -136,6 +206,9 @@ namespace WorldMap.UI
                 return m_startAxis;
             }
         }
+        /// <summary>
+        /// 固定列或者固定行的数量
+        /// </summary>
         public int GridConstraintCount
         {
             set
@@ -147,6 +220,9 @@ namespace WorldMap.UI
                 return gridLayout.constraintCount;
             }
         }
+        /// <summary>
+        /// 固定列或者固定行
+        /// </summary>
         public GridLayoutGroup.Constraint GridConstraint
         {
             set
@@ -158,21 +234,7 @@ namespace WorldMap.UI
                 return gridLayout.constraint;
             }
         }
-        protected void ConfigCellSize()
-        {
-            if (cellSize.x < 0)
-            {
-                cellSize.x = viewPortSize.x;
-            }
-            if (cellSize.y < 0)
-            {
-                cellSize.y = viewPortSize.y;
-            }
-            gridLayout.cellSize = cellSize;
-        }
         public int ItemCount { get { return items.Count; } }
-        protected virtual int GetPersistentCount()
-        { return 0; }
         protected virtual void Awake()
         {
             CreateBaseModel();
@@ -235,12 +297,8 @@ namespace WorldMap.UI
             ConfigCellSize();
             StartAxis = m_startAxis;
         }
-        void Update()
+        protected void Update()
         { }
-        public void SetCellSize(Vector2 cellSize)
-        {
-            this.cellSize = cellSize;
-        }
         public void SetBackgroudColor(Color color)
         {
             ViewTool.ForceGetComponent<Image>(gameObject).color = color;
@@ -250,6 +308,10 @@ namespace WorldMap.UI
             RemoveAllItems();
             RefreshData();
         }
+        /// <summary>
+        /// 刷新数据时的操作，示例见MergableListView。
+        /// 因为MergableListView会把删除数量小于等于0的item删去
+        /// </summary>
         protected virtual void RefreshData()
         {
             for (int i = 0; i < Datas.Count; i++)
@@ -258,12 +320,21 @@ namespace WorldMap.UI
                     OnItemView(AppendItem(), Datas[i], i);
             }
         }
+        /// <summary>
+        /// 添加Item
+        /// </summary>
+        /// <param name="data"></param>
         public virtual void AddItem(D data)
         {
             Datas.Add(data);
             if (onItemFilter == null || !onItemFilter(data))
                 OnItemView(AppendItem(), data, Datas.Count - 1);
         }
+        /// <summary>
+        /// 删去item。注意存放数据的数组是引用，并非拷贝，也就意味着连通外面的一起删掉。
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public virtual bool RemoveData(D data)
         {
             if (!Datas.Remove(data))
@@ -271,11 +342,17 @@ namespace WorldMap.UI
             Refresh();
             return true;
         }
+        /// <summary>
+        /// 除去所有的数据
+        /// </summary>
         public void RemoveAllDatas()
         {
             Datas.Clear();
             Refresh();
         }
+        /// <summary>
+        /// 除去所有的item，但不除去数据
+        /// </summary>
         public void RemoveAllItems()
         {
             for (int i = m_persistentCount; i < items.Count; ++i)
@@ -301,6 +378,10 @@ namespace WorldMap.UI
             CallbackItemClick(items[index]);
             return true;
         }
+        /// <summary>
+        /// Item点击的回调函数
+        /// </summary>
+        /// <param name="item"></param>
         public void CallbackItemClick(ListViewItem item)
         {
             int index = items.IndexOf(item);
@@ -335,6 +416,10 @@ namespace WorldMap.UI
             child.offsetMin = Vector2.zero;
             child.offsetMax = Vector2.zero;
         }
+        /// <summary>
+        /// 创建一个新的item，并把它追加到视图（GameObject）中。
+        /// </summary>
+        /// <returns></returns>
         protected ListViewItem AppendItem()
         {
             ListViewItem itemView;
@@ -352,6 +437,10 @@ namespace WorldMap.UI
             items.Add(itemView);
             return itemView;
         }
+        /// <summary>
+        /// 创建一个Item
+        /// </summary>
+        /// <returns></returns>
         private ListViewItem CreateItem()
         {
             RectTransform rectOfItem = new GameObject("Item", typeof(RectTransform)).GetComponent<RectTransform>();
@@ -369,7 +458,18 @@ namespace WorldMap.UI
             SetParent(rectOfItem, content.GetComponent<RectTransform>());
             return listViewItem;
         }
+        /// <summary>
+        /// Item的具体显示方法
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="data"></param>
+        /// <param name="itemIndex"></param>
         protected abstract void OnItemView(ListViewItem item, D data, int itemIndex);
+        /// <summary>
+        /// 一直存在的item，具体显示方法
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="index"></param>
         protected virtual void OnPersistentItemView(ListViewItem item, int index)
         { }
     }
