@@ -40,7 +40,12 @@ public class Structure : ISerializable {
     
     public struct ButtonAction {
         public string Title;
-        public Action<Structure> Action;
+        public Action<Facility> Action;
+
+        public ButtonAction(string title, Action<Facility> action) {
+            Title = title;
+            Action = action;
+        }
     }
 
     /// <summary>
@@ -74,6 +79,7 @@ public class Structure : ISerializable {
                     break;
                 case State.WORKING:
                     OnStart();
+                    HasTriggered = true;
                     break;
                 case State.REMOVING:
                     OnRemoving();
@@ -90,7 +96,7 @@ public class Structure : ISerializable {
     /// <summary>
     /// 设施安置位置。
     /// </summary>
-    public Vector3 Position { get; protected set; }
+    public Vector3 Position { get; set; }
     /// <summary>
     /// 建造耗材比例。
     /// </summary>
@@ -103,6 +109,10 @@ public class Structure : ISerializable {
     /// ID
     /// </summary>
     public int ID { get; private set; }
+    /// <summary>
+    /// 是否已触发过OnStart
+    /// </summary>
+    protected bool HasTriggered { get; private set; }
 
     public event Action<Structure> OnStateChange;
     public event Action<float, float, float> OnProgressChange;
@@ -127,10 +137,11 @@ public class Structure : ISerializable {
     /// <summary>
     /// 返回上下文菜单按钮项。
     /// </summary>
-    public virtual ButtonAction[] GetButtonActions() {
-        return new ButtonAction[] {
-            new ButtonAction{ Title = "拆除", Action = (structure) => structure.FacilityState = State.REMOVING }
-        };
+    public virtual LinkedList<ButtonAction> GetButtonActions() {
+        LinkedList<ButtonAction> actions = new LinkedList<ButtonAction>();
+        actions.AddLast(new ButtonAction("移动", (facility) => ConstructionManager.Instance.Move(facility)));
+        actions.AddLast(new ButtonAction("拆除", (facility) => facility.Structure.FacilityState = State.REMOVING));
+        return actions;
     }
 
     /// <summary>
@@ -168,6 +179,7 @@ public class Structure : ISerializable {
     
     protected Structure(SerializationInfo info, StreamingContext context) {
         ID = info.GetInt32("ID");
+        HasTriggered = info.GetBoolean("HasTriggered");
         WorkSpeedRatio = (float)info.GetValue("WorkSpeedRatio", typeof(float));
         WorkNow = (float)info.GetValue("WorkNow", typeof(float));
         Position = new Vector3((float)info.GetValue("PositionX", typeof(float)), (float)info.GetValue("PositionY", typeof(float)), (float)info.GetValue("PositionZ", typeof(float)));
@@ -178,6 +190,7 @@ public class Structure : ISerializable {
 
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context) {
         info.AddValue("ID", ID);
+        info.AddValue("HasTriggered", HasTriggered);
         info.AddValue("WorkSpeedRatio", WorkSpeedRatio);
         info.AddValue("WorkNow", WorkNow);
         info.AddValue("FacilityState", FacilityState);

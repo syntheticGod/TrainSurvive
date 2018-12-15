@@ -79,13 +79,13 @@ public class World {
     private uint foodIn = 800;
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
-    private uint energy = 0;
+    private float energy = 0;
     private uint money=100000;
-    private uint electricity = 0;
+    private float electricity = 0;
     private uint foodInMax = 10000;
     private uint foodOutMax = 1000;
-    private uint energyMax = 1000;
-    private uint electricityMax = 1000;
+    private float energyMax = 1000;
+    private float electricityMax = 1000;
 
     public float trainInventoryMaxSize = 50;    //需要使用相关方法来确定这个属性的值，然后其他的Inventory系统会自己使用它
     public float trainInventoryCurSize = 0;
@@ -155,7 +155,7 @@ public class World {
     {
         game_time = time;
     }
-    public uint getEnergy()
+    public float getEnergy()
     {
         return energy;
     }
@@ -171,7 +171,7 @@ public class World {
     {
         return money;
     }
-    public uint getElectricity()
+    public float getElectricity()
     {
         return electricity;
     }
@@ -183,11 +183,11 @@ public class World {
     {
         return foodInMax;
     }
-    public uint getEnergyMax()
+    public float getEnergyMax()
     {
         return energyMax;
     }
-    public uint getElectricityMax()
+    public float getElectricityMax()
     {
         return electricityMax;
     }
@@ -229,7 +229,7 @@ public class World {
     }
     /// <param name="food"></param>
     /// <returns>返回false代表资源超过最大值</returns>
-    public bool setEnergy(uint energyNum)
+    public bool setEnergy(float energyNum)
     {
         bool result = true;
         if (energyNum > energyMax)
@@ -261,12 +261,18 @@ public class World {
             resourceUI.setFoodOut(foodOut, foodOutMax);
         }
     }
-    public void setEnergyMax(uint num)
+    public void setEnergyMax(float num)
     {
         energyMax = num;
         if (resourceUI != null)
         {
             resourceUI.setEnergy(energy, energyMax);
+        }
+    }
+    public void setElectricityMax(float num) {
+        electricityMax = num;
+        if (resourceUI != null) {
+            resourceUI.setElectricity(electricity, electricityMax);
         }
     }
     /// <summary>
@@ -326,7 +332,7 @@ public class World {
     /// </summary>
     /// <param name="num"></param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
-    public int addEnergy(int num)
+    public int addEnergy(float num)
     {
         int result = 1;
         if ((energy + num) < 0)
@@ -336,11 +342,11 @@ public class World {
         }
         else if ((energy + num) > energyMax)
         {
-            energy = (uint)energyMax;
+            energy = energyMax;
             result = 2;
         }
         else
-            energy = (uint)(energy + num);
+            energy = (energy + num);
         if (resourceUI != null)
         {
             resourceUI.setEnergy(energy, energyMax);
@@ -372,7 +378,7 @@ public class World {
     /// </summary>
     /// <param name="num"></param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
-    public int addElectricity(int num)
+    public int addElectricity(float num)
     {
         int result = 1;
         if ((electricity + num) < 0)
@@ -382,11 +388,11 @@ public class World {
         }
         else if ((electricity + num) > electricityMax)
         {
-            electricity = (uint)electricityMax;
+            electricity = electricityMax;
             result = 2;
         }
         else
-            electricity = (uint)(electricity + num);
+            electricity = (electricity + num);
         if (resourceUI != null)
         {
             resourceUI.setElectricity(electricity, electricityMax);

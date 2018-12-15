@@ -9,48 +9,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
-  m_Name: 0
+  m_Name: New Structure Setting
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 7
   LayerOrientation: {x: 0, y: -1}
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
     m_Bits: 256
-  Name: "\u52A8\u80FD\u6838\u5FC3"
-  Description: "\u5B58\u50A8\u52A8\u80FD\u7684\u80FD\u6E90\u6838\u5FC3\uFF0C\u63D0\u4F9B2000\u52A8\u80FD\u5B58\u50A8\u4E0A\u9650"
-  WorkAll: 0.01
+  Name: "\u521D\u7EA7\u7814\u7A76\u53F0"
+  Description: "\u7528\u5B83\u6765\u7814\u7A76\u79D1\u6280"
+  WorkAll: 12
   BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
-  Class: 0
+  Class: 1
   RequiredTech: 1
-  Initializer: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}
+  Initializer: {fileID: 11500000, guid: 0716d49999e125d47bc762133350df01, type: 3}
   InitializeValues:
-  - Name: _addElectMax
+  - Name: _speed
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 1
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+  - Name: _costElect
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
-  - Name: _addEnergyMax
+  - Name: _costEnergy
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 2000
-    System_StringValue: 
-    Item2EnergyStructure_ConversionArrayValue: []
-  - Name: _addInventoryMax
-    TypeName: System.Single
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 0
-    System_StringValue: 
-    Item2EnergyStructure_ConversionArrayValue: []
-  - Name: _addMemberMax
-    TypeName: System.Int32
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 0
+    System_SingleValue: 0.5
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []

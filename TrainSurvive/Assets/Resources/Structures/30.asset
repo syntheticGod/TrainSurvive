@@ -9,48 +9,57 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
-  m_Name: 0
+  m_Name: 30
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 30
   LayerOrientation: {x: 0, y: -1}
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
     m_Bits: 256
-  Name: "\u52A8\u80FD\u6838\u5FC3"
-  Description: "\u5B58\u50A8\u52A8\u80FD\u7684\u80FD\u6E90\u6838\u5FC3\uFF0C\u63D0\u4F9B2000\u52A8\u80FD\u5B58\u50A8\u4E0A\u9650"
-  WorkAll: 0.01
+  Name: "\u4E2D\u7EA7\u77F3\u5DE5\u53F0"
+  Description: "\u7ECF\u81EA\u52A8\u5316\u6539\u9020\u540E\u7684\u77F3\u5DE5\u53F0\uFF0C\u52A0\u5DE5\u901F\u7387\u5F97\u5230\u4E86\u63D0\u5347"
+  WorkAll: 18
   BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
-  Class: 0
-  RequiredTech: 1
-  Initializer: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}
+  Class: 3
+  RequiredTech: 21
+  Initializer: {fileID: 11500000, guid: f128628d3b381af49b2f54dd079877f9, type: 3}
   InitializeValues:
-  - Name: _addElectMax
+  - Name: _conversions
+    TypeName: Item2ItemStructure+Conversion[]
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue:
+    - FromItemID: 235
+      FromItemNum: 1
+      ToItemID: 236
+      ToItemNum: 1
+      ProcessTime: 10
+  - Name: _processSpeed
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 1.5
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _costElect
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
-  - Name: _addEnergyMax
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _costEnergy
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 2000
+    System_SingleValue: 0.3
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
-  - Name: _addInventoryMax
-    TypeName: System.Single
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 0
-    System_StringValue: 
-    Item2EnergyStructure_ConversionArrayValue: []
-  - Name: _addMemberMax
-    TypeName: System.Int32
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 0
-    System_StringValue: 
-    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
