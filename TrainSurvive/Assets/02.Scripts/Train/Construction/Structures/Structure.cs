@@ -40,9 +40,9 @@ public class Structure : ISerializable {
     
     public struct ButtonAction {
         public string Title;
-        public Action<Structure> Action;
+        public Action<Facility> Action;
 
-        public ButtonAction(string title, Action<Structure> action) {
+        public ButtonAction(string title, Action<Facility> action) {
             Title = title;
             Action = action;
         }
@@ -96,7 +96,7 @@ public class Structure : ISerializable {
     /// <summary>
     /// 设施安置位置。
     /// </summary>
-    public Vector3 Position { get; protected set; }
+    public Vector3 Position { get; set; }
     /// <summary>
     /// 建造耗材比例。
     /// </summary>
@@ -139,7 +139,8 @@ public class Structure : ISerializable {
     /// </summary>
     public virtual LinkedList<ButtonAction> GetButtonActions() {
         LinkedList<ButtonAction> actions = new LinkedList<ButtonAction>();
-        actions.AddLast(new ButtonAction("拆除", (structure) => structure.FacilityState = State.REMOVING));
+        actions.AddLast(new ButtonAction("移动", (facility) => ConstructionManager.Instance.Move(facility)));
+        actions.AddLast(new ButtonAction("拆除", (facility) => facility.Structure.FacilityState = State.REMOVING));
         return actions;
     }
 

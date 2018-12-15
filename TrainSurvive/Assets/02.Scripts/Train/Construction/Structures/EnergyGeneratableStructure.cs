@@ -111,9 +111,9 @@ public class EnergyGeneratableStructure : Structure {
     public override LinkedList<ButtonAction> GetButtonActions() {
         LinkedList<ButtonAction> actions = base.GetButtonActions();
         if (IsOn) {
-            actions.AddFirst(new ButtonAction("关闭", (structure) => IsOn = false));
+            actions.AddFirst(new ButtonAction("关闭", (facility) => IsOn = false));
         } else {
-            actions.AddFirst(new ButtonAction("打开", (structure) => IsOn = true));
+            actions.AddFirst(new ButtonAction("打开", (facility) => IsOn = true));
         }
         return actions;
     }

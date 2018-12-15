@@ -163,7 +163,7 @@ public class Item2EnergyStructure : Structure {
 
     public override LinkedList<ButtonAction> GetButtonActions() {
         LinkedList<ButtonAction> actions = base.GetButtonActions();
-        actions.AddFirst(new ButtonAction("操作", (structure) => UIManager.Instance?.ShowFaclityUI("sui_" + structure.ID, structure)));
+        actions.AddFirst(new ButtonAction("操作", (facility) => UIManager.Instance?.ShowFaclityUI("sui_" + facility.Structure.ID, facility.Structure)));
         return actions;
     }
 

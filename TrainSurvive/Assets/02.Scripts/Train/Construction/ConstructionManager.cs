@@ -136,6 +136,11 @@ public class ConstructionManager : MonoBehaviour {
         StartCoroutine(moveFacility(facility));
     }
 
+    public void Move(Facility facility) {
+        PlaceState = State.PLACING;
+        StartCoroutine(MoveFacilityPosition(facility));
+    }
+
     /// <summary>
     /// 调用该方法以开始放置一个列车车厢，左键放置，右键退出。
     /// 材料不足时将自动标红并阻止放置。
@@ -247,6 +252,52 @@ public class ConstructionManager : MonoBehaviour {
             float y = Mathf.SmoothDamp(Camera.main.transform.position.y, toPos.y, ref vpy, 0.2f);
             Camera.main.transform.SetPositionAndRotation(new Vector3(x, y, Camera.main.transform.position.z), Quaternion.identity);
             yield return 1;
+        }
+    }
+
+    private IEnumerator MoveFacilityPosition(Facility facility) {
+        Transform fTransform = facility.GetComponent<Transform>();
+        SpriteRenderer fSpriteRenderer = facility.GetComponent<SpriteRenderer>();
+        Color originColor = fSpriteRenderer.color;
+        
+        WaitForEndOfFrame wait = new WaitForEndOfFrame();
+        while (PlaceState == State.PLACING) {
+            RaycastHit2D? hit = getPlacablePointByMousePosition(StructureSettings[facility.Structure.ID].RequiredLayers, StructureSettings[facility.Structure.ID].LayerOrientation);
+            bool isCollided = false;
+            if (hit.HasValue) {
+                fTransform.SetPositionAndRotation(hit.Value.point, Quaternion.identity);
+                facility.gameObject.SetActive(true);
+                if (facility.Structure.IsCostsAvailable()) {
+                    isCollided = checkCollided(facility.gameObject, hit.Value);
+                    if (isCollided) {
+                        fSpriteRenderer.color = BlockColor;
+                    } else {
+                        fSpriteRenderer.color = OriginColor;
+                    }
+                } else {
+                    fSpriteRenderer.color = BlockColor;
+                }
+            } else {
+                facility.gameObject.SetActive(false);
+            }
+            // 按右键退出
+            if (Input.GetMouseButton(1)) {
+                StopPlacing();
+            }
+            // 左键放置
+            if (Input.GetMouseButton(0) && facility.gameObject.activeSelf && !isCollided) {
+                facility.Structure.Position = fTransform.position;
+                fSpriteRenderer.color = facility.HighlightColor;
+                PlaceState = State.PLACED;
+            }
+            yield return wait;
+        }
+
+        if (PlaceState == State.IDLE) {
+            fTransform.SetPositionAndRotation(facility.Structure.Position, Quaternion.identity);
+            fSpriteRenderer.color = originColor;
+        } else {
+            PlaceState = State.IDLE;
         }
     }
 

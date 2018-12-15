@@ -130,7 +130,7 @@ public class Facility : MonoBehaviour {
                 LinkedList<Structure.ButtonAction> actions = Structure.GetButtonActions();
                 int i = 0;
                 foreach (Structure.ButtonAction action in actions) {
-                    contextMenu.PutButton(action.Title, i++, () => action.Action(Structure));
+                    contextMenu.PutButton(action.Title, i++, () => action.Action(this));
                 }
                 break;
             default:
