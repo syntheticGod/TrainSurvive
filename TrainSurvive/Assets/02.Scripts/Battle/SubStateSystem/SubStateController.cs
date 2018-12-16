@@ -52,11 +52,11 @@ namespace WorldBattle {
         /// </summary>
         /// <param name="nextActionState"></param>
         public void changeSubState(ActionStateEnum nextActionState) {
-            if (actor.isPlayer)
-            Debug.Log((actor.isPlayer ? "玩家" : "敌人")
-                + actor.myId
-                + "当前状态为：" + curActionState
-                + " 下一个状态为：" + nextActionState);
+            //if (actor.isPlayer)
+            //Debug.Log((actor.isPlayer ? "玩家" : "敌人")
+            //    + actor.myId
+            //    + "当前状态为：" + curActionState
+            //    + " 下一个状态为：" + nextActionState);
 
             //如果当前状态等于上一个状态，不做转变
             if (curActionState == nextActionState) {
@@ -152,6 +152,7 @@ namespace WorldBattle {
         public void executeCurState() {
             //如果当前子状态不为空
             if (subActionState != null) {
+                //Debug.Log(curActionState);
                 subActionState.executeState();
             }
         }

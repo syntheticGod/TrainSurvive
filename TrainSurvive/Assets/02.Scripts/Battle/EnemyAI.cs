@@ -45,6 +45,42 @@ namespace WorldBattle {
 
             return;
         }
+
+        /// <summary>
+        /// 选中最近的敌人
+        /// 如果玩家已经选中了敌人，则不变
+        /// 否则找最近的敌人
+        /// </summary>
+        protected void selectNearestEnemy() {
+            //如果当前已经存在玩家选中的目标了，朝着目标行动
+            if (selectedAtkTarget != -1 && enemyActors[selectedAtkTarget].isAlive == true) {
+                atkTarget = selectedAtkTarget;
+            } else {
+                //获取距离最近的目标
+                atkTarget = getNearestEnemy();
+            }
+        }
+
+        /// <summary>
+        /// 查找最近的目标
+        /// 距离相等时则找序号最小的
+        /// </summary>
+        /// <returns>返回目标的id</returns>
+        private int getNearestEnemy() {
+            int nearestId = -1;
+
+            //寻找距离最近相应目标(距离最近，序号最前)
+            foreach (BattleActor enemyActor in enemyActors) {
+                //如果当前敌人存活
+                if (enemyActor.isAlive) {
+                    if (nearestId == -1 || Mathf.Abs(enemyActor.pos - pos) > Mathf.Abs(enemyActors[nearestId].pos - pos)) {
+                        nearestId = enemyActor.myId;
+                    }
+                }
+            }
+
+            return nearestId;
+        }
     }
 }
 

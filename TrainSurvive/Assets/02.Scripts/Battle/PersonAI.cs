@@ -7,14 +7,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace WorldBattle {
     public class PersonAI : BattleActor {
         //撤退所需的等待时间
         private const float retreatNeedTime = 5.0f;
-
         //设置控制射程的范围参数
         private const float controlRangePara = 0.8f;
+        //绑定两个技能按钮
+        public Button []skillBtn;
 
         //玩家当前的策略状态
         public StrategyStateEnum strategyState;
@@ -251,7 +253,39 @@ namespace WorldBattle {
         /// </summary>
         /// <param name="skillIndex">技能的编号</param>
         public void startSkillRelease(int skillIndex) {
-            changeSubState(ActionStateEnum.SKILL);
+            Debug.Log("释放技能" + skillIndex);
+            //释放技能
+            releaseSkill(skillIndex);
+        }
+
+        /// <summary>
+        /// 当ap改变时技能按钮激活
+        /// </summary>
+        protected override void changeSkillBtn() {
+            for (int i = 0; i < skillList.Count; i++) {
+                //如果当前技能不是被动技能且能释放，则该按钮可用
+                if (skillList[i].isPassive == false && skillList[i].canReleaseSkill()) {
+                    skillBtn[i].interactable = true;
+                } else {
+                    //否则设置其不可用
+                    skillBtn[i].interactable = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 选中最近的敌人
+        /// 如果玩家已经选中了敌人，则不变
+        /// 否则找最近的敌人
+        /// </summary>
+        protected void selectNearestEnemy() {
+            //如果当前已经存在玩家选中的目标了，朝着目标行动
+            if (selectedAtkTarget != -1 && enemyActors[selectedAtkTarget].isAlive == true) {
+                atkTarget = selectedAtkTarget;
+            } else {
+                //获取距离最近的目标
+                atkTarget = HelpSelectTarget.getNearestEnemy(this);
+            }
         }
     }
 }

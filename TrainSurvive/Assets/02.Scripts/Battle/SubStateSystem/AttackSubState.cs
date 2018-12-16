@@ -12,10 +12,7 @@ using static WorldBattle.BattleActor;
 namespace WorldBattle {
     public class AttackSubState : AISubState{
         //当前攻击前摇已等待的时间
-        private float curAtkWindUpPassTime = 0.0f;
-
-        //攻击所需的前摇的时间
-        private const float atkWindUpTime = 0.5f;
+        private float curAtkWindUpPassTime = 0.0f;       
 
         //初始化攻击子状态
         public AttackSubState(BattleActor actor, Animator animator) : base(actor, animator) {
@@ -54,7 +51,7 @@ namespace WorldBattle {
             curAtkWindUpPassTime += Time.deltaTime;
 
             //如果当前时间小于攻击前摇等待时间
-            if (curAtkWindUpPassTime < atkWindUpTime) {
+            if (curAtkWindUpPassTime < battleActor.atkWindUpTime) {
                 //继续等待，不做操作
                 return;
             }
@@ -67,8 +64,24 @@ namespace WorldBattle {
 
                 //每次攻击后增加行动值，保证不大于最大值
                 battleActor.addActionPoint(battleActor.myId, battleActor.apRecovery);
+
+                //给敌人加一个攻击减速buff
+                battleActor.enemyActors[atkTarget].setBuffEffect(
+                    BuffFactory.getBuff(
+                        BuffFactory.BuffEnum.ATTACK_EFFECT_BUFF,
+                        battleActor.enemyActors[atkTarget])
+                );
+
+                //给攻击目标执行被动技能
+                battleActor.releasePassiveBuff(battleActor.enemyActors[atkTarget]);
             } else {
                 //如果此次攻击被敌人闪避
+                Debug.Log((battleActor.isPlayer ? "玩家" : "敌人")
+                    + battleActor.myId
+                    + "攻击"
+                    + (battleActor.enemyActors[atkTarget].isPlayer ? "玩家" : "敌人")
+                    + battleActor.enemyActors[atkTarget].myId
+                    + "被闪避!");
             }
 
             //本次攻击完，停止本次攻击
@@ -81,19 +94,15 @@ namespace WorldBattle {
         public override void initState() {
             //攻击前摇时间清空
             curAtkWindUpPassTime = 0.0f;
-            //设置攻击子状态
-            //battleActor.actionState = ActionStateEnum.ATTACK;
         }      
 
         //播放攻击动画
         private void playAttackAnimation() {
-            Debug.Log("开始攻击！");
+            //Debug.Log("开始攻击！");
             //播放攻击动画
             animator.SetTrigger("attack");
-            //获取攻击的动画播放速度
-            //Animation animation = animator.animation.;
-            //按照攻击速度更改攻击的播放速度
-            //animator.speed = 1.0f * atkNeedTime / animationTime;
+            //按攻击速度设置动画速度
+            battleActor.setAtkSpeedAnimate();
         }
 
         /// <summary>
