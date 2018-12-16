@@ -196,7 +196,7 @@ namespace WorldBattle {
 
                 //给队伍背包加随机材料(当前不处于测试状态)
                 if (isTest == false) {
-                    Team.Instance.Inventory.PushItem(Good.RandomMaterial().item);
+                    //Team.Instance.Inventory.PushItem(item);
                 }
             }
 

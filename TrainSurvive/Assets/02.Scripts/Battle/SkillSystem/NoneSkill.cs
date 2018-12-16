@@ -18,6 +18,15 @@ namespace WorldBattle {
         //技能不执行
         protected override void skillEffect(BattleActor targetActor = null) {
         }
+
+        /// <summary>
+        /// 实现克隆方法
+        /// </summary>
+        /// <param name="curActor"></param>
+        /// <returns></returns>
+        public override Skill Clone(BattleActor curActor) {
+            return new NoneSkill(curActor);
+        }
     }
 }
 

@@ -47,6 +47,9 @@ namespace WorldBattle {
 
         //释放本次技能的效果
         protected abstract void skillEffect(BattleActor targetActor = null);
+
+        //实现克隆
+        public abstract Skill Clone(BattleActor curActor);
     }
 }
 

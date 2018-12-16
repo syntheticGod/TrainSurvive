@@ -32,7 +32,7 @@ namespace WorldBattle {
                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
                 MonsterInitializer mi = new MonsterInitializer();
-                mi.initializeMonster(ref curPlayer);
+                mi.initializeMonster(ref curPlayer, 1);
                 BattleActor battleActor = mi.getBattleActor();
 
                 //battleActor = initBattleEnemy(ref curPlayer, i);

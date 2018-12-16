@@ -15,7 +15,7 @@ namespace WorldBattle {
     public class DoubleAttackSkill : Skill {
 
         //当前技能消耗的AP
-        public new const int needAp = 0;
+        public new const int needAp = 35;
         //当前技能是不是被动技能
         public new const bool isPassive = false;
 
@@ -41,6 +41,15 @@ namespace WorldBattle {
 
             //设置buff
             battleActor.setBuffEffect(buff);
+        }
+
+        /// <summary>
+        /// 实现克隆方法
+        /// </summary>
+        /// <param name="curActor"></param>
+        /// <returns></returns>
+        public override Skill Clone(BattleActor curActor) {
+            return new DoubleAttackSkill(curActor);
         }
     }
 }
