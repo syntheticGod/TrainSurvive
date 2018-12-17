@@ -26,4 +26,7 @@ public class TechSetting : ScriptableObject {
     public float TotalWorks;
     [Tooltip("额外功能。")]
     public TechCompleteAction OnCompleted;
+
+    [SerializableAction]
+    public static void ddd(Tech d) { }
 }

@@ -24,7 +24,7 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 1
   RequiredTech: 2
-  Initializer: {fileID: 11500000, guid: 0716d49999e125d47bc762133350df01, type: 3}
+  Initializer: ResearchableStructure
   InitializeValues:
   - Name: _speed
     TypeName: System.Single
@@ -33,6 +33,7 @@ MonoBehaviour:
     System_SingleValue: 1.2
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
   - Name: _costElect
     TypeName: System.Single
     System_Int32Value: 0
@@ -40,6 +41,7 @@ MonoBehaviour:
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
   - Name: _costEnergy
     TypeName: System.Single
     System_Int32Value: 0
@@ -47,3 +49,5 @@ MonoBehaviour:
     System_SingleValue: 0.6
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 0716d49999e125d47bc762133350df01, type: 3}

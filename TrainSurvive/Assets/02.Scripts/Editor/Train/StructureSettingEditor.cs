@@ -26,6 +26,7 @@ public class StructureSettingEditor : Editor {
         SerializedProperty buildCostsProperty = serializedObject.FindProperty("BuildCosts");
         SerializedProperty requiredTechProperty = serializedObject.FindProperty("RequiredTech");
         SerializedProperty initializerProperty = serializedObject.FindProperty("Initializer");
+        SerializedProperty initializerObjectProperty = serializedObject.FindProperty("InitializerObject");
         SerializedProperty requiredLayersProperty = serializedObject.FindProperty("RequiredLayers");
         SerializedProperty layerProperty = serializedObject.FindProperty("Layer");
         SerializedProperty layerOrientationProperty = serializedObject.FindProperty("LayerOrientation");
@@ -36,7 +37,7 @@ public class StructureSettingEditor : Editor {
         EditorGUILayout.PropertyField(idProperty);
         EditorGUILayout.PropertyField(nameProperty);
         EditorGUILayout.PropertyField(descriptionProperty);
-        InitializerProperty(initializerProperty, initializeValuesProperty);
+        InitializerProperty(initializerProperty, initializerObjectProperty, initializeValuesProperty);
         EditorGUILayout.PropertyField(spriteProperty);
         EditorGUILayout.PropertyField(workAllProperty);
         ClassProperty(classProperty);
@@ -88,15 +89,18 @@ public class StructureSettingEditor : Editor {
         }
     }
     
-    private void InitializerProperty(SerializedProperty initializerProperty, SerializedProperty initializeValuesProperty) {
-        EditorGUILayout.PropertyField(initializerProperty);
-        if (initializerProperty.objectReferenceValue == null) {
+    private void InitializerProperty(SerializedProperty initializerProperty, SerializedProperty initializerObjectProperty, SerializedProperty initializeValuesProperty) {
+        EditorGUILayout.ObjectField(initializerObjectProperty, typeof(MonoScript));
+        if (initializerObjectProperty.objectReferenceValue == null) {
+            initializerProperty.stringValue = null;
             initializeValuesProperty.ClearArray();
             return;
+        } else {
+            initializerProperty.stringValue = ((MonoScript)initializerObjectProperty.objectReferenceValue).GetClass().FullName;
         }
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.Space();
-        Type scriptType = ((MonoScript)initializerProperty.objectReferenceValue).GetClass();
+        Type scriptType = ((MonoScript)initializerObjectProperty.objectReferenceValue).GetClass();
         if (scriptType != typeof(Structure) && !scriptType.IsSubclassOf(typeof(Structure))) {
             EditorGUILayout.HelpBox(scriptType.Name + "不是一个有效的Structure类型。", MessageType.Error);
             EditorGUILayout.EndHorizontal();
