@@ -31,11 +31,14 @@ namespace WorldBattle {
                     Quaternion.identity);
                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
-                MonsterInitializer mi = new MonsterInitializer();
-                mi.initializeMonster(ref curPlayer, 1);
-                BattleActor battleActor = mi.getBattleActor();
+                //MonsterInitializer mi = new MonsterInitializer();
+                //mi.initializeMonster(ref curPlayer, 2);
+                //BattleActor battleActor = mi.getBattleActor();
 
-                //battleActor = initBattleEnemy(ref curPlayer, i);
+                //（敌人）BUG未修复，先用自己的
+                BattleActor battleActor = curPlayer.AddComponent<EnemyAI>();
+                battleActor.playerPrefab = curPlayer;
+                InitPlayers.initPersonPara(ref battleActor, 1.0f);
 
                 //初始化人物的位置
                 battleActor.pos = battleController.battleMapLen;

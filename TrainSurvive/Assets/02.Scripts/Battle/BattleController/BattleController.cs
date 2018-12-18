@@ -74,7 +74,7 @@ namespace WorldBattle {
         public GameObject defeatText;
 
         //设置当前是否为测试状态
-        public bool isTest = true;
+        public bool isTest = false;
         //敌人数值相应的削弱
         public float enemyPara = 0.2f;
 
@@ -169,7 +169,7 @@ namespace WorldBattle {
                 
             } else {
                 //如果是敌人胜利，设置敌人胜利
-                foreach (EnemyAI enemy in enemyActors) {
+                foreach (BattleActor enemy in enemyActors) {
                     enemy.startWin();
                 }
                 //显示失败的文本
