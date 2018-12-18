@@ -167,6 +167,10 @@ namespace WorldBattle {
             battleActor.critRate = (float)person.getValCrc();
             battleActor.hitRate = (float)person.getValHrate();
             battleActor.dodgeRate = (float)person.getValErate();
+
+            //初始化两个技能
+            person.addSkill(skill1);
+            person.addSkill(skill2);
         }
 
         /// <summary>

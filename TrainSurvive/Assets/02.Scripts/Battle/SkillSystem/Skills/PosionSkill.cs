@@ -38,6 +38,16 @@ namespace WorldBattle {
                 );
             }
         }
+
+
+        /// <summary>
+        /// 实现克隆方法
+        /// </summary>
+        /// <param name="curActor"></param>
+        /// <returns></returns>
+        public override Skill Clone(BattleActor curActor) {
+            return new PosionSkill(curActor);
+        }
     }
 }
 

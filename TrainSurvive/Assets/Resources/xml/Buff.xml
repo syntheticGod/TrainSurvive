@@ -5,7 +5,7 @@
   </Buff>
   
   <Buff name = "MOVE_SPEED_UP_BUFF">
-    <Effect changeWhat ="CHANGE_RATE" changeRate="50" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="5" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
   </Buff>
   
   <Buff name = "ATTACK_SPEED_UP_BUFF">
@@ -15,7 +15,7 @@
   <Buff name = "POSION_BUFF">
     <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
     <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="false" maxFloorNum="1"/>
-    <Effect changeWhat ="CHANGE_VALUE" changeValue="-500" intervalTime="0.5" maxDurationTime="5" propertyEnum="HP" isCanOverlay="true" maxFloorNum="999"/>
+    <Effect changeWhat ="CHANGE_VALUE" changeValue="-5" intervalTime="0.5" maxDurationTime="5" propertyEnum="HP" isCanOverlay="true" maxFloorNum="999"/>
   </Buff>
   
 </BuffPool>
