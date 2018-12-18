@@ -50,7 +50,6 @@ namespace WorldMap.Controller
                 bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
             }
             teamActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
-            
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
         protected override void Start()

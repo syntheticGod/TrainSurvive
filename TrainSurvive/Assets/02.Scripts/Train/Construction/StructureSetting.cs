@@ -60,15 +60,19 @@ public class StructureSetting : ScriptableObject {
     public int RequiredTech;
     [Tooltip("用于初始化该建筑的类型函数，须要为Structure类型")]
     [SerializeField]
-    private MonoScript Initializer;
+    private string Initializer;
     [Tooltip("用于初始化的数据")]
     [SerializeField]
     private InitializeValue[] InitializeValues;
+    [SerializeField]
+    [HideInInspector]
+    private UnityEngine.Object InitializerObject;
 
     public Structure Instantiate() {
-        object o = Initializer.GetClass().GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { ID });
+        Type type = Type.GetType(Initializer);
+        object o = type.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { ID });
         foreach (InitializeValue value in InitializeValues) {
-            Type t = Initializer.GetClass();
+            Type t = type;
             do {
                 bool flag = false;
                 foreach (FieldInfo info in t.GetRuntimeFields()) {

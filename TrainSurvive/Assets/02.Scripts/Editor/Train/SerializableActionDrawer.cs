@@ -4,6 +4,7 @@
  * 创建时间：2018/12/11 01:15:37
  * 版本：v0.1
  */
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -19,7 +20,7 @@ public class SerializableActionDrawer : PropertyDrawer {
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
         SerializedProperty classProperty = property.FindPropertyRelative("Class");
-        SerializedProperty acceptTypesProperty = property.FindPropertyRelative("AcceptTypes");
+        SerializedProperty classObjectProperty = property.FindPropertyRelative("ClassObject");
         SerializedProperty methodCandidateNamesProperty = property.FindPropertyRelative("MethodCandidateNames");
         SerializedProperty candidateSelectionProperty = property.FindPropertyRelative("CandidateSelection");
         
@@ -27,23 +28,25 @@ public class SerializableActionDrawer : PropertyDrawer {
             new Rect(position.x, position.y, position.width, position.height / 3),
             label
         );
-
+        
         // target + method section
         EditorGUI.indentLevel++;
         EditorGUI.BeginChangeCheck(); // if target changes we need to repopulate the candidate method lists
-
+        
         // select target
-        EditorGUI.PropertyField(
+        EditorGUI.ObjectField(
             new Rect(position.x, position.y += position.height / 3, position.width, position.height / 3),
-            classProperty
+            classObjectProperty, typeof(MonoScript)
         );
-        if (classProperty.objectReferenceValue == null) {
+        if (classObjectProperty.objectReferenceValue == null) {
+            classProperty.stringValue = null;
             methodCandidateNamesProperty.ClearArray();
             return; // null objects have no methods - don't continue
+        } else {
+            classProperty.stringValue = ((MonoScript)classObjectProperty.objectReferenceValue).GetClass().FullName;
         }
-
         // polulate method candidate names
-        string[] methodCandidateNames = RepopulateCandidateList(classProperty, acceptTypesProperty, methodCandidateNamesProperty, candidateSelectionProperty);
+        string[] methodCandidateNames = RepopulateCandidateList(classObjectProperty, methodCandidateNamesProperty, candidateSelectionProperty);
 
         // place holder when no candidates are available
         if (methodCandidateNames.Length == 0) {
@@ -67,32 +70,23 @@ public class SerializableActionDrawer : PropertyDrawer {
     }
 
     public string[] RepopulateCandidateList(
-             SerializedProperty classProperty,
-             SerializedProperty acceptTypesProperty,
+             SerializedProperty classObjectProperty,
              SerializedProperty methodCandidateNamesProperty,
              SerializedProperty candidateSelectionProperty
      ) {
-        System.Type type = ((MonoScript)classProperty.objectReferenceValue).GetClass();
-        MethodInfo[] methodInfos = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public);
-
+        Type type = ((MonoScript)classObjectProperty.objectReferenceValue).GetClass();
+        IEnumerable<MethodInfo> methodInfos = type.GetRuntimeMethods();
+        
         List<string> candidateNames = new List<string>();
         foreach(MethodInfo methodInfo in methodInfos) {
-            ParameterInfo[] parameters = methodInfo.GetParameters();
-            if (parameters.Length != acceptTypesProperty.arraySize) {
+            if (methodInfo.GetCustomAttribute<SerializableActionAttribute>() == null || !methodInfo.IsStatic)
                 continue;
-            }
-            bool flag = true;
+            ParameterInfo[] parameters = methodInfo.GetParameters();
             StringBuilder stringBuilder = new StringBuilder(methodInfo.Name + "|");
             for (int i = 0; i < parameters.Length; i++) {
-                if (parameters[i].ParameterType.FullName != acceptTypesProperty.GetArrayElementAtIndex(i).stringValue) {
-                    flag = false;
-                    break;
-                }
                 stringBuilder.Append(parameters[i].ParameterType.FullName + ",");
             }
-            if (flag) {
-                candidateNames.Add(stringBuilder.ToString().TrimEnd(','));
-            }
+            candidateNames.Add(stringBuilder.ToString().TrimEnd(','));
         }
         // clear/resize/initialize storage containers
         methodCandidateNamesProperty.ClearArray();

@@ -24,7 +24,7 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 0
   RequiredTech: 1
-  Initializer: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}
+  Initializer: MaxValueModifiableStructure
   InitializeValues:
   - Name: _addElectMax
     TypeName: System.Single
@@ -33,6 +33,7 @@ MonoBehaviour:
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
   - Name: _addEnergyMax
     TypeName: System.Single
     System_Int32Value: 0
@@ -40,6 +41,7 @@ MonoBehaviour:
     System_SingleValue: 2000
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
   - Name: _addInventoryMax
     TypeName: System.Single
     System_Int32Value: 0
@@ -47,6 +49,7 @@ MonoBehaviour:
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
   - Name: _addMemberMax
     TypeName: System.Int32
     System_Int32Value: 0
@@ -54,3 +57,5 @@ MonoBehaviour:
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}

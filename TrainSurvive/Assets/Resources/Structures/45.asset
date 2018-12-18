@@ -24,7 +24,7 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 4
   RequiredTech: 30
-  Initializer: {fileID: 11500000, guid: 7fdf148e5dfa7624c81151859dc89172, type: 3}
+  Initializer: EnergyGeneratableStructure
   InitializeValues:
   - Name: _addElect
     TypeName: System.Single
@@ -58,3 +58,4 @@ MonoBehaviour:
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 7fdf148e5dfa7624c81151859dc89172, type: 3}

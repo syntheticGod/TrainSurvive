@@ -59,7 +59,6 @@ namespace WorldMap.Controller
             trainActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
 
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
-            cameraFocus.focusLock(transform);
         }
         protected override void OnEnable()
         {
@@ -76,6 +75,15 @@ namespace WorldMap.Controller
             Train train = Train.Instance;
             transform.position = StaticResource.MapPosToWorldPos(train.PosTrain, levelOfTrain);
             map.MoveToThisSpawn(train.MapPosTrain);
+            if (world.IfTeamOuting)
+            {
+                EnableTrain(false);
+            }
+            else
+            {
+                EnableTrain(true);
+                cameraFocus.focusLock(transform);
+            }
         }
         protected override void Update()
         {
@@ -175,6 +183,8 @@ namespace WorldMap.Controller
                         TeamOutPrepareDialog dialog = BaseDialog.CreateDialog<TeamOutPrepareDialog>("TeamOutPrepareDialog");
                         dialog.DialogCallBack = this;
                         dialog.ShowDialog();
+                        //选择人物后不能操作列车
+                        EnableTrain(false);
                     }
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
@@ -194,7 +204,10 @@ namespace WorldMap.Controller
             ControllerManager.FocusController("Team", "Character");
         }
         public void Cancel()
-        { }
+        {
+            //取消区域后
+            EnableTrain(true);
+        }
         private void EnableTrain(bool active)
         {
             Train.Instance.IsMovable = active;

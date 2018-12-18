@@ -24,7 +24,7 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 3
   RequiredTech: 20
-  Initializer: {fileID: 11500000, guid: f128628d3b381af49b2f54dd079877f9, type: 3}
+  Initializer: Item2ItemStructure
   InitializeValues:
   - Name: _conversions
     TypeName: Item2ItemStructure+Conversion[]
@@ -53,7 +53,7 @@ MonoBehaviour:
       FromItemNum: 1
       ToItemID: 237
       ToItemNum: 1
-      ProcessTime: 10
+      ProcessTime: 60
   - Name: _processSpeed
     TypeName: System.Single
     System_Int32Value: 0
@@ -78,3 +78,4 @@ MonoBehaviour:
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: f128628d3b381af49b2f54dd079877f9, type: 3}

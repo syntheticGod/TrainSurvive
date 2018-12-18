@@ -17,7 +17,8 @@ MonoBehaviour:
   Description: 
   TotalWorks: 6
   OnCompleted:
-    Class: {fileID: 0}
+    Class: 
     AcceptTypes: []
     MethodCandidateNames: []
     CandidateSelection: 0
+    ClassObject: {fileID: 0}

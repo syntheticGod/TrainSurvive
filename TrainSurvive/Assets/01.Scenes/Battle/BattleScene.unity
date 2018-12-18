@@ -2159,7 +2159,7 @@ MonoBehaviour:
   enemysRoot: {fileID: 0}
   winText: {fileID: 901313467}
   defeatText: {fileID: 461335921}
-  isTest: 1
+  isTest: 0
   enemyPara: 0.2
 --- !u!224 &1167222819
 RectTransform:

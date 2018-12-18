@@ -6,20 +6,21 @@
  */
  using System;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 
 [Serializable]
 public class SerializableAction {
 
     [SerializeField]
-    private MonoScript Class;
+    private string Class;
     [SerializeField]
     protected string[] AcceptTypes;
     [SerializeField]
     private string[] MethodCandidateNames;
     [SerializeField]
     private int CandidateSelection;
+    [SerializeField]
+    private UnityEngine.Object ClassObject;
 
     private MethodInfo _method;
     protected MethodInfo Method {
@@ -28,14 +29,14 @@ public class SerializableAction {
                 string[] split = MethodCandidateNames[CandidateSelection].Split('|');
                 string methodName = split[0];
                 if (split[1].Length == 0) {
-                    _method = Class.GetClass().GetMethod(methodName, new Type[] { });
+                    _method = Type.GetType(Class).GetMethod(methodName, new Type[] { });
                 } else {
                     string[] methodParamNames = split[1].Split(',');
                     Type[] types = new Type[methodParamNames.Length];
                     for (int i = 0; i < types.Length; i++) {
                         types[i] = Type.GetType(methodParamNames[i]);
                     }
-                    _method = Class.GetClass().GetMethod(methodName, types);
+                    _method = Type.GetType(Class).GetMethod(methodName, types);
                 }
             }
             return _method;
@@ -56,13 +57,5 @@ public class SerializableAction<T> : SerializableAction {
 
     public SerializableAction() {
         AcceptTypes = new string[]{ typeof(T).FullName };
-    }
-}
-
-[Serializable]
-public class SerializableActionForResult<T> : SerializableAction {
-
-    public new T Invoke() {
-        return (T) Method?.Invoke(null, null);
     }
 }
