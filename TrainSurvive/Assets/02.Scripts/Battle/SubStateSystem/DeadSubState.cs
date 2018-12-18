@@ -37,6 +37,10 @@ namespace WorldBattle {
         public override void initState() {
             //播放死亡动画
             animator.SetTrigger("dead");
+            //恢复正常的动画播放速度
+            animator.speed = 1.0f;
+            //显示玩家已死亡
+            battleActor.nameText.text += "(死亡)";
 
             //该角色死亡，未存活
             battleActor.isAlive = false;

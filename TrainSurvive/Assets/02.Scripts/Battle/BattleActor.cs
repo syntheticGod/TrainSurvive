@@ -11,6 +11,7 @@ using UnityEngine.UI;
 
 namespace WorldBattle {
 
+    [System.Serializable]
     public abstract class BattleActor : MonoBehaviour {
 
         //当前角色最大的生命值（假设出场是满的）
@@ -21,8 +22,6 @@ namespace WorldBattle {
         public float hpRecovery { get; set; }
         //AP恢复值（攻击时行动值恢复值）
         public float apRecovery { get; set; }
-        //移动速度（每1s移动的距离）
-        public float moveSpeed { get; set; }
         //攻击力
         public float atkDamage { get; set; }
         //攻击范围
@@ -40,8 +39,66 @@ namespace WorldBattle {
         //当前角色的暴击伤害比例
         public float critDamage { get; set; }
 
+        //移动速度（每1s移动的距离）
+        public float moveSpeed {
+            get {
+                return MoveSpeed;
+            }
+            set {
+                //设置移速
+                MoveSpeed = value;
+
+                //如果当前处于播放移动动画时，设置动画播放速度
+                if (subStateController != null
+                    && subStateController.curActionState == ActionStateEnum.MOTION) {
+                    //按移动速度设置动画速度
+                    setMoveSpeedAnimate();
+                }
+            }
+        }
+        //这是实际记录的移动速度的值
+        private float MoveSpeed;
+        //这是移速改变比率
+        public float moveSpeedChangeRate {
+            get {
+                return MoveSpeedChangeRate;
+            }
+            set {
+                //设置移速
+                MoveSpeedChangeRate = value;
+
+                //如果当前处于播放移动动画时，设置动画播放速度
+                if (subStateController != null
+                    && subStateController.curActionState == ActionStateEnum.MOTION) {
+                    //按移动速度设置动画速度
+                    setMoveSpeedAnimate();
+                }
+            }
+        }
+        //这是实际记录的移速改变比率的值
+        private float MoveSpeedChangeRate;
+
         //攻击所需的时间(受攻速影响)
-        public float atkNeedTime { get; set; }
+        public float atkNeedTime {
+            get {
+                return AtkNeedTime;
+            }
+            set {
+                //改攻速后同时更改攻击前摇时间
+                AtkNeedTime = value;
+                atkWindUpTime = 0.4f * atkNeedTime;
+                //如果当前处于播放攻击动画时，设置动画播放速度
+                if (subStateController != null
+                    && subStateController.curActionState == ActionStateEnum.ATTACK) {
+                    //按攻击速度设置动画速度
+                    setAtkSpeedAnimate();
+                }
+            }
+        }
+        //这是实际记录的攻速值
+        private float AtkNeedTime;
+        //攻击所需的前摇的时间
+        public float atkWindUpTime { get; private set; }
 
         //本次战斗中本角色的id
         public int myId { get; set; }
@@ -50,8 +107,12 @@ namespace WorldBattle {
 
         //生命值Slider
         public Slider hpSlider;
+        //Hp值显示
+        public Text hpTxt;
         //行动力Slider
         public Slider apSlider;
+        //Ap值显示
+        public Text apTxt;
         //撤退按钮
         public Button retreatBtn;
         //获取绑定的gameObject(销毁用)
@@ -63,9 +124,9 @@ namespace WorldBattle {
         protected float curRetreatPassTime = 0.0f;
 
         //生命值
-        private float curHealthPoint;
+        public float curHealthPoint { get; private set; }
         //行动值
-        private float curActionPoint;
+        public float curActionPoint { get; private set; }
 
         //当前战斗地图的起始位置
         private Vector3 orign;
@@ -82,7 +143,7 @@ namespace WorldBattle {
         //角色的走向（玩家正为往前走，敌人负为往前走）
         protected int forwardDir;
 
-        //记录本次移动的方向
+        //记录本次移动的方向（给下次pos增加值或减小值）
         protected int curMotionDir = 0;
 
         //当前角色是否存活(死亡或撤退都属于不存活)
@@ -101,9 +162,19 @@ namespace WorldBattle {
         public BattleController battleController;
         //获取当前的Animator
         private Animator animator;
+        //获取当前的Text
+        public Text nameText;
 
         //记录actor的transform
         public Transform myTransform;
+
+        //当前角色身上的buff状态
+        public List<Buff> buffEffects;
+
+        //当前角色身上的技能
+        public List<Skill> skillList { get; private set; }
+        //当前释放的技能id
+        public int curSkillId = -1;
 
         //角色当前动作的状态
         public enum ActionStateEnum {
@@ -158,20 +229,22 @@ namespace WorldBattle {
             //将当前位置赋予角色上
             changeRealPos();
 
-            //获取当前的Animator
-            this.animator = this.GetComponentInChildren<Animator>();
-
             //初始化当前生命值是满的（更新显示条）
             addHealthPoint(myId, maxHealthPoint);
             //初始化当前行动值为0（更新显示条）
             addActionPoint(myId, 0.0f);
 
+            //绑定当前的Animator
+            this.animator = this.GetComponentInChildren<Animator>();
+            //初始化移速改变比率为1.0
+            moveSpeedChangeRate = 1.0f;
+
             //初始化当前角色规定的朝向正负（玩家为正，敌人为负）
             forwardDir = isPlayer ? 1 : -1;
             //当前角色往认为自己为正的朝向
             isForward = 1;
-            //当前角色的前进方向为1
-            curMotionDir = 1;
+            //当前角色的前进方向应是正向方向
+            curMotionDir = forwardDir;
 
             //当前没有战斗目标，也没有选中的战斗目标
             atkTarget = -1;
@@ -183,6 +256,8 @@ namespace WorldBattle {
 
             //初始化子状态控制器
             subStateController = new SubStateController(this, animator);
+            //初始化buff状态列表
+            buffEffects = new List<Buff>();
 
             //其它子类的继承方法
             otherInit();
@@ -211,18 +286,27 @@ namespace WorldBattle {
             subStateController.executeCurState();
         }
 
-        //每个角色不同的AI
-        protected abstract void AIStrategy();  
+        /// <summary>
+        /// 每个角色不同的AI
+        /// </summary>
+        protected abstract void AIStrategy();
 
-        //更改显示物体的pos
+        /// <summary>
+        /// 更改显示物体的pos
+        /// </summary>
         public void changeRealPos() {
+            //获取正常的位置
             Vector3 curPos = orign;
-            orign.x = pos;
+            //
+            curPos.x = pos;
             myTransform.position = curPos;
-        }      
+        }
 
-        //获得当前角色移动的方向，正或负
-        //保证必须是1或-1
+        /// <summary>
+        ///获得当前角色移动的方向，正或负
+        ///保证必须是1或-1
+        /// </summary>
+        /// <returns></returns>
         public int getMotionDir() {
             return isForward * forwardDir;
         }
@@ -291,26 +375,22 @@ namespace WorldBattle {
             float realDamage = damagePoint * damageRate;
 
             //如果当前处于休息状态，受到的伤害加倍
-            realDamage *= 2.0f;
+            if (subStateController.curActionState == ActionStateEnum.REST) {
+                realDamage *= 2.0f;
+            }
 
             //受到伤害后，撤退时间为0
             curRetreatPassTime = 0.0f;
 
-            //如果当前生命值高于本次伤害，减去本次伤害
-            if (curHealthPoint > realDamage) {
-                addHealthPoint(id, -realDamage);
-            }
-            //否则生命值变为0，进入死亡播放状态
-            else {
-                addHealthPoint(id, -curHealthPoint);
-                changeSubState(ActionStateEnum.DEAD);
-            }
+            //减去本次伤害
+            addHealthPoint(id, -realDamage);
 
             return realDamage;
         }
 
         /// <summary>
         /// 增加生命值
+        /// 如果生命值变成0，变成死亡状态
         /// </summary>
         /// <param name="id">造成此次生命值增加的id</param>
         /// <param name="addHp">此次增加的数值</param>
@@ -319,6 +399,12 @@ namespace WorldBattle {
 
             //更新hp的显示
             hpSlider.value = curHealthPoint / maxHealthPoint;
+            hpTxt.text = Mathf.Floor(curHealthPoint).ToString();
+
+            //如果当前生命值变成0，无论是技能，攻击，Buff，挂掉
+            if (curHealthPoint <= 0.0f) {
+                changeSubState(ActionStateEnum.DEAD);
+            }
         }
 
         /// <summary>
@@ -331,7 +417,17 @@ namespace WorldBattle {
 
             //更新ap的显示
             apSlider.value = curActionPoint / maxActionPoint;
+            apTxt.text = Mathf.Floor(curActionPoint).ToString();
+
+            //人物角色可选择将技能按钮激活
+            changeSkillBtn();
         }
+
+        /// <summary>
+        /// 当ap改变时提供给人物角色面板
+        /// 技能按钮是否激活
+        /// </summary>
+        protected virtual void changeSkillBtn() { }
       
         /// <summary>
         /// 播放获胜动画
@@ -347,39 +443,104 @@ namespace WorldBattle {
         }
 
         /// <summary>
-        /// 选中最近的敌人
-        /// 如果玩家已经选中了敌人，则不变
-        /// 否则找最近的敌人
+        /// 设置buff效果
         /// </summary>
-        protected void selectNearestEnemy() {
-            //如果当前已经存在玩家选中的目标了，朝着目标行动
-            if (selectedAtkTarget != -1 && enemyActors[selectedAtkTarget].isAlive == true) {
-                atkTarget = selectedAtkTarget;
+        /// <param name="buff">叠加buff的类型</param>
+        /// <param name="floorNum">叠加的层数</param>
+        public void setBuffEffect(Buff addBuff, int floorNum = 1) {
+            //查找当前目标有没有对应的buff效果
+            Buff findBuff =  buffEffects.Find(delegate(Buff buff) {
+                return buff.buffType == addBuff.buffType;
+            });
+
+            //如果没有当前的buff效果
+            if (findBuff == null) {
+                //设置当前的buff效果，包括对应层数
+                addBuff.setBuff(floorNum);
+                //将其加入对应的buff中
+                buffEffects.Add(addBuff);
             } else {
-                //获取距离最近的目标
-                atkTarget = getNearestEnemy();
+                //直接执行已有的buff
+                findBuff.setBuff(floorNum);
             }
         }
 
         /// <summary>
-        /// 查找最近的目标
-        /// 距离相等时则找序号最小的
+        /// 设置移动速度动画
         /// </summary>
-        /// <returns>返回目标的id</returns>
-        private int getNearestEnemy() {
-            int nearestId = -1;
+        public void setMoveSpeedAnimate() {
+            //按移动速度设置动画速度
+            animator.speed = moveSpeed * moveSpeedChangeRate;
+            //Debug.Log(moveSpeedChangeRate);
+        }
 
-            //寻找距离最近相应目标(距离最近，序号最前)
-            foreach (BattleActor enemyActor in enemyActors) {
-                //如果当前敌人存活
-                if (enemyActor.isAlive) {
-                    if (nearestId == -1 || Mathf.Abs(enemyActor.pos - pos) > Mathf.Abs(enemyActors[nearestId].pos - pos)) {
-                        nearestId = enemyActor.myId;
-                    }
+        /// <summary>
+        /// 设置攻击动画的播放速度
+        /// </summary>
+        public void setAtkSpeedAnimate() {
+            //按攻击速度设置动画速度
+            animator.speed = 1.0f / atkNeedTime;
+        }
+
+        /// <summary>
+        /// 每次攻击执行被动buff
+        /// 目前假设被动buff都是攻击触发
+        /// </summary>
+        /// <param name="targetActor"></param>
+        public void releasePassiveBuff(BattleActor targetActor) {
+            //遍历技能列表
+            foreach (Skill skill in skillList) {
+                //如果当前不是被动技能跳过
+                if (skill.isPassive == false) {
+                    continue;
                 }
+
+                //对目标执行被动技能
+                skill.release(targetActor);
+            }
+        }
+
+        /// <summary>
+        /// 根据id执行指定的技能
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="targetActor"></param>
+        public bool releaseSkill(int id, BattleActor targetActor = null) {
+            //如果id不合法，返回错误
+            if (id < 0 || id >= skillList.Count) {
+                return false;
             }
 
-            return nearestId;
+            //如果当前不能释放技能，错误
+            if (skillList[id].canReleaseSkill() == false) {
+                Debug.Log("当前技能" + id + " ap不够！");
+                return false;
+            }
+
+            //如果当前已经在技能释放阶段，不释放
+            if (subStateController.curActionState == ActionStateEnum.SKILL) {
+                return false;
+            }
+
+            //记录当前技能释放id
+            curSkillId = id;
+            //转入释放技能状态
+            changeSubState(ActionStateEnum.SKILL);
+
+            return true;
+        }
+
+        /// <summary>
+        /// 根据id, 添加技能
+        /// </summary>
+        public void addSkill(int skillId) {
+            //如果当前为空，将其初始化
+            if (skillList == null) {
+                skillList = new List<Skill>();
+            }
+
+            //将指定技能id加入到技能列表中
+            skillList.Add(SkillFactory.getSkill(skillId, this));
         }
     }
 }

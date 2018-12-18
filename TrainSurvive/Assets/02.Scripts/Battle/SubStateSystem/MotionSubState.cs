@@ -22,10 +22,12 @@ namespace WorldBattle {
             //播放移动动画
             playMoveAnimation();
 
-            //对逻辑位置开始移动
-            battleActor.pos += battleActor.getMotionDir() * battleActor.moveSpeed * Time.deltaTime;
+            //对逻辑位置开始移动(方向，移速，移动改变比率，上一帧的时间)
+            battleActor.pos += battleActor.getMotionDir() * battleActor.moveSpeed * battleActor.moveSpeedChangeRate * Time.deltaTime;
             //将坐标限制为0到最大的mapLen中
             battleActor.pos = Mathf.Clamp(battleActor.pos, 0, battleActor.battleMapLen);
+
+            //Debug.Log(battleActor.moveSpeed);
 
             //将当前位置赋予角色上
             battleActor.changeRealPos();
@@ -40,13 +42,8 @@ namespace WorldBattle {
         private void playMoveAnimation() {
             //animator.SetTrigger("idle");
             animator.SetTrigger("run");
-
-            if (battleActor.isPlayer)
-            Debug.Log("播放跑步动画");
-            //获取跑步的动画播放速度
-            //float length = animator.GetCurrentAnimatorStateInfo(0).length;
-            //按照移速更改跑步的播放速度
-            animator.speed = 1.0f * battleActor.moveSpeed / 1.0f;
+            //设置动画播放速度
+            battleActor.setMoveSpeedAnimate();
         }
 
     }
