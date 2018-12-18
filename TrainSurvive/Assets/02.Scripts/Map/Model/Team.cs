@@ -130,7 +130,7 @@ namespace WorldMap.Model
             if (MathTool.RandomInt(5) == 0)
             {
                 //
-                TimeController.getInstance().changeScene(true);
+                TimeController.getInstance()?.changeScene(true);
                 //触发战斗
                 SceneManager.LoadScene("BattleScene");
             }

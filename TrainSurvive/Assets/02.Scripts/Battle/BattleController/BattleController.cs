@@ -169,7 +169,7 @@ namespace WorldBattle {
                 
             } else {
                 //如果是敌人胜利，设置敌人胜利
-                foreach (EnemyAI enemy in enemyActors) {
+                foreach (BattleActor enemy in enemyActors) {
                     enemy.startWin();
                 }
                 //显示失败的文本
@@ -219,7 +219,7 @@ namespace WorldBattle {
             //返回正常帧率
             Application.targetFrameRate = -1;
 
-            TimeController.getInstance().changeScene(false);
+            TimeController.getInstance()?.changeScene(false);
             SceneManager.LoadScene("MapScene");
         }
 
