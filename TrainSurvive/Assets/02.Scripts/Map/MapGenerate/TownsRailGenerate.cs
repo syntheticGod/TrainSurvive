@@ -14,8 +14,8 @@ using UnityEngine;
 
 namespace WorldMap {
     public class TownsRailGenerate : MonoBehaviour {
-        //private const float levelOfRail = -0.5F;
-        //private const float levelOfTown = -0.5F;
+        private const float levelOfRail = -0.5F;
+        private const float levelOfTown = -0.5F;
         //城镇的图标
         public GameObject townObject;
         //铁轨直线图标
@@ -24,7 +24,7 @@ namespace WorldMap {
         public GameObject railTurnObject;
 
         //城镇的个数(最好是一个数的平方)
-        public int townsNum = 25;
+        public int townsNum = 49;
 
         //城镇图标在一个地块的偏移量
         public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, -0.03f);
@@ -82,7 +82,6 @@ namespace WorldMap {
             //先计算出将整块地图分成多少个大块
             int townRowNum = Mathf.FloorToInt(Mathf.Sqrt((float)townsNum));
             int townColNum = townRowNum;
-            //大块之间相差的间距
             int offsetX = mapData.rowNum / townRowNum;
             int offsetZ = mapData.colNum / townRowNum;
 
@@ -94,24 +93,13 @@ namespace WorldMap {
             int marginX = Mathf.Min(minDist / 4, offsetX / 4);
             int marginZ = Mathf.Min(minDist / 4, offsetZ / 4);
 
-            //设置正中间的的城镇位置
-            Vector2Int midTownPos = new Vector2Int(townRowNum / 2, townColNum / 2);
-
             //按照大块来生成城镇，每个大块生成一个城镇
             //每个大块靠边界的地方不生成城镇，保证每个城镇的最远距离
             for (int i = 0; i < townRowNum; i++) {
                 for (int j = 0; j < townColNum; j++) {
                     //生成在该区域内的城镇
-                    int posx, posz;
-                    //如果城镇在最中间的位置，不随机位置，放在最中间
-                    if (midTownPos.x == i && midTownPos.y == j) {
-                        posx = mapData.rowNum / 2;
-                        posz = mapData.colNum / 2;
-                    } else {
-                        //其余随机
-                        posx = Random.Range(marginX, offsetX - marginX) + i * offsetX;
-                        posz = Random.Range(marginZ, offsetZ - marginZ) + j * offsetZ;
-                    }
+                    int posx = Random.Range(marginX, offsetX - marginX) + i * offsetX;
+                    int posz = Random.Range(marginZ, offsetZ - marginZ) + j * offsetZ;
                     
                     //Debug.Log(mapData.data[posx, posz].townPos);
                     towns[i, j] = new Town(new Vector2Int(posx, posz));
