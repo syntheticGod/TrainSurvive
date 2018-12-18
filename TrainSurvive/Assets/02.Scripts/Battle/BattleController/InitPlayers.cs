@@ -29,13 +29,10 @@ namespace WorldBattle {
             battleController.playerActors = new List<BattleActor>();
             battleController.playerPanels = new List<GameObject>();
 
-            //获取当前人数
-            int personNum = battleController.personNum;
-
             //如果当前处于测试状态
             if (battleController.isTest) {
                 //和玩家生成的统一
-                for (int i = 0; i < personNum; i++) {
+                for (int i = 0; i < battleController.personNum; i++) {
                     //绑定两个技能
                     //skill1 = Random.Range(1, 4);
                     //skill2 = Random.Range(1, 4);
@@ -51,7 +48,7 @@ namespace WorldBattle {
                 }
             } else {
                 //初始化当前玩家角色人物为0
-                personNum = 0;
+                battleController.personNum = 0;
 
                 //遍历world中的人物列表，将小队人物参战
                 foreach (Person person in World.getInstance().persons) {
@@ -69,16 +66,16 @@ namespace WorldBattle {
                     }
 
                     //生成指定的玩家对象，绑定脚本和指令框
-                    BattleActor battleActor = generatePlayer(battleController.player, person.name, personNum);
+                    BattleActor battleActor = generatePlayer(battleController.player, person.name, battleController.personNum);
 
                     //初始化人物属性
-                    initBattlePerson(ref battleActor, personNum, person);
+                    initBattlePerson(ref battleActor, battleController.personNum, person);
 
                     //添加到玩家列表中
                     battleController.playerActors.Add(battleActor);
 
                     //增加人的数量
-                    personNum++;
+                    battleController.personNum++;
                 }
             }
         }
@@ -169,8 +166,8 @@ namespace WorldBattle {
             battleActor.dodgeRate = (float)person.getValErate();
 
             //初始化两个技能
-            person.addSkill(skill1);
-            person.addSkill(skill2);
+            battleActor.addSkill(skill1);
+            battleActor.addSkill(skill2);
         }
 
         /// <summary>
