@@ -34,7 +34,7 @@ namespace WorldBattle {
 
             //绑定到当前的对象
             noneSkill.battleActor = battleActor;
-            return noneSkill.Clone(battleActor);
+            return noneSkill;
         }
 
         /// <summary>

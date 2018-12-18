@@ -40,7 +40,7 @@ public class PersonCell : MonoBehaviour {
     {
         PersonTextPanel panelCs=(PersonTextPanel)textPanel.GetComponent("PersonTextPanel");
         panelCs.updatePanel(index);
-        ProfessionPanel professionpanelCs = professionPanel.GetComponent<ProfessionPanel>();
+        ProfessionPanel professionpanelCs = textPanel.GetComponent<ProfessionPanel>();
         professionpanelCs.updatePanel(index);
         
         Button bt = (Button)gameObject.GetComponent("Button");
