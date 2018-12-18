@@ -239,12 +239,12 @@ namespace WorldMap {
             switch (viewState) {
                 case SpawnViewStateEnum.INVISIBLE:
                     //不可见状态
-                    render.color = new Color(0.2f, 0.2f, 0.2f);
+                    render.color = new Color(0.25f, 0.25f, 0.25f);
                     break;
 
                 case SpawnViewStateEnum.HALF_INVISIBLE:
                     //半可见状态
-                    render.color = Color.gray;
+                    render.color = new Color(0.75f, 0.75f, 0.75f);
                     break;
 
                 case SpawnViewStateEnum.VISBLE:

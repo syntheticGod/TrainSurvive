@@ -31,11 +31,20 @@ namespace WorldBattle {
                     Quaternion.identity);
                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
+<<<<<<< HEAD
                 MonsterInitializer mi = new MonsterInitializer();
                 mi.initializeMonster(ref curPlayer);
                 BattleActor battleActor = mi.getBattleActor();
+=======
+                //MonsterInitializer mi = new MonsterInitializer();
+                //mi.initializeMonster(ref curPlayer, 2);
+                //BattleActor battleActor = mi.getBattleActor();
+>>>>>>> parent of 23e2ef1... Revert "自己推自己"
 
-                //battleActor = initBattleEnemy(ref curPlayer, i);
+                //（敌人）BUG未修复，先用自己的
+                BattleActor battleActor = curPlayer.AddComponent<EnemyAI>();
+                battleActor.playerPrefab = curPlayer;
+                InitPlayers.initPersonPara(ref battleActor, 1.0f);
 
                 //初始化人物的位置
                 battleActor.pos = battleController.battleMapLen;

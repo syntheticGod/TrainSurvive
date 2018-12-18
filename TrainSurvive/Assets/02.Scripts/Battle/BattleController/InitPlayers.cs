@@ -60,6 +60,14 @@ namespace WorldBattle {
                         continue;
                     }
 
+                    //绑定两个技能
+                    skill1 = Random.Range(1, 4);
+                    skill2 = Random.Range(1, 4);
+
+                    if (skill1 == 4) {
+                        skill1 = 10;
+                    }
+
                     //生成指定的玩家对象，绑定脚本和指令框
                     BattleActor battleActor = generatePlayer(battleController.player, person.name, personNum);
 
