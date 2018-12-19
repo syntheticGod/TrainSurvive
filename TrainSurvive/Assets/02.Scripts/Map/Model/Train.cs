@@ -204,7 +204,14 @@ namespace WorldMap.Model
             //Debug.Log("运行日记：" + current + " => " + currentNext + " 剩余路程：" + remanentRoad);
             //放在前面的原因是保证，如果达到终点时最后一定的状态一定时ARRIVED
             if (passCenterOfBlock)
+            {
+                if(WorldForMap.Instance.IfEnergyEmpty())
+                {
+                    Debug.Log("没有燃油了");
+                    ifTemporarilyStop = true;
+                }
                 PassCenterCallBack(StaticResource.BlockIndex(current));
+            }
             if (arrived)
             {
                 Debug.Log("到达目的地：" + current);
@@ -244,8 +251,14 @@ namespace WorldMap.Model
             //1. 是否行动
             //2. 是否正在运行
             //3. 目的点是否可到达
+            //4. 是否有燃油
             if (!IsMovable || IsRunning || !CanReachableAndSet(clickedPosition))
                 return false;
+            if (WorldForMap.Instance.IfEnergyEmpty())
+            {
+                InfoDialog.Show("列车缺少燃油");
+                return false;
+            }
             nextCityPosition = IsMovePositive ? railStandingOn.End : railStandingOn.Start;
             Debug.Log("列车开始前往 城市坐标：" + nextCityPosition + " 总路程：" + railStandingOn.CalTotalRoad());
             velocity = 0.0F;

@@ -84,7 +84,7 @@ namespace WorldMap.UI
         {
             herosChoosedLV.Datas = new List<Person>();
             herosGetReadyLV.Datas = new List<Person>(world.GetHeros());
-            foodInTrain = world.GetFoodIn();
+            foodInTrain = world.TrainGetFoodIn();
             TryShowFood();
         }
         public List<Person> GetSelectedPerson()
@@ -105,8 +105,8 @@ namespace WorldMap.UI
                 foodSelected = foodInTrain;
             if (foodSelected < 0)
                 foodSelected = 0;
-            if (foodSelected >= world.GetFootOutMax())
-                foodSelected = world.GetFootOutMax();
+            if (foodSelected >= world.TeamGetFootOutMax())
+                foodSelected = world.TeamGetFootOutMax();
             foodEditUI.text = foodSelected + "";
         }
         private void OnClick(BUTTON_ID id)
