@@ -145,6 +145,7 @@ namespace WorldMap
         {
             return world.personNumMax;
         }
+        //-----------------------------Team----------↓↓↓↓↓↓↓↓↓↓
         public bool IfTeamOuting
         {
             get { return world.ifOuting; }
@@ -242,11 +243,6 @@ namespace WorldMap
             person.ifOuting = true;
             world.persons.Add(person);
         }
-        public void TrainRecruit(Person person)
-        {
-            person.ifOuting = false;
-            world.persons.Add(person);
-        }
         public void TeamSetMapPos(Vector2Int mapPos)
         {
             world.posTeamX = mapPos.x;
@@ -264,6 +260,10 @@ namespace WorldMap
         {
             return (int)world.getFoodOut();
         }
+        public int TeamGetFootOutMax()
+        {
+            return (int)world.getFoodOutMax();
+        }
         public void TeamSetFoodOut(int food)
         {
             world.setFoodOut(food < 0 ? 0 : (uint)food);
@@ -271,6 +271,14 @@ namespace WorldMap
         public int TeamAddFoodIn(int food)
         {
             return world.addFoodIn(food);
+        }
+        //-----------------------------Team----------↑↑↑↑↑↑↑↑↑↑↑↑
+
+        //-----------------------------Train----------↓↓↓↓↓↓↓↓↓↓
+        public void TrainRecruit(Person person)
+        {
+            person.ifOuting = false;
+            world.persons.Add(person);
         }
         public void TrainMoving()
         {
@@ -284,13 +292,9 @@ namespace WorldMap
             world.ifGather = false;
             world.ifOuting = false;
         }
-        public int GetFoodIn()
+        public int TrainGetFoodIn()
         {
             return (int)world.getFoodIn();
-        }
-        public int GetFootOutMax()
-        {
-            return (int)world.getFoodOutMax();
         }
         public void TrainSetMapPos(Vector2Int mapPos)
         {
@@ -301,6 +305,12 @@ namespace WorldMap
         {
             return new Vector2Int(world.posTrainX, world.posTrainY);
         }
+        public bool IfEnergyEmpty()
+        {
+            return Mathf.Approximately(world.getEnergy(), 0);
+        }
+        //-----------------------------Train----------↑↑↑↑↑↑↑↑↑↑↑↑
+
         /// <summary>
         /// 在World中随机生成城镇信息
         /// </summary>
