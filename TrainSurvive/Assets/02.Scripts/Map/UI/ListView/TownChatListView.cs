@@ -14,7 +14,7 @@ namespace WorldMap.UI
     {
         protected override void OnItemView(ListViewItem item, NPCChat data, int itemIndex)
         {
-            TownChatItem view = ViewTool.ForceGetComponent<TownChatItem>(item);
+            TownChatItem view = CompTool.ForceGetComponent<TownChatItem>(item);
             view.SetProfile(data.Name);
             view.SetContent(data.Content);
         }

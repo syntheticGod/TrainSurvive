@@ -43,15 +43,25 @@ namespace WorldMap
         public void AddMoney(int money)
         {
             world.addMoney(money);
-            //world.money += money;
         }
         public void PushItemToTrain(int itemID, int numberBuy)
         {
             world.itemDataInTrain.Add(new ItemData(itemID, numberBuy));
         }
-        public void PushGoodsToTeam(int itemID, int numberBuy)
+        public bool CanPushGoodsToTeam(int itemID, int numberBuy)
+        {
+            //TODO 目前背包容量无限
+            return true;
+        }
+        public bool PushGoodsToTeam(int itemID, int numberBuy)
         {
             world.itemDataInTeam.Add(new ItemData(itemID, numberBuy));
+            return true;
+        }
+        public float GetPackWeightInTeam()
+        {
+            //TODO 暂时使用数量代替重量
+            return world.itemDataInTeam.Count;
         }
         public void SellGoodsFromTeam(int itemID, int numberSell)
         {
@@ -123,6 +133,14 @@ namespace WorldMap
         public List<Person> GetHeros()
         {
             return world.persons;
+        }
+        public int PersonCount()
+        {
+            return world.persons.Count;
+        }
+        public int MaxPersonCount()
+        {
+            return world.personNumMax;
         }
         public bool IfTeamOuting
         {
@@ -230,6 +248,10 @@ namespace WorldMap
         {
             world.posTeamX = mapPos.x;
             world.posTeamY = mapPos.y;
+        }
+        public int TeamNumber()
+        {
+            return world.numOut;
         }
         public Vector2Int TeamMapPos()
         {

@@ -12,11 +12,9 @@ namespace WorldMap.Model
 {
     public class InventoryForTeam
     {
-        public Inventory Inventory { private set; get; }
         public WorldForMap world;
         public InventoryForTeam(float MaxValue)
         {
-            Inventory = new Inventory(MaxValue);
             world = WorldForMap.Instance;
         }
         /// <summary>
@@ -24,23 +22,21 @@ namespace WorldMap.Model
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public int PushItem(Item item)
+        public bool PushItem(Item item)
         {
-            world.PushGoodsToTeam(item.id, item.currPileNum);
-            return Inventory.PushItem(item);
+            return world.PushGoodsToTeam(item.id, item.currPileNum);
         }
-        public bool CanPushItemToPack(Good good)
+        public bool CanPushItemToPack(int id, int number)
         {
-            return Inventory.CanPushAllItem(good.item);
+            return world.CanPushGoodsToTeam(id, number);
         }
-        public void PushItemFromShop(Good good)
+        public void PushItemFromShop(int id, int number)
         {
-            world.PushGoodsToTeam(good.item.id, good.Number);
-            Inventory.PushItem(good.item);
+            world.PushGoodsToTeam(id, number);
         }
         public float GetWeight()
         {
-            return Inventory.currSize;
+            return world.GetPackWeightInTeam();
         }
     }
 }

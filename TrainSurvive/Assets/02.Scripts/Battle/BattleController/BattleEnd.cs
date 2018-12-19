@@ -28,7 +28,7 @@ namespace WorldBattle {
             //创建一个空的gameObject
             GameObject gameObject = new GameObject(item.name);
             //将当前图片显示依附于此object
-            ItemDisplay view = ViewTool.ForceGetComponent<ItemDisplay>(gameObject);
+            ItemDisplay view = CompTool.ForceGetComponent<ItemDisplay>(gameObject);
             //设置相应的图片
             view.setItem(item);
 

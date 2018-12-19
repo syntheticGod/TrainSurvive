@@ -8,7 +8,9 @@ using UnityEngine;
 
 using WorldMap.Model;
 using WorldMap.Controller;
+
 using TTT.Resource;
+using TTT.Utility;
 
 namespace WorldMap
 {
@@ -72,20 +74,12 @@ namespace WorldMap
 
             //列车
             train = Train.Instance;
-            trainObject = Instantiate(trainPrefab);
-            trainObject.name = "Train";
             train.Init(world.TrainMapPos(), movable: true,maxSpeed: maxSpeedForTrain);
-            trainObject.GetComponent<TrainController>().init();
-            trainObject.transform.parent = characterObject.transform;
-
+            GOTool.ForceGetComponentInChildren<TrainController>(characterObject, "Train", true).PathOfTransform = "/Character/Train";
             //探险队
             team = Team.Instance;
-            teamObject = Instantiate(teamPrefab);
-            teamObject.name = "Team";
             team.Init(world.TeamMapPos());
-            teamObject.transform.parent = characterObject.transform;
-            
-            teamObject.SetActive(world.IfTeamOuting);
+            GOTool.ForceGetComponentInChildren<TeamController>(characterObject, "Team", false).PathOfTransform = "/Character/Team";
         }
 
         /// <summary>

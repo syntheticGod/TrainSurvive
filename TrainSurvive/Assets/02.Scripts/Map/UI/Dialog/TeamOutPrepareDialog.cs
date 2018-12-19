@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
+using WorldMap.Model;
 
 namespace WorldMap.UI
 {
@@ -124,33 +125,22 @@ namespace WorldMap.UI
                     break;
             }
         }
-
-        public string GetName()
-        {
-            return "TeamOutPrepareDialog";
-        }
-
+        
         protected override bool OK()
         {
             if (GetSelectedCount() == 0)
             {
-                InfoDialog dialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
-                dialog.SetInfo("未选择任何人");
-                dialog.ShowDialog();
+                InfoDialog.Show("未选择任何人");
                 return false;
             }
             if (foodSelected == 0)
             {
-                InfoDialog dialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
-                dialog.SetInfo("请选择食物");
-                dialog.ShowDialog();
+                InfoDialog.Show("请选择食物");
                 return false;
             }
-            if(GetSelectedCount() > 5)
+            if (GetSelectedCount() > Team.MAX_NUMBER_OF_TEAM_MEMBER)
             {
-                InfoDialog dialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
-                dialog.SetInfo("至多选择5个英雄");
-                dialog.ShowDialog();
+                InfoDialog.Show("至多选择" + Team.MAX_NUMBER_OF_TEAM_MEMBER + "个英雄");
                 return false;
             }
             if (DialogCallBack != null)

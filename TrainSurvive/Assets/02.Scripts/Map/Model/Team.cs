@@ -16,6 +16,8 @@ namespace WorldMap.Model
 {
     public class Team : SubjectBase
     {
+        //探险队的最多人数
+        public const int MAX_NUMBER_OF_TEAM_MEMBER = 5;
         //最大运动速度
         public float MaxSpeed { set; get; } = 1.0F;
         //最小移动距离
@@ -44,7 +46,10 @@ namespace WorldMap.Model
                     case STATE.STOP_TOWN:
                         world.TeamStandeBy();
                         break;
-                    case STATE.MOVING:
+                    case STATE.MOVING_TOP:
+                    case STATE.MOVING_RIGHT:
+                    case STATE.MOVING_BOTTOM:
+                    case STATE.MOVING_LEFT:
                         world.TeamMoving();
                         break;
                     case STATE.IN_TRAIN:
@@ -199,38 +204,42 @@ namespace WorldMap.Model
             //Debug.Log("Position：当前位置：" + PosTeam + " 移动到：" + nextStopPosition);
             //Debug.Log("Index：当前位置：" + StaticResource.BlockIndex(PosTeam) + " 移动到：" + target);
             velocity = 0.0F;
-            state = STATE.MOVING;
             return true;
         }
         public void MoveTop()
         {
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.y++;
-            WalkTo(teamIndex);
+            if (WalkTo(teamIndex) && State != STATE.MOVING_TOP)
+                    State = STATE.MOVING_TOP;
+                
         }
         public void MoveBottom()
         {
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.y--;
-            WalkTo(teamIndex);
+            if(WalkTo(teamIndex) && State != STATE.MOVING_BOTTOM)
+                    State = STATE.MOVING_BOTTOM;
         }
         public void MoveLeft()
         {
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.x--;
-            WalkTo(teamIndex);
+            if (WalkTo(teamIndex) && State != STATE.MOVING_LEFT)
+                State = STATE.MOVING_LEFT;
         }
         public void MoveRight()
         {
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.x++;
-            WalkTo(teamIndex);
+            if (WalkTo(teamIndex) && State != STATE.MOVING_RIGHT)
+                State = STATE.MOVING_RIGHT;
         }
         public bool IsMoving
         {
             get
             {
-                return state == STATE.MOVING;
+                return MathTool.IfBetweenBoth((int)STATE.MOVING_TOP, (int)STATE.MOVING_LEFT, (int)state);
             }
         }
         public bool IsGathering
@@ -254,7 +263,10 @@ namespace WorldMap.Model
             RELEXING,//休息
             GATHERING,//采集
             //相对运动
-            MOVING, //正在移动
+            MOVING_TOP,
+            MOVING_RIGHT,
+            MOVING_BOTTOM,
+            MOVING_LEFT,
             NUM
         }
     }

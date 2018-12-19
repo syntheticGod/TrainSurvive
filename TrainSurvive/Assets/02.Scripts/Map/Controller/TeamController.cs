@@ -7,6 +7,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Collections.Generic;
+
 using TTT.Resource;
 using TTT.Utility;
 using WorldMap.Model;
@@ -16,9 +18,10 @@ namespace WorldMap.Controller
     public class TeamController : BaseController, Observer
     {
         private int levelOfTeam = -2;
-        
+        //视图
         private RectTransform teamModeBTs;
-        private TrainController trainController;
+        private SpriteRenderer[] teamPersons;
+        //数据
         private static string[] bottomBtnsStrs = { "进入区域", "上车", "采集", "背包","人物" };
         private Button[] bottomBtns;
         private static string[] teamActionBtnStrs = { "采集", "停止采集" };
@@ -29,12 +32,20 @@ namespace WorldMap.Controller
         protected override void OnEnable()
         {
             Team.Instance.Attach(this);
+            ActiveBTs(true);
+            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.PosTeam, levelOfTeam);
+            RefreshView();
+        }
+        protected override void OnDisable()
+        {
+            Team.Instance.Detach(this);
+            ActiveBTs(false);
         }
         protected override void CreateModel()
         {
             //Buttons
             Transform canvas = GameObject.Find("/Canvas").transform;
-            teamModeBTs = new GameObject("TrainMode").AddComponent<RectTransform>();
+            teamModeBTs = new GameObject("TeamMode").AddComponent<RectTransform>();
             ViewTool.SetParent(teamModeBTs, canvas);
             ViewTool.RightBottom(teamModeBTs, new Vector2(1, 0), Vector2.zero, Vector2.zero);
             Vector2 btnPivot = new Vector2(1, 0);
@@ -49,20 +60,28 @@ namespace WorldMap.Controller
                 BUTTON_ID btnID = BUTTON_ID.TEAM_NONE + i + 1;
                 bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
             }
+            ActiveBTs(false);
             teamActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
+            //根据探险队数量，放至探险队图标
+            teamPersons = new SpriteRenderer[Team.MAX_NUMBER_OF_TEAM_MEMBER];
+            for (int i = 0; i < Team.MAX_NUMBER_OF_TEAM_MEMBER; i++)
+            {
+                teamPersons[i] = GOTool.CreateSpriteRenderer("Person" + i, transform, false);
+            }
+            teamPersons[0].transform.localPosition = new Vector3(0f, 0f, 0f);
+            teamPersons[1].transform.localPosition = new Vector3(-0.3f, -0.3f, 0f);
+            teamPersons[2].transform.localPosition = new Vector3(0.3f, -0.3f, 0f);
+            teamPersons[3].transform.localPosition = new Vector3(-0.3f, 0.3f, 0f);
+            teamPersons[4].transform.localPosition = new Vector3(0.3f, 0.3f, 0f);
+
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
-        protected override void Start()
-        {
-            base.Start();
-            Debug.Log("TeamController Start");
-            if (world.IfTeamOuting)
-            {
-                Debug.Log("FOCUS TEAM");
-                transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
-                cameraFocus.focusLock(transform);
-            }
-        }
+        //protected override void Start()
+        //{
+        //    base.Start();
+        //    Debug.Log("TeamController Start");
+        //    cameraFocus.focusLock(transform);
+        //}
         protected override void Update()
         {
             base.Update();
@@ -93,9 +112,9 @@ namespace WorldMap.Controller
                     {
                         //进入城镇后不能操作小队
                         Team.Instance.IsMovable = false;
-                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
+                        TownController townController = ControllerManager.Instance.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
-                        townController.ShowWindow();
+                        townController.Show();
                     }
                     else
                     {
@@ -110,7 +129,7 @@ namespace WorldMap.Controller
                         return;
                     }
                     HideTeam();
-                    ControllerManager.FocusController("Train", "Character");
+                    ControllerManager.Instance.FocusController("Train", "Character");
                     break;
                 case BUTTON_ID.TEAM_GATHER:
                     if (world.IfTeamGathering)
@@ -128,11 +147,10 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TEAM_PACK:
                     Debug.Log("背包指令");
-                    ControllerManager.ShowWindow<PackController>("PackViewer");
+                    ControllerManager.Instance.GetWindow<PackController>("PackViewer").Show();
                     break;
                 case BUTTON_ID.TEAM_CHARACTER:
                     Debug.Log("查看小队指令");
-
                     break;
             }
         }
@@ -165,6 +183,19 @@ namespace WorldMap.Controller
             }
             return false;
         }
+        public void RefreshView()
+        {
+            int i;
+            for(i = 0; i< world.TeamNumber(); i++)
+            {
+                teamPersons[i].gameObject.SetActive(true);
+            }
+            for(; i < teamPersons.Length; i++)
+            {
+                teamPersons[i].gameObject.SetActive(false);
+            }
+            FaceTowardsBottom();
+        }
         private bool CanTeamGoBack()
         {
             Team team = Team.Instance;
@@ -174,22 +205,56 @@ namespace WorldMap.Controller
                 return false;
             return true;
         }
+        private void FaceTowardsBottom()
+        {
+            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
+            ESprite type = ESprite.PERSON1_B;
+            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            {
+                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
+                type += delta;
+            }
+        }
+        private void FaceTowardsTop()
+        {
+            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
+            ESprite type = ESprite.PERSON1_T;
+            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            {
+                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
+                type += delta;
+            }
+        }
+        private void FaceTowardsLeft()
+        {
+            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
+            ESprite type = ESprite.PERSON1_L;
+            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            {
+                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
+                type += delta;
+            }
+        }
+        private void FaceTowardsRight()
+        {
+            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
+            ESprite type = ESprite.PERSON1_L;
+            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            {
+                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                teamPersons[i].transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);
+                type += delta;
+            }
+        }
         private void HideTeam()
         {
             if (gameObject.activeSelf == true)
             {
                 gameObject.SetActive(false);
             }
-            ActiveBTs(false);
-        }
-        private void ShowTeam()
-        {
-            if(gameObject.activeSelf == false)
-            {
-                gameObject.SetActive(true);
-            }
-            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.PosTeam, levelOfTeam);
-            ActiveBTs(true);
         }
         private bool ActiveBTs(bool active)
         {
@@ -204,16 +269,50 @@ namespace WorldMap.Controller
         protected override bool FocusBehaviour()
         {
             Team.Instance.IsMovable = true;
-            ShowTeam();
+            cameraFocus.focusLock(transform);
+            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
+            return true;
+        }
+
+        protected override bool UnfocusBehaviour()
+        {
+            Team.Instance.IsMovable = false;
+            return true;
+        }
+
+        protected override bool ShowBehaviour()
+        {
+            ActiveBTs(true);
+            return true;
+        }
+
+        protected override bool HideBehaviour()
+        {
+            ActiveBTs(false);
             return true;
         }
         public void ObserverUpdate(int state, int echo)
         {
             Team.STATE tState = (Team.STATE)state;
-            if(tState != Team.STATE.GATHERING)
+            if (tState != Team.STATE.GATHERING)
             {
                 world.StopGather();
                 teamActionBtn.text = teamActionBtnStrs[0];
+            }
+            switch (tState)
+            {
+                case Team.STATE.MOVING_TOP:
+                    FaceTowardsTop();
+                    break;
+                case Team.STATE.MOVING_RIGHT:
+                    FaceTowardsRight();
+                    break;
+                case Team.STATE.MOVING_BOTTOM:
+                    FaceTowardsBottom();
+                    break;
+                case Team.STATE.MOVING_LEFT:
+                    FaceTowardsLeft();
+                    break;
             }
         }
     }

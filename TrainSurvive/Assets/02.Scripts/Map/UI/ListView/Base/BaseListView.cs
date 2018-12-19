@@ -248,7 +248,7 @@ namespace WorldMap.UI
         {
             //gameObject.AddComponent<RectTransform>();
             //ScrollRect
-            scrollRect = ViewTool.ForceGetComponent<ScrollRect>(this);
+            scrollRect = CompTool.ForceGetComponent<ScrollRect>(this);
             //Viewport
             Transform viewportTransform = transform.Find("Viewport");
             if (viewportTransform == null)
@@ -274,8 +274,8 @@ namespace WorldMap.UI
             }
             else
             {
-                content = ViewTool.ForceGetComponent<RectTransform>(contentTransform);
-                contentSizeFitter = ViewTool.ForceGetComponent<ContentSizeFitter>(contentTransform);
+                content = CompTool.ForceGetComponent<RectTransform>(contentTransform);
+                contentSizeFitter = CompTool.ForceGetComponent<ContentSizeFitter>(contentTransform);
             }
             ViewTool.FullFillRectTransform(content);
             content.pivot = new Vector2(0, 1);
@@ -301,7 +301,7 @@ namespace WorldMap.UI
         { }
         public void SetBackgroudColor(Color color)
         {
-            ViewTool.ForceGetComponent<Image>(gameObject).color = color;
+            CompTool.ForceGetComponent<Image>(gameObject).color = color;
         }
         public void Refresh()
         {

@@ -211,25 +211,6 @@ namespace WorldMap.Controller
             InitProfessions();
             ShowProfession();
         }
-
-        protected override bool FocusBehaviour()
-        {
-            return true;
-        }
-        public void Show()
-        {
-            if (!gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(true);
-            }
-        }
-        private void Hide()
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(false);
-            }
-        }
         /// <summary>
         /// 计算所需金钱，并显示
         /// </summary>

@@ -21,6 +21,7 @@ namespace WorldMap.UI
             heroListView = ViewTool.ForceGetComponentInChildren<HeroListView>(this, "HeroListView");
             heroListView.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
             heroListView.GridConstraintCount = 7;
+            heroListView.ScrollDirection = ScrollType.Vertical;
             ViewTool.SetParent(heroListView, this);
             ViewTool.FullFillRectTransform(heroListView, new Vector2(0, 60F), new Vector2(0, -60F));
         }

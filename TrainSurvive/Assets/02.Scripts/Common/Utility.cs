@@ -152,7 +152,7 @@ namespace TTT.Utility
             return rand.Next(minValue, maxValue);
         }
     }
-    public static class ViewTool
+    public static class CompTool
     {
         public static T ForceGetComponent<T>(GameObject gameo)
             where T : Component
@@ -175,6 +175,10 @@ namespace TTT.Utility
             T t = component.GetComponent<T>();
             return t == null ? component.gameObject.AddComponent<N>() as T : t;
         }
+
+    }
+    public static class ViewTool
+    {
         public static T ForceGetComponentInChildren<T>(GameObject gameo, string name, bool active = true)
             where T : Component
         {
@@ -182,32 +186,20 @@ namespace TTT.Utility
             T t;
             if (transform == null)
             {
-                RectTransform child = new GameObject(name).AddComponent<RectTransform>();
-                child.gameObject.SetActive(active);
-                child.SetParent(gameo.GetComponent<Transform>());
-                FullFillRectTransform(child, Vector2.zero, Vector2.zero);
-                t = child.gameObject.AddComponent<T>();
+                transform = new GameObject(name).AddComponent<RectTransform>();
+                transform.gameObject.SetActive(false);
+                transform.gameObject.AddComponent<T>();
+                transform.SetParent(gameo.GetComponent<Transform>());
+                FullFillRectTransform(transform, Vector2.zero, Vector2.zero);
             }
-            else
-            {
-                t = transform.GetComponent<T>();
-                if (t == null) t = transform.gameObject.AddComponent<T>();
-            }
+            t = CompTool.ForceGetComponent<T>(transform);
+            t.gameObject.SetActive(active);
             return t;
         }
         public static T ForceGetComponentInChildren<T>(Component comp, string name, bool active = true)
             where T : Component
         {
-            T t = comp.GetComponentInChildren<T>();
-            if (t == null)
-            {
-                RectTransform child = new GameObject(name).AddComponent<RectTransform>();
-                child.gameObject.SetActive(active);
-                child.SetParent(comp.GetComponent<Transform>());
-                FullFillRectTransform(child, Vector2.zero, Vector2.zero);
-                t = child.gameObject.AddComponent<T>();
-            }
-            return t;
+            return ForceGetComponentInChildren<T>(comp.gameObject, name, active);
         }
         public static void Anchor(Component comp, Vector2 anchorMin, Vector2 anchorMax)
         {
@@ -382,6 +374,45 @@ namespace TTT.Utility
         public static void LeftTop(Component comp, Vector2 pivot, Vector2 size)
         {
             LeftTop(comp, pivot, size, Vector2.zero);
+        }
+    }
+    public static class GOTool
+    {
+        public static SpriteRenderer CreateSpriteRenderer(string name, Transform parent, bool active = true)
+        {
+            SpriteRenderer sRenderer = new GameObject(name).AddComponent<SpriteRenderer>();
+            sRenderer.gameObject.SetActive(active);
+            SetParent(sRenderer, parent);
+            return sRenderer;
+        }
+        public static T ForceGetComponentInChildren<T>(GameObject gameo, string name, bool active = true)
+            where T : Component
+        {
+            Transform transform = gameo.transform.Find(name);
+            T t;
+            if (transform == null)
+            {
+                transform = new GameObject(name, typeof(T)).GetComponent<Transform>();
+                SetParent(transform, gameo.GetComponent<Transform>());
+            }
+            t = CompTool.ForceGetComponent<T>(transform);
+            t.gameObject.SetActive(active);
+            return t;
+        }
+        public static T ForceGetComponentInChildren<T>(Component comp, string name, bool active = true)
+            where T : Component
+        {
+            return ForceGetComponentInChildren<T>(comp.gameObject, name, active);
+        }
+        public static void SetParent(Transform child, Transform parent)
+        {
+            child.SetParent(parent);
+            child.localPosition = Vector3.zero;
+            child.localRotation = Quaternion.identity;
+        }
+        public static void SetParent(Component child, Transform parent)
+        {
+            SetParent(child.GetComponent<Transform>(), parent);
         }
     }
     public struct Matrix2x2Int

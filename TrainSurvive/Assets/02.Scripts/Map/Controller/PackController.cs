@@ -116,7 +116,7 @@ namespace WorldMap.Controller
         }
         public void OnTopLeftBtnClick(int index)
         {
-            HideWindow();
+            Hide();
         }
 
         protected override bool PrepareDataBeforeShowWindow()
@@ -136,11 +136,5 @@ namespace WorldMap.Controller
         {
             packLV.Datas = items;
         }
-        delegate bool Filter(Item item);
-        protected override bool FocusBehaviour()
-        {
-            return true;
-        }
-        
     }
 }

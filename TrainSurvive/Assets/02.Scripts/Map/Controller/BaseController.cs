@@ -14,9 +14,11 @@ namespace WorldMap.Controller
     {
         protected WorldForMap world;
         protected RectTransform rectTransform { get { return gameObject.GetComponent<RectTransform>(); } }
+        public string PathOfTransform { get; set; }
         private Vector2 leftMouseDownPosition;
         private Vector2 rightMouseDownPosition;
-
+        private BaseController child;
+        private BaseController parent;
         protected enum MouseState
         {
             None = 0,//空，没有鼠标事件
@@ -56,6 +58,43 @@ namespace WorldMap.Controller
                 return false;
             return true;
         }
+        public bool UnFocus()
+        {
+            if (!UnfocusBehaviour())
+                return false;
+            return true;
+        }
+        public bool Hide()
+        {
+            if (!UnFocus())
+                return false;
+            if (child != null)
+            {
+                Debug.Log("子控制未关闭");
+                return false;
+            }
+            if(parent != null)
+                parent.child = null;
+            return HideBehaviour();
+        }
+        public bool Show()
+        {
+            if (!Focus())
+                return false;
+            return ShowBehaviour();
+        }
+        /// <summary>
+        /// 有层级的显示
+        /// 父级必须在子集关闭后，才能关闭
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public bool Show(BaseController parent)
+        {
+            parent.child = this;
+            this.parent = parent;
+            return Show();
+        }
         /// <summary>
         /// 焦距行为函数
         /// 用于加载界面等行为
@@ -65,6 +104,9 @@ namespace WorldMap.Controller
         /// TRUE：允许焦距
         /// </returns>
         protected abstract bool FocusBehaviour();
+        protected abstract bool UnfocusBehaviour();
+        protected abstract bool ShowBehaviour();
+        protected abstract bool HideBehaviour();
         protected abstract void CreateModel();
         /// <summary>
         /// 设置鼠标的状态

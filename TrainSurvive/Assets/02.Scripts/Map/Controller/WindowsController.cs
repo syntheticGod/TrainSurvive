@@ -99,7 +99,7 @@ namespace WorldMap.Controller
         protected override void CreateModel()
         {
             RectTransform rect = rectTransform;
-            backgroundImage = ViewTool.ForceGetComponent<Image>(gameObject);
+            backgroundImage = CompTool.ForceGetComponent<Image>(gameObject);
             rect.anchorMin = defaultMinAnchor;
             rect.anchorMax = defaultMaxAnchor;
             WinSizeType = m_windowSizeType;
@@ -119,7 +119,7 @@ namespace WorldMap.Controller
                 ViewTool.LeftTop(titleText, new Vector2(0F, 1F), new Vector2(120F, 60F), Vector2.zero);
                 //Close Button
                 closeBtn = ViewTool.CreateBtn("Close", "X");
-                closeBtn.onClick.AddListener(delegate () { HideWindow(); });
+                closeBtn.onClick.AddListener(delegate () { Hide(); });
                 ViewTool.SetParent(closeBtn, titleBar);
                 ViewTool.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
                 ColorBlock redColorBlock = closeBtn.colors;
@@ -133,37 +133,6 @@ namespace WorldMap.Controller
         protected void SetTitle(string title)
         {
             titleText.text = title;
-        }
-        public bool ShowWindow()
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                Debug.Log("窗口已显示");
-                return false;
-            }
-            if (!Focus())
-            {
-                Debug.Log("窗口拒绝被焦距，导致拒绝显示窗口");
-                return false;
-            }
-            //ShowWindow可能会在Awake之前调用
-            world = WorldForMap.Instance;
-            if (!PrepareDataBeforeShowWindow())
-            {
-                Debug.Log("窗口数据未准备好，拒绝显示");
-                return false;
-            }
-            gameObject.SetActive(true);
-            if (gameObject.transform.parent != null)
-                AfterShowWindow();
-            return true;
-        }
-        protected abstract bool PrepareDataBeforeShowWindow();
-        protected abstract void AfterShowWindow();
-        public void HideWindow()
-        {
-            if (gameObject.activeInHierarchy)
-                gameObject.SetActive(false);
         }
         public void SetBackground(string filename)
         {
@@ -179,6 +148,46 @@ namespace WorldMap.Controller
                 rect.position = eventData.position;
             }
         }
+        protected override bool FocusBehaviour()
+        {
+            //ShowWindow可能会在Awake之前调用
+            world = WorldForMap.Instance;
+            if (!PrepareDataBeforeShowWindow())
+            {
+                Debug.Log("窗口数据未准备好，拒绝显示");
+                return false;
+            }
+            return true;
+        }
+        protected override bool UnfocusBehaviour()
+        {
+            return true;
+        }
+        protected override bool ShowBehaviour()
+        {
+            if (gameObject.activeInHierarchy)
+            {
+                Debug.Log("窗口已显示");
+                return false;
+            }
+            gameObject.SetActive(true);
+            if (gameObject.transform.parent != null)
+                AfterShowWindow();
+            return true;
+        }
+        protected override bool HideBehaviour()
+        {
+            //TODO 判断子窗口是否关闭
+            if (!gameObject.activeInHierarchy)
+            {
+                Debug.Log("窗口已关闭");
+                return false;
+            }
+            gameObject.SetActive(false);
+            return true;
+        }
+        protected abstract bool PrepareDataBeforeShowWindow();
+        protected abstract void AfterShowWindow();
     }
     public class NullWindowsController : WindowsController
     {
@@ -188,10 +197,5 @@ namespace WorldMap.Controller
         }
         protected override void AfterShowWindow()
         { }
-        protected override bool FocusBehaviour()
-        {
-            return true;
-        }
-
     }
 }

@@ -60,17 +60,10 @@ namespace WorldMap.Controller
         {
             return currentTown != null;
         }
-
         protected override void AfterShowWindow()
         {
             townInfoText.text = currentTown.Info;
         }
-
-        protected override bool FocusBehaviour()
-        {
-            return true;
-        }
-        
         public bool TryShowTown(Vector2Int mapPos)
         {
             Model.Town town;
@@ -99,19 +92,19 @@ namespace WorldMap.Controller
             {
                 case BUTTON_ID.TOWN_TAVERN:
                     Debug.Log("进入酒馆");
-                    TavernController tavernController = ControllerManager.GetWindow<TavernController>("TavernViewer");
+                    TavernController tavernController = ControllerManager.Instance.GetWindow<TavernController>("TavernViewer");
                     tavernController.SetTown(currentTown);
-                    tavernController.ShowWindow();
+                    tavernController.Show(this);
                     break;
                 case BUTTON_ID.TOWN_SCHOOL:
                     Debug.Log("进入学校");
-                    ControllerManager.ShowWindow<SchoolController>("SchoolViewer");
+                    ControllerManager.Instance.GetWindow<SchoolController>("SchoolViewer").Show(this);
                     break;
                 case BUTTON_ID.TOWN_SHOP:
                     Debug.Log("进入商店");
-                    ShopController shopController = ControllerManager.GetWindow<ShopController>("ShopController");
+                    ShopController shopController = ControllerManager.Instance.GetWindow<ShopController>("ShopController");
                     shopController.SetTown(currentTown);
-                    shopController.ShowWindow();
+                    shopController.Show(this);
                     break;
             }
         }

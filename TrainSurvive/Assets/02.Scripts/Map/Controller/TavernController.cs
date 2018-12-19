@@ -113,10 +113,6 @@ namespace WorldMap.Controller
             townChatListView.Datas = chats;
             nullListView.Datas = nullData;
         }
-        protected override bool FocusBehaviour()
-        {
-            return true;
-        }
         public void OnItemClick(ListViewItem item, Person person)
         {
             selectedIndex = heros.IndexOf(person);
@@ -171,6 +167,11 @@ namespace WorldMap.Controller
                     {
                         //私聊选项2：请加入我
                         Debug.Log("玩家：招募指令");
+                        if(world.PersonCount() >= world.MaxPersonCount())
+                        {
+                            InfoDialog.Show("人物已满，无法招募更多的人");
+                            return;
+                        }
                         NPC currentNPC = currentTown.NPCs[selectedIndex];
                         if (!currentTown.RecruitNPC(currentNPC))
                         {

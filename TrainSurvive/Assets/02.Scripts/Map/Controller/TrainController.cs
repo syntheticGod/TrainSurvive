@@ -31,18 +31,11 @@ namespace WorldMap.Controller
         //外部引用
         private IMapForTrain map;
         private RectTransform trainModeBTs;
-        public void init()
-        {
-            Debug.Log("TrainController init");
-            map = Map.GetIntanstance();
-        }
         protected override void CreateModel()
         {
-            Debug.Log("TrainController CreateModel");
             //Buttons
-            Transform canvas = GameObject.Find("/Canvas").transform;
             trainModeBTs = new GameObject("TrainMode").AddComponent<RectTransform>();
-            ViewTool.SetParent(trainModeBTs, canvas);
+            ViewTool.SetParent(trainModeBTs, GameObject.Find("/Canvas").transform);
             ViewTool.RightBottom(trainModeBTs, new Vector2(1, 0), Vector2.zero, Vector2.zero);
             Vector2 btnPivot = new Vector2(1, 0);
             Vector2 btnSize = new Vector2(120, 120);
@@ -56,8 +49,10 @@ namespace WorldMap.Controller
                 BUTTON_ID btnID = BUTTON_ID.TRAIN_NONE + i + 1;
                 bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
             }
+            ActiveBTs(!world.IfTeamOuting);
             trainActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
-
+            //列车图标
+            GOTool.CreateSpriteRenderer("Train", transform).sprite = StaticResource.GetSprite(ESprite.TRAIN);
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
         protected override void OnEnable()
@@ -74,16 +69,8 @@ namespace WorldMap.Controller
             base.Start();
             Train train = Train.Instance;
             transform.position = StaticResource.MapPosToWorldPos(train.PosTrain, levelOfTrain);
+            map = Map.GetIntanstance();
             map.MoveToThisSpawn(train.MapPosTrain);
-            if (world.IfTeamOuting)
-            {
-                EnableTrain(false);
-            }
-            else
-            {
-                EnableTrain(true);
-                cameraFocus.focusLock(transform);
-            }
         }
         protected override void Update()
         {
@@ -157,25 +144,21 @@ namespace WorldMap.Controller
                     if (world.FindTown(train.MapPosTrain, out town))
                     {
                         //进入城镇后不能操作列车
-                        EnableTrain(false);
-                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
+                        Train.Instance.IsMovable = false;
+                        TownController townController = ControllerManager.Instance.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
-                        townController.ShowWindow();
+                        townController.Show();
                     }
                     else
                     {
-                        InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
-                        infoDialog.SetInfo("该区域不可进入，目前只能进城镇。");
-                        infoDialog.ShowDialog();
+                        InfoDialog.Show("该区域不可进入，目前只能进城镇。");
                     }
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:
                     Debug.Log("探险队行动");
                     if (train.IsRunning)
                     {
-                        InfoDialog infoDialog = BaseDialog.CreateDialog<InfoDialog>("InfoDialog");
-                        infoDialog.SetInfo("列车正在运行，无法出队");
-                        infoDialog.ShowDialog();
+                        InfoDialog.Show("列车正在运行，无法出队");
                     }
                     else
                     {
@@ -184,7 +167,7 @@ namespace WorldMap.Controller
                         dialog.DialogCallBack = this;
                         dialog.ShowDialog();
                         //选择人物后不能操作列车
-                        EnableTrain(false);
+                        Train.Instance.IsMovable = false;
                     }
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
@@ -192,25 +175,20 @@ namespace WorldMap.Controller
                     break;
             }
         }
-
         public void OK(BaseDialog baseDialog)
         {
             if (!(baseDialog is TeamOutPrepareDialog)) return;
             TeamOutPrepareDialog dialog = baseDialog as TeamOutPrepareDialog;
             //险队准备
-            EnableTrain(false);
+            Train.Instance.IsMovable = false;
             ActiveBTs(false);
             Team.Instance.OutPrepare(Train.Instance.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
-            ControllerManager.FocusController("Team", "Character");
+            ControllerManager.Instance.FocusController("Team", "Character");
         }
         public void Cancel()
         {
             //取消区域后
-            EnableTrain(true);
-        }
-        private void EnableTrain(bool active)
-        {
-            Train.Instance.IsMovable = active;
+            Train.Instance.IsMovable = true;
         }
         private bool ActiveBTs(bool active)
         {
@@ -225,11 +203,26 @@ namespace WorldMap.Controller
         protected override bool FocusBehaviour()
         {
             ActiveBTs(true);
-            EnableTrain(true);
+            Train.Instance.IsMovable = true;
             cameraFocus.focusLock(transform);
             return true;
         }
-        
+        protected override bool UnfocusBehaviour()
+        {
+            ActiveBTs(false);
+            Train.Instance.IsMovable = false;
+            return true;
+        }
+        protected override bool ShowBehaviour()
+        {
+            //列车是一直存在的
+            return false;
+        }
+        protected override bool HideBehaviour()
+        {
+            //列车是一直存在的
+            return false;
+        }
         public void ObserverUpdate(int state, int echo)
         {
             switch (echo)
@@ -243,9 +236,5 @@ namespace WorldMap.Controller
             }
         }
 
-        public string GetName()
-        {
-            return "TrainController";
-        }
     }
 }

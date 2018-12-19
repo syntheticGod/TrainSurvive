@@ -18,7 +18,7 @@ namespace WorldMap.UI
         public string ActionBtnString { set; get; } = "购买";
         protected override ResourceItemBase GetResourceItemBase(ListViewItem item, Good data)
         { 
-            GoodsItem view = ViewTool.ForceGetComponent<GoodsItem>(item);
+            GoodsItem view = CompTool.ForceGetComponent<GoodsItem>(item);
             ActionClickEvent buyClickEvent = new ActionClickEvent(data);
             buyClickEvent.callBackGoodsAction = callBackGoodsAction;
             view.SetActionBtnContent(ActionBtnString);

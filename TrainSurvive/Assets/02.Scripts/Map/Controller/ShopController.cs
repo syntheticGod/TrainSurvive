@@ -48,7 +48,7 @@ namespace WorldMap.Controller
             Button cancel = ViewTool.CreateBtn("Cancel", btnStrs[0]);
             ViewTool.SetParent(cancel, btns);
             ViewTool.CenterAt(cancel, new Vector2(0.5F, 0.5F), btnSize);
-            cancel.onClick.AddListener(delegate () { HideWindow(); });
+            cancel.onClick.AddListener(delegate () { Hide(); });
         }
         private void ConfigListView(GoodsListView listView, float xAnchor)
         {
@@ -94,12 +94,12 @@ namespace WorldMap.Controller
             if (world.IfTeamOuting)
             {
                 InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
-                if (!inventoryForTeam.CanPushItemToPack(goodInPack))
+                if (!inventoryForTeam.CanPushItemToPack(goodInPack.ItemID, goodInPack.Number))
                 {
                     InfoDialog.Show("背包已满");
                     return;
                 }
-                inventoryForTeam.PushItemFromShop(goodInPack);
+                inventoryForTeam.PushItemFromShop(goodInPack.ItemID, goodInPack.Number);
             }
             else
             {
@@ -142,10 +142,5 @@ namespace WorldMap.Controller
             goodsInPackLV.Refresh();
             goodsInShopLV.AddItem(goodsInTown);
         }
-        protected override bool FocusBehaviour()
-        {
-            return true;
-        }
-
     }
 }

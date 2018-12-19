@@ -52,7 +52,7 @@ namespace WorldMap.UI
                             m_dialogSize.y = scale * 12;
                             break;
                     }
-                    ViewTool.CenterAt(bgImage, new Vector2(0.5F, 0.5F), m_dialogSize);
+                    ViewTool.CenterAt(this, new Vector2(0.5F, 0.5F), m_dialogSize);
                 }
             }
             get
@@ -89,7 +89,7 @@ namespace WorldMap.UI
         private void CreateBG()
         {
             //背景
-            bgImage = ViewTool.ForceGetComponent<Image>(this);
+            bgImage = CompTool.ForceGetComponent<Image>(this);
             DialogSizeType = m_dialogSizeType;
             //标题
             titleText = ViewTool.CreateText("Title", "TTT");
