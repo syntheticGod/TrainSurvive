@@ -22,8 +22,8 @@ namespace WorldMap {
     public class MapGenerate : MonoBehaviour, IMapForTrainTemp {
 
         //大地图的宽高（x轴和z轴地块的个数）
-        public int mapWidth = 200;
-        public int mapHeight = 200;
+        private int mapWidth = 200;
+        private int mapHeight = 200;
 
         //三种特殊地形的图标
         //湖泊
