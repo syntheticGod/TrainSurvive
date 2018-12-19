@@ -26,9 +26,10 @@ namespace WorldMap.Controller
         protected override void CreateModel()
         {
             m_windowSizeType = EWindowSizeType.BIG26x14;
-            m_titleString = "城镇";
+            m_titleString = currentTown.Name;
             base.CreateModel();
             SetBackground("town_bg_02");
+            //城镇信息容器
             Image townInfoBG = ViewTool.CreateImage("TownInfo");
             ViewTool.SetParent(townInfoBG, this);
             ViewTool.Anchor(townInfoBG, new Vector2(0.2F, 0.2F), new Vector2(0.4F, 0.8F));

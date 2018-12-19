@@ -12,6 +12,7 @@ using WorldMap.UI;
 
 namespace WorldMap.Model
 {
+    public delegate void PassBlockCenterCallBack(Vector2Int mapPosition);
     public class Train : SubjectBase
     {
         //列车的最大移动速度
@@ -40,15 +41,14 @@ namespace WorldMap.Model
                 this.Notify((int)state);
                 if(state == STATE.RUNNING)
                 {
-                    world.TrainMoving();
+                    WorldForMap.Instance.TrainMoving();
                 }
                 else if(state == STATE.STOP_RAIL || state == STATE.STOP_TOWN)
                 {
-                    world.TrainStop();
+                    WorldForMap.Instance.TrainStop();
                 }
             }
         }
-
         //列车运行时下一目的地（城市位置）
         private Vector2 nextCityPosition;
         //列车运行时所在的铁轨
@@ -59,11 +59,7 @@ namespace WorldMap.Model
         private bool ifTemporarilyStop;
         //列车移动速度
         private float velocity = 0.0F;
-
-        //外部引用
-        private IMapForTrain map;
-        private Team team;
-        private WorldForMap world;
+        public PassBlockCenterCallBack OnPassBlockCenter;
         public override int MaxState()
         {
             return (int)STATE.NUM;
@@ -72,16 +68,29 @@ namespace WorldMap.Model
         private Train() : base()
         {
         }
-        public void Init(Vector2Int initPosition, bool movable, float maxSpeed)
+        /// <summary>
+        /// 设置列车的基础属性
+        /// </summary>
+        /// <param name="initPosition"></param>
+        /// <param name="movable"></param>
+        /// <param name="maxSpeed"></param>
+        public void Config(Vector2Int initPosition, bool movable, float maxSpeed)
         {
-            map = Map.GetIntanstance();
-            team = Team.Instance;
-            world = WorldForMap.Instance;
             PosTrain = StaticResource.BlockCenter(initPosition);
             IsMovable = movable;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
             MinDeltaStep = 0.01F * StaticResource.BlockSize.x;
+        }
+        /// <summary>
+        /// 初始状态等设置
+        /// </summary>
+        public void Init()
+        {
+            Vector2Int initPosition = MapPosTrain;
+            State = Map.GetIntanstance().IfTown(initPosition) == true ? STATE.STOP_TOWN : STATE.STOP_RAIL;
+            //初始化时
+            PassCenterCallBack(initPosition);
         }
         /// <summary>
         /// 判断current和click之间是否连通
@@ -97,8 +106,9 @@ namespace WorldMap.Model
             Vector2Int currentIndex = StaticResource.BlockIndex(PosTrain);
             Vector2Int clickIndex = StaticResource.BlockIndex(clickPosition);
             Vector2Int clickedStart, clickedEnd, currentStart, currentEnd;
-            bool trainOnTheTown = map.IfTown(currentIndex);
-            bool clickOnTheTown = map.IfTown(clickIndex);
+            bool trainOnTheTown = Map.GetIntanstance().IfTown(currentIndex);
+            bool clickOnTheTown = Map.GetIntanstance().IfTown(clickIndex);
+            IMapForTrain map = Map.GetIntanstance();
             //列车位于城镇上，点击处也是城镇
             if (trainOnTheTown && clickOnTheTown)
             {
@@ -209,10 +219,10 @@ namespace WorldMap.Model
         /// 不会被重复调用。
         /// </summary>
         /// <param name="center">块的地图坐标</param>
-        public void PassCenterCallBack(Vector2Int center)
+        private void PassCenterCallBack(Vector2Int center)
         {
-            map.MoveToThisSpawn(center);
-            world.TrainSetMapPos(center);
+            Map.GetIntanstance().MoveToThisSpawn(center);
+            WorldForMap.Instance.TrainSetMapPos(center);
             //暂时性停车
             if (ifTemporarilyStop)
             {
@@ -220,6 +230,7 @@ namespace WorldMap.Model
                 State = STATE.STOP_RAIL;
                 ifTemporarilyStop = false;
             }
+            OnPassBlockCenter?.Invoke(center);
         }
         /// <summary>
         /// 启动列车，重新计算起止点。
@@ -289,7 +300,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("列车：招募到" + theOne.name);
-            world.TrainRecruit(theOne);
+            WorldForMap.Instance.TrainRecruit(theOne);
         }
         //列车属性判断
         public bool IsRunning

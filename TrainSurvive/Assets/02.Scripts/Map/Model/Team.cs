@@ -40,20 +40,20 @@ namespace WorldMap.Model
                 switch (state)
                 {
                     case STATE.GATHERING:
-                        world.DoGather();
+                        WorldForMap.Instance.DoGather();
                         break;
                     case STATE.STOP_OUT:
                     case STATE.STOP_TOWN:
-                        world.TeamStandeBy();
+                        WorldForMap.Instance.TeamStandeBy();
                         break;
                     case STATE.MOVING_TOP:
                     case STATE.MOVING_RIGHT:
                     case STATE.MOVING_BOTTOM:
                     case STATE.MOVING_LEFT:
-                        world.TeamMoving();
+                        WorldForMap.Instance.TeamMoving();
                         break;
                     case STATE.IN_TRAIN:
-                        world.TeamGetIn();
+                        WorldForMap.Instance.TeamGetIn();
                         break;
                 }
             }
@@ -66,10 +66,7 @@ namespace WorldMap.Model
         private Vector2 nextStopPosition;
         //背包
         public InventoryForTeam Inventory { private set; get; }
-        //外部引用
-        private Train train;
-        private IMapForTrain map;
-        private WorldForMap world;
+        public PassBlockCenterCallBack OnPassBlockCenter;
         public override int MaxState()
         {
             return (int)STATE.NUM;
@@ -84,18 +81,14 @@ namespace WorldMap.Model
         /// </summary>
         public void Init()
         {
-            map = Map.GetIntanstance();
-            train = Train.Instance;
-            world = WorldForMap.Instance;
             Inventory = new InventoryForTeam(float.MaxValue);
         }
         /// <summary>
-        /// 夹带探险队位置的初始化
+        /// 配置探险队的初始坐标
         /// </summary>
         /// <param name="initPosition"></param>
-        public void Init(Vector2 initPosition)
+        public void Config(Vector2 initPosition)
         {
-            Init();
             PosTeam = initPosition;
         }
         /// <summary>
@@ -108,6 +101,7 @@ namespace WorldMap.Model
             if (!IsMoving || !IsMovable) return false;
             Vector2 currentNext = current;
             Vector2 direction = nextStopPosition - current;
+            IMapForTrain map = Map.GetIntanstance();
             if (MathTool.ApproximatelyInView(direction, Vector2.zero))
             {
                 //到达目的地
@@ -130,9 +124,10 @@ namespace WorldMap.Model
         }
         public void PassCenterCallBack(Vector2Int position)
         {
-            map.MoveToThisSpawn(StaticResource.BlockIndex(position));
-            world.TeamSetMapPos(position);
-            if (MathTool.RandomInt(5) == 0)
+            Map.GetIntanstance().MoveToThisSpawn(StaticResource.BlockIndex(position));
+            WorldForMap.Instance.TeamSetMapPos(position);
+            OnPassBlockCenter?.Invoke(position);
+            if (MathTool.RandomInt(100) <= 20)
             {
                 //
                 TimeController.getInstance()?.changeScene(true);
@@ -149,8 +144,9 @@ namespace WorldMap.Model
         public void OutPrepare(Vector2 initPosition, int selectedFood, List<Person> selectedPersons)
         {
             PosTeam = initPosition;
-            world.TeamGetOut(selectedFood, selectedPersons);
+            WorldForMap.Instance.TeamGetOut(selectedFood, selectedPersons);
             State = IfInTown()? STATE.STOP_TOWN : STATE.STOP_OUT;
+            OnPassBlockCenter?.Invoke(MapPosTeam);
         }
         /// <summary>
         /// 判断探险队是否能回车
@@ -161,7 +157,7 @@ namespace WorldMap.Model
         /// </returns>
         public bool CanTeamGoBack()
         {
-            if (StaticResource.BlockIndex(train.PosTrain) != StaticResource.BlockIndex(PosTeam))
+            if (StaticResource.BlockIndex(Train.Instance.PosTrain) != StaticResource.BlockIndex(PosTeam))
             {
                 Debug.Log("探险队不在列车上");
                 return false;
@@ -187,7 +183,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("探险队：招募到" + theOne.name);
-            world.TeamRecruit(theOne);
+            WorldForMap.Instance.TeamRecruit(theOne);
         }
         /// <summary>
         /// 移动到指定坐标
@@ -197,7 +193,7 @@ namespace WorldMap.Model
         private bool WalkTo(Vector2Int target)
         {
             //判断目标坐标是否在地图内
-            if (!map.IfInter(target)) return false;
+            if (!Map.GetIntanstance().IfInter(target)) return false;
             //判断目标是否正在移动、或者不可移动
             if (IsMoving || !IsMovable) return false;
             nextStopPosition = StaticResource.BlockCenter(target);
@@ -251,7 +247,7 @@ namespace WorldMap.Model
         }
         private bool IfInTown()
         {
-            return map.IfTown(StaticResource.BlockIndex(PosTeam));
+            return Map.GetIntanstance().IfTown(StaticResource.BlockIndex(PosTeam));
         }
         public enum STATE
         {

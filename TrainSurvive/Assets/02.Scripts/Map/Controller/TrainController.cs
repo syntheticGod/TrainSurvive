@@ -29,7 +29,6 @@ namespace WorldMap.Controller
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
         //外部引用
-        private IMapForTrain map;
         private RectTransform trainModeBTs;
         protected override void CreateModel()
         {
@@ -67,10 +66,7 @@ namespace WorldMap.Controller
         {
             Debug.Log("TrainController Start");
             base.Start();
-            Train train = Train.Instance;
-            transform.position = StaticResource.MapPosToWorldPos(train.PosTrain, levelOfTrain);
-            map = Map.GetIntanstance();
-            map.MoveToThisSpawn(train.MapPosTrain);
+            transform.position = StaticResource.MapPosToWorldPos(Train.Instance.PosTrain, levelOfTrain);
         }
         protected override void Update()
         {
@@ -90,7 +86,7 @@ namespace WorldMap.Controller
                 Debug.Log("origin of ray:" + ray.origin + " dire:" + ray.direction);
                 Debug.Log("mouse position " + Input.mousePosition);
                 Vector2 clickedPosition = StaticResource.WorldPosToMapPos(ray.origin);
-                if (map.isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
+                if (Map.GetIntanstance().isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
                 {
                     if (!train.StartRun(clickedPosition))
                     {

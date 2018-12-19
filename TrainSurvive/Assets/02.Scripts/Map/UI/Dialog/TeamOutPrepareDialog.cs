@@ -143,15 +143,11 @@ namespace WorldMap.UI
                 InfoDialog.Show("至多选择" + Team.MAX_NUMBER_OF_TEAM_MEMBER + "个英雄");
                 return false;
             }
-            if (DialogCallBack != null)
-                DialogCallBack.OK(this);
             return true;
         }
 
         protected override void Cancel()
         {
-            if (DialogCallBack != null)
-                DialogCallBack.Cancel();
         }
     }
 }

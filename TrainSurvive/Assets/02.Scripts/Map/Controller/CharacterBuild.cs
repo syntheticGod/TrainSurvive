@@ -31,8 +31,6 @@ namespace WorldMap
         private GameObject trainObject;
         private GameObject teamObject;
         private GameObject characterObject;
-        private Train train;
-        private Team team;
         private MapGenerate mapGenerate;
         private WorldForMap world;
         public void Init(Vector2Int initIndex)
@@ -46,21 +44,6 @@ namespace WorldMap
             FillMoreData();
             CreateModel();
         }
-        void Start()
-        {
-            Debug.Log("CharacterBuild Start");
-        }
-
-        void Update()
-        {
-//测试代码，使得能够在Inspector中修改的值马上生效
-#if DEBUG
-            if(null != train)
-                train.MaxSpeed = maxSpeedForTrain;
-            if (null != team)
-                team.MaxSpeed = maxSpeedForTeam;
-#endif
-        }
         private void CreateModel()
         {
             characterObject = new GameObject("Character");
@@ -73,13 +56,17 @@ namespace WorldMap
             StaticResource.MapOriginUnit = StaticResource.MapOrigin / StaticResource.BlockSize - new Vector2(0.5F, 0.5F);
 
             //列车
-            train = Train.Instance;
-            train.Init(world.TrainMapPos(), movable: true,maxSpeed: maxSpeedForTrain);
+            Train.Instance.Config(world.TrainMapPos(), movable: true, maxSpeed: maxSpeedForTrain);
             GOTool.ForceGetComponentInChildren<TrainController>(characterObject, "Train", true).PathOfTransform = "/Character/Train";
             //探险队
-            team = Team.Instance;
-            team.Init(world.TeamMapPos());
+            Team.Instance.Config(world.TeamMapPos());
             GOTool.ForceGetComponentInChildren<TeamController>(characterObject, "Team", false).PathOfTransform = "/Character/Team";
+        }
+        void Start()
+        {
+            Debug.Log("CharacterBuild Start");
+            Train.Instance.Init();
+            Team.Instance.Init();
         }
 
         /// <summary>
@@ -93,6 +80,8 @@ namespace WorldMap
                 world.TrainSetMapPos(initIndexForTrain);
                 world.RandomTownsInfo(Map.GetIntanstance().towns);
                 world.SaveGame();
+                //初始化档案时随机生成3个人物
+                world.RandomPersonInTrain(3);
             }
             world.PrepareData();
         }

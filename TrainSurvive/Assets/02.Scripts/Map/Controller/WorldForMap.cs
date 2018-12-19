@@ -22,20 +22,11 @@ namespace WorldMap
         {
             world = World.getInstance();
             posToTown = new Dictionary<Vector2Int, Model.Town>();
-            world.numIn = 3;
-            //在列车内部随机生成人物
-            for (int i = 0; i < world.numIn; i++)
-            {
-                AddPerson(Person.RandomPerson());
-            }
-            //world.money = 9999;//9,999
         }
-        
         public bool IfMoneyEnough(int cost)
         {
             return world.getMoney() >= cost;
         }
-        
         public bool Pay(int cost)
         {
             return world.addMoney(-cost);
@@ -120,6 +111,18 @@ namespace WorldMap
             get
             {
                 return (int)world.getMoney();
+            }
+        }
+        /// <summary>
+        /// 在列车内部随机生成人物
+        /// </summary>
+        /// <param name="count"></param>
+        public void RandomPersonInTrain(int count)
+        {
+            world.numIn = count;
+            for (int i = 0; i < count; i++)
+            {
+                AddPerson(Person.RandomPerson());
             }
         }
         /// <summary>
