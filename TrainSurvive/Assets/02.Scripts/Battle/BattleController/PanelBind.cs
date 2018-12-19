@@ -56,16 +56,8 @@ namespace WorldBattle {
                 dropdown.options.Add(op);
             }
 
-            //绑定hpSlider
-            person.hpSlider = panel.Find("HpSlider").GetComponent<Slider>();
-            //绑定apSlider
-            person.apSlider = panel.Find("ApSlider").GetComponent<Slider>();
-            //绑定text
-            person.nameText = panel.Find("name").GetComponent<Text>();
-            //绑定hpTxt
-            person.hpTxt = panel.Find("HpSlider").Find("HpValueTxt").GetComponent<Text>();
-            //绑定apTxt
-            person.apTxt = panel.Find("ApSlider").Find("ApValueTxt").GetComponent<Text>();
+            //获取一些基本绑定元素
+            bindEnemyPanel(person, panel);
 
             //增加攻击监听事件
             panel.Find("ToggleGroup").Find("AttackToggle").GetComponent<Toggle>()
@@ -98,12 +90,14 @@ namespace WorldBattle {
         /// <param name="person"></param>
         /// <param name="panel"></param>
         public static void bindEnemyPanel(BattleActor person, Transform panel) {
-            //绑定text
-            person.nameText = panel.Find("name").GetComponent<Text>();
             //绑定hpSlider
             person.hpSlider = panel.Find("HpSlider").GetComponent<Slider>();
+            person.hpSlider.interactable = false;
             //绑定apSlider
             person.apSlider = panel.Find("ApSlider").GetComponent<Slider>();
+            person.apSlider.interactable = false;
+            //绑定text
+            person.nameText = panel.Find("name").GetComponent<Text>();
             //绑定hpTxt
             person.hpTxt = panel.Find("HpSlider").Find("HpValueTxt").GetComponent<Text>();
             //绑定apTxt

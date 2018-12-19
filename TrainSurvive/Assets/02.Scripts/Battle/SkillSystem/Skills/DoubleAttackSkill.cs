@@ -37,7 +37,7 @@ namespace WorldBattle {
             BuffBase buffBase = buff.buffList[0];
 
             //修改当前最大持续时间为两次攻击的时间
-            buffBase.maxDurationTime = battleActor.atkNeedTime / 5 * 2;
+            buffBase.maxDurationTime = (battleActor.atkNeedTime / 5 + 0.1f) * 5;
 
             //设置buff
             battleActor.setBuffEffect(buff);

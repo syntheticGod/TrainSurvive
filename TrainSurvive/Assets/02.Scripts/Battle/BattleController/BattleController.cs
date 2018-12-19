@@ -53,7 +53,8 @@ namespace WorldBattle {
         //玩家的操作命令面板
         public List<GameObject> playerPanels;
         //掉落战利品的gameObject
-        public GameObject dropSpoilsPanel;
+        public GameObject dropSpoilsPanelPrefab;
+        private GameObject dropSpoilsPanel;
 
         //敌人的显示面板Prefab
         public GameObject enemyPanel;
@@ -94,8 +95,6 @@ namespace WorldBattle {
             //此处限定60帧（强制提高帧率）（测试）
             Application.targetFrameRate = 60;
 
-            //先关闭掉落战利品界面
-            dropSpoilsPanel.SetActive(false);
             //保存玩家的父级
             playersRoot = new GameObject("players");
             //保存敌人的父级
@@ -185,7 +184,11 @@ namespace WorldBattle {
             yield return new WaitForSeconds(1.0f);
 
             //启动战利品panel
-            dropSpoilsPanel.SetActive(true);
+            dropSpoilsPanel = Instantiate(dropSpoilsPanelPrefab);
+            //设置父框
+            dropSpoilsPanel.transform.parent = curCanvas.transform;
+            //设置战利品框为居中显示
+            HelpGameObjectAnchor.setCenter(dropSpoilsPanel);
 
             //获取掉落的战利品
             for (int i = 0; i < 12; i++) {
@@ -194,9 +197,10 @@ namespace WorldBattle {
 
                 DropSpoils.setItem(dropSpoilsPanel.transform, item, i);
 
-                //给队伍背包加随机材料(当前不处于测试状态)
-                Team.Instance.Inventory.PushItem(Good.RandomMaterial().item);
-                
+                if (isTest == false) {
+                    //给队伍背包加随机材料(当前不处于测试状态)
+                    Team.Instance.Inventory.PushItem(Good.RandomMaterial().item);
+                }
             }
 
             //绑定button事件为跳转到map

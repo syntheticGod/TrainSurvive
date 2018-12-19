@@ -25,7 +25,7 @@ namespace WorldMap {
         public GameObject railTurnObject;
 
         //城镇的个数(最好是一个数的平方)
-        public int townsNum = 25;
+        private int townsNum = 25;
 
         //城镇图标在一个地块的偏移量
         public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, -0.03f);
