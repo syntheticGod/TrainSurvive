@@ -10,6 +10,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 namespace WorldMap {
@@ -62,6 +63,8 @@ namespace WorldMap {
             if (mapGenerate.isCreateMap) {
                 //生成城镇
                 BuildTowns();
+                //设置特殊城镇信息
+                SetSpecialTownInfo(mapData);
                 //生成铁轨
                 BuildRails(mapData);
             }
@@ -149,6 +152,12 @@ namespace WorldMap {
             }
         }
 
+        /// <summary>
+        /// 设置城镇的属性
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="townPos"></param>
+        /// <param name="mapPos"></param>
         public static void SetTownProperty(Map map, Vector2Int townPos, Vector2Int mapPos) {
             //设置城镇属性
             map.spowns[mapPos.x, mapPos.y].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
@@ -180,6 +189,45 @@ namespace WorldMap {
                     ConnectTown(map, towns[i, j - 1], towns[i, j]);
                     ConnectTown(map, towns[i - 1, j], towns[i, j]);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 在25个区块中放置如下6个特殊城镇（对应类型ID1~6）与其他19个普通城镇（类型ID=0）
+        /// </summary>
+        public static void SetSpecialTownInfo(Map map) {
+            //获取行数和列数
+            int townRowNum = map.towns.GetLength(0);
+            int townColNum = map.towns.GetLength(1);
+
+            //设置城镇的类型id
+            for (int i = 0; i < townRowNum; i++) {
+                for (int j = 0; j < townColNum; j++) {
+                    //设置类型为普通类型
+                    map.towns[i, j].typeId = 0;
+                    //设置城镇名字
+                    map.towns[i, j].name = "城" + i + "-" + j;
+                }
+            }
+
+            //获取Buff库的xml文件
+            string xmlString = Resources.Load("xml/TownInfo").ToString();
+
+            //解析xml
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlString);
+
+            //查找<Towns>
+            XmlNode rootNode = xmlDoc.SelectSingleNode("Towns");
+            //遍历所有子节点
+            foreach (XmlNode curBuffNode in rootNode.ChildNodes) {
+                //获取城镇的位置
+                int posx = int.Parse(curBuffNode.Attributes["posx"].Value);
+                int posy = int.Parse(curBuffNode.Attributes["posy"].Value);
+                //获取城镇的类型id
+                map.towns[posx, posy].typeId = int.Parse(curBuffNode.Attributes["typeId"].Value);
+                //获取城镇名
+                map.towns[posx, posy].name = curBuffNode.Attributes["name"].Value;
             }
         }
 

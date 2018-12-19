@@ -15,6 +15,11 @@ namespace WorldMap {
         //城镇在地图的坐标
         public Vector2Int position { get; private set; }
 
+        //当前城镇的类型id
+        public int typeId;
+        //当前城镇名
+        public string name;
+
         //与这个城镇相连的城镇（以此点作为起点的相连城镇）
         public List<Town> connectTowns { get; private set; }
 

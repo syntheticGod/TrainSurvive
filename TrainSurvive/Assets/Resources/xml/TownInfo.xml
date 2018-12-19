@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Towns>
+  <Town name = "城1-初" typeId ="1" posx="0" posy="0"/>
+  
+  <Town name = "城2-光" typeId ="2" posx="2" posy="2"/>
+  
+  <Town name = "城3-水" typeId ="3" posx="2" posy="4"/>
+  
+  <Town name = "城4-火" typeId ="4" posx="2" posy="0"/>
+  
+  <Town name = "城5-风" typeId ="5" posx="4" posy="2"/>
+  
+  <Town name = "城6-雷" typeId ="6" posx="0" posy="2"/> 
+
+</Towns>
