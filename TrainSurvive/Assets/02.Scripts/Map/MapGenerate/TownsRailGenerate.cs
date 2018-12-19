@@ -228,6 +228,8 @@ namespace WorldMap {
                 map.towns[posx, posy].typeId = int.Parse(curBuffNode.Attributes["typeId"].Value);
                 //获取城镇名
                 map.towns[posx, posy].name = curBuffNode.Attributes["name"].Value;
+                //获取城镇描述
+                map.towns[posx, posy].description = curBuffNode.Attributes["description"].Value;
             }
         }
 

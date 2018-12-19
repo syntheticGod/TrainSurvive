@@ -19,6 +19,8 @@ namespace WorldMap {
         public int typeId;
         //当前城镇名
         public string name;
+        //当前城镇描述
+        public string description;
 
         //与这个城镇相连的城镇（以此点作为起点的相连城镇）
         public List<Town> connectTowns { get; private set; }
