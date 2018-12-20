@@ -74,7 +74,10 @@ namespace WorldMap.Controller
                 return false;
             }
             if(parent != null)
+            {
                 parent.child = null;
+                parent.Focus();
+            }
             return HideBehaviour();
         }
         public bool Show()

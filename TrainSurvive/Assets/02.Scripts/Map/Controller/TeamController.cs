@@ -32,14 +32,10 @@ namespace WorldMap.Controller
         protected override void OnEnable()
         {
             Team.Instance.Attach(this);
-            ActiveBTs(true);
-            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.PosTeam, levelOfTeam);
-            RefreshView();
         }
         protected override void OnDisable()
         {
             Team.Instance.Detach(this);
-            ActiveBTs(false);
         }
         protected override void CreateModel()
         {
@@ -114,7 +110,7 @@ namespace WorldMap.Controller
                         Team.Instance.IsMovable = false;
                         TownController townController = ControllerManager.Instance.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
-                        townController.Show();
+                        townController.Show(this);
                     }
                     else
                     {
@@ -128,8 +124,8 @@ namespace WorldMap.Controller
                         Debug.Log("回车指令执行失败");
                         return;
                     }
-                    HideTeam();
                     ControllerManager.Instance.FocusController("Train", "Character");
+                    Hide();
                     break;
                 case BUTTON_ID.TEAM_GATHER:
                     if (world.IfTeamGathering)
@@ -249,13 +245,6 @@ namespace WorldMap.Controller
                 type += delta;
             }
         }
-        private void HideTeam()
-        {
-            if (gameObject.activeSelf == true)
-            {
-                gameObject.SetActive(false);
-            }
-        }
         private bool ActiveBTs(bool active)
         {
             if (teamModeBTs.gameObject.activeInHierarchy == active)
@@ -269,8 +258,6 @@ namespace WorldMap.Controller
         protected override bool FocusBehaviour()
         {
             Team.Instance.IsMovable = true;
-            cameraFocus.focusLock(transform);
-            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
             return true;
         }
 
@@ -283,12 +270,17 @@ namespace WorldMap.Controller
         protected override bool ShowBehaviour()
         {
             ActiveBTs(true);
+            cameraFocus.focusLock(transform);
+            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
+            RefreshView();
             return true;
         }
 
         protected override bool HideBehaviour()
         {
             ActiveBTs(false);
+            if (gameObject.activeSelf == true)
+                gameObject.SetActive(false);
             return true;
         }
         public void ObserverUpdate(int state, int echo)

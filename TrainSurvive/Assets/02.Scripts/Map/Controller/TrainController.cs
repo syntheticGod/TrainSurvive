@@ -143,7 +143,7 @@ namespace WorldMap.Controller
                         Train.Instance.IsMovable = false;
                         TownController townController = ControllerManager.Instance.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
-                        townController.Show();
+                        townController.Show(this);
                     }
                     else
                     {
@@ -179,7 +179,8 @@ namespace WorldMap.Controller
             Train.Instance.IsMovable = false;
             ActiveBTs(false);
             Team.Instance.OutPrepare(Train.Instance.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
-            ControllerManager.Instance.FocusController("Team", "Character");
+            ControllerManager.Instance.ShowController("Team", "Character");
+            UnFocus();
         }
         public void Cancel()
         {
@@ -211,12 +212,10 @@ namespace WorldMap.Controller
         }
         protected override bool ShowBehaviour()
         {
-            //列车是一直存在的
             return false;
         }
         protected override bool HideBehaviour()
         {
-            //列车是一直存在的
             return false;
         }
         public void ObserverUpdate(int state, int echo)

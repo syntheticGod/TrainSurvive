@@ -305,8 +305,6 @@ namespace WorldMap
         public void TrainStop()
         {
             world.ifMoving = false;
-            world.ifGather = false;
-            world.ifOuting = false;
         }
         public int TrainGetFoodIn()
         {

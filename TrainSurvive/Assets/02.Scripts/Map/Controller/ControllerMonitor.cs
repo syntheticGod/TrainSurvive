@@ -32,7 +32,7 @@ namespace WorldMap.Controller
             if (WorldForMap.Instance.IfTeamOuting)
             {
                 ControllerManager.Instance.UnfocusController("Train", "Character");
-                ControllerManager.Instance.FocusController("Team", "Character");
+                ControllerManager.Instance.ShowController("Team", "Character");
             }
             else
             {
