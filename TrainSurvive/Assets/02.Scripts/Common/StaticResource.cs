@@ -17,19 +17,92 @@ namespace TTT.Resource
         /// 根据EProfession的序号排序
         /// </summary>
         private static Profession[] professions;
-        /// <summary>
-        /// 一级专精映射
-        /// </summary>
         private static Profession[] firstProfessions;
-        /// <summary>
-        /// 二级专精映射
-        /// </summary>
         private static Profession[,] secondProfessions;
+        private static Profession[,,] thirdProfessions;
+        public static Profession GetProfession(EAttribute atr)
+        {
+            return firstProfessions[(int)atr];
+        }
+        private static void SetProfession(EAttribute atr, Profession profession)
+        {
+            firstProfessions[(int)atr] = profession;
+        }
+        public static Profession GetProfession(EAttribute atr1, EAttribute atr2)
+        {
+            return secondProfessions[(int)atr1, (int)atr2];
+        }
+        private static void SetProfession(EAttribute atr1, EAttribute atr2, Profession profession)
+        {
+            secondProfessions[(int)atr1, (int)atr2] = profession;
+            secondProfessions[(int)atr2, (int)atr1] = profession;
+        }
+        private static Profession GetProfession(EAttribute atr1, EAttribute atr2, EAttribute atr3)
+        {
+            return thirdProfessions[(int)atr1, (int)atr2, (int)atr3];
+        }
+        private static void SetProfession(EAttribute atr1, EAttribute atr2, EAttribute atr3, Profession profession)
+        {
+            thirdProfessions[(int)atr1, (int)atr2, (int)atr3] = profession;
+            thirdProfessions[(int)atr1, (int)atr3, (int)atr2] = profession;
+            thirdProfessions[(int)atr2, (int)atr1, (int)atr3] = profession;
+            thirdProfessions[(int)atr2, (int)atr3, (int)atr1] = profession;
+            thirdProfessions[(int)atr3, (int)atr1, (int)atr2] = profession;
+            thirdProfessions[(int)atr3, (int)atr2, (int)atr1] = profession;
+        }
+        private const int NumOfAttribute = (int)EAttribute.NUM;
+        public static Profession GetProfessionByID(int id)
+        {
+            if (professions == null)
+            {
+                LoadProfessionFromXml();
+            }
+            return professions[id];
+        }
+        public static Profession[] GetNextProfessions(Profession profession)
+        {
+            if (firstProfessions == null) LoadProfessionFromXml();
+            Profession[] result = new Profession[NumOfAttribute];
+            if (profession == null)
+            {
+                //返回一级专精
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = firstProfessions[i];
+            }
+            else if (profession.Level == EProfessionLevel.LEVEL1)
+            {
+                //返回二级专精
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = secondProfessions[(int)profession.AbiReqs[0].Abi, i];
+            }
+            else if (profession.Level == EProfessionLevel.LEVEL2)
+            {
+                //返回三级专精
+                for (int i = 0; i < result.Length; i++)
+                {
+                    int x = (int)profession.AbiReqs[0].Abi;
+                    int y = x;
+                    if (profession.AbiReqs.Length == 2)
+                        y = (int)profession.AbiReqs[1].Abi;
+                    result[i] = thirdProfessions[x, y, i];
+                }
+
+            }
+            else if (profession.Level == EProfessionLevel.LEVEL3)
+            {
+                //顶级专精
+                return null;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 从profession.xml中读取数据
+        /// </summary>
         private static void LoadProfessionFromXml()
         {
-            professions = new Profession[(int)EProfession.NUM];
             firstProfessions = new Profession[NumOfAttribute];
             secondProfessions = new Profession[NumOfAttribute, NumOfAttribute];
+            thirdProfessions = new Profession[NumOfAttribute, NumOfAttribute, NumOfAttribute];
             string xmlString = Resources.Load("xml/profession").ToString();
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
@@ -38,84 +111,67 @@ namespace TTT.Resource
             string spriteFloder = root.SelectSingleNode("spriteFloder").InnerText + "/";
 
             XmlNodeList professionList = root.SelectNodes("profession");
-            int indexOfProf = 0;
+            professions = new Profession[professionList.Count];
             foreach (XmlNode professionNode in professionList)
             {
+                //属性状态
+                EProfessionState eState = EProfessionState.NONE + 1 + int.Parse(professionNode.Attributes["state"].Value);
+                //属性类型
+                int id = int.Parse(professionNode.Attributes["id"].Value);
+                //前置属性
                 XmlNodeList abiReqList = professionNode.SelectNodes("abiReq");
-                Profession.AbiReq[] abiReq = new Profession.AbiReq[abiReqList.Count];
-                EProfession eProfession = EProfession.NONE + 1 + int.Parse(professionNode.Attributes["type"].Value);
-                int indexOfAbi = 0;
-                foreach (XmlNode abiReqNode in abiReqList)
+                Profession.AbiReq[] abiReq = null;
+                if (abiReqList.Count != 0)
                 {
-                    Profession.AbiReq tempAbi = new Profession.AbiReq();
-                    tempAbi.Abi = EAttribute.NONE + 1 + int.Parse(abiReqNode.Attributes["abi"].Value);
-                    tempAbi.Number = int.Parse(abiReqNode.Attributes["Number"].Value);
-                    tempAbi.costFix = float.Parse(abiReqNode.Attributes["costFix"].Value);
-                    abiReq[indexOfAbi++] = tempAbi;
+                    abiReq = new Profession.AbiReq[abiReqList.Count];
+                    int indexOfAbi = 0;
+                    foreach (XmlNode abiReqNode in abiReqList)
+                    {
+                        Profession.AbiReq tempAbi = new Profession.AbiReq();
+                        tempAbi.Abi = EAttribute.NONE + 1 + int.Parse(abiReqNode.Attributes["abi"].Value);
+                        //tempAbi.Number = int.Parse(abiReqNode.Attributes["Number"].Value);
+                        tempAbi.costFix = float.Parse(abiReqNode.Attributes["costFix"].Value);
+                        abiReq[indexOfAbi++] = tempAbi;
+                    }
                 }
-                string iconFile = spriteFloder + professionNode.Attributes["sprite"].Value;
+                //名字
                 string name = professionNode.Attributes["name"].Value;
+                //信息
                 string info = professionNode.Attributes["info"].Value;
-                Profession profession = new Profession(abiReq, name, eProfession, iconFile, info);
-                professions[indexOfProf] = profession;
-                if (indexOfProf < NumOfAttribute)
+                Profession profession = new Profession(id, abiReq, eState, name, info);
+                //类型映射
+                professions[id] = profession;
+                //根据前置属性，填充映射关系
+                EAttribute atr1 = abiReq[0].Abi;
+                switch (profession.Level)
                 {
-                    //一级专精
-                    firstProfessions[indexOfProf] = profession;
+                    case EProfessionLevel.LEVEL1:
+                        {
+                            SetProfession(atr1, profession);
+                        }
+                        break;
+                    case EProfessionLevel.LEVEL2:
+                        {
+                            EAttribute atr2 = atr1;
+                            if (profession.AbiReqs.Length != 1)
+                                atr2 = profession.AbiReqs[1].Abi;
+                            SetProfession(atr1, atr2, profession);
+                        }
+                        break;
+                    case EProfessionLevel.LEVEL3:
+                        {
+                            EAttribute atr2 = atr1;
+                            EAttribute atr3 = atr1;
+                            if (profession.AbiReqs.Length != 1)
+                            {
+                                atr2 = profession.AbiReqs[1].Abi;
+                                atr3 = profession.AbiReqs[2].Abi;
+                            }
+                            SetProfession(atr1, atr2, atr3, profession);
+                        }
+                        break;
                 }
-                else
-                {
-                    //二级专精
-                    if (profession.AbiReqs.Length == 1)
-                    {
-                        int x = (int)profession.AbiReqs[0].Abi;
-                        secondProfessions[x, x] = profession;
-                    }
-                    else
-                    {
-                        int x = (int)profession.AbiReqs[0].Abi;
-                        int y = (int)profession.AbiReqs[1].Abi;
-                        secondProfessions[y, x] = secondProfessions[x, y] = profession;
-                    }
-                }
-                indexOfProf++;
             }
-        }
-        private const int NumOfAttribute = 5;
-        public static Profession GetProfession(EProfession professionType)
-        {
-            if (professions == null)
-            {
-                LoadProfessionFromXml();
-            }
-            return professions[(int)professionType];
-        }
-        public static Profession[] GetNextProfessions(Profession profession)
-        {
-            if (firstProfessions == null) LoadProfessionFromXml();
-            Profession[] result = new Profession[NumOfAttribute];
-            if (profession == null)
-            {
-                for (int i = 0; i < result.Length; i++)
-                    result[i] = firstProfessions[i];
-            }
-            else if (profession.Level == EProfessionLevel.LEVEL1)
-            {
-                for (int i = 0; i < result.Length; i++)
-                    result[i] = secondProfessions[(int)profession.Type, i];
-            }
-            else if(profession.Level == EProfessionLevel.LEVEL2)
-            {
-                //TODO 三级专精
-                Debug.LogError("三级专精——待扩展");
-                return null;
-            }
-            else if(profession.Level == EProfessionLevel.LEVEL3)
-            {
-                //顶级专精
-                return null;
-            }
-            return result;
         }
         //方块大小
         public static Vector2 BlockSize
@@ -228,6 +284,7 @@ namespace TTT.Resource
         }
         private static Sprite[] spriteStore = new Sprite[(int)ESprite.NUM];
         private static string[] spriteFileName = {
+            "Commen/developing_icon_01_big","Commen/developing_icon_01_small",
             "Sprite/map/person/person1_bottom_0", "Sprite/map/person/person1_left_0", "Sprite/map/person/person1_top_0",
             "Sprite/map/person/person2_bottom", "Sprite/map/person/person2_left", "Sprite/map/person/person2_top",
             "Sprite/map/person/person3_bottom", "Sprite/map/person/person3_left", "Sprite/map/person/person3_top",
@@ -235,12 +292,104 @@ namespace TTT.Resource
             "Sprite/map/person/person5_bottom", "Sprite/map/person/person5_left", "Sprite/map/person/person5_top",
 
             "Sprite/map/Train",
+
+            "ProfessionIcon/profession0_icon_big",
+            "ProfessionIcon/profession1_icon_big",
+            "ProfessionIcon/profession2_icon_big",
+            "ProfessionIcon/profession3_icon_big",
+            "ProfessionIcon/profession4_icon_big",
+            //第二专精
+            "ProfessionIcon/profession00_icon_big",
+            "ProfessionIcon/profession01_icon_big",
+            "ProfessionIcon/profession02_icon_big",
+            "ProfessionIcon/profession03_icon_big",
+            "ProfessionIcon/profession04_icon_big",
+
+            "ProfessionIcon/profession11_icon_big",
+            "ProfessionIcon/profession12_icon_big",
+            "ProfessionIcon/profession13_icon_big",
+            "ProfessionIcon/profession14_icon_big",
+
+            "ProfessionIcon/profession22_icon_big",
+            "ProfessionIcon/profession23_icon_big",
+            "ProfessionIcon/profession24_icon_big",
+
+            "ProfessionIcon/profession33_icon_big",
+            "ProfessionIcon/profession34_icon_big",
+
+            "ProfessionIcon/profession44_icon_big",
+            //第三专精
+            "ProfessionIcon/profession000_icon_big",
+            "ProfessionIcon/profession012_icon_big",
+            "ProfessionIcon/profession013_icon_big",
+            "ProfessionIcon/profession014_icon_big",
+            "ProfessionIcon/profession023_icon_big",
+            "ProfessionIcon/profession024_icon_big",
+            "ProfessionIcon/profession034_icon_big",
+
+            "ProfessionIcon/profession111_icon_big",
+            "ProfessionIcon/profession123_icon_big",
+            "ProfessionIcon/profession124_icon_big",
+            "ProfessionIcon/profession134_icon_big",
+
+            "ProfessionIcon/profession222_icon_big",
+            "ProfessionIcon/profession234_icon_big",
+
+            "ProfessionIcon/profession333_icon_big",
+
+            "ProfessionIcon/profession444_icon_big",
+
+                "ProfessionIcon/profession0_icon_small",
+                "ProfessionIcon/profession1_icon_small",
+                "ProfessionIcon/profession2_icon_small",
+                "ProfessionIcon/profession3_icon_small",
+                "ProfessionIcon/profession4_icon_small",
+
+                "ProfessionIcon/profession00_icon_small",
+                "ProfessionIcon/profession01_icon_small",
+                "ProfessionIcon/profession02_icon_small",
+                "ProfessionIcon/profession03_icon_small",
+                "ProfessionIcon/profession04_icon_small",
+
+                "ProfessionIcon/profession11_icon_small",
+                "ProfessionIcon/profession12_icon_small",
+                "ProfessionIcon/profession13_icon_small",
+                "ProfessionIcon/profession14_icon_small",
+
+                "ProfessionIcon/profession22_icon_small",
+                "ProfessionIcon/profession23_icon_small",
+                "ProfessionIcon/profession24_icon_small",
+
+                "ProfessionIcon/profession33_icon_small",
+                "ProfessionIcon/profession34_icon_small",
+
+                "ProfessionIcon/profession44_icon_small",
+
+                "ProfessionIcon/profession000_icon_small",
+                "ProfessionIcon/profession012_icon_small",
+                "ProfessionIcon/profession013_icon_small",
+                "ProfessionIcon/profession014_icon_small",
+                "ProfessionIcon/profession023_icon_small",
+                "ProfessionIcon/profession024_icon_small",
+                "ProfessionIcon/profession034_icon_small",
+
+                "ProfessionIcon/profession111_icon_small",
+                "ProfessionIcon/profession123_icon_small",
+                "ProfessionIcon/profession124_icon_small",
+                "ProfessionIcon/profession134_icon_small",
+
+                "ProfessionIcon/profession222_icon_small",
+                "ProfessionIcon/profession234_icon_small",
+
+                "ProfessionIcon/profession333_icon_small",
+
+                "ProfessionIcon/profession444_icon_small",
         };
         public static Sprite GetSprite(ESprite eSprite)
         {
-            if(spriteStore[(int)eSprite] == null)
+            if (spriteStore[(int)eSprite] == null)
             {
-                if(MathTool.IfBetweenBoth((int)ESprite.PERSON1_B, (int)ESprite.PERSON1_T, (int)eSprite))
+                if (MathTool.IfBetweenBoth((int)ESprite.PERSON1_B, (int)ESprite.PERSON1_T, (int)eSprite))
                 {
                     Sprite[] sprites = Resources.LoadAll<Sprite>("Sprite/map/person/person1");
                     spriteStore[(int)ESprite.PERSON1_B] = sprites[3];
@@ -251,7 +400,7 @@ namespace TTT.Resource
                 {
                     Sprite[] sprites = Resources.LoadAll<Sprite>("Sprite/map/person/persons");
                     int index = 0;
-                    for(ESprite i = ESprite.PERSON2_B; i < ESprite.PERSON5_T; i++)
+                    for (ESprite i = ESprite.PERSON2_B; i < ESprite.PERSON5_T; i++)
                     {
                         spriteStore[(int)i] = sprites[index++];
                     }
@@ -260,9 +409,14 @@ namespace TTT.Resource
                 {
                     spriteStore[(int)eSprite] = Resources.Load<Sprite>(spriteFileName[(int)eSprite]);
                 }
-                if(spriteStore[(int)eSprite] == null)
+                if (spriteStore[(int)eSprite] == null)
                 {
-                    Debug.LogError("Sprite资源不存在");
+                    Debug.LogWarning("Sprite资源不存在" + eSprite.ToString());
+                    if (spriteStore[(int)ESprite.DEVELOPING_BIG] == null)
+                        spriteStore[(int)ESprite.DEVELOPING_BIG] = Resources.Load<Sprite>(spriteFileName[(int)ESprite.DEVELOPING_BIG]);
+                    if (spriteStore[(int)ESprite.DEVELOPING_SMALL] == null)
+                        spriteStore[(int)ESprite.DEVELOPING_SMALL] = Resources.Load<Sprite>(spriteFileName[(int)ESprite.DEVELOPING_SMALL]);
+                    return spriteStore[(int)ESprite.DEVELOPING_BIG];
                 }
             }
             return spriteStore[(int)eSprite];
@@ -271,6 +425,8 @@ namespace TTT.Resource
     public enum ESprite
     {
         NONE = -1,
+        DEVELOPING_BIG,
+        DEVELOPING_SMALL,
         PERSON1_B,
         PERSON1_L,
         PERSON1_T,
@@ -287,6 +443,98 @@ namespace TTT.Resource
         PERSON5_L,
         PERSON5_T,
         TRAIN,
+
+        PROFESSION0_BIG,
+        PROFESSION1_BIG,
+        PROFESSION2_BIG,
+        PROFESSION3_BIG,
+        PROFESSION4_BIG,
+
+        PROFESSION00_BIG,
+        PROFESSION01_BIG,
+        PROFESSION02_BIG,
+        PROFESSION03_BIG,
+        PROFESSION04_BIG,
+
+        PROFESSION11_BIG,
+        PROFESSION12_BIG,
+        PROFESSION13_BIG,
+        PROFESSION14_BIG,
+
+        PROFESSION22_BIG,
+        PROFESSION23_BIG,
+        PROFESSION24_BIG,
+
+        PROFESSION33_BIG,
+        PROFESSION34_BIG,
+
+        PROFESSION44_BIG,
+
+        PROFESSION000_BIG,
+        PROFESSION012_BIG,
+        PROFESSION013_BIG,
+        PROFESSION014_BIG,
+        PROFESSION023_BIG,
+        PROFESSION024_BIG,
+        PROFESSION034_BIG,
+
+        PROFESSION111_BIG,
+        PROFESSION123_BIG,
+        PROFESSION124_BIG,
+        PROFESSION134_BIG,
+
+        PROFESSION222_BIG,
+        PROFESSION234_BIG,
+
+        PROFESSION333_BIG,
+
+        PROFESSION444_BIG,
+
+        PROFESSION0_SMALL,
+        PROFESSION1_SMALL,
+        PROFESSION2_SMALL,
+        PROFESSION3_SMALL,
+        PROFESSION4_SMALL,
+
+        PROFESSION00_SMALL,
+        PROFESSION01_SMALL,
+        PROFESSION02_SMALL,
+        PROFESSION03_SMALL,
+        PROFESSION04_SMALL,
+
+        PROFESSION11_SMALL,
+        PROFESSION12_SMALL,
+        PROFESSION13_SMALL,
+        PROFESSION14_SMALL,
+
+        PROFESSION22_SMALL,
+        PROFESSION23_SMALL,
+        PROFESSION24_SMALL,
+
+        PROFESSION33_SMALL,
+        PROFESSION34_SMALL,
+
+        PROFESSION44_SMALL,
+
+        PROFESSION000_SMALL,
+        PROFESSION012_SMALL,
+        PROFESSION013_SMALL,
+        PROFESSION014_SMALL,
+        PROFESSION023_SMALL,
+        PROFESSION024_SMALL,
+        PROFESSION034_SMALL,
+
+        PROFESSION111_SMALL,
+        PROFESSION123_SMALL,
+        PROFESSION124_SMALL,
+        PROFESSION134_SMALL,
+
+        PROFESSION222_SMALL,
+        PROFESSION234_SMALL,
+
+        PROFESSION333_SMALL,
+
+        PROFESSION444_SMALL,
         NUM
     }
     public enum EAttribute

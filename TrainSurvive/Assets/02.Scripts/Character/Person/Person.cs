@@ -18,23 +18,37 @@ public class Person
     /// <summary>
     /// 体力
     /// </summary>
-    public int vitality = 0;
+    public int vitality { get { return attriNumber[(int)EAttribute.VITALITY]; } set { attriNumber[(int)EAttribute.VITALITY] = value; } }
     /// <summary>
     /// 力量
     /// </summary>
-    public int strength = 0;
+    public int strength { get { return attriNumber[(int)EAttribute.STRENGTH]; } set { attriNumber[(int)EAttribute.STRENGTH] = value; } }
     /// <summary>
     /// 敏捷
     /// </summary>
-    public int agile = 0;
+    public int agile { get { return attriNumber[(int)EAttribute.AGILE]; } set { attriNumber[(int)EAttribute.AGILE] = value; } }
     /// <summary>
     /// 技巧
     /// </summary>
-    public int technique = 0;
+    public int technique { get { return attriNumber[(int)EAttribute.TECHNIQUE]; } set { attriNumber[(int)EAttribute.TECHNIQUE] = value; } }
     /// <summary>
     /// 智力
     /// </summary>
-    public int intelligence = 0;
+    public int intelligence { get { return attriNumber[(int)EAttribute.INTELLIGENCE]; } set { attriNumber[(int)EAttribute.INTELLIGENCE] = value; } }
+    private int[] attriNumber;
+    public int GetAttriNumber(EAttribute eAttribute)
+    {
+        return attriNumber[(int)eAttribute];
+    }
+    public void AddAttriNumber(EAttribute eAttribute, int delta)
+    {
+        attriNumber[(int)eAttribute] += delta;
+    }
+    private int[] attriMaxNumber;
+    public int GetAttriMaxNumber(EAttribute eAttribute)
+    {
+        return attriMaxNumber[(int)eAttribute];
+    }
     /// <summary>
     /// 已训练次数
     /// </summary>
@@ -45,28 +59,44 @@ public class Person
     /// 是否外出，即是否在探险队里（探险队不一定处于出动状态）
     /// </summary>
     public bool ifOuting = false;
-    public string name = "张三";
+    public string name = "";
     /// <summary>
     /// 性别用ismale代替
     /// </summary>
     public bool ismale = true;
-    //技能属性待添加
-
     /// <summary>
     /// 小数属性保留的位数
     /// </summary>
     private const int numsLeft = 3;
-
     /// <summary>
     /// 人物所持有的武器对象
     /// </summary>
     public Weapon weapon = null;
-    private EProfession[] professions;
+    /// <summary>
+    /// 三个专精槽位
+    /// </summary>
+    private int[] professions;
+    /// <summary>
+    /// 允许的槽位
+    /// </summary>
+    private int professionAvaliable;
+    /// <summary>
+    /// 获取第index级专精
+    /// </summary>
+    /// <param name="index">[0,1,2] => 第一级 第二级 第三级</param>
+    /// <returns>
+    /// NULL：未专精
+    /// NOT NULL：专精对象
+    /// </returns>
     public Profession getProfession(int index)
     {
-        if (professions[index] == EProfession.NONE)
+        if (professions[index] == -1)
             return null;
-        return StaticResource.GetProfession(professions[index]);
+        return StaticResource.GetProfessionByID(professions[index]);
+    }
+    public bool IfProfessionAvailable()
+    {
+        return professions[professionAvaliable - 1] == -1;
     }
     /// <summary>
     /// 获取最高级的专精
@@ -77,28 +107,37 @@ public class Person
     /// </returns>
     public Profession getTopProfession()
     {
-        for(int i = professions.Length-1; i >= 0; i--)
+        for (int i = professions.Length - 1; i >= 0; i--)
         {
-            if (professions[i] != EProfession.NONE)
-                return StaticResource.GetProfession(professions[i]);
+            if (professions[i] != -1)
+                return StaticResource.GetProfessionByID(professions[i]);
         }
         return null;
     }
+    /// <summary>
+    /// 根据专精的Level绑定专精
+    /// </summary>
+    /// <param name="profession"></param>
     public void setProfession(Profession profession)
     {
-        if(profession.Level == EProfessionLevel.NONE)
+        if (profession.Level == EProfessionLevel.NONE)
         {
             Debug.LogError("专精错误");
             return;
         }
-        professions[(int)profession.Level] = profession.Type;
+        professions[(int)profession.Level] = profession.ID;
     }
     [NonSerialized]
     private int lastWeaponId = -1;
     private Person()
     {
         //保留以后用
-        professions = new EProfession[3] { EProfession.NONE, EProfession.NONE, EProfession.NONE };
+        professions = new int[3] { -1, -1, -1 };
+        attriNumber = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
+        //默认最大属性为10
+        attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
+        //初始专精槽数为1
+        professionAvaliable = 1;
     }
     /// <summary>
     /// 生成一个随机属性的人物（未持有武器）
@@ -109,11 +148,10 @@ public class Person
         Person p = new Person();
         p.ismale = MathTool.RandomInt(2) == 0;
         p.name = StaticResource.RandomNPCName(p.ismale);
-        p.vitality = MathTool.RandomRange(0, 10);
-        p.strength = MathTool.RandomRange(0, 10);
-        p.agile = MathTool.RandomRange(0, 10);
-        p.technique = MathTool.RandomRange(0, 10);
-        p.intelligence = MathTool.RandomRange(0, 10);
+        for(EAttribute itr = EAttribute.NONE+1;itr < EAttribute.NUM; itr++)
+        {
+            p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
+        }
         p.ifOuting = false;
         return p;
     }
@@ -179,7 +217,7 @@ public class Person
     }
     public double getValCrd()
     {
-        double crd = 1.6  + 0.03 * technique;
+        double crd = 1.6 + 0.03 * technique;
         if (hasWeapon)
         {
             crd = crd + weapon.modCrd;
@@ -193,7 +231,7 @@ public class Person
     }
     public double getValErate()
     {
-        double num =  0.02 * agile;
+        double num = 0.02 * agile;
         return Math.Round(num, numsLeft);
     }
     public double getRange()

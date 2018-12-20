@@ -8,12 +8,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TTT.Utility;
+using System.Collections.Generic;
 
 namespace WorldMap.UI
 {
     public class HeroSelectDialog : BaseDialog
     {
         private HeroListView heroListView;
+        private List<Person> datas;
         protected override void CreateModel()
         {
             SetTitle("请选择人物");
@@ -25,13 +27,17 @@ namespace WorldMap.UI
             ViewTool.SetParent(heroListView, this);
             ViewTool.FullFillRectTransform(heroListView, new Vector2(0, 60F), new Vector2(0, -60F));
         }
+        public void SetDatas(List<Person> persons)
+        {
+            datas = persons;
+        }
         protected override void AfterDialogShow()
         {
-            heroListView.Datas = world.GetHeros();
+            heroListView.Datas = datas;
         }
         public Person GetSelectedHero()
         {
-            return world.GetHeros()[heroListView.SelectIndex];
+            return datas[heroListView.SelectIndex];
         }
         protected override void Cancel()
         {

@@ -17,9 +17,8 @@ namespace TTT.Test.Resource
         [TestCase]
         public void TestGetProfession()
         {
-            Profession profession = StaticResource.GetProfession(EProfession.KNIGHT);
+            Profession profession = StaticResource.GetProfessionByID(0);
             Assert.AreEqual("骑士", profession.Name);
-            Assert.AreEqual(EProfession.KNIGHT, profession.Type);
             Profession.AbiReq abiReq = profession.AbiReqs[0];
             Assert.AreEqual(EAttribute.NONE + 1 + 0, abiReq.Abi);
             Assert.AreEqual(10, abiReq.Number);

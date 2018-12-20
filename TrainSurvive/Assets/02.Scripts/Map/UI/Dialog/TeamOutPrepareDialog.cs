@@ -83,7 +83,7 @@ namespace WorldMap.UI
         protected override void AfterDialogShow()
         {
             herosChoosedLV.Datas = new List<Person>();
-            herosGetReadyLV.Datas = new List<Person>(world.GetHeros());
+            herosGetReadyLV.Datas = new List<Person>(world.GetPersonInTrain());
             foodInTrain = world.TrainGetFoodIn();
             TryShowFood();
         }

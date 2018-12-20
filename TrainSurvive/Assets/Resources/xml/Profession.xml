@@ -7,89 +7,161 @@
   abi 2：敏捷
   abi 3：技巧
   abi 4：智力
+ 
+  state 0: 未开放
+  state 1: 正常
+  state 2: 无
   
   要求：
   1、abiReq：必须按abi的大小 从小到大排序
-  2、一级专精的type必须小于二级专精的type
-  3、二级专精之间的abi要求不能相同。例如：野蛮人要求abi(0,1)，那么壁垒就不能也要求abi(0,1)。
-  4、专精的type需要和Eprofession相对应
-  如果不满足要求，会造成读取数据混乱。
+  2、id需要从0开始且唯一连续
+ 如果不满足要求，会造成读取数据混乱
+ 
+ 注意：根据专精与技能3.0 12.16文档，删去了abiReq中的Number，目前暂时存放。
   -->
   <!--第一专精-->
-  <profession name="骑士" sprite="knight_icon_01" type="0" info="无特殊能力">
+  <profession name="骑士" id="0" info="无特殊能力" state="1">
     <abiReq abi="0" Number="10" costFix="0.8"/>
   </profession>
-  <profession  name="战士" sprite="warrior_icon_01" type="1" info="无特殊能力">
+  <profession  name="战士" id="1" info="无特殊能力" state="1">
     <abiReq abi="1" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="刺客" sprite="assassin_icon_01" type="2" info="无特殊能力">
+  <profession name="刺客" id="2" info="无特殊能力" state="1">
     <abiReq abi="2" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="枪手" sprite="shooter_icon_01" type="3" info="无特殊能力">
+  <profession name="枪手" id="3" info="无特殊能力" state="1">
     <abiReq abi="3" Number="10" costFix="0.8"/>
   </profession>
-  <profession name="法师" sprite="enchanter_icon_01" type="4" info="获得能力：允许学习2阶法术">
+  <profession name="法师" id="4" info="入门法师，可以掌握一系列初阶法术" state="1">
     <abiReq abi="4" Number="10" costFix="0.8"/>
   </profession>
   <!--第二专精-->
   <!--split========================-->
-  <profession name="坚壁" sprite="knight_icon_01" type="5" info="无特殊能力">
+  <profession name="未开放" id="5" info="未开放" state="0">
     <abiReq abi="0" Number="30" costFix="0.5"/>
   </profession>
-  <profession  name="野蛮人" sprite="knight_icon_01" type="6" info="无特殊能力">
+  <profession  name="野蛮人" id="6" info="无特殊能力" state="1">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="1" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="后勤？" sprite="knight_icon_01" type="7" info="无特殊能力">
+  <profession name="探险家" id="7" info="无特殊能力" state="1">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="2" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="铁匠？" sprite="knight_icon_01" type="8" info="无特殊能力">
+  <profession name="工程师" id="8" info="无特殊能力" state="1">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="医师？" sprite="knight_icon_01" type="9" info="无特殊能力">
+  <profession name="冰凌" id="9" info="无特殊能力" state="1">
     <abiReq abi="0" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="勇士" sprite="knight_icon_01" type="10" info="无特殊能力">
+  <profession name="未开放" id="10" info="未开放" state="0">
     <abiReq abi="1" Number="30" costFix="0.5"/>
   </profession>
-  <profession  name="双剑士" sprite="knight_icon_01" type="11" info="解锁技能：双刀">
+  <profession  name="双剑士" id="11" info="解锁技能：双刀" state="1">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="2" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="游侠" sprite="knight_icon_01" type="12" info="解锁技能：淬毒">
+  <profession name="游侠" id="12" info="解锁技能：淬毒" state="1">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="魔剑士" sprite="knight_icon_01" type="13" info="解锁技能：魔能之力">
+  <profession name="烈火使者" id="13" info="精通进阶火系法术，直接的伤害制造者" state="1">
     <abiReq abi="1" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="快攻手" sprite="knight_icon_01" type="14" info="无特殊能力">
+  <profession name="未开放" id="14" info="未开放" state="0">
     <abiReq abi="2" Number="30" costFix="0.5"/>
   </profession>
-  <profession name="潜行者" sprite="knight_icon_01" type="15" info="解锁技能：隐身">
+  <profession name="潜行者" id="15" info="解锁技能：隐身" state="1">
     <abiReq abi="2" Number="25" costFix="0.7"/>
     <abiReq abi="3" Number="25" costFix="0.7"/>
   </profession>
-  <profession name="风行者" sprite="knight_icon_01" type="16" info="解锁技能：御风">
+  <profession name="狂风使" id="16" info="解锁技能：御风" state="1">
     <abiReq abi="2" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="鹰隼" sprite="knight_icon_01" type="17" info="获得能力：视野+1">
+  <profession name="未开放" id="17" info="未开放" state="0">
     <abiReq abi="3" Number="30" costFix="0.5"/>
   </profession>
-  <profession name="工程师" sprite="knight_icon_01" type="18" info="无特殊能力">
+  <profession name="雷霆" id="18" info="精通进阶雷系法术，注重技能释放时机与战斗技巧" state="1">
     <abiReq abi="3" Number="25" costFix="0.7"/>
     <abiReq abi="4" Number="25" costFix="0.7"/>
   </profession>
   <!--split========================-->
-  <profession name="魔导师" sprite="knight_icon_01" type="19" info="获得能力：允许学习3阶法术">
+  <profession name="未开放" id="19" info="未开放" state="0">
     <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <!--第三专精-->
+  <!--三级专精 要么一个属性，要么三个属性，不能有两个属性-->
+  <!--split========================-->
+  <profession name="未开放" id="20" info="未开放" state="0">
+    <abiReq abi="0" Number="90" costFix="0.4"/>
+  </profession>
+  <profession  name="空012" id="21" info="空012" state="1">
+    <abiReq abi="0" Number="30" costFix="0.5"/>
+    <abiReq abi="1" Number="30" costFix="0.5"/>
+    <abiReq abi="2" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="空013" id="22" info="空013" state="1">
+    <abiReq abi="0" Number="30" costFix="0.5"/>
+    <abiReq abi="1" Number="30" costFix="0.5"/>
+    <abiReq abi="3" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="空014" id="23" info="空014" state="1">
+    <abiReq abi="0" Number="30" costFix="0.5"/>
+    <abiReq abi="1" Number="30" costFix="0.5"/>
+    <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="空023" id="24" info="空023" state="1">
+    <abiReq abi="0" Number="30" costFix="0.5"/>
+    <abiReq abi="2" Number="30" costFix="0.5"/>
+    <abiReq abi="3" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="空024" id="25" info="空024" state="1">
+    <abiReq abi="0" Number="30" costFix="0.5"/>
+    <abiReq abi="2" Number="30" costFix="0.5"/>
+    <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="空034" id="26" info="空034" state="1">
+    <abiReq abi="0" Number="30" costFix="0.5"/>
+    <abiReq abi="3" Number="30" costFix="0.5"/>
+    <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="未开放" id="27" info="未开放" state="0">
+    <abiReq abi="1" Number="90" costFix="0.4"/>
+  </profession>
+  <profession name="巡林客" id="28" info="无特殊能力" state="1">
+    <abiReq abi="1" Number="30" costFix="0.5"/>
+    <abiReq abi="2" Number="30" costFix="0.5"/>
+    <abiReq abi="3" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="空124" id="29" info="空124" state="1">
+    <abiReq abi="1" Number="30" costFix="0.5"/>
+    <abiReq abi="2" Number="30" costFix="0.5"/>
+    <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="毁灭者" id="30" info="空134" state="1">
+    <abiReq abi="1" Number="30" costFix="0.5"/>
+    <abiReq abi="3" Number="30" costFix="0.5"/>
+    <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="未开放" id="31" info="未开放" state="0">
+    <abiReq abi="2" Number="90" costFix="0.4"/>
+  </profession>
+  <profession name="空234" id="32" info="空234" state="1">
+    <abiReq abi="2" Number="30" costFix="0.5"/>
+    <abiReq abi="3" Number="30" costFix="0.5"/>
+    <abiReq abi="4" Number="30" costFix="0.5"/>
+  </profession>
+  <profession name="未开放" id="33" info="未开放" state="0">
+    <abiReq abi="3" Number="90" costFix="0.4"/>
+  </profession>
+  <profession name="未开放" id="34" info="未开放" state="0">
+    <abiReq abi="4" Number="90" costFix="0.4"/>
   </profession>
 </professions>

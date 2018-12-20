@@ -20,7 +20,7 @@ namespace WorldMap.Controller
         private string payBtnStr = "确定";
         private string resetBtnStr = "重置";
         //属性视图
-        private uint[] deltaAttri;
+        private int[] deltaAttri;
         private Text[] attriViews;
         private Text[] attriViewsNew;
         //花费金额视图
@@ -45,7 +45,7 @@ namespace WorldMap.Controller
             int attriCount = StaticResource.AttributeCount;
             attriViews = new Text[attriCount];
             attriViewsNew = new Text[attriCount];
-            deltaAttri = new uint[attriCount];
+            deltaAttri = new int[attriCount];
             heroAttribute = new int[attriCount];
             //英雄信息窗口
             {
@@ -64,6 +64,10 @@ namespace WorldMap.Controller
                     heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
                     {
                         HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
+                        if (world.IfTeamOuting)
+                            dialog.SetDatas(world.GetPersonInTeam());
+                        else
+                            dialog.SetDatas(world.GetPersonInTrain());
                         dialog.DialogCallBack = this;
                         dialog.ShowDialog();
                     });
@@ -194,7 +198,11 @@ namespace WorldMap.Controller
         protected override void AfterShowWindow()
         {
             professionListView.SetData(new List<Profession>());
-            List<Person> heros = world.GetHeros();
+            List<Person> heros;
+            if (world.IfTeamOuting)
+                heros = world.GetPersonInTeam();
+            else
+                heros = world.GetPersonInTrain();
             if (heros.Count > 0)
             {
                 ShowHero(heros[0]);
@@ -217,20 +225,25 @@ namespace WorldMap.Controller
         //TODO：有细节问题，训练次数是每点一次属性加一，还是点一次训练加一。
         private void ShowMoney()
         {
-            moneyView.text = GetMoney().ToString();
+            int origin = 0, discount = 0;
+            GetMoney(ref origin, ref discount);
+            moneyView.text = string.Format("{0:D}", discount);
         }
-        public int GetMoney()
+        public void GetMoney(ref int origin, ref int discount)
         {
-            float money = 0F;
+            float originF = 0F;
+            float discountF = 0F;
             for (EAttribute iAttribute = EAttribute.NONE + 1; iAttribute < EAttribute.NUM; iAttribute++)
             {
                 int i = (int)iAttribute;
                 float oneAttributeMoney = deltaAttri[i] * 1000F * (1 + heroAttribute[i] * 0.05F) * (1 + heroChoosed.trainCnt * 0.05F);
+                originF += oneAttributeMoney;
                 if (currentProfession != null)
-                    oneAttributeMoney *= currentProfession.GetCostFixByAttribute(iAttribute);
-                money += oneAttributeMoney;
+                    oneAttributeMoney *= currentProfession.GetDiscountByAttri(iAttribute);
+                discountF += oneAttributeMoney;
             }
-            return (int)money;
+            origin = (int)originF;
+            discount = (int)discountF;
         }
         /// <summary>
         /// 将加完之后的所有属性显示在属性板上
@@ -291,17 +304,23 @@ namespace WorldMap.Controller
                 InfoDialog.Show("已到达顶级专精");
                 return;
             }
-            Profession selectedProfession = nextProfessions[professionListView.SelectIndex];
-            for (EAttribute i = EAttribute.NONE + 1; i < EAttribute.NUM; i++)
+            Profession wanted = nextProfessions[professionListView.SelectIndex];
+            if (wanted.State == EProfessionState.DEVELOPING)
             {
-                int requireNumber = 0;
-                if (!selectedProfession.CheckRequires(i, heroAttribute[(int)i], ref requireNumber))
-                {
-                    InfoDialog.Show(StaticResource.GetAttributeName((int)i) + "必须大于等于" + requireNumber);
-                    return;
-                }
+                InfoDialog.Show("该专精未开放");
+                return;
             }
-            heroChoosed.setProfession(selectedProfession);
+            if (wanted.State == EProfessionState.EMPTY)
+            {
+                InfoDialog.Show("该专精不存在");
+                return;
+            }
+            if (!heroChoosed.IfProfessionAvailable())
+            {
+                InfoDialog.Show("无更多专精槽，专精槽可以通过剧情解锁");
+                return;
+            }
+            heroChoosed.setProfession(wanted);
             InitProfessions();
             ShowProfession();
             //重新计算金钱
@@ -314,11 +333,10 @@ namespace WorldMap.Controller
         /// </summary>
         private void InitAttribute()
         {
-            heroAttribute[0] = heroChoosed.vitality;
-            heroAttribute[1] = heroChoosed.strength;
-            heroAttribute[2] = heroChoosed.agile;
-            heroAttribute[3] = heroChoosed.technique;
-            heroAttribute[4] = heroChoosed.intelligence;
+            for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)
+            {
+                heroAttribute[(int)itr] = heroChoosed.GetAttriNumber(itr);
+            }
             for (int i = 0; i < StaticResource.AttributeCount; i++)
             {
                 deltaAttri[i] = 0;
@@ -330,8 +348,9 @@ namespace WorldMap.Controller
         /// <param name="index"></param>
         public void OnAttributeMinusBtnClick(int index)
         {
-            if (deltaAttri[index] != 0)
-                deltaAttri[index]--;
+            if (deltaAttri[index] <= 0)
+                return;
+            deltaAttri[index]--;
             attriViewsNew[index].text = (heroAttribute[index] + deltaAttri[index]).ToString();
             ShowMoney();
         }
@@ -341,8 +360,11 @@ namespace WorldMap.Controller
         /// <param name="index"></param>
         public void OnAttributePlusBtnClick(int index)
         {
+            int afterAttribute = deltaAttri[index] + 1 + heroAttribute[index];
+            if (afterAttribute > heroChoosed.GetAttriMaxNumber((EAttribute)index))
+                return;
             deltaAttri[index]++;
-            attriViewsNew[index].text = (heroAttribute[index] + deltaAttri[index]).ToString();
+            attriViewsNew[index].text = afterAttribute.ToString();
             ShowMoney();
         }
         /// <summary>
@@ -350,7 +372,9 @@ namespace WorldMap.Controller
         /// </summary>
         public void OnOKBtnClick()
         {
-            int money = GetMoney();
+            int origin = 0;
+            int money = 0;
+            GetMoney(ref origin, ref money);
             if (!world.IfMoneyEnough(money))
             {
                 InfoDialog.Show("金钱不足");
@@ -361,11 +385,11 @@ namespace WorldMap.Controller
                 Debug.LogError("扣款失败");
                 return;
             }
-            heroChoosed.vitality += (int)deltaAttri[0];
-            heroChoosed.strength += (int)deltaAttri[1];
-            heroChoosed.agile += (int)deltaAttri[2];
-            heroChoosed.technique += (int)deltaAttri[3];
-            heroChoosed.intelligence += (int)deltaAttri[4];
+            Debug.Log(string.Format("训练成功：原价{0:D} 折扣后{1:D}", origin, money));
+            for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)
+            {
+                heroChoosed.AddAttriNumber(itr, deltaAttri[(int)itr]);
+            }
             InitAttribute();
             ShowAttributes();
             ShowMoney();

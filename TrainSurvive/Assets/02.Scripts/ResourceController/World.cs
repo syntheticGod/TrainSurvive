@@ -6,8 +6,10 @@ using UnityEngine;
 using WorldMap;
 using System;
 [System.Serializable]
-public class World {
-    private World() {
+public class World
+{
+    private World()
+    {
 
         //测试用 xys
         foodIn = (uint)foodInMax;
@@ -28,8 +30,8 @@ public class World {
                 instance = (World)bf.Deserialize(file);
                 file.Close();
             }
-            else                 
-                instance = new World();               
+            else
+                instance = new World();
         }
         return instance;
     }
@@ -42,14 +44,14 @@ public class World {
 
         //地图保存
         SaveReadMap.SaveMapInfo();
-        
+
         string path = PathManager.getInstance().getWorldPath();
         BinaryFormatter bf = new BinaryFormatter();
         if (File.Exists(path))
         {
             File.Delete(path);
         }
-        FileStream file = File.Create(path);  
+        FileStream file = File.Create(path);
         bf.Serialize(file, this);
         file.Close();
     }
@@ -71,7 +73,7 @@ public class World {
     public event saveDelegate saveDelegateHandler;
 
     //基本资源
-    private double game_time=0;
+    private double game_time = 0;
     public const int mapWidth = 300;
     public const int mapHeight = 300;
     //public const int trainWidth = 10;
@@ -80,7 +82,7 @@ public class World {
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
     private float energy = 0;
-    private uint money=100000;
+    private uint money = 100000;
     private float electricity = 0;
     private uint foodInMax = 10000;
     private uint foodOutMax = 1000;
@@ -98,7 +100,7 @@ public class World {
 
     public int time = 0;
     public int timeSpd = 1;
-    public int dayCnt=1;
+    public int dayCnt = 1;
     public int weekCnt = 0;
 
     public bool ifOuting = false;
@@ -109,12 +111,12 @@ public class World {
     public float outVitMax = 100;
     public float outMood = 0;
     public float outMoodMax = 100;
-    
-    public int posTrainX ;
-    public int posTrainY ;
+
+    public int posTrainX;
+    public int posTrainY;
     public int posTeamX;
     public int posTeamY;
-    public int distView=1;
+    public int distView = 1;
 
     public int numWeapon = 101;
     public int numPersonPlayer = 1;
@@ -127,10 +129,17 @@ public class World {
 
 
     public WorldMap.Model.Town[] towns;
-    //public List<weapon> weapons = new List<weapon>();
     public List<Person> persons = new List<Person>();
+    public Person GetPerson(int index)
+    {
+        return persons[index];
+    }
+    public void AddPerson(Person person)
+    {
+        persons.Add(person);
+    }
     public int[] personTeamIDArray;
-    
+
 
     public LinkedList<Structure> buildInstArray = new LinkedList<Structure>();
     public LinkedList<TrainCarriage> carriageInstArray = new LinkedList<TrainCarriage>();
@@ -142,7 +151,7 @@ public class World {
     public int[] abiAllOut;
     public int numIn;
     public int numOut;
-    public int personNumMax=15;
+    public int personNumMax = 15;
 
     [NonSerialized]
     public ResouceBaseUI resourceUI;
@@ -199,10 +208,10 @@ public class World {
         if (food > foodInMax)
         {
             foodIn = foodInMax;
-            result=false;
+            result = false;
         }
         else
-           foodIn = food;
+            foodIn = food;
         if (resourceUI != null)
         {
             resourceUI.setFoodIn(foodIn, foodInMax);
@@ -269,9 +278,11 @@ public class World {
             resourceUI.setEnergy(energy, energyMax);
         }
     }
-    public void setElectricityMax(float num) {
+    public void setElectricityMax(float num)
+    {
         electricityMax = num;
-        if (resourceUI != null) {
+        if (resourceUI != null)
+        {
             resourceUI.setElectricity(electricity, electricityMax);
         }
     }
@@ -286,15 +297,15 @@ public class World {
         if ((foodIn + num) < 0)
         {
             foodIn = 0;
-            result=0;
+            result = 0;
         }
         else if ((foodIn + num) > foodInMax)
         {
             foodIn = (uint)foodInMax;
-            result= 2;
+            result = 2;
         }
         else
-          foodIn = (uint)(foodIn + num);
+            foodIn = (uint)(foodIn + num);
         if (resourceUI != null)
         {
             resourceUI.setFoodIn(foodIn, foodInMax);
@@ -317,7 +328,7 @@ public class World {
         else if ((foodOut + num) > foodOutMax)
         {
             foodOut = (uint)foodOutMax;
-            result= 2;
+            result = 2;
         }
         else
             foodOut = (uint)(foodOut + num);
@@ -447,7 +458,7 @@ public class World {
     /// <returns>0代表食物不足，1代表食物充足</returns>
     public int consumeFoodIn()
     {
-        return addFoodIn((int)-(foodConsumed_eachPerson * numIn));      
+        return addFoodIn((int)-(foodConsumed_eachPerson * numIn));
     }
     /// <summary>
     /// 探险队人员消耗食物
@@ -465,7 +476,7 @@ public class World {
     public int getTotalProperty(bool isOuting)
     {
         int totalProperty = 0;
-        foreach(Person p in persons)
+        foreach (Person p in persons)
         {
             if (p.ifOuting == isOuting)
             {
@@ -474,16 +485,16 @@ public class World {
                 totalProperty += p.strength;
                 totalProperty += p.technique;
                 totalProperty += p.agile;
-            }              
+            }
         }
-            return totalProperty;
+        return totalProperty;
     }
 
     public static void destroyWorld()
     {
         instance = null;
     }
-    }
+}
 
 
 

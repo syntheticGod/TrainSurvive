@@ -131,11 +131,27 @@ namespace WorldMap
         /// <param name="person"></param>
         public void AddPerson(Person person)
         {
-            world.persons.Add(person);
+            world.AddPerson(person);
         }
-        public List<Person> GetHeros()
+        public List<Person> GetPersonInTrain()
         {
-            return world.persons;
+            List<Person> ret = new List<Person>();
+            foreach(Person itr in world.persons)
+            {
+                if (!itr.ifOuting)
+                    ret.Add(itr);
+            }
+            return ret;
+        }
+        public List<Person> GetPersonInTeam()
+        {
+            List<Person> ret = new List<Person>();
+            foreach (Person itr in world.persons)
+            {
+                if (itr.ifOuting)
+                    ret.Add(itr);
+            }
+            return ret;
         }
         public int PersonCount()
         {
@@ -241,7 +257,7 @@ namespace WorldMap
         public void TeamRecruit(Person person)
         {
             person.ifOuting = true;
-            world.persons.Add(person);
+            world.AddPerson(person);
         }
         public void TeamSetMapPos(Vector2Int mapPos)
         {
@@ -278,7 +294,7 @@ namespace WorldMap
         public void TrainRecruit(Person person)
         {
             person.ifOuting = false;
-            world.persons.Add(person);
+            world.AddPerson(person);
         }
         public void TrainMoving()
         {

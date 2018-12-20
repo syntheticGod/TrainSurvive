@@ -50,10 +50,10 @@ public class Test : MonoBehaviour {
 
     private void Awake()
     {
-        World.getInstance().persons.Add(Person.RandomPerson());
-        World.getInstance().persons.Add(Person.RandomPerson());
-        World.getInstance().persons.Add(Person.RandomPerson());
-        World.getInstance().persons.Add(Person.RandomPerson());
-        World.getInstance().persons.Add(Person.RandomPerson());
+        World.getInstance().AddPerson(Person.RandomPerson());
+        World.getInstance().AddPerson(Person.RandomPerson());
+        World.getInstance().AddPerson(Person.RandomPerson());
+        World.getInstance().AddPerson(Person.RandomPerson());
+        World.getInstance().AddPerson(Person.RandomPerson());
     }
 }
