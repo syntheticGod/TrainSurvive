@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SkillInfo>
+  <Skill id="0" chineseName="空" englishName="NULL" type="" AP="0" description="未携带技能"/>
+  <Skill id="1" chineseName="测试1" englishName="Test1" type="单体 伤害" AP="5" description="立即对敌人中当前生命值最低的单位造成100伤害"/>
+  <Skill id="2" chineseName="测试2" englishName="Test2" type="单体 增益" AP="0" description="使自身移动速度增加500%，持续5秒"/>
+  <Skill id="3" chineseName="测试3" englishName="Test3" type="持久型" AP="0" description="攻击给目标叠加中毒状态：每0.5s失去5*层数的生命值，并降低99%攻速与移速"/>
+  <Skill id="4" chineseName="自愈" englishName="Waiting" type="单体 治疗" AP="40" description="回复自身（体力*2）%最大生命值"/>
+  <Skill id="5" chineseName="怒意打击" englishName="Waiting" type="单体 伤害" AP="60" description="对当前攻击目标造成使用者自身20%最大生命值的伤害"/>
+  <Skill id="6" chineseName="鲜血渴望" englishName="Waiting" type="单体 伤害" AP="50" description="对当前攻击目标造成800%攻击力的伤害，并回复等值生命值"/>
+  <Skill id="7" chineseName="裂地击" englishName="Waiting" type="群体 伤害" AP="40" description="对自身3米内所有敌人造成300%攻击力的伤害，并晕眩3秒"/>
+  <Skill id="8" chineseName="致命一击" englishName="Waiting" type="单体 伤害" AP="40" description="对敌人中当前生命值百分比最低的单位造成1000%攻击力的伤害"/>
+  <Skill id="9" chineseName="后撤步" englishName="Waiting"  type="单体 位移" AP="30" description="瞬间后移5米"/>
+  <Skill id="10" chineseName="二连击" englishName="Waiting" type="单体 增益" AP="30" description="增加500%攻速，持续两次攻击"/>
+  <Skill id="11" chineseName="三连击" englishName="Waiting" type="单体 增益" AP="35" description="增加500%攻速，持续三次攻击"/>
+  <Skill id="12" chineseName="迅击" englishName="Waiting"  type="-" AP="50/秒" description="开启后持续消耗AP，技能开启期间攻速增加100%"/>
+  <Skill id="13" chineseName="狂化" englishName="Waiting" type="-" AP="70/秒" description="开启后持续消耗AP，技能开启期间攻速增加100%，攻击力增加50%，但受到伤害增加20%"/>
+  <Skill id="14" chineseName="匿踪" englishName="Waiting" type="单体 增益" AP="50" description="进入持续10秒的隐身状态，移动速度增加50%且无法被选中为目标，攻击或释放技能会打破隐身状态"/>
+  <Skill id="15" chineseName="勾爪" englishName="Waiting" type="单体 位移" AP="40" description="抓取当前攻击目标至面前1米处，并晕眩3秒"/>
+  <Skill id="16" chineseName="晕眩击" englishName="Waiting" type="单体 伤害" AP="30" description="对当前攻击目标造成200%攻击力的伤害，并晕眩5秒"/>
+  <Skill id="17" chineseName="空袭" englishName="Waiting" type="群体 伤害" AP="100" description="呼叫毁灭性飞弹袭击，对敌方全体造成 7x技巧 伤害"/>
+  <Skill id="18" chineseName="武器淬毒" englishName="Waiting" type="持久性" AP="0" description="攻击附带中毒效果：每秒失去（层数*1）%当前生命值，并降低（层数*4）%的攻速与移速，最高叠加至20层"/>
+  <Skill id="19" chineseName="圣光闪现" englishName="Waiting" type="单体 位移" AP="40" description="初阶光系法术，瞬间后移10米"/>
+  <Skill id="20" chineseName="寒冰守护" englishName="Waiting" type="单体 增益" AP="30" description="初阶水系法术，将自身冰封5秒，无法行动，减少80%所受伤害，每秒恢复10%最大生命值"/>
+  <Skill id="21" chineseName="火焰爆轰" englishName="Waiting" type="单体 伤害" AP="60" description="初阶火系法术，在当前攻击目标身上引爆火球，造成 8x智力 伤害"/>
+  <Skill id="22" chineseName="御风" englishName="Waiting" type="持久性" AP="0" description="初阶风系法术，小队全体增加（智力*0.5）%移速，（智力*1）%攻速"/>
+  <Skill id="23" chineseName="闪电链" englishName="Waiting" type="群体 伤害" AP="30" description="初阶雷系法术，对敌方全体造成 2x智力 伤害"/>
+  <Skill id="24" chineseName="圣光术" englishName="Waiting" type="群体 治疗" AP="40" description="进阶光系法术，对小队全体造成 3x智力 治疗"/>
+  <Skill id="25" chineseName="寒冰禁锢" englishName="Waiting" type="单体 增益" AP="50" description="进阶水系法术，将目标冰冻5秒"/>
+  <Skill id="26" chineseName="陨石术" englishName="Waiting" type="群体 伤害" AP="100" description="进阶火系法术，在目标位置落下陨石，对半径2米内敌人造成 10x智力 伤害"/>
+  <Skill id="27" chineseName="龙卷风" englishName="Waiting" type="群体 位移" AP="60" description="进阶风系法术，推出一道飓风至面前20米的位置，并击退路径上所有敌人。"/>
+  <Skill id="28" chineseName="雷击术" englishName="Waiting" type="单体 伤害" AP="80" description="进阶雷系法术，对敌方当前生命值最高的单位造成 15x智力 伤害"/>
+  <Skill id="29" chineseName="钢铁意志" englishName="Waiting" type="持久型" AP="0" description="增加自身（体力*5）%攻击力"/>
+  <Skill id="30" chineseName="魔能之力" englishName="Waiting" type="持久型" AP="0" description="增加自身（智力*5）%攻击力"/>
+  <Skill id="31" chineseName="死亡抗拒" englishName="Waiting" type="条件型" AP="0" description="生命值百分比跌至20%以下触发，每秒恢复10%最大生命值，持续至战斗结束"/>
+</SkillInfo>
