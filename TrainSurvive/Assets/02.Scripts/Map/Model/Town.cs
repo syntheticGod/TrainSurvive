@@ -1,3 +1,4 @@
+
 /*
  * 描述：城镇具体信息类，WorldMap命名空间的Town值有坐标信息
  * 作者：项叶盛
@@ -49,11 +50,13 @@ namespace WorldMap.Model
             ret.Name = StaticResource.RandomTownName();
             return ret;
         }
+        public ETownType TownType;
+        public string SpecialBuilding;
         //地图坐标
         public int PosIndexX { get; set; }
         public int PosIndexY { get; set; }
         //城镇名字
-        public string Name { get; private set; }
+        public string Name { get; set; }
         //商店等级
         public int LevelShop { get; private set; }
         //酒馆等级

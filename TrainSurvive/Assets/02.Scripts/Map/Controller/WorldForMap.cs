@@ -339,8 +339,14 @@ namespace WorldMap
                 for (int z = 0; z < townNumOfZ; ++z)
                 {
                     Model.Town town = Model.Town.Random();
+                    town.TownType = towns[x, z].typeId;
                     town.PosIndexX = towns[x, z].position.x;
                     town.PosIndexY = towns[x, z].position.y;
+                    if(town.TownType != ETownType.COMMON)
+                    {
+                        town.SpecialBuilding = towns[x, z].description;
+                        town.Name = towns[x, z].name;
+                    }
                     townInfos[index++] = town;
                 }
             world.towns = townInfos;

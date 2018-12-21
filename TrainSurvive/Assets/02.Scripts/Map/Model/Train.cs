@@ -207,8 +207,12 @@ namespace WorldMap.Model
             {
                 if(WorldForMap.Instance.IfEnergyEmpty())
                 {
+#if DEBUG
+                    Debug.LogWarning("没有燃油了，DEBUG模式不阻止");
+#else
                     Debug.Log("没有燃油了");
                     ifTemporarilyStop = true;
+#endif
                 }
                 PassCenterCallBack(StaticResource.BlockIndex(current));
             }
@@ -256,8 +260,12 @@ namespace WorldMap.Model
                 return false;
             if (WorldForMap.Instance.IfEnergyEmpty())
             {
+#if DEBUG
+                Debug.LogWarning("列车缺少燃油，DEBUG模式不进行判断");
+#else
                 InfoDialog.Show("列车缺少燃油");
                 return false;
+#endif
             }
             nextCityPosition = IsMovePositive ? railStandingOn.End : railStandingOn.Start;
             Debug.Log("列车开始前往 城市坐标：" + nextCityPosition + " 总路程：" + railStandingOn.CalTotalRoad());

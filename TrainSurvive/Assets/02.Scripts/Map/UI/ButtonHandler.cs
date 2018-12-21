@@ -75,6 +75,7 @@ namespace WorldMap
         TOWN_SHOP,//商店
         TOWN_SCHOOL,//学校
         TOWN_TAVERN,//酒馆
+        TOWN_SPECIAL_BUILDING,//特殊建筑 ——神殿
         TOWN_NUM,
 
         TAVERN_NONE,//酒馆界面

@@ -11,12 +11,24 @@ using System.IO;
 using UnityEngine;
 
 namespace WorldMap {
+    public enum ETownType
+    {
+        NONE = -1,
+        COMMON,//普通的城镇
+        HOMETOWN,//出生地
+        LIGHT,//光神殿
+        WATER,//水神殿
+        FIRE,//火神殿
+        WIND,//风神殿
+        THUNDER,//雷神殿
+        NUM
+    }
     public class Town {
         //城镇在地图的坐标
         public Vector2Int position { get; private set; }
 
         //当前城镇的类型id
-        public int typeId;
+        public ETownType typeId;
         //当前城镇名
         public string name;
         //当前城镇描述

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Towns>
-  <Town name = "城1-初" typeId ="1" posx="0" posy="0" description="普通城镇"/>
+  <Town name = "城1-初" typeId ="1" posx="0" posy="0" description="出生地"/>
   
   <Town name = "城2-光" typeId ="2" posx="2" posy="2" description="光神殿"/>
   

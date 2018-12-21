@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TTT.Utility;
+using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
@@ -15,10 +16,11 @@ namespace WorldMap.Controller
     {
         private const int ECHO_CODE_TRAIN = 1;
         private const int ECHO_CODE_TEAM = 2;
-        private static string[] btnsStrs = { "商店", "学校", "酒馆" };
+        private static string[] btnsStrs = { "酒馆", "学校", "商店", "" };
         private TavernController tavernController;
         private Model.Town currentTown;
         private Text townInfoText;
+        private Button[] btns;
         protected override void OnEnable()
         { }
         protected override void OnDisable()
@@ -26,7 +28,7 @@ namespace WorldMap.Controller
         protected override void CreateModel()
         {
             m_windowSizeType = EWindowSizeType.BIG26x14;
-            m_titleString = currentTown.Name;
+            m_titleString = "城镇";
             base.CreateModel();
             SetBackground("town_bg_02");
             //城镇信息容器
@@ -43,14 +45,13 @@ namespace WorldMap.Controller
             RectTransform btnsRect = new GameObject("Btns").AddComponent<RectTransform>();
             ViewTool.SetParent(btnsRect, townInfoBG);
             ViewTool.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1.0F, 0.4F));
-            Button[] btns = new Button[btnsStrs.Length];
+            btns = new Button[btnsStrs.Length];
             for (int i = 0; i < btns.Length; i++)
             {
                 btns[i] = ViewTool.CreateBtn("Btn" + i, btnsStrs[i]);
-                ViewTool.SetParent(btns[i], btnsRect);
-                ViewTool.Anchor(btns[i], new Vector2(0F, (float)i / btns.Length), new Vector2(1.0F, (float)(i + 1) / btns.Length));
                 BUTTON_ID bid = BUTTON_ID.TOWN_NONE + i + 1;
                 btns[i].onClick.AddListener(delegate () { OnClick(bid); });
+                ViewTool.SetParent(btns[i], btnsRect);
             }
         }
         public void SetTown(Model.Town town)
@@ -63,29 +64,36 @@ namespace WorldMap.Controller
         }
         protected override void AfterShowWindow()
         {
+            RefreshView();
+        }
+        public void RefreshView()
+        {
+            SetTitle(currentTown.Name);
             townInfoText.text = currentTown.Info;
-        }
-        public bool TryShowTown(Vector2Int mapPos)
-        {
-            Model.Town town;
-            if (!world.FindTown(mapPos, out town))
+            float delta;
+            int showCount;
+            if (currentTown.TownType != ETownType.COMMON)
             {
-                Debug.Log("当前列车位置不在城镇");
-                return false;
+                showCount = btnsStrs.Length;
+                ViewTool.SetBtnContent(btns[btnsStrs.Length - 1], currentTown.SpecialBuilding);
+                delta = 1.0f / btnsStrs.Length;
             }
-            ShowTwon(town);
-            return true;
-        }
-        private void ShowTwon(Model.Town town)
-        {
-            if (gameObject.activeInHierarchy)
+            else
             {
-                Debug.Log("城镇界面已经显示");
-                return;
+                showCount = btnsStrs.Length - 1;
+                delta = 1.0f / (btnsStrs.Length - 1);
+                //隐藏最后一个按钮
+                ViewTool.Anchor(btns[btnsStrs.Length - 1], Vector2.zero, Vector2.zero);
             }
-            gameObject.SetActive(true);
-            Debug.Log("城镇：" + town.Info);
-            currentTown = town;
+            Vector2 maxAnchor = new Vector2(1.0f, 1.0f);
+            Vector2 minAnchor = new Vector2(0.0f, 1.0f - delta);
+            for (int i = 0; i < showCount; i++)
+            {
+                ViewTool.Anchor(btns[i], minAnchor, maxAnchor);
+                maxAnchor.y -= delta;
+                minAnchor.y -= delta;
+            }
+
         }
         public void OnClick(BUTTON_ID id)
         {
@@ -107,12 +115,10 @@ namespace WorldMap.Controller
                     shopController.SetTown(currentTown);
                     shopController.Show(this);
                     break;
+                case BUTTON_ID.TOWN_SPECIAL_BUILDING:
+                    InfoDialog.Show("待开发");
+                    break;
             }
-        }
-
-        public string GetName()
-        {
-            return "TownController";
         }
     }
 }
