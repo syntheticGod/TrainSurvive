@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
+  m_Name: 26
+  m_EditorClassIdentifier: 
+  ID: 26
+  LayerOrientation: {x: 0, y: -1}
+  Layer: 9
+  RequiredLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  Name: "\u9AD8\u7EA7\u6728\u5DE5\u53F0"
+  Description: 
+  WorkAll: 24
+  BuildCosts:
+  - id: 211
+    num: 1
+  Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
+  Class: 3
+  RequiredTech: 18
+  Initializer: Item2ItemStructure
+  InitializeValues:
+  - Name: _processSpeed
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 2
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _conversions
+    TypeName: Item2ItemStructure+Conversion[]
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue:
+    - FromItemID: 223
+      FromItemNum: 1
+      ToItemID: 224
+      ToItemNum: 1
+      ProcessTime: 10
+  - Name: _costElect
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _costEnergy
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0.4
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: f128628d3b381af49b2f54dd079877f9, type: 3}

@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
+  m_Name: 3
+  m_EditorClassIdentifier: 
+  ID: 3
+  LayerOrientation: {x: 0, y: -1}
+  Layer: 9
+  RequiredLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  Name: "\u84C4\u7535\u6C60"
+  Description: "\u5B58\u50A8\u7535\u80FD\u7684\u80FD\u6E90\u6838\u5FC3\uFF0C\u63D0\u4F9B5000\u7535\u80FD\u5B58\u50A8\u4E0A\u9650"
+  WorkAll: 96
+  BuildCosts:
+  - id: 211
+    num: 1
+  Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
+  Class: 0
+  RequiredTech: 10
+  Initializer: MaxValueModifiableStructure
+  InitializeValues:
+  - Name: _addElectMax
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 5000
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _addEnergyMax
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _addInventoryMax
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _addMemberMax
+    TypeName: System.Int32
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}
