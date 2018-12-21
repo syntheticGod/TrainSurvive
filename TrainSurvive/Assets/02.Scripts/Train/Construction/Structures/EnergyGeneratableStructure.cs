@@ -130,7 +130,11 @@ public class EnergyGeneratableStructure : Structure {
             World.getInstance().addEnergy(AddEnergy * AddEnergyRatio);
             World.getInstance().addElectricity(AddElect * AddElectRatio);
             World.getInstance().addFoodIn((int)(AddFood * AddFoodRatio));
-            yield return new WaitForSeconds(DeltaTime);
+            if (DeltaTime == 0) {
+                yield return 1;
+            } else {
+                yield return new WaitForSeconds(DeltaTime);
+            }
         }
     }
 }

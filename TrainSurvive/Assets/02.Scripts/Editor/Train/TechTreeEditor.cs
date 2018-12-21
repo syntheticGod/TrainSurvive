@@ -147,7 +147,7 @@ public class TechTreeEditor : Editor {
         
         // Set Content size.
         RectTransform content = techTree.transform.Find("TreePanel/Viewport/Content").transform as RectTransform;
-        content.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tree.rect.width);
-        content.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tree.rect.height);
+        content.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tree.rect.width + 10);
+        content.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tree.rect.height + 10);
     }
 }
