@@ -366,6 +366,7 @@ public class ConstructionManager : MonoBehaviour {
         if (!facility.Structure.Place(position)) {
             facility.Structure.OnStateChange -= OnStructureStateChange;
             spriteRenderer.color = BlockColor;
+            UIManager.Instance?.ShowInfoPanel(StructureSettings[facility.Structure.ID].Name, StructureSettings[facility.Structure.ID].Description);
             return;
         }
         spriteRenderer.color = facility.HighlightColor;

@@ -20,7 +20,9 @@ MonoBehaviour:
   Name: "\u84B8\u6C7D\u673A"
   Description: "\u53EF\u4EE5\u71C3\u70E7\u5404\u79CD\u53EF\u71C3\u7269\uFF0C\u5C06\u5B83\u4EEC\u8F6C\u5316\u4E3A\u52A8\u80FD"
   WorkAll: 0.01
-  BuildCosts: []
+  BuildCosts:
+  - id: 211
+    num: 1
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 0
   RequiredTech: 8
