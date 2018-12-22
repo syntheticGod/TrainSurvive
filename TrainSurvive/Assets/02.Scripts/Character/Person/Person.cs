@@ -96,7 +96,7 @@ public class Person
         return ContainerTool.IfContainByBinarySearching(skillsGot, skill.ID);
     }
     //----------技能----------↑
-    
+
     //----------专精----------↓
     /// <summary>
     /// 三个专精槽位
@@ -182,9 +182,13 @@ public class Person
         }
         p.ifOuting = false;
         //获得无条件获得的技能
-        foreach(SkillInfo skill in StaticResource.SkillsNoCondition)
+        SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber);
+        if (avaliableSkills != null)
         {
-            p.AddGotSkill(skill.ID);
+            foreach (SkillInfo skill in avaliableSkills)
+            {
+                p.AddGotSkill(skill.ID);
+            }
         }
         return p;
     }

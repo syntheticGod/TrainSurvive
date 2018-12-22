@@ -454,9 +454,7 @@ namespace TTT.Resource
         /// <summary>
         /// 无条件就获得的技能
         /// </summary>
-        private static SkillInfo[] skillsNoCondition;
         public static SkillInfo[] Skills { get { if (skills == null) LoadSkillFormXml(); return skills; } }
-        public static SkillInfo[] SkillsNoCondition { get { if (skillsNoCondition == null) LoadSkillFormXml(); return skillsNoCondition; } }
         private static void LoadSkillFormXml()
         {
             string xmlString = Resources.Load("xml/SkillInfo").ToString();
@@ -465,7 +463,6 @@ namespace TTT.Resource
             XmlNode root = document.SelectSingleNode("SkillInfo");
             XmlNodeList skillsNode = root.SelectNodes("Skill");
             skills = new SkillInfo[skillsNode.Count];
-            List<SkillInfo> noCondition = new List<SkillInfo>();
             for (int i = 0; i < skillsNode.Count; i++)
             {
                 try
@@ -477,14 +474,8 @@ namespace TTT.Resource
                     string description = skillsNode[i].Attributes["description"].Value;
                     XmlNodeList attributeRequires = skillsNode[i].SelectNodes("Precondition/Attributes/Attribute");
                     SkillInfo.AbiReq[] abiReqs = null;
-                    SkillInfo skill = null;
                     //无条件获得
-                    if (attributeRequires.Count == 0)
-                    {
-                        skill = new SkillInfo(id, name, type, ap, description, abiReqs);
-                        noCondition.Add(skill);
-                    }
-                    else
+                    if (attributeRequires.Count != 0)
                     {
                         abiReqs = new SkillInfo.AbiReq[attributeRequires.Count];
                         for (int y = 0; y < attributeRequires.Count; y++)
@@ -493,16 +484,14 @@ namespace TTT.Resource
                             abiReqs[y].Abi = EAttribute.NONE + 1 + int.Parse(attributeRequires[y].Attributes["Abi"].Value);
                             abiReqs[y].Number = int.Parse(attributeRequires[y].Attributes["Number"].Value);
                         }
-                        skill = new SkillInfo(id, name, type, ap, description, abiReqs);
                     }
-                    skills[id] = skill;
+                    skills[id] = new SkillInfo(id, name, type, ap, description, abiReqs);
                 }
                 catch (FormatException e)
                 {
                     Debug.LogError(e.ToString());
                 }
             }
-            skillsNoCondition = noCondition.ToArray();
         }
         public static SkillInfo GetSkillByID(int id)
         {
