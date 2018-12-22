@@ -27,8 +27,6 @@ namespace WorldBattle {
         protected readonly float changeValue;
         //所要改变角色的属性
         protected readonly ValuePropertyEnum actorProperty;
-        //持续的时间
-        //protected readonly float maxDurationTime;
         //每次数值变化间隔的时间
         protected readonly float intervalTime;
 
@@ -41,7 +39,7 @@ namespace WorldBattle {
             float changeValue, float maxDurationTime, float intervalTime,
             ValuePropertyEnum actorProperty,
             bool isCanOverlay, int maxFloorNum = 1)
-            : base(battleActor, isCanOverlay, maxFloorNum) {
+            : base(battleActor, isCanOverlay, maxDurationTime, maxFloorNum) {
 
             //设置当前的层数为0（还未开始）
             floorNum = 0;
@@ -49,8 +47,6 @@ namespace WorldBattle {
             this.changeValue = changeValue;
             //设置当前每隔多长时间执行一次
             this.intervalTime = intervalTime;
-            //设置当前最大的持续时间
-            this.maxDurationTime = maxDurationTime;
             //设置当前所要更改的角色属性
             this.actorProperty = actorProperty;
 

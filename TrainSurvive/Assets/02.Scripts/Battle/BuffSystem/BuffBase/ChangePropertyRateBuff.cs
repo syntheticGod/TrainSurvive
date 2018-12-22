@@ -27,20 +27,16 @@ namespace WorldBattle {
         public readonly float changeRate;
         //所要改变角色的属性
         public readonly RatePropertyEnum actorProperty;
-        //持续的时间
-        //public float maxDurationTime;
        
         public ChangePropertyRateBuff(BattleActor battleActor,
             float changeRate, float maxDurationTime, RatePropertyEnum actorProperty,
             bool isCanOverlay, int maxFloorNum = 1)
-            : base(battleActor, isCanOverlay, maxFloorNum) {
+            : base(battleActor, isCanOverlay, maxDurationTime, maxFloorNum) {
 
             //设置当前的层数为0（还未开始）
             floorNum = 0;
             //设置当前属性修改的比率
             this.changeRate = changeRate;
-            //设置当前最大的持续时间
-            this.maxDurationTime = maxDurationTime;
             //设置当前所要更改的角色属性
             this.actorProperty = actorProperty;
         }

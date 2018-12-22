@@ -15,6 +15,22 @@ namespace WorldBattle {
         private delegate bool SelectTargetCompare(BattleActor curActor, BattleActor enemyActor, BattleActor selectActor);
 
         /// <summary>
+        /// 选中最近的敌人
+        /// 如果玩家已经选中了敌人，则不变
+        /// 否则找最近的敌人
+        /// </summary>
+        public static int selectNearestEnemy(BattleActor battleActor) {
+            //如果当前已经存在玩家选中的目标了，朝着目标行动
+            if (battleActor.selectedAtkTarget != -1
+                && battleActor.enemyActors[battleActor.selectedAtkTarget].isAlive == true) {
+                return battleActor.selectedAtkTarget;
+            } else {
+                //获取距离最近的目标
+                return getNearestEnemy(battleActor);
+            }
+        }
+
+        /// <summary>
         /// 查找最近的目标
         /// 距离相等时则找序号最小的
         /// </summary>
@@ -35,6 +51,19 @@ namespace WorldBattle {
             return getMapEnemy(battleActor,
                 (BattleActor curActor, BattleActor enemyActor, BattleActor selectedActor) => {
                     return selectedActor.curHealthPoint > enemyActor.curHealthPoint;
+                });
+        }
+
+        /// <summary>
+        /// 查找生命值百分比最小的存活目标
+        /// 距离相等时则找序号最小的
+        /// </summary>
+        /// <returns>返回目标的id</returns>
+        public static int getHPRateMinestEnemy(BattleActor battleActor) {
+            return getMapEnemy(battleActor,
+                (BattleActor curActor, BattleActor enemyActor, BattleActor selectedActor) => {
+                    return selectedActor.curHealthPoint / selectedActor.maxHealthPoint
+                    > enemyActor.curHealthPoint / selectedActor.maxHealthPoint;
                 });
         }
 

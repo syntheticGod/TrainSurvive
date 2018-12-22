@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SkillPool>
+  <!--立即对敌人中当前生命值最低的单位造成100伤害-->
+  <Skill id = "1" skillType="ACTIVE" needAp ="5" />
+
+  <!--使自身移动速度增加500%，持续5秒-->
+  <Skill id = "2" skillType="ACTIVE" needAp ="0" />
+
+  <!--攻击给目标叠加中毒状态：每0.5s失去5*层数的生命值，并降低99%攻速与移速-->
+  <Skill id = "3" skillType="ATTACK" needAp ="0" />
+
+  <!--回复自身（体力*2）%最大生命值-->
+  <Skill id = "4" skillType="ACTIVE" needAp ="40" rate ="0.02" />
+
+  <!--对当前攻击目标造成使用者自身20%最大生命值的伤害-->
+  <Skill id = "5" skillType="ACTIVE" needAp ="60" rate ="0.2" />
+
+  <!--对当前攻击目标造成800%攻击力的伤害，并回复等值生命值-->
+  <Skill id = "6" skillType="ACTIVE" needAp ="50" rate ="8" />
+
+  <!--对自身3米内所有敌人造成300%攻击力的伤害，并晕眩3秒-->
+  <Skill id = "7" skillType="ACTIVE" needAp ="40" rangeRate ="3" attackRate ="3" timeRate ="3" />
+
+  <!--对敌人中当前生命值百分比最低的单位造成1000%攻击力的伤害-->
+  <Skill id = "8" skillType="ACTIVE" needAp ="40" rate ="10" />
+
+  <!--瞬间后移5米-->
+  <Skill id = "9" skillType="ACTIVE" needAp ="30" rate ="5" />
+
+  <!--增加500%攻速，持续两次攻击。-->
+  <Skill id = "10" skillType="ACTIVE" needAp ="30" />
+
+  <!--增加500%攻速，持续三次攻击。-->
+  <Skill id = "11" skillType="ACTIVE" needAp ="35" >
+  </Skill>
+
+</SkillPool>

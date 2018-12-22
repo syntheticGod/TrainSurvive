@@ -12,15 +12,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldBattle {
-    public class DoubleAttackSkill : Skill {
+    public class MultipleAttackSkill : Skill {
 
-        //当前技能消耗的AP
-        public new const int needAp = 0;
-        //当前技能是不是被动技能
-        public new const bool isPassive = false;
+        //当前连击的次数
+        public int attackTime;
 
-        public DoubleAttackSkill(BattleActor battleActor)
-            : base(battleActor, needAp, isPassive) {
+        public MultipleAttackSkill(BattleActor battleActor, int needAp, SkillType skillType, int attackTime)
+            : base(battleActor, needAp, skillType, 0) {
+            this.attackTime = attackTime;
         }
 
         /// <summary>
@@ -30,14 +29,14 @@ namespace WorldBattle {
         protected override void skillEffect(BattleActor targetActor = null) {
             //给自己加一个移速加速buff
             Buff buff = BuffFactory.getBuff(
-                    BuffFactory.BuffEnum.ATTACK_SPEED_UP_BUFF,
+                    "AttackSpeedUp",
                     battleActor);
 
             //获取当中的攻击增加
             BuffBase buffBase = buff.buffList[0];
 
             //修改当前最大持续时间为两次攻击的时间
-            buffBase.maxDurationTime = (battleActor.atkNeedTime / 5 + 0.1f) * 5;
+            buffBase.maxDurationTime = (battleActor.atkNeedTime / 5 + 0.1f) * attackTime;
 
             //设置buff
             battleActor.setBuffEffect(buff);
@@ -49,7 +48,7 @@ namespace WorldBattle {
         /// <param name="curActor"></param>
         /// <returns></returns>
         public override Skill Clone(BattleActor curActor) {
-            return new DoubleAttackSkill(curActor);
+            return new MultipleAttackSkill(curActor, needAp, skillType, attackTime);
         }
     }
 }

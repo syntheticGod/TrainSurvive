@@ -11,18 +11,37 @@ using UnityEngine;
 namespace WorldBattle {
     public abstract class Skill {
 
+        //设置技能类型
+        public enum SkillType {
+            NONE = -1,
+
+            //主动型
+            ACTIVE,
+
+            //攻击触发型
+            ATTACK,
+
+            //被动型
+            PASSIVE,
+
+            NUM
+        };
+
         //当前技能消耗的AP
         public readonly int needAp;
         //当前技能是不是被动技能
-        public readonly bool isPassive;
+        public readonly SkillType skillType;
         //当前技能依附的battleActor
         public BattleActor battleActor;
+        //技能释放的时间
+        public float skillReleaseTime;
 
         //对技能类的构造函数
-        public Skill(BattleActor battleActor, int needAp, bool isPassive) {
-            this.isPassive = isPassive;
+        public Skill(BattleActor battleActor, int needAp, SkillType skillType, float skillReleaseTime = 0.5f) {
+            this.skillType = skillType;
             this.needAp = needAp;
             this.battleActor = battleActor;
+            this.skillReleaseTime = skillReleaseTime;
         }
 
         //能否释放此技能

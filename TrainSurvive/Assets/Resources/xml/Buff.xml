@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 <BuffPool>
-  <Buff name = "ATTACK_EFFECT_BUFF">
+  <Buff name = "Attack">
     <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="0.2" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
   </Buff>
   
-  <Buff name = "MOVE_SPEED_UP_BUFF">
+  <Buff name = "MoveSpeedUp">
     <Effect changeWhat ="CHANGE_RATE" changeRate="5" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
   </Buff>
   
-  <Buff name = "ATTACK_SPEED_UP_BUFF">
+  <Buff name = "AttackSpeedUp">
     <Effect changeWhat ="CHANGE_RATE" changeRate="5" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="false" maxFloorNum="1"/>
   </Buff>
   
-  <Buff name = "POSION_BUFF">
+  <Buff name = "Posion">
     <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
     <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="false" maxFloorNum="1"/>
     <Effect changeWhat ="CHANGE_VALUE" changeValue="-5" intervalTime="0.5" maxDurationTime="5" propertyEnum="HP" isCanOverlay="true" maxFloorNum="999"/>

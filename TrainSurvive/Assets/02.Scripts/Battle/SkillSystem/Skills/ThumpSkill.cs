@@ -12,13 +12,8 @@ using UnityEngine;
 namespace WorldBattle {
     public class ThumpSkill : Skill {
 
-        //当前技能消耗的AP
-        public new const int needAp = 5;
-        //当前技能是不是被动技能
-        public new const bool isPassive = false;
-
-        public ThumpSkill(BattleActor battleActor)
-            : base(battleActor, needAp, isPassive) {
+        public ThumpSkill(BattleActor battleActor, int needAp, SkillType skillType)
+            : base(battleActor, needAp, skillType) {
         }
 
         /// <summary>
@@ -31,7 +26,7 @@ namespace WorldBattle {
             //对目标造成伤害（如果目标存在）
             if (target != -1) {
                 //对敌方目标造成100点伤害
-                battleActor.enemyActors[target].addHealthPoint(battleActor.myId, -100);
+                battleActor.enemyActors[target].getDamage(battleActor.myId, 100 * battleActor.skillPara);
             }
         }
 
@@ -42,7 +37,7 @@ namespace WorldBattle {
         /// <param name="curActor"></param>
         /// <returns></returns>
         public override Skill Clone(BattleActor curActor) {
-            return new ThumpSkill(curActor);
+            return new ThumpSkill(curActor, needAp, skillType);
         }
     }
 }
