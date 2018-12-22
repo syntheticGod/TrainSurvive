@@ -2016,6 +2016,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1167222819}
   - component: {fileID: 1167222818}
+  - component: {fileID: 1167222820}
   m_Layer: 5
   m_Name: BattleController
   m_TagString: Untagged
@@ -2035,9 +2036,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orign: {x: 0, y: 0.6, z: 0}
-  battleMapLen: 40
+  battleMapLen: 15
   personNum: 1
-  enemyNum: 1
+  enemyNum: 5
   personWidth: 0.5
   playerActors: []
   enemyActors: []
@@ -2075,6 +2076,17 @@ RectTransform:
   m_AnchoredPosition: {x: 173.6, y: 160.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1167222820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1167222817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b1512790ae4cd4aa50d3a20e486705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1187997280
 GameObject:
   m_ObjectHideFlags: 0

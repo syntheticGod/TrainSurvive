@@ -1,8 +1,6 @@
 /*
- * 描述：这是加速技能
- * 消耗0 
- * 使自身移动速度增加500%，持续5秒
- * 
+ * 描述：这是自愈技能
+ * 回复自身（体力*2）%最大生命值
  * 作者：王安鑫
  * 创建时间：2018/12/13 14:40:11
  * 版本：v0.1
@@ -12,23 +10,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldBattle {
-    public class SpeedUpSkill : Skill {
+    public class SelfHealingSkill : Skill {
 
-        public SpeedUpSkill(BattleActor battleActor, int needAp, SkillType skillType)
+        //按比例恢复的生命值
+        public float rate;
+        
+        public SelfHealingSkill(BattleActor battleActor, int needAp, SkillType skillType, float rate)
             : base(battleActor, needAp, skillType) {
+            this.rate = rate;
         }
 
         /// <summary>
-        /// 给自己加一个移速加速buff
+        /// 回复自身（体力*rate）%最大生命值
         /// </summary>
-
         protected override void skillEffect(BattleActor targetActor = null) {
-            //给自己加一个移速加速buff
-            battleActor.setBuffEffect(
-                BuffFactory.getBuff(
-                    "MoveSpeedUp",
-                    battleActor)
-            );
+            battleActor.addHealthPoint(battleActor.myId,
+                battleActor.maxHealthPoint * battleActor.vitality * rate * battleActor.skillPara);
         }
 
 
@@ -38,7 +35,7 @@ namespace WorldBattle {
         /// <param name="curActor"></param>
         /// <returns></returns>
         public override Skill Clone(BattleActor curActor) {
-            return new SpeedUpSkill(curActor, needAp, skillType);
+            return new SelfHealingSkill(curActor, needAp, skillType, rate);
         }
     }
 }

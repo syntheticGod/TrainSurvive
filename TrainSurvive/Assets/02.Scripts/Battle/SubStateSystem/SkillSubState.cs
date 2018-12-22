@@ -12,7 +12,7 @@ using static WorldBattle.BattleActor;
 namespace WorldBattle {
     public class SkillSubState : AISubState {
         //释放技能所需等待的时间(设立统一的固定CD)
-        private const float skillNeedTime = 0.5f;
+        private float skillNeedTime = 0.5f;
 
         //释放技能已等待的时间
         private float curPassTime = 0.0f;
@@ -61,6 +61,8 @@ namespace WorldBattle {
             animator.speed = 3.0f;
             //播放技能动画
             animator.SetBool("skill", true);
+            //初始化当前技能释放的时间
+            skillNeedTime = battleActor.skillList[battleActor.curSkillId].skillReleaseTime;
         }
     }
 }

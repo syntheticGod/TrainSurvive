@@ -16,13 +16,13 @@ using static WorldBattle.BuffFactory;
 namespace WorldBattle {
     public class Buff{
         //当前buff类型
-        public BuffEnum buffType { get; private set; }
+        public string buffType { get; private set; }
         //构建组合Buff列表
         public List<BuffBase> buffList;
         //绑定的battleActor
         public BattleActor battleActor;
 
-        public Buff(BattleActor battleActor, BuffEnum buffType) {
+        public Buff(BattleActor battleActor, string buffType) {
             //初始化buff效果队列
             buffList = new List<BuffBase>();
             //初始化buff类型

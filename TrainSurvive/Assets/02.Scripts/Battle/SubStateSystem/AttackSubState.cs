@@ -68,7 +68,7 @@ namespace WorldBattle {
                 //给敌人加一个攻击减速buff
                 battleActor.enemyActors[atkTarget].setBuffEffect(
                     BuffFactory.getBuff(
-                        BuffFactory.BuffEnum.ATTACK_EFFECT_BUFF,
+                        "Attack",
                         battleActor.enemyActors[atkTarget])
                 );
 

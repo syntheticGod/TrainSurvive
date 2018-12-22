@@ -23,14 +23,13 @@ namespace WorldBattle {
             playMoveAnimation();
 
             //对逻辑位置开始移动(方向，移速，移动改变比率，上一帧的时间)
-            battleActor.pos += battleActor.getMotionDir() * battleActor.moveSpeed * battleActor.moveSpeedChangeRate * Time.deltaTime;
-            //将坐标限制为0到最大的mapLen中
-            battleActor.pos = Mathf.Clamp(battleActor.pos, 0, battleActor.battleMapLen);
+            float curPos = battleActor.pos + 
+                battleActor.getMotionDir() * battleActor.moveSpeed * battleActor.moveSpeedChangeRate * Time.deltaTime;
 
             //Debug.Log(battleActor.moveSpeed);
 
-            //将当前位置赋予角色上
-            battleActor.changeRealPos();
+            //将当前位置赋予角色上（在函数里已经限制了范围）
+            battleActor.changeRealPos(curPos);
         }
 
         public override void initState() {

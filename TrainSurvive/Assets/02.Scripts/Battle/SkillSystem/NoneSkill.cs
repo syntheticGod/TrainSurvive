@@ -12,7 +12,7 @@ namespace WorldBattle {
     public class NoneSkill : Skill {
         //收成默认值
         public NoneSkill(BattleActor battleActor)
-            : base(battleActor, 0, false) {
+            : base(battleActor, 0, SkillType.NONE) {
         }
 
         //技能不执行

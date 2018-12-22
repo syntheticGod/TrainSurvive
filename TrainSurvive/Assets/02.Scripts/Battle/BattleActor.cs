@@ -11,8 +11,19 @@ using UnityEngine.UI;
 
 namespace WorldBattle {
 
-    [System.Serializable]
     public abstract class BattleActor : MonoBehaviour {
+
+        //角色五大基本属性（跟技能相关）
+        //体力
+        public int vitality;
+        //力量
+        public int strength;
+        //敏捷
+        public int agility;
+        //技巧
+        public int technical;
+        //智力
+        public int intelligence;
 
         //当前角色最大的生命值（假设出场是满的）
         public float maxHealthPoint { get; set; }
@@ -38,6 +49,8 @@ namespace WorldBattle {
         public float critRate { get; set; }
         //当前角色的暴击伤害比例
         public float critDamage { get; set; }
+        //当前角色的技能系数加成
+        public float skillPara { get; set; }
 
         //移动速度（每1s移动的距离）
         public float moveSpeed {
@@ -136,7 +149,7 @@ namespace WorldBattle {
         //角色当前的攻击目标
         public int atkTarget;
         //玩家当前选中的攻击目标
-        protected int selectedAtkTarget;
+        public int selectedAtkTarget;
 
         //当前角色的朝向，是否处于前进状态
         private int isForward = 1;
@@ -170,6 +183,9 @@ namespace WorldBattle {
 
         //当前角色身上的buff状态
         public List<Buff> buffEffects;
+
+        //当前眩晕buff的个数（只有个数为0时才解除眩晕）
+        public int actorStopNum;
 
         //当前角色身上的技能
         public List<Skill> skillList { get; private set; }
@@ -227,7 +243,7 @@ namespace WorldBattle {
             }
 
             //将当前位置赋予角色上
-            changeRealPos();
+            changeRealPos(pos);
 
             //初始化当前生命值是满的（更新显示条）
             addHealthPoint(myId, maxHealthPoint);
@@ -253,6 +269,8 @@ namespace WorldBattle {
             isAlive = true;
             //当前角色未停止
             isActorStop = false;
+            //当前眩晕buff的个数为0
+            actorStopNum = 0;
 
             //初始化子状态控制器
             subStateController = new SubStateController(this, animator);
@@ -294,7 +312,10 @@ namespace WorldBattle {
         /// <summary>
         /// 更改显示物体的pos
         /// </summary>
-        public void changeRealPos() {
+        public void changeRealPos(float newPos) {
+            //更改当前pos位置（限制pos的范围为正确的范围）
+            pos = Mathf.Clamp(newPos, 0, battleMapLen);
+
             //获取正常的位置
             Vector3 curPos = orign;
             //
@@ -490,13 +511,11 @@ namespace WorldBattle {
         public void releasePassiveBuff(BattleActor targetActor) {
             //遍历技能列表
             foreach (Skill skill in skillList) {
-                //如果当前不是被动技能跳过
-                if (skill.isPassive == false) {
-                    continue;
+                //只有当前是攻击执行的被动技能再执行
+                if (skill.skillType == Skill.SkillType.ATTACK) {
+                    //对目标执行被动技能
+                    skill.release(targetActor);
                 }
-
-                //对目标执行被动技能
-                skill.release(targetActor);
             }
         }
 

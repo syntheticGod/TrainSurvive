@@ -29,10 +29,11 @@ namespace WorldBattle {
         public float maxDurationTime;
 
         //绑定相应的角色对象，以及当前buff是否可以叠加
-        public BuffBase(BattleActor battleActor, bool isCanOverlay, int maxFloorNum = 1) {
+        public BuffBase(BattleActor battleActor, bool isCanOverlay, float maxDurationTime, int maxFloorNum) {
             this.battleActor = battleActor;
             this.isCanOverlay = isCanOverlay;
             this.maxFloorNum = maxFloorNum;
+            this.maxDurationTime = maxDurationTime;
         }
 
         /// <summary>

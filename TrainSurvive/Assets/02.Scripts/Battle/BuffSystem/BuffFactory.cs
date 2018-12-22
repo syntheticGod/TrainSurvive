@@ -18,27 +18,6 @@ namespace WorldBattle {
     public class BuffFactory {
 
         /// <summary>
-        /// 当前已经有的buff
-        /// </summary>
-        public enum BuffEnum {
-            NONE = -1,
-
-            //攻击滞后buff
-            ATTACK_EFFECT_BUFF,
-
-            //移速提升buff
-            MOVE_SPEED_UP_BUFF,
-
-            //攻速提升buff
-            ATTACK_SPEED_UP_BUFF,
-
-            //毒buff
-            POSION_BUFF,
-
-            NUM
-        }
-
-        /// <summary>
         /// 现有的buff类型
         /// </summary>
         enum BuffType {
@@ -54,10 +33,10 @@ namespace WorldBattle {
         }
 
         //通过string返回对应的map
-        private static Dictionary<BuffEnum, Buff> buffMap;
+        private static Dictionary<string, Buff> buffMap;
 
         //根据指定的buff名获取Buff效果
-        public static Buff getBuff(BuffEnum buff, BattleActor battleActor) {
+        public static Buff getBuff(string buff, BattleActor battleActor) {
             //如果没进行过初始化，则对其进行第一次初始化
             if (buffMap == null) {
                 initBuffSystem();
@@ -77,7 +56,7 @@ namespace WorldBattle {
         //初始化buff系统（从json数据中读取各种buff效果）
         public static void initBuffSystem() {
             //初始化buff映射表
-            buffMap = new Dictionary<BuffEnum, Buff>();
+            buffMap = new Dictionary<string, Buff>();
 
             //获取Buff库的xml文件
             string xmlString = Resources.Load("xml/Buff").ToString();
@@ -93,7 +72,7 @@ namespace WorldBattle {
                 //先获取buff的name
                 string buffName = curBuffNode.Attributes["name"].Value;
                 //每次出创建一个绑定空角色的buff
-                Buff buff = new Buff(null, (BuffEnum)Enum.Parse(typeof(BuffEnum), buffName));
+                Buff buff = new Buff(null, buffName);
 
                 //遍历buff的每个子效果
                 foreach (XmlNode buffEffectNode in curBuffNode.ChildNodes) {

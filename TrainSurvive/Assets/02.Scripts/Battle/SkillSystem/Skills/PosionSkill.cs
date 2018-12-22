@@ -14,13 +14,8 @@ using UnityEngine;
 namespace WorldBattle {
     public class PosionSkill : Skill {
 
-        //当前技能消耗的AP
-        public new const int needAp = 0;
-        //当前技能是不是被动技能
-        public new const bool isPassive = true;
-
-        public PosionSkill(BattleActor battleActor)
-            : base(battleActor, needAp, isPassive) {
+        public PosionSkill(BattleActor battleActor, int needAp, SkillType skillType)
+            : base(battleActor, needAp, skillType) {
         }
 
         /// <summary>
@@ -33,7 +28,7 @@ namespace WorldBattle {
                 //给目标叠加中毒状态：每0.5s失去5*层数的HP，并降低99%攻速与移速
                 targetActor.setBuffEffect(
                     BuffFactory.getBuff(
-                        BuffFactory.BuffEnum.POSION_BUFF,
+                        "Posion",
                         targetActor)
                 );
             }
@@ -46,7 +41,7 @@ namespace WorldBattle {
         /// <param name="curActor"></param>
         /// <returns></returns>
         public override Skill Clone(BattleActor curActor) {
-            return new PosionSkill(curActor);
+            return new PosionSkill(curActor, needAp, skillType);
         }
     }
 }

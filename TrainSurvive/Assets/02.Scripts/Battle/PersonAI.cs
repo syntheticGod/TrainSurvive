@@ -263,8 +263,8 @@ namespace WorldBattle {
         /// </summary>
         protected override void changeSkillBtn() {
             for (int i = 0; i < skillList.Count; i++) {
-                //如果当前技能不是被动技能且能释放，则该按钮可用
-                if (skillList[i].isPassive == false && skillList[i].canReleaseSkill()) {
+                //如果当前技能是主动技能且能释放，则该按钮可用
+                if (skillList[i].skillType == Skill.SkillType.ACTIVE && skillList[i].canReleaseSkill()) {
                     skillBtn[i].interactable = true;
                 } else {
                     //否则设置其不可用
@@ -279,13 +279,7 @@ namespace WorldBattle {
         /// 否则找最近的敌人
         /// </summary>
         protected void selectNearestEnemy() {
-            //如果当前已经存在玩家选中的目标了，朝着目标行动
-            if (selectedAtkTarget != -1 && enemyActors[selectedAtkTarget].isAlive == true) {
-                atkTarget = selectedAtkTarget;
-            } else {
-                //获取距离最近的目标
-                atkTarget = HelpSelectTarget.getNearestEnemy(this);
-            }
+            atkTarget = HelpSelectTarget.selectNearestEnemy(this);
         }
     }
 }

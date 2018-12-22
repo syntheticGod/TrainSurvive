@@ -34,8 +34,10 @@ namespace WorldBattle {
                 //和玩家生成的统一
                 for (int i = 0; i < battleController.personNum; i++) {
                     //绑定两个技能
-                    //skill1 = Random.Range(1, 4);
-                    //skill2 = Random.Range(1, 4);
+                    //skill1 = Random.Range(1, 12);
+                    //skill2 = Random.Range(1, 12);
+                    skill1 = 9;
+                    skill2 = 10;
 
                     //生成指定的玩家对象，绑定脚本和指令框
                     BattleActor battleActor = generatePlayer(battleController.player, "玩家" + (i + 1), i);
@@ -58,12 +60,8 @@ namespace WorldBattle {
                     }
 
                     //绑定两个技能
-                    skill1 = Random.Range(1, 4);
-                    skill2 = Random.Range(1, 4);
-
-                    if (skill1 == 4) {
-                        skill1 = 10;
-                    }
+                    skill1 = Random.Range(1, 12);
+                    skill2 = Random.Range(1, 12);
 
                     //生成指定的玩家对象，绑定脚本和指令框
                     BattleActor battleActor = generatePlayer(battleController.player, person.name, battleController.personNum);
@@ -164,6 +162,14 @@ namespace WorldBattle {
             battleActor.critRate = (float)person.getValCrc();
             battleActor.hitRate = (float)person.getValHrate();
             battleActor.dodgeRate = (float)person.getValErate();
+            battleActor.skillPara = 1.0f;
+
+            //初始化五个属性
+            battleActor.vitality = person.vitality;
+            battleActor.strength = person.strength;
+            battleActor.agility = person.agile;
+            battleActor.technical = person.technique;
+            battleActor.intelligence = person.intelligence;
 
             //初始化两个技能
             battleActor.addSkill(skill1);
@@ -180,7 +186,7 @@ namespace WorldBattle {
             person.maxHealthPoint = Random.Range(150.0f, 200.0f) * para;
             person.maxActionPoint = Random.Range(50.0f, 100.0f) * para;
             person.hpRecovery = 5;
-            person.apRecovery = 5;
+            person.apRecovery = 100;
             person.atkNeedTime = 1 / (Random.Range(0.5f, 1.5f) * para);
             person.moveSpeed = Random.Range(0.5f, 1.5f);
             person.atkDamage = Random.Range(5f, 10f) * para;
@@ -190,6 +196,14 @@ namespace WorldBattle {
             person.critRate = 0.2f;
             person.hitRate = 1.0f;
             person.dodgeRate = 0.0f;
+            person.skillPara = 1.0f;
+
+            //初始化五个属性
+            person.vitality = 5;
+            person.strength = 5;
+            person.agility = 5;
+            person.technical = 5;
+            person.intelligence = 5;
 
             //初始化两个技能
             person.addSkill(skill1);
