@@ -72,6 +72,32 @@ public class Person
     /// 人物所持有的武器对象
     /// </summary>
     public Weapon weapon = null;
+    //----------技能----------↓
+    private List<int> skillsGot = new List<int>();
+    /// <summary>
+    /// 添加人物学习到的技能
+    /// 如果已经存在则不添加
+    /// </summary>
+    /// <param name="skillID"></param>
+    public void AddGotSkill(int skillID)
+    {
+        ContainerTool.InsertSortUnique(skillsGot, skillID);
+    }
+    public List<int> GetSkillsGot()
+    {
+        return skillsGot;
+    }
+    public bool IfHaveGotTheSkill(int skillID)
+    {
+        return ContainerTool.IfContainByBinarySearching(skillsGot, skillID);
+    }
+    public bool IfHaveGotTheSkill(SkillInfo skill)
+    {
+        return ContainerTool.IfContainByBinarySearching(skillsGot, skill.ID);
+    }
+    //----------技能----------↑
+    
+    //----------专精----------↓
     /// <summary>
     /// 三个专精槽位
     /// </summary>
@@ -127,6 +153,8 @@ public class Person
         }
         professions[(int)profession.Level] = profession.ID;
     }
+    //----------专精----------↑
+
     [NonSerialized]
     private int lastWeaponId = -1;
     private Person()
@@ -148,11 +176,16 @@ public class Person
         Person p = new Person();
         p.ismale = MathTool.RandomInt(2) == 0;
         p.name = StaticResource.RandomNPCName(p.ismale);
-        for(EAttribute itr = EAttribute.NONE+1;itr < EAttribute.NUM; itr++)
+        for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)
         {
             p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
         }
         p.ifOuting = false;
+        //获得无条件获得的技能
+        foreach(SkillInfo skill in StaticResource.SkillsNoCondition)
+        {
+            p.AddGotSkill(skill.ID);
+        }
         return p;
     }
     //以下获取的属性均保留numsLeft位小数

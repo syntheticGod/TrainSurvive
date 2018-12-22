@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--  
+  abi 0：体力
+  abi 1：力量
+  abi 2：敏捷
+  abi 3：技巧
+  abi 4：智力
+  -->
+
+<SkillPrecondition>
+  <Skill id="0">
+    <Attributes></Attributes>
+</Skill>
+  
+  <Skill id="1">
+    <Attributes>
+      <Attribute Abi="1" Number="10"/>
+    </Attributes>
+  </Skill>
+  <Skill id="2"><!--测试1-->
+    <Attributes>
+      <Attribute Abi="2" Number="10"/>
+    </Attributes>
+  </Skill>
+  <Skill id="3">
+    <Attributes></Attributes>
+  </Skill>
+  <Skill id="1">
+    <Attributes>
+      <Attribute Abi="0" Number="10"/>
+    </Attributes>
+  </Skill>
+  <Skill id="1">
+    <Attributes>
+      <Attribute Abi="0" Number="10"/>
+    </Attributes>
+  </Skill>
+</SkillPrecondition>

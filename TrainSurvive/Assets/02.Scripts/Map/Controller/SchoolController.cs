@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using TTT.Utility;
 using WorldMap.UI;
 using TTT.Resource;
+using System.Text;
 
 namespace WorldMap.Controller
 {
@@ -292,6 +293,30 @@ namespace WorldMap.Controller
             //更新英雄信息
             ShowHeroInfo();
         }
+        private void LearnSKills()
+        {
+            SkillInfo[] skills = StaticResource.GetAvailableSkills(heroAttribute);
+            List<SkillInfo> newSkills = new List<SkillInfo>();
+            for(int i= 0; i < skills.Length; i++)
+            {
+                if (heroChoosed.IfHaveGotTheSkill(skills[i]) == false)
+                {
+                    newSkills.Add(skills[i]);
+                    heroChoosed.AddGotSkill(skills[i].ID);
+                }
+            }
+            if(newSkills.Count != 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("学习到新技能：");
+                foreach (SkillInfo skill in newSkills)
+                {
+                    sb.AppendFormat("{0},", skill.Name);
+                }
+                sb.Remove(sb.Length - 1, 1);
+                InfoDialog.Show(sb.ToString());
+            }
+        }
         private void OnProfessionOKBtn()
         {
             if (professionListView.IsSelectNothing)
@@ -393,6 +418,7 @@ namespace WorldMap.Controller
             InitAttribute();
             ShowAttributes();
             ShowMoney();
+            LearnSKills();
         }
 
         public void OK(BaseDialog dialog)

@@ -5,12 +5,57 @@
  * 版本：v0.1
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace TTT.Utility
 {
-    //功能类函数
+    /// <summary>
+    /// 容器工具
+    /// </summary>
+    public static class ContainerTool
+    {
+        /// <summary>
+        /// 插入排序的一次迭代
+        /// 不会插入已经存在的数据
+        /// </summary>
+        /// <param name="container">容器</param>
+        /// <param name="data">数据</param>
+        public static void InsertSortUnique(List<int> container, int data)
+        {
+            int i;
+            for (i = container.Count - 1; i >= 0; --i)
+            {
+                if (container[i] < data)
+                    break;
+                //如果已经存在，则不添加
+                else if (container[i] == data)
+                    return;
+            }
+            container.Insert(i + 1, data);
+        }
+        public static bool IfContainByBinarySearching(List<int> container, int data)
+        {
+            int mid;
+            int left = 0, right = container.Count - 1;
+            //TODO 死循环
+            while(left <= right)
+            {
+                mid = (left + right) / 2;
+                if (container[mid] == data)
+                    return true;
+                else if(container[mid] > data)
+                    right = mid - 1;
+                else
+                    left = mid + 1;
+            }
+            return false;
+        }
+    }
+    /// <summary>
+    /// 数学工具
+    /// </summary>
     public static class MathTool
     {
         public static void Swap<T>(ref T my, ref T other)
@@ -177,6 +222,9 @@ namespace TTT.Utility
         }
 
     }
+    /// <summary>
+    /// 拥有RectTransform游戏对象的工具
+    /// </summary>
     public static class ViewTool
     {
         public static T ForceGetComponentInChildren<T>(GameObject gameo, string name, bool active = true)
@@ -376,6 +424,9 @@ namespace TTT.Utility
             LeftTop(comp, pivot, size, Vector2.zero);
         }
     }
+    /// <summary>
+    /// 游戏对象工具
+    /// </summary>
     public static class GOTool
     {
         public static SpriteRenderer CreateSpriteRenderer(string name, Transform parent, bool active = true)

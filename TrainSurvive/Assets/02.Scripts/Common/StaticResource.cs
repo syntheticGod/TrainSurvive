@@ -8,11 +8,14 @@ using UnityEngine;
 using System.Xml;
 
 using TTT.Utility;
+using System.Collections.Generic;
+using System;
 
 namespace TTT.Resource
 {
     public static class StaticResource
     {
+        //----------专精----------↓
         /// <summary>
         /// 根据EProfession的序号排序
         /// </summary>
@@ -20,37 +23,11 @@ namespace TTT.Resource
         private static Profession[] firstProfessions;
         private static Profession[,] secondProfessions;
         private static Profession[,,] thirdProfessions;
-        public static Profession GetProfession(EAttribute atr)
-        {
-            return firstProfessions[(int)atr];
-        }
-        private static void SetProfession(EAttribute atr, Profession profession)
-        {
-            firstProfessions[(int)atr] = profession;
-        }
-        public static Profession GetProfession(EAttribute atr1, EAttribute atr2)
-        {
-            return secondProfessions[(int)atr1, (int)atr2];
-        }
-        private static void SetProfession(EAttribute atr1, EAttribute atr2, Profession profession)
-        {
-            secondProfessions[(int)atr1, (int)atr2] = profession;
-            secondProfessions[(int)atr2, (int)atr1] = profession;
-        }
-        private static Profession GetProfession(EAttribute atr1, EAttribute atr2, EAttribute atr3)
-        {
-            return thirdProfessions[(int)atr1, (int)atr2, (int)atr3];
-        }
-        private static void SetProfession(EAttribute atr1, EAttribute atr2, EAttribute atr3, Profession profession)
-        {
-            thirdProfessions[(int)atr1, (int)atr2, (int)atr3] = profession;
-            thirdProfessions[(int)atr1, (int)atr3, (int)atr2] = profession;
-            thirdProfessions[(int)atr2, (int)atr1, (int)atr3] = profession;
-            thirdProfessions[(int)atr2, (int)atr3, (int)atr1] = profession;
-            thirdProfessions[(int)atr3, (int)atr1, (int)atr2] = profession;
-            thirdProfessions[(int)atr3, (int)atr2, (int)atr1] = profession;
-        }
-        private const int NumOfAttribute = (int)EAttribute.NUM;
+        /// <summary>
+        /// 根据专精的ID返回专精
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Profession GetProfessionByID(int id)
         {
             if (professions == null)
@@ -59,8 +36,30 @@ namespace TTT.Resource
             }
             return professions[id];
         }
+        public static Profession GetProfession(EAttribute atr)
+        {
+            return firstProfessions[(int)atr];
+        }
+        public static Profession GetProfession(EAttribute atr1, EAttribute atr2)
+        {
+            return secondProfessions[(int)atr1, (int)atr2];
+        }
+        public static Profession GetProfession(EAttribute atr1, EAttribute atr2, EAttribute atr3)
+        {
+            return thirdProfessions[(int)atr1, (int)atr2, (int)atr3];
+        }
+        /// <summary>
+        /// 根据传入的专精获取下一级别的专精
+        /// NULL => 一级
+        /// 一级   => 二级
+        /// 二级   => 三级
+        /// 三级   => NULL
+        /// </summary>
+        /// <param name="profession"></param>
+        /// <returns></returns>
         public static Profession[] GetNextProfessions(Profession profession)
         {
+            const int NumOfAttribute = (int)EAttribute.NUM;
             if (firstProfessions == null) LoadProfessionFromXml();
             Profession[] result = new Profession[NumOfAttribute];
             if (profession == null)
@@ -95,14 +94,34 @@ namespace TTT.Resource
             }
             return result;
         }
+        private static void SetProfession(EAttribute atr, Profession profession)
+        {
+            firstProfessions[(int)atr] = profession;
+        }
+        private static void SetProfession(EAttribute atr1, EAttribute atr2, Profession profession)
+        {
+            secondProfessions[(int)atr1, (int)atr2] = profession;
+            secondProfessions[(int)atr2, (int)atr1] = profession;
+        }
+        private static void SetProfession(EAttribute atr1, EAttribute atr2, EAttribute atr3, Profession profession)
+        {
+            thirdProfessions[(int)atr1, (int)atr2, (int)atr3] = profession;
+            thirdProfessions[(int)atr1, (int)atr3, (int)atr2] = profession;
+            thirdProfessions[(int)atr2, (int)atr1, (int)atr3] = profession;
+            thirdProfessions[(int)atr2, (int)atr3, (int)atr1] = profession;
+            thirdProfessions[(int)atr3, (int)atr1, (int)atr2] = profession;
+            thirdProfessions[(int)atr3, (int)atr2, (int)atr1] = profession;
+        }
         /// <summary>
         /// 从profession.xml中读取数据
         /// </summary>
         private static void LoadProfessionFromXml()
         {
+            const int NumOfAttribute = (int)EAttribute.NUM;
             firstProfessions = new Profession[NumOfAttribute];
             secondProfessions = new Profession[NumOfAttribute, NumOfAttribute];
             thirdProfessions = new Profession[NumOfAttribute, NumOfAttribute, NumOfAttribute];
+
             string xmlString = Resources.Load("xml/profession").ToString();
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
@@ -173,7 +192,11 @@ namespace TTT.Resource
                 }
             }
         }
-        //方块大小
+        //----------专精----------↑
+
+        /// <summary>
+        /// 方块大小
+        /// </summary>
         public static Vector2 BlockSize
         {
             set;
@@ -282,6 +305,8 @@ namespace TTT.Resource
             else
                 return NPC_NAME_WOMAN[MathTool.RandomInt(NPC_NAME_WOMAN.Length)];
         }
+
+        //----------Sprite----------↓
         private static Sprite[] spriteStore = new Sprite[(int)ESprite.NUM];
         private static string[] spriteFileName = {
             "Commen/developing_icon_01_big","Commen/developing_icon_01_small",
@@ -339,51 +364,51 @@ namespace TTT.Resource
 
             "ProfessionIcon/profession444_icon_big",
 
-                "ProfessionIcon/profession0_icon_small",
-                "ProfessionIcon/profession1_icon_small",
-                "ProfessionIcon/profession2_icon_small",
-                "ProfessionIcon/profession3_icon_small",
-                "ProfessionIcon/profession4_icon_small",
+            "ProfessionIcon/profession0_icon_small",
+            "ProfessionIcon/profession1_icon_small",
+            "ProfessionIcon/profession2_icon_small",
+            "ProfessionIcon/profession3_icon_small",
+            "ProfessionIcon/profession4_icon_small",
 
-                "ProfessionIcon/profession00_icon_small",
-                "ProfessionIcon/profession01_icon_small",
-                "ProfessionIcon/profession02_icon_small",
-                "ProfessionIcon/profession03_icon_small",
-                "ProfessionIcon/profession04_icon_small",
+            "ProfessionIcon/profession00_icon_small",
+            "ProfessionIcon/profession01_icon_small",
+            "ProfessionIcon/profession02_icon_small",
+            "ProfessionIcon/profession03_icon_small",
+            "ProfessionIcon/profession04_icon_small",
 
-                "ProfessionIcon/profession11_icon_small",
-                "ProfessionIcon/profession12_icon_small",
-                "ProfessionIcon/profession13_icon_small",
-                "ProfessionIcon/profession14_icon_small",
+            "ProfessionIcon/profession11_icon_small",
+            "ProfessionIcon/profession12_icon_small",
+            "ProfessionIcon/profession13_icon_small",
+            "ProfessionIcon/profession14_icon_small",
 
-                "ProfessionIcon/profession22_icon_small",
-                "ProfessionIcon/profession23_icon_small",
-                "ProfessionIcon/profession24_icon_small",
+            "ProfessionIcon/profession22_icon_small",
+            "ProfessionIcon/profession23_icon_small",
+            "ProfessionIcon/profession24_icon_small",
 
-                "ProfessionIcon/profession33_icon_small",
-                "ProfessionIcon/profession34_icon_small",
+            "ProfessionIcon/profession33_icon_small",
+            "ProfessionIcon/profession34_icon_small",
 
-                "ProfessionIcon/profession44_icon_small",
+            "ProfessionIcon/profession44_icon_small",
 
-                "ProfessionIcon/profession000_icon_small",
-                "ProfessionIcon/profession012_icon_small",
-                "ProfessionIcon/profession013_icon_small",
-                "ProfessionIcon/profession014_icon_small",
-                "ProfessionIcon/profession023_icon_small",
-                "ProfessionIcon/profession024_icon_small",
-                "ProfessionIcon/profession034_icon_small",
+            "ProfessionIcon/profession000_icon_small",
+            "ProfessionIcon/profession012_icon_small",
+            "ProfessionIcon/profession013_icon_small",
+            "ProfessionIcon/profession014_icon_small",
+            "ProfessionIcon/profession023_icon_small",
+            "ProfessionIcon/profession024_icon_small",
+            "ProfessionIcon/profession034_icon_small",
 
-                "ProfessionIcon/profession111_icon_small",
-                "ProfessionIcon/profession123_icon_small",
-                "ProfessionIcon/profession124_icon_small",
-                "ProfessionIcon/profession134_icon_small",
+            "ProfessionIcon/profession111_icon_small",
+            "ProfessionIcon/profession123_icon_small",
+            "ProfessionIcon/profession124_icon_small",
+            "ProfessionIcon/profession134_icon_small",
 
-                "ProfessionIcon/profession222_icon_small",
-                "ProfessionIcon/profession234_icon_small",
+            "ProfessionIcon/profession222_icon_small",
+            "ProfessionIcon/profession234_icon_small",
 
-                "ProfessionIcon/profession333_icon_small",
+             "ProfessionIcon/profession333_icon_small",
 
-                "ProfessionIcon/profession444_icon_small",
+             "ProfessionIcon/profession444_icon_small",
         };
         public static Sprite GetSprite(ESprite eSprite)
         {
@@ -421,6 +446,107 @@ namespace TTT.Resource
             }
             return spriteStore[(int)eSprite];
         }
+        //----------Sprite----------↑ ----------技能----------↓
+        /// <summary>
+        /// 所有技能包括无条件获得的
+        /// </summary>
+        private static SkillInfo[] skills;
+        /// <summary>
+        /// 无条件就获得的技能
+        /// </summary>
+        private static SkillInfo[] skillsNoCondition;
+        public static SkillInfo[] Skills { get { if (skills == null) LoadSkillFormXml(); return skills; } }
+        public static SkillInfo[] SkillsNoCondition { get { if (skillsNoCondition == null) LoadSkillFormXml(); return skillsNoCondition; } }
+        private static void LoadSkillFormXml()
+        {
+            string xmlString = Resources.Load("xml/SkillInfo").ToString();
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+            XmlNode root = document.SelectSingleNode("SkillInfo");
+            XmlNodeList skillsNode = root.SelectNodes("Skill");
+            skills = new SkillInfo[skillsNode.Count];
+            List<SkillInfo> noCondition = new List<SkillInfo>();
+            for (int i = 0; i < skillsNode.Count; i++)
+            {
+                try
+                {
+                    int id = int.Parse(skillsNode[i].Attributes["id"].Value);
+                    string name = skillsNode[i].Attributes["name"].Value;
+                    string type = skillsNode[i].Attributes["type"].Value;
+                    string ap = skillsNode[i].Attributes["AP"].Value;
+                    string description = skillsNode[i].Attributes["description"].Value;
+                    XmlNodeList attributeRequires = skillsNode[i].SelectNodes("Precondition/Attributes/Attribute");
+                    SkillInfo.AbiReq[] abiReqs = null;
+                    SkillInfo skill = null;
+                    //无条件获得
+                    if (attributeRequires.Count == 0)
+                    {
+                        skill = new SkillInfo(id, name, type, ap, description, abiReqs);
+                        noCondition.Add(skill);
+                    }
+                    else
+                    {
+                        abiReqs = new SkillInfo.AbiReq[attributeRequires.Count];
+                        for (int y = 0; y < attributeRequires.Count; y++)
+                        {
+                            abiReqs[y] = new SkillInfo.AbiReq();
+                            abiReqs[y].Abi = EAttribute.NONE + 1 + int.Parse(attributeRequires[y].Attributes["Abi"].Value);
+                            abiReqs[y].Number = int.Parse(attributeRequires[y].Attributes["Number"].Value);
+                        }
+                        skill = new SkillInfo(id, name, type, ap, description, abiReqs);
+                    }
+                    skills[id] = skill;
+                }
+                catch (FormatException e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+            }
+            skillsNoCondition = noCondition.ToArray();
+        }
+        public static SkillInfo GetSkillByID(int id)
+        {
+            return Skills[id];
+        }
+        /// <summary>
+        /// 获得符合五个属性的技能ID
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <returns>
+        /// NOT NULL：技能ID数组
+        /// NULL：无符合的
+        /// </returns>
+        public static int[] GetAvailableSkillIDs(int[] attributes)
+        {
+            List<int> availableSkills = new List<int>();
+            SkillInfo[] skillInfos = Skills;
+            for (int i = 0; i < skillInfos.Length; i++)
+            {
+                if (skillInfos[i].IfAvailable(attributes))
+                    availableSkills.Add(skillInfos[i].ID);
+            }
+            return availableSkills.ToArray();
+        }
+        /// <summary>
+        /// 获得符合五个属性的技能
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <returns>
+        /// NOT NULL：技能数组
+        /// NULL：无符合的
+        /// </returns>
+        public static SkillInfo[] GetAvailableSkills(int[] attributes)
+        {
+            List<SkillInfo> availableSkills = new List<SkillInfo>();
+            SkillInfo[] skillInfos = Skills;
+            for (int i = 0; i < skillInfos.Length; i++)
+            {
+                if (skillInfos[i].IfAvailable(attributes))
+                    availableSkills.Add(skillInfos[i]);
+            }
+            return availableSkills.ToArray();
+        }
+        //----------技能----------↑
     }
     public enum ESprite
     {
