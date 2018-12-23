@@ -16,7 +16,6 @@ namespace WorldBattle
     {
         protected override void AIStrategy()
         {
-            
         }
 
         protected override void otherInit()

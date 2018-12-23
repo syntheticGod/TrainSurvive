@@ -5,6 +5,8 @@
  * 版本：v0.1
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using TTT.Resource;
 using TTT.Utility;
 
@@ -13,6 +15,8 @@ namespace WorldMap.Model
     [Serializable]
     public class NPC
     {
+        public List<int> taskId_canDo=new List<int>();
+        public List<int> taskId_Doing= new List<int>();
         public Person PersonInfo { private set; get; }
         public string Name { get { return PersonInfo.name; } }
         public int Strength { get { return PersonInfo.strength; } }
@@ -36,5 +40,43 @@ namespace WorldMap.Model
                     " 智力：" + PersonInfo.intelligence;
             }
         }
+
+        //调用taskController的getTask获取任务
+
+
+        /// <summary>
+        /// 接取某个任务后调用
+        /// </summary>
+        /// <param name="taskId"></param>
+        private void receiveTask(int taskId)
+        {
+            taskId_canDo.Remove(taskId);
+            taskId_Doing.Add(taskId);
+            TaskController con = TaskController.getInstance();
+            Task task = con.getTask(taskId, TaskController.TASKCONDITION.CAN_DO);
+            con.Task_canDo.Remove(taskId);
+            con.Task_doing.Add(taskId,task);
+        }
+
+
+        /// <summary>
+        /// 完成某个任务后调用
+        /// </summary>
+        /// <param name="taskId"></param>
+        private void finishTask(int taskId)
+        {
+            taskId_Doing.Remove(taskId);
+            TaskController con = TaskController.getInstance();
+            Task task = con.getTask(taskId, TaskController.TASKCONDITION.Doing);
+            foreach(int latterTaskId in task.LatterTaskIDList)
+            {
+                Task latter_task = con.getTask(latterTaskId, TaskController.TASKCONDITION.LOCKED);
+                con.Task_locked.Remove(latterTaskId);
+                con.Task_canDo.Add(latterTaskId,latter_task);
+            }       
+            con.Task_doing.Remove(taskId);
+            con.Task_finish.Add(taskId, task);
+        } 
+
     }
 }

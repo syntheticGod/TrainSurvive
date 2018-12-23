@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tasklist>
+  <task id="1" name="测试任务1——交东西" npcId="1" islocked="false">
+   <requimentList>
+    <requiment type="giveMoney" num="1000" />   
+    <requiment type="giveItem" itemId="233" num="3" />
+   </requimentList>
+   <unlockList>
+    <unlock taskId="2" /> 
+    <unlock taskId="3" /> 
+   </unlockList>
+  </task>
+
+  <task id="2" name="测试任务2——打怪" npcId="1" islocked="true">
+   <requimentList>
+    <requiment type="kill" monsterId="0" num="1" />
+   </requimentList>
+  </task>
+
+  <task id="3" name="测试任务3——打怪" npcId="1" islocked="true">
+   <requimentList>
+    <requiment type="kill" monsterId="1" num="1" />
+   </requimentList>
+  </task>
+</tasklist>

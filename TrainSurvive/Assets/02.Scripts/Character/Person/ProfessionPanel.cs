@@ -6,6 +6,8 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Utility;
+using TTT.Resource;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -14,7 +16,8 @@ public class ProfessionPanel : MonoBehaviour {
     public Text professionText1;
     public Text professionText2;
     public Text professionText3;
-
+    private string[] pStr= new string[3];
+    public Text mainProfessionText;
     // Use this for initialization
     void Start () {
 		
@@ -23,20 +26,49 @@ public class ProfessionPanel : MonoBehaviour {
 	public void updatePanel(int personIndex)
     {
         Person person = World.getInstance().persons[personIndex];
-        Profession p1 = person.getProfession(0);
-        Profession p2 = person.getProfession(1);
-        Profession p3 = person.getProfession(2);
-        if (p1 != null)
-            professionText1.text = p1.Name;
+        Profession mainProfession = person.getTopProfession();
+        Profession[] ps = new Profession[3];
+        for(int i = 0; i < 3; i++)
+        {
+            ps[i] = person.getProfession(i);
+            if (ps[i] != null)
+            {
+                Profession.AbiReq[] req = ps[i].AbiReqs;
+                pStr[i] = "";
+                foreach (Profession.AbiReq abiReq in req)
+                {
+                    switch (abiReq.Abi)
+                    {
+                        case EAttribute.VITALITY:
+                            pStr[i] += "体力";
+                            break;
+                        case EAttribute.TECHNIQUE:
+                            pStr[i] += "技巧";
+                            break;
+                        case EAttribute.STRENGTH:
+                            pStr[i] += "力量";
+                            break;
+                        case EAttribute.INTELLIGENCE:
+                            pStr[i] += "智力";
+                            break;
+                        case EAttribute.AGILE:
+                            pStr[i] += "敏捷";
+                            break;                       
+                    }
+                }
+            }
+            else
+                pStr[i] = "无";           
+        }
+           
+
+        if (mainProfession != null)
+            mainProfessionText.text = mainProfession.Name;
         else
-            professionText1.text = "无";
-        if (p2 != null)
-            professionText2.text = p2.Name;
-        else
-            professionText2.text = "无";
-        if (p3 != null)
-            professionText3.text = p3.Name;
-        else
-            professionText3.text = "无";
+            mainProfessionText.text = "无";
+
+        professionText1.text = pStr[0];
+        professionText2.text = pStr[1];
+        professionText3.text = pStr[2];
     }
 }

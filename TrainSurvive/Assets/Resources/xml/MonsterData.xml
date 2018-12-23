@@ -5,10 +5,10 @@
   </monster>
   <monster id="1" name="狼">
     <property vitality="5" strength="5" agile="5" technique="5" intelligence="5" />
-    <AI>BeatFarAI</AI>
+    <AI type="BeatFarAI"/>
   </monster>
   <monster id="2" name="熊">
     <property vitality="5" strength="5" agile="5" technique="5" intelligence="5" />
-    <AI>BeatNearAI</AI>
+    <AI type="BeatNearAI"/>
   </monster>
 </monsterlist>

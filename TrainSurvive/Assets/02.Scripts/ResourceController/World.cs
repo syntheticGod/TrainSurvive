@@ -153,6 +153,8 @@ public class World
     public int numOut;
     public int personNumMax = 15;
 
+    public TaskController taskCon=null;
+
     [NonSerialized]
     public ResouceBaseUI resourceUI;
 

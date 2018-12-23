@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
-using System.Reflection;
 using UnityEngine;
 
 namespace WorldBattle
@@ -47,6 +46,7 @@ public class MonsterInitializer
                 //要补上武器信息的更新
             }
 
+
             if (aiNode == null)
             {
                 character.AddComponent<NoneAI>();
@@ -54,7 +54,7 @@ public class MonsterInitializer
             }
             else
             {
-                switch (aiNode.Value)
+                switch (aiNode.Attributes["type"].Value)
                 {
                     case "BeatNearAI":
                         character.AddComponent<BeatNearAI>();
@@ -166,6 +166,27 @@ public class MonsterInitializer
         public BattleActor getBattleActor()
         {
             return battleActor;
+        }
+
+        /// <summary>
+        /// 返回对应id怪物的名字
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string getMonsterName(int id)
+        {
+            string result = "";
+            string xmlString = Resources.Load("xml/MonsterData").ToString();
+            string XPath = string.Format("./monster[@id='{0:D}']", id);
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+            XmlNode root = document.SelectSingleNode("monsterlist");
+            XmlNode aimNode = root.SelectSingleNode(XPath);
+            if (aimNode != null)
+                result = aimNode.Attributes["name"].Value;
+            else
+                result = "不存在的怪物";
+            return result;
         }
     }
 }
