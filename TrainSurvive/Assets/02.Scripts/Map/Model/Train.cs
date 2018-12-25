@@ -208,7 +208,7 @@ namespace WorldMap.Model
                 if(WorldForMap.Instance.IfEnergyEmpty())
                 {
 #if DEBUG
-                    Debug.LogWarning("没有燃油了，DEBUG模式不阻止");
+                    InfoDialog.Show("没有燃油了，DEBUG模式不阻止");
 #else
                     Debug.Log("没有燃油了");
                     ifTemporarilyStop = true;
@@ -261,7 +261,7 @@ namespace WorldMap.Model
             if (WorldForMap.Instance.IfEnergyEmpty())
             {
 #if DEBUG
-                Debug.LogWarning("列车缺少燃油，DEBUG模式不进行判断");
+                InfoDialog.Show("列车缺少燃油，DEBUG模式不阻止");
 #else
                 InfoDialog.Show("列车缺少燃油");
                 return false;
@@ -283,6 +283,15 @@ namespace WorldMap.Model
             {
                 Debug.Log("列车正在运行");
                 return false;
+            }
+            if (WorldForMap.Instance.IfEnergyEmpty())
+            {
+#if DEBUG
+                InfoDialog.Show("列车缺少燃油，DEBUG模式不阻止");
+#else
+                InfoDialog.Show("列车缺少燃油");
+                return false;
+#endif
             }
             //只有中途停车后才能继续开车
             if (!IsStopedTemporarily)
