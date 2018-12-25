@@ -35,7 +35,8 @@ public class KillRequirement : TaskRequirement
     public override void achieveGoal(int nums)
     {
         //待补充，需要在battle里加delegate
-
+        finish = true;
+        finish_task_Handler();
         throw new NotImplementedException();
     }
 }

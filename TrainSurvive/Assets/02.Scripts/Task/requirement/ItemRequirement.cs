@@ -36,6 +36,7 @@ public class ItemRequirement : TaskRequirement
 
         condition="已交付："+ PublicMethod.GenerateItem(_itemId)[0].name+ "*" + _needNums;
         finish = true;
+        finish_task_Handler();
         throw new NotImplementedException();
     }
 }

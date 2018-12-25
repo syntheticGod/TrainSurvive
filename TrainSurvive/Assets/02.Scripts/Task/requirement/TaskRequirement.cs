@@ -40,7 +40,8 @@ public abstract class TaskRequirement  {
         }
     }
     protected bool finish;
-
+    public delegate void finishTask();
+    public finishTask finish_task_Handler;
 
 
     /// <summary>
