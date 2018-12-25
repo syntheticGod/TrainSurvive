@@ -16,13 +16,17 @@ namespace WorldMap.Model
     public class NPC
     {
         public List<int> taskId_canDo=new List<int>();
-        public List<int> taskId_Doing= new List<int>();
+        public List<int> taskId_doing= new List<int>();
+        public List<int> taskId_locked = new List<int>();
+        public List<int> taskId_finish = new List<int>();
         public Person PersonInfo { private set; get; }
         public string Name { get { return PersonInfo.name; } }
         public int Strength { get { return PersonInfo.strength; } }
+        public int ID { get; private set; }
         private NPC()
         {
             PersonInfo = Person.RandomPerson();
+            ID = MathTool.GenerateID();
         }
         public static NPC Random()
         {
@@ -40,7 +44,30 @@ namespace WorldMap.Model
                     " 智力：" + PersonInfo.intelligence;
             }
         }
-
+        /// <summary>
+        /// 给NPC添加能开始的或未解锁的任务
+        /// </summary>
+        /// <param name="taskId">任务ID</param>
+        /// <param name="taskCondition">取值范围[LOCKED, CAN_DO]</param>
+        /// <returns>
+        /// TRUE：添加成功
+        /// FALSE：该任务状态的任务不允许被填加
+        /// </returns>
+        public bool AddTask(int taskId, TaskController.TASKCONDITION taskCondition)
+        {
+            switch (taskCondition)
+            {
+                case TaskController.TASKCONDITION.LOCKED:
+                    taskId_locked.Add(taskId);
+                    break;
+                case TaskController.TASKCONDITION.CAN_DO:
+                    taskId_canDo.Add(taskId);
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
         //调用taskController的getTask获取任务
 
 
@@ -51,7 +78,7 @@ namespace WorldMap.Model
         private void receiveTask(int taskId)
         {
             taskId_canDo.Remove(taskId);
-            taskId_Doing.Add(taskId);
+            taskId_doing.Add(taskId);
             TaskController con = TaskController.getInstance();
             Task task = con.getTask(taskId, TaskController.TASKCONDITION.CAN_DO);
             con.Task_canDo.Remove(taskId);
@@ -65,7 +92,7 @@ namespace WorldMap.Model
         /// <param name="taskId"></param>
         private void finishTask(int taskId)
         {
-            taskId_Doing.Remove(taskId);
+            taskId_doing.Remove(taskId);
             TaskController con = TaskController.getInstance();
             Task task = con.getTask(taskId, TaskController.TASKCONDITION.Doing);
             foreach(int latterTaskId in task.LatterTaskIDList)

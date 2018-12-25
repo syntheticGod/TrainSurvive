@@ -87,12 +87,12 @@ public class TaskController  {
                             task.LatterTaskIDList.Add(int.Parse(node.Attributes["taskId"].Value));
                         }
                     }
-                   
                     if (taskElement.Attributes["islocked"].Value == "true")
                         con.Task_locked.Add(task.id,task);
                     else
                     {
                         con.Task_canDo.Add(task.id, task);
+                        
                         //需求接口： NPC getNPC(int npcId)
                         //给对应npc加上任务id和当前任务状态：已解锁未接取或者已接取
                     }

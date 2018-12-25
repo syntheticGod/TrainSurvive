@@ -120,9 +120,33 @@ public class Person
             return null;
         return StaticResource.GetProfessionByID(professions[index]);
     }
+    /// <summary>
+    /// 判断专精槽是否足够
+    /// </summary>
+    /// <returns></returns>
     public bool IfProfessionAvailable()
     {
         return professions[professionAvaliable - 1] == -1;
+    }
+    /// <summary>
+    /// 判断指定属性是否已专精
+    /// </summary>
+    /// <param name="attribute"></param>
+    /// <returns></returns>
+    public bool IfProfession(EAttribute attribute)
+    {
+        for(int i = 0; i < professions.Length; i++)
+        {
+            Profession profession = getProfession(i);
+            if (profession == null) continue;
+            foreach(Profession.AbiReq req in profession.AbiReqs)
+            {
+                //如果已学的专精的属性要求中包含该属性，则返回真
+                if(req.Abi == attribute)
+                    return true;
+            }
+        }
+        return false;
     }
     /// <summary>
     /// 获取最高级的专精
@@ -153,6 +177,7 @@ public class Person
         }
         professions[(int)profession.Level] = profession.ID;
     }
+    
     //----------专精----------↑
 
     [NonSerialized]
