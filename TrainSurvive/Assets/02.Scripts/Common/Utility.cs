@@ -196,6 +196,11 @@ namespace TTT.Utility
         {
             return rand.Next(minValue, maxValue);
         }
+        
+        public static int GenerateID()
+        {
+            return World.getInstance().IncreasementOfID++;
+        }
     }
     public static class CompTool
     {

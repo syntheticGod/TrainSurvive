@@ -16,13 +16,15 @@ namespace WorldMap.Model
     public class NPC
     {
         public List<int> taskId_canDo=new List<int>();
-        public List<int> taskId_Doing= new List<int>();
+        public List<int> taskId_doing= new List<int>();
         public Person PersonInfo { private set; get; }
         public string Name { get { return PersonInfo.name; } }
         public int Strength { get { return PersonInfo.strength; } }
+        public int ID { get; private set; }
         private NPC()
         {
             PersonInfo = Person.RandomPerson();
+            ID = MathTool.GenerateID();
         }
         public static NPC Random()
         {
@@ -40,7 +42,14 @@ namespace WorldMap.Model
                     " 智力：" + PersonInfo.intelligence;
             }
         }
-
+        /// <summary>
+        /// 给NPC添加能开始的的任务
+        /// </summary>
+        /// <param name="taskId">任务ID</param>
+        public void AddCanDoTask(int taskId)
+        {
+            taskId_canDo.Add(taskId);
+        }
         //调用taskController的getTask获取任务
 
 
@@ -51,7 +60,7 @@ namespace WorldMap.Model
         private void receiveTask(int taskId)
         {
             taskId_canDo.Remove(taskId);
-            taskId_Doing.Add(taskId);
+            taskId_doing.Add(taskId);
             TaskController con = TaskController.getInstance();
             Task task = con.getTask(taskId, TaskController.TASKCONDITION.CAN_DO);
             con.Task_canDo.Remove(taskId);
@@ -65,7 +74,7 @@ namespace WorldMap.Model
         /// <param name="taskId"></param>
         private void finishTask(int taskId)
         {
-            taskId_Doing.Remove(taskId);
+            taskId_doing.Remove(taskId);
             TaskController con = TaskController.getInstance();
             Task task = con.getTask(taskId, TaskController.TASKCONDITION.Doing);
             foreach(int latterTaskId in task.LatterTaskIDList)

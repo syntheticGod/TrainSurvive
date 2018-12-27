@@ -1,7 +1,6 @@
 /*
- * 描述：这是二连击技能
- * 消耗30
- * 增加500%攻速，直至两次攻击后结束
+ * 描述：这是多连击技能
+ * 增加500%攻速，直至多次攻击后结束
  * 
  * 作者：王安鑫
  * 创建时间：2018/12/13 14:40:11
@@ -23,7 +22,7 @@ namespace WorldBattle {
         }
 
         /// <summary>
-        /// 给自己加一个攻击加速buff，持续时间两次攻击
+        /// 给自己加一个攻击加速buff，持续时间多次攻击
         /// </summary>
 
         protected override void skillEffect(BattleActor targetActor = null) {
@@ -36,7 +35,7 @@ namespace WorldBattle {
             BuffBase buffBase = buff.buffList[0];
 
             //修改当前最大持续时间为两次攻击的时间
-            buffBase.maxDurationTime = (battleActor.atkNeedTime / 5 + 0.1f) * attackTime;
+            buffBase.maxDurationTime = (battleActor.atkNeedTime / 5 + 0.05f) * attackTime;
 
             //设置buff
             battleActor.setBuffEffect(buff);

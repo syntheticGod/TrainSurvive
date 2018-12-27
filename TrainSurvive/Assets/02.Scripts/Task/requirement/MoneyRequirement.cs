@@ -30,7 +30,8 @@ public class MoneyRequirement:TaskRequirement  {
 
         
             finish = true;
-            condition = "已付清：" + needMoney;          
+            condition = "已付清：" + needMoney;
+            finish_task_Handler();
         throw new NotImplementedException();
     }
 }

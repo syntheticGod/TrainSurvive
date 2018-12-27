@@ -72,9 +72,9 @@ namespace WorldMap
         TRAIN_NUM,
 
         TOWN_NONE,//城镇界面显示的按钮
-        TOWN_SHOP,//商店
-        TOWN_SCHOOL,//学校
         TOWN_TAVERN,//酒馆
+        TOWN_SCHOOL,//学校
+        TOWN_SHOP,//商店
         TOWN_SPECIAL_BUILDING,//特殊建筑 ——神殿
         TOWN_NUM,
 

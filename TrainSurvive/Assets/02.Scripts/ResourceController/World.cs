@@ -129,6 +129,23 @@ public class World
 
 
     public WorldMap.Model.Town[] towns;
+    /// <summary>
+    /// 遍历所有城镇，寻找指定ID的NPC
+    /// </summary>
+    /// <param name="id">NPC的ID</param>
+    /// <returns>
+    /// NULL：找不到
+    /// NOT NULL：指定ID的NPC
+    /// </returns>
+    public WorldMap.Model.NPC FindNPCByID(int id)
+    {
+        foreach(WorldMap.Model.Town town in towns)
+        {
+            WorldMap.Model.NPC npc = town.FindNPCByID(id);
+            if (npc != null) return npc;
+        }
+        return null;
+    }
     public List<Person> persons = new List<Person>();
     public Person GetPerson(int index)
     {
@@ -155,6 +172,11 @@ public class World
     public int personNumMax = 15;
 
     public TaskController taskCon=null;
+
+    /// <summary>
+    /// ID自增值
+    /// </summary>
+    public int IncreasementOfID = 0;
 
     [NonSerialized]
     public ResouceBaseUI resourceUI;

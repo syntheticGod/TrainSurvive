@@ -87,6 +87,18 @@ namespace WorldMap.Model
             return true;
         }
         /// <summary>
+        /// 在城镇中寻找指定ID的NPC
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public NPC FindNPCByID(int id)
+        {
+            foreach(NPC npc in NPCs)
+                if (npc.ID == id)
+                    return npc;
+            return null;
+        }
+        /// <summary>
         /// 购买商品
         /// </summary>
         /// <param name="goods"></param>

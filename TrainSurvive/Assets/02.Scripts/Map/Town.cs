@@ -40,7 +40,7 @@ namespace WorldMap {
         //如果它和下一个城镇连接，则记录它的连接路径
         public List<RailPath> railPaths;
 
-        //如果它和下一个城镇连接，则记录它的连接路径
+        //连接路径类
         public class RailPath {
             //铁轨的路径
             public List<Vector2Int> railPath;

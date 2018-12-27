@@ -297,7 +297,7 @@ namespace WorldMap.Controller
         {
             SkillInfo[] skills = StaticResource.GetAvailableSkills(heroAttribute);
             List<SkillInfo> newSkills = new List<SkillInfo>();
-            for(int i= 0; i < skills.Length; i++)
+            for (int i = 0; i < skills.Length; i++)
             {
                 if (heroChoosed.IfHaveGotTheSkill(skills[i]) == false)
                 {
@@ -305,7 +305,7 @@ namespace WorldMap.Controller
                     heroChoosed.AddGotSkill(skills[i].ID);
                 }
             }
-            if(newSkills.Count != 0)
+            if (newSkills.Count != 0)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append("学习到新技能：");
@@ -385,8 +385,12 @@ namespace WorldMap.Controller
         /// <param name="index"></param>
         public void OnAttributePlusBtnClick(int index)
         {
+            EAttribute attribute = EAttribute.NONE + 1 + index;
             int afterAttribute = deltaAttri[index] + 1 + heroAttribute[index];
-            if (afterAttribute > heroChoosed.GetAttriMaxNumber((EAttribute)index))
+            int maxAttributeNumber = 999;
+            if (heroChoosed.IfProfession(attribute) == false)
+                maxAttributeNumber = heroChoosed.GetAttriMaxNumber(attribute);
+            if (afterAttribute > maxAttributeNumber)
                 return;
             deltaAttri[index]++;
             attriViewsNew[index].text = afterAttribute.ToString();

@@ -55,23 +55,33 @@ public class TaskController  {
                 foreach (XmlElement taskElement in taskList)
                 {
                     Task task = new Task();
+                    task.id= int.Parse(taskElement.Attributes["id"].Value);
+                    task.name = taskElement.Attributes["name"].Value;
+                    task.npcId = int.Parse(taskElement.Attributes["npcId"].Value);
                     XmlNode requirementNode= taskElement.SelectSingleNode("requimentList");
                     //初始化任务条件
                     if (requirementNode != null)
                     {
                         XmlNodeList requirementList = requirementNode.ChildNodes;
+
                         foreach (XmlElement requirement in requirementList)
                         {
                             switch (requirement.Attributes["type"].Value)
                             {
                                 case "giveMoney":
-                                    task.reqList.Add(new MoneyRequirement(int.Parse(requirement.Attributes["num"].Value)));
+                                    MoneyRequirement r1 = new MoneyRequirement(int.Parse(requirement.Attributes["num"].Value));
+                                    r1.finish_task_Handler = task.finish_task;
+                                    task.reqList.Add(r1);
                                     break;
                                 case "giveItem":
-                                    task.reqList.Add(new ItemRequirement(int.Parse(requirement.Attributes["itemId"].Value),int.Parse(requirement.Attributes["num"].Value)));
+                                    ItemRequirement r2 = new ItemRequirement(int.Parse(requirement.Attributes["itemId"].Value), int.Parse(requirement.Attributes["num"].Value));
+                                    r2.finish_task_Handler = task.finish_task;
+                                    task.reqList.Add(r2);
                                     break;
                                 case "kill":
-                                    task.reqList.Add(new KillRequirement(int.Parse(requirement.Attributes["monsterId"].Value), int.Parse(requirement.Attributes["num"].Value)));
+                                    KillRequirement r3 = new KillRequirement(int.Parse(requirement.Attributes["monsterId"].Value), int.Parse(requirement.Attributes["num"].Value));
+                                    r3.finish_task_Handler = task.finish_task;
+                                    task.reqList.Add(r3);
                                     break;
                             }
                         }
@@ -87,14 +97,12 @@ public class TaskController  {
                             task.LatterTaskIDList.Add(int.Parse(node.Attributes["taskId"].Value));
                         }
                     }
-                   
                     if (taskElement.Attributes["islocked"].Value == "true")
                         con.Task_locked.Add(task.id,task);
                     else
                     {
                         con.Task_canDo.Add(task.id, task);
-                        //需求接口： NPC getNPC(int npcId)
-                        //给对应npc加上任务id和当前任务状态：已解锁未接取或者已接取
+                        World.getInstance().FindNPCByID(task.npcId).taskId_canDo.Add(task.id);
                     }
                         
                 }
