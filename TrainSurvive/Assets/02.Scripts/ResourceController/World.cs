@@ -146,6 +146,7 @@ public class World
     public bool[] carriageUnlock;
     public Tech[] techArray;
     public int techUnlock;
+    public bool automata;
 
     public int[] abiAllin;
     public int[] abiAllOut;

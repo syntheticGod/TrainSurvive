@@ -11,6 +11,7 @@ public class Item2EnergySUI : FacilityUI {
 
     public UnitInventoryCtrl Gas;
     public Slider Slider;
+    public AutomataUI AutomataUI;
 
     private new Item2EnergyStructure Structure {
         get {
@@ -20,6 +21,10 @@ public class Item2EnergySUI : FacilityUI {
 
     private void Awake() {
         Gas.ChargeIn = (item) => Structure.Conversions.ContainsKey(item.id);
+        AutomataUI.OnChangeState = (state, value) => {
+            Structure.AutomataCount = value;
+            Structure.AutomataEnabled = state;
+        };
     }
 
     private void OnEnable() {
@@ -27,6 +32,7 @@ public class Item2EnergySUI : FacilityUI {
         Structure.OnAcquireGas = OnAcquireGas;
         Structure.OnGasUpdate = OnGasUpdate;
         Structure.OnProgressChange += OnProgressChange;
+        Structure.OnAutomataCountChange = OnAutomataCountChange;
 
         UIManager.Instance?.ToggleInventoryPanel(true);
     }
@@ -35,6 +41,7 @@ public class Item2EnergySUI : FacilityUI {
         Structure.OnAcquireGas = null;
         Structure.OnGasUpdate = null;
         Structure.OnProgressChange -= OnProgressChange;
+        Structure.OnAutomataCountChange = null;
     }
 
     private void UpdateUI() {
@@ -42,6 +49,9 @@ public class Item2EnergySUI : FacilityUI {
         if (Structure.Gas != null)
             Gas.GeneratorItem(Structure.Gas.id, Structure.Gas.num);
         Slider.value = Structure.Progress;
+        AutomataUI.gameObject.SetActive(World.getInstance().automata);
+        AutomataUI.Value = Structure.AutomataCount;
+        AutomataUI.Enabled = Structure.AutomataEnabled;
     }
     
     private void OnAcquireGas(ref ItemData old) {
@@ -65,7 +75,11 @@ public class Item2EnergySUI : FacilityUI {
         if(newItem == null) {
             Gas.Clear();
         } else {
-            Gas.GetItem().currPileNum = newItem.num;
+            if (Gas.GetItem() == null) {
+                Gas.GeneratorItem(newItem.id, newItem.num);
+            } else {
+                Gas.GetItem().currPileNum = newItem.num;
+            }
         }
     }
     
@@ -73,5 +87,9 @@ public class Item2EnergySUI : FacilityUI {
         Slider.minValue = min;
         Slider.maxValue = max;
         Slider.value = value;
+    }
+
+    private void OnAutomataCountChange(int count) {
+        AutomataUI.Value = count;
     }
 }
