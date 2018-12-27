@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static WorldMap.SpawnPoint;
 
 namespace WorldMap {
     public class SaveReadMap : MonoBehaviour {
@@ -114,18 +115,12 @@ namespace WorldMap {
 
             //写入普通气候的数据
             for (int i = 0; i < map.rowNum; i++) {
-                string row = ((int)map.spowns[i, 0].terrainType).ToString();
-                for (int j = 1; j < map.colNum; j++) {
-                    row += "," + (int)map.spowns[i, j].climateType;
-                }
-                sw.WriteLine(row);
-            }
-
-            //写入普通地形的数据
-            for (int i = 0; i < map.rowNum; i++) {
-                string row = ((int)map.spowns[i, 0].terrainType).ToString();
-                for (int j = 1; j < map.colNum; j++) {
-                    row += "," + (int)map.spowns[i, j].terrainType;
+                string row = "";
+                for (int j = 0; j < map.colNum; j++) {
+                    //写入普通气候的数据
+                    row += (j == 0 ? "" : ",") + (int)map.spowns[i, j].climateType
+                        //写入普通地形的数据
+                        + "," + (int)map.spowns[i, j].terrainType;
                 }
                 sw.WriteLine(row);
             }
@@ -156,11 +151,16 @@ namespace WorldMap {
             //先写大地图的宽高
             sw.WriteLine(map.rowNum + "," + map.colNum);
 
-            //写入普通地形的数据
+            //写入迷雾的数据
             for (int i = 0; i < map.rowNum; i++) {
-                string row = ((int)map.spowns[i, 0].viewState).ToString();
-                for (int j = 1; j < map.colNum; j++) {
-                    row += "," + (int)map.spowns[i, j].viewState;
+                string row = "";
+                for (int j = 0; j < map.colNum; j++) {
+                    //写入迷雾的数据
+                    row += (j == 0 ? "" : ",") + (int)map.spowns[i, j].viewState
+                        //写入特殊区域（怪物，特殊区域的数据）
+                        + "," + (int)map.spowns[i, j].specialTerrainType
+                        //写入怪物难度或是特殊区域id
+                        + "," + map.spowns[i, j].monsterId;
                 }
                 sw.WriteLine(row);
             }
@@ -210,23 +210,16 @@ namespace WorldMap {
             // 第一行地图的尺寸
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
-            //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
 
-            //获取气候数据
-            for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
+            //获取气候，地形数据(paraNum为2)
+            for (int lineCnt = 0, paraNum = 2; lineCnt < map.rowNum; lineCnt++) {
                 // 用“,”将每个字符分割开
                 string[] curLineData = lines[lineIndex++].Split(spliter, option);
                 for (int col = 0; col < map.colNum; col++) {
-                    map.spowns[lineCnt, col].SetClimateEnum((SpawnPoint.ClimateEnum)int.Parse(curLineData[col]));
-                }
-            }
-
-            //获取地形数据
-            for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
-                // 用“,”将每个字符分割开
-                string[] curLineData = lines[lineIndex++].Split(spliter, option);
-                for (int col = 0; col < map.colNum; col++) {
-                    map.spowns[lineCnt, col].SetTerrainEnum((SpawnPoint.TerrainEnum)int.Parse(curLineData[col]));
+                     //获取气候数据
+                     map.spowns[lineCnt, col].SetClimateEnum((ClimateEnum)int.Parse(curLineData[col * paraNum]));
+                     //获取地形数据
+                     map.spowns[lineCnt, col].SetTerrainEnum((TerrainEnum)int.Parse(curLineData[col * paraNum + 1]));
                 }
             }
 
@@ -273,16 +266,18 @@ namespace WorldMap {
             // 第一行地图的尺寸
             int lineIndex = 0;
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
-            //map.initMap(int.Parse(sizewh[0]), int.Parse(sizewh[1]));
 
-            //获取迷雾的数据
-            for (int lineCnt = 0; lineCnt < map.rowNum; lineCnt++) {
+            //获取迷雾，怪物，怪物类型的数据(paraNum为3)
+            for (int lineCnt = 0, paraNum = 3; lineCnt < map.rowNum; lineCnt++) {
                 // 用“,”将每个字符分割开
                 string[] curLineData = lines[lineIndex++].Split(spliter, option);
                 for (int col = 0; col < map.colNum; col++) {
-                    map.spowns[lineCnt, col].SetViewState((SpawnPoint.SpawnViewStateEnum)int.Parse(curLineData[col]));
-
-                    //Debug.Log(map.spowns[lineCnt, col].viewState);
+                    //获取迷雾数据
+                    map.spowns[lineCnt, col].SetViewState((SpawnViewStateEnum)int.Parse(curLineData[col * paraNum]));
+                    //获取特殊区域数据
+                    map.spowns[lineCnt, col].SetSpecialTerrain((SpecialTerrainEnum)int.Parse(curLineData[col * paraNum + 1]));
+                    //获取怪物难度id
+                    map.spowns[lineCnt, col].SetMonsterId(int.Parse(curLineData[col * paraNum + 2]));
                 }
             }
         }

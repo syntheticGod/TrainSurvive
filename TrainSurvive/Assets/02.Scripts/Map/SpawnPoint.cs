@@ -66,16 +66,17 @@ namespace WorldMap {
             //铁轨
             RAIL,
 
-            //湖泊
-
             //剧情副本
             SCENARIO_AREA,
 
-            //特殊区域
+            //特殊区域（特殊区域）
             SPECIAL_AREA,
 
             //随机小副本
             RANDOM_AREA,
+
+            //怪物
+            MONSTER,
 
             NUM
         };
@@ -95,6 +96,12 @@ namespace WorldMap {
 
             //铁轨（城镇和铁轨只会出现一个）
             RAIL = 2,
+
+            //怪物级别
+            MONSTER_LEVEL = 2,
+
+            //特殊区域
+            SPECIAL_AREA = 2,
 
             NUM
         }
@@ -139,6 +146,10 @@ namespace WorldMap {
         //如果是铁轨，将记录起始城镇所在区域大块的位置
         public Vector2Int startTownPos { get; private set; }
 
+        //如果是怪物地块，记录怪物的难度
+        //如果是特殊区域，记录区域id
+        public int monsterId { get; private set; }
+
         //地块的方法
         //---------------------------------------------------------------------------
         //初始化当前气候为热带，地形为平原，不是特殊地带，不初始化城镇
@@ -182,6 +193,11 @@ namespace WorldMap {
         //设置起点的城镇位置
         public void SetStartTownId(Vector2Int startTownPos) {
             this.startTownPos = startTownPos;
+        }
+
+        //设置怪物的id或者是特殊区域的id
+        public void SetMonsterId(int monsterId) {
+            this.monsterId = monsterId;
         }
 
         /// <summary>

@@ -21,6 +21,9 @@ namespace WorldBattle {
             //攻击触发型
             ATTACK,
 
+            //开关型
+            SWITCH,
+
             //被动型
             PASSIVE,
 

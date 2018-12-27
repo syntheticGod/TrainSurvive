@@ -31,7 +31,15 @@
   <Skill id = "10" skillType="ACTIVE" needAp ="30" />
 
   <!--增加500%攻速，持续三次攻击。-->
-  <Skill id = "11" skillType="ACTIVE" needAp ="35" >
-  </Skill>
+  <Skill id = "11" skillType="ACTIVE" needAp ="35" />
+
+  <!--开启后持续消耗AP，技能开启期间攻速增加100%-->
+  <Skill id = "12" skillType="SWITCH" needAp ="50" atkSpeedRate="2" />
+
+  <!--开启后持续消耗AP，技能开启期间攻速增加100%，攻击力增加50%，但受到伤害增加20%-->
+  <Skill id = "13" skillType="SWITCH" needAp ="70" atkSpeedRate="2" atkDamageRate="1.5" injuryedRate="1.2" />
+
+  <!--进入持续10秒的隐身状态，移动速度增加50%且无法被选中为目标，攻击或释放技能会打破隐身状态-->
+  <Skill id = "14" skillType="SWITCH" needAp ="50" timeRate="10" atkDamageRate="1.5" injuryedRate="1.2" />
 
 </SkillPool>

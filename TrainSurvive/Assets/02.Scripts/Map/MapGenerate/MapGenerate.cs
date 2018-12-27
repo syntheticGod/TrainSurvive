@@ -61,6 +61,8 @@ namespace WorldMap {
         private TownsRailGenerate townsRailGenerate;
         //获取气候地形生成类
         private ClimateTerrainGenerate climateTerrainGenerate;
+        //获取怪物生成类
+        private MonsterGenerate monsterGenerate;
 
         //判定这是新游戏（生成地图）还是读取地图
         public bool isCreateMap;
@@ -96,7 +98,8 @@ namespace WorldMap {
             townsRailGenerate = GameObject.Find("TownsRailGenerate").GetComponent<TownsRailGenerate>();
             //获取气候地形生成脚本
             climateTerrainGenerate = GameObject.Find("ClimateTerrainGenerate").GetComponent<ClimateTerrainGenerate>();
-
+            //获取怪物生成脚本
+            monsterGenerate = GameObject.Find("MonsterGenerate").GetComponent<MonsterGenerate>();
 
             ////为每种地形赋予一个图标
             //mapObject = new GameObject[(int)SpawnPoint.TerrainEnum.NUM];
@@ -134,15 +137,6 @@ namespace WorldMap {
                 BuildTerrain();
             }
 
-            ////判断是不是第一次生成地形
-            //if (isCreateMap) {
-            //    //生成特殊地形的算法
-            //    BuildTerrain();
-            //} else {
-            //    //读取地图的信息
-            //    SaveReadMap.ReadMapInfo();
-            //}
-
             //对地形进行绘画
             //PaintTerrain();
 
@@ -152,10 +146,8 @@ namespace WorldMap {
             //生成城镇，并绘画出城镇和铁轨
             townsRailGenerate.StartGenerate();
 
-            //如果是第一次生成地图的静态数据，要将其保存
-            //if (isCreateMap) {
-            //    SaveReadMap.SaveStaticMapInfo();
-            //}
+            //生成怪物
+            monsterGenerate.StartGenerate();
         }
 
         ////生成地形
