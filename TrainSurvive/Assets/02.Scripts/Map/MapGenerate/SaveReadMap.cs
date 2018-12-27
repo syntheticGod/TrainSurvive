@@ -255,7 +255,7 @@ namespace WorldMap {
             Map map = Map.GetIntanstance();
             
             // 将空元素删除的选项
-            System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
+            StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries;
 
             // 用换行符将每行切割开
             string[] lines = mapData.Split(new char[] { '\r', '\n' }, option);
@@ -276,6 +276,10 @@ namespace WorldMap {
                     map.spowns[lineCnt, col].SetViewState((SpawnViewStateEnum)int.Parse(curLineData[col * paraNum]));
                     //获取特殊区域数据
                     map.spowns[lineCnt, col].SetSpecialTerrain((SpecialTerrainEnum)int.Parse(curLineData[col * paraNum + 1]));
+                    //删除城镇和铁轨的信息，它们的保存读取是另一个体系
+                    if (map.spowns[lineCnt, col].specialTerrainType == SpecialTerrainEnum.RAIL) {
+                        map.spowns[lineCnt, col].SetSpecialTerrain(SpecialTerrainEnum.NONE);
+                    }
                     //获取怪物难度id
                     map.spowns[lineCnt, col].SetMonsterId(int.Parse(curLineData[col * paraNum + 2]));
                 }
