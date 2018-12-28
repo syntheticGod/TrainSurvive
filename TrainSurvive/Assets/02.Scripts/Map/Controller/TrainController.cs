@@ -17,7 +17,7 @@ using TTT.Utility;
 
 namespace WorldMap.Controller
 {
-    public class TrainController : BaseController, DialogCallBack, Observer
+    public class TrainController : BaseController, Observer
     {
         private const int levelOfTrain = -1;
         //列车状态映射显示信息
@@ -96,7 +96,7 @@ namespace WorldMap.Controller
                 }
                 else
                 {
-                    Debug.Log("点击处被迷雾环绕");
+                    InfoDialog.Show("点击处被迷雾环绕");
                     return;
                 }
             }
@@ -158,12 +158,12 @@ namespace WorldMap.Controller
                     }
                     else
                     {
-                        //弹出框之后不能再操作列车
-                        TeamOutPrepareDialog dialog = BaseDialog.CreateDialog<TeamOutPrepareDialog>("TeamOutPrepareDialog");
-                        dialog.DialogCallBack = this;
-                        dialog.ShowDialog();
-                        //选择人物后不能操作列车
+
                         Train.Instance.IsMovable = false;
+                        ActiveBTs(false);
+                        Team.Instance.OutPrepare(Train.Instance.PosTrain);
+                        ControllerManager.Instance.ShowController("Team", "Character");
+                        UnFocus();
                     }
                     break;
                 case BUTTON_ID.TRAIN_CHANGE:
@@ -176,11 +176,6 @@ namespace WorldMap.Controller
             if (!(baseDialog is TeamOutPrepareDialog)) return;
             TeamOutPrepareDialog dialog = baseDialog as TeamOutPrepareDialog;
             //险队准备
-            Train.Instance.IsMovable = false;
-            ActiveBTs(false);
-            Team.Instance.OutPrepare(Train.Instance.PosTrain, dialog.GetSelectedFood(), dialog.GetSelectedPerson());
-            ControllerManager.Instance.ShowController("Team", "Character");
-            UnFocus();
         }
         public void Cancel()
         {

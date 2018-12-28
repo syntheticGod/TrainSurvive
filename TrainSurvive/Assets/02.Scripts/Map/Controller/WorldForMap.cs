@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using WorldMap.Model;
 using TTT.Utility;
 using TTT.Resource;
+using WorldMap.UI;
 
 namespace WorldMap
 {
@@ -133,25 +134,9 @@ namespace WorldMap
         {
             world.AddPerson(person);
         }
-        public List<Person> GetPersonInTrain()
+        public List<Person> GetAllPersons()
         {
-            List<Person> ret = new List<Person>();
-            foreach(Person itr in world.persons)
-            {
-                if (!itr.ifOuting)
-                    ret.Add(itr);
-            }
-            return ret;
-        }
-        public List<Person> GetPersonInTeam()
-        {
-            List<Person> ret = new List<Person>();
-            foreach (Person itr in world.persons)
-            {
-                if (itr.ifOuting)
-                    ret.Add(itr);
-            }
-            return ret;
+            return new List<Person>(world.persons); ;
         }
         public int PersonCount()
         {
@@ -164,49 +149,48 @@ namespace WorldMap
         //-----------------------------Team----------↓↓↓↓↓↓↓↓↓↓
         public bool IfTeamOuting
         {
-            get { return world.ifOuting; }
-        }
-        public bool IfTeamGathering
-        {
-            get { return world.ifGather; }
+            get { return world.ifTeamOuting; }
         }
         /// <summary>
         /// 探险队移动回调
         /// </summary>
         public void TeamMoving()
         {
-            world.ifMoving = true;
-            world.ifGather = false;
-        }
-        /// <summary>
-        /// 探险队采集回调
-        /// </summary>
-        public void DoGather()
-        {
-            world.ifGather = true;
-            world.ifMoving = false;
-        }
-        public void StopGather()
-        {
-            world.ifGather = false;
-            world.ifMoving = false;
+            world.ifTrainMoving = true;
         }
         /// <summary>
         /// 探险队停止回调
         /// </summary>
         public void TeamStandeBy()
         {
-            world.ifMoving = false;
-            world.ifGather = false;
+            world.ifTeamMoving = false;
+        }
+        /// <summary>
+        /// 探险队采集回调
+        /// </summary>
+        public bool DoGather()
+        {
+            if(world.outVit < 20)
+            {
+                InfoDialog.Show("探险队体力不足，无法采集");
+                return false;
+            }
+            world.addOutVit(-20);
+            //马上采集五次
+            for(int i = 0; i < 5; i++)
+                Gather.gather();
+            return true;
+        }
+        public void StopGather()
+        {
         }
         /// <summary>
         /// 探险队回车
         /// </summary>
         public void TeamGetIn()
         {
-            world.ifOuting = false;
-            world.ifMoving = false;
-            world.ifGather = false;
+            world.ifTeamOuting = false;
+            world.ifTrainMoving = false;
             //探险队放回食物
             int remain = (int)world.getFoodOut();
             world.setFoodOut(0);
@@ -222,41 +206,34 @@ namespace WorldMap
                 world.itemDataInTrain.Add(item);
             }
             world.itemDataInTeam.Clear();
-            world.numIn += world.numOut;
+            world.numIn = world.persons.Count;
             world.numOut = 0;
-            foreach(Person person in world.persons)
-            {
-                person.ifOuting = false;
-            }
         }
         /// <summary>
         /// 探险队外出
         /// </summary>
-        /// <param name="food"></param>
-        /// <param name="selectedPersons"></param>
-        public void TeamGetOut(int food, List<Person> selectedPersons)
+        public void TeamGetOut()
         {
+            int food = world.persons.Count * 200;
+            if (food > world.getFoodIn())
+                food = (int)world.getFoodIn();
             if (world.addFoodIn(-food) != 1)
             {
                 Debug.LogWarning("列车食物减少不正常——探险队外出！");
             }
-            world.numIn = world.persons.Count - selectedPersons.Count;
+            world.numIn = 0;
+            world.numOut = world.persons.Count;
             Debug.Log("列车：探险队外出了，剩下" + world.numIn + "人，剩下" + world.getFoodIn() + "食物");
             if (!world.setFoodOut((uint)food))
             {
                 Debug.LogWarning("探险队携带外出食物不正常！");
             }
-            world.numOut = selectedPersons.Count;
+            
             Debug.Log("探险队：我们（一共" + world.numOut + "人）外出了，带走了" + world.getFoodOut() + "点食物");
-            foreach(Person person in selectedPersons)
-            {
-                person.ifOuting = true;
-            }
-            world.ifOuting = true;
+            world.ifTeamOuting = true;
         }
         public void TeamRecruit(Person person)
         {
-            person.ifOuting = true;
             world.AddPerson(person);
         }
         public void TeamSetMapPos(Vector2Int mapPos)
@@ -266,7 +243,7 @@ namespace WorldMap
         }
         public int TeamNumber()
         {
-            return world.numOut;
+            return world.persons.Count;
         }
         public Vector2Int TeamMapPos()
         {
@@ -293,18 +270,17 @@ namespace WorldMap
         //-----------------------------Train----------↓↓↓↓↓↓↓↓↓↓
         public void TrainRecruit(Person person)
         {
-            person.ifOuting = false;
             world.AddPerson(person);
         }
         public void TrainMoving()
         {
-            world.ifMoving = true;
-            world.ifGather = false;
-            world.ifOuting = false;
+            world.ifTrainMoving = true;
+            if (world.ifTeamOuting)
+                Debug.LogError("错误，小队外出状态下，列车被允许移动");
         }
         public void TrainStop()
         {
-            world.ifMoving = false;
+            world.ifTrainMoving = false;
         }
         public int TrainGetFoodIn()
         {

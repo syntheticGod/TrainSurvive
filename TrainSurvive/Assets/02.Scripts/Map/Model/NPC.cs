@@ -15,8 +15,8 @@ namespace WorldMap.Model
     [Serializable]
     public class NPC
     {
-        public List<int> taskId_canDo=new List<int>();
-        public List<int> taskId_doing= new List<int>();
+        public List<int> taskId_canDo { get; } = new List<int>();
+        public List<int> taskId_doing { get; } = new List<int>();
         public Person PersonInfo { private set; get; }
         public string Name { get { return PersonInfo.name; } }
         public int Strength { get { return PersonInfo.strength; } }
@@ -41,14 +41,6 @@ namespace WorldMap.Model
                     "\n技巧：" + PersonInfo.technique + 
                     " 智力：" + PersonInfo.intelligence;
             }
-        }
-        /// <summary>
-        /// 给NPC添加能开始的的任务
-        /// </summary>
-        /// <param name="taskId">任务ID</param>
-        public void AddCanDoTask(int taskId)
-        {
-            taskId_canDo.Add(taskId);
         }
         //调用taskController的getTask获取任务
 

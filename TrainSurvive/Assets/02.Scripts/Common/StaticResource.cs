@@ -287,11 +287,13 @@ namespace TTT.Resource
         public static int AttributeCount { get { return AttributeName.Length; } }
         public static string GetAttributeName(int index)
         {
+#if DEBUG
             if (index >= AttributeName.Length)
             {
                 Debug.LogError("获取属性名失败，index=" + index);
                 return "";
             }
+#endif
             return AttributeName[index];
         }
         public static string RandomTownName()
@@ -454,7 +456,7 @@ namespace TTT.Resource
         /// <summary>
         /// 无条件就获得的技能
         /// </summary>
-        public static SkillInfo[] Skills { get { if (skills == null) LoadSkillFormXml(); return skills; } }
+        private static SkillInfo[] Skills { get { if (skills == null) LoadSkillFormXml(); return skills; } }
         private static void LoadSkillFormXml()
         {
             string xmlString = Resources.Load("xml/SkillInfo").ToString();

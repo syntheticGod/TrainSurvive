@@ -85,7 +85,8 @@ public class World
     private uint money = 100000;
     private float electricity = 0;
     private uint foodInMax = 10000;
-    private uint foodOutMax = 1000;
+    //外出携带默认食物，不需要玩家选择，意味着无外带食物上限
+    private uint foodOutMax = 99999999;
     private float energyMax = 1000;
     private float electricityMax = 1000;
 
@@ -102,13 +103,26 @@ public class World
     public int timeSpd = 1;
     public int dayCnt = 1;
     public int weekCnt = 0;
-
-    public bool ifOuting = false;
-    public bool ifMoving = false;
-    public bool ifGather = false;
-
-    public float outVit = 0;
-    public float outVitMax = 100;
+    /// <summary>
+    /// 探险队是否在外面
+    /// </summary>
+    public bool ifTeamOuting = false;
+    /// <summary>
+    /// 探险队是否在移动
+    /// </summary>
+    public bool ifTeamMoving = false;
+    /// <summary>
+    /// 列车是否在移动
+    /// </summary>
+    public bool ifTrainMoving = false;
+    /// <summary>
+    /// 探险队的体力
+    /// </summary>
+    public float outVit { private set; get; } = 0;
+    public float outVitMax { private set; get; } = 100;
+    /// <summary>
+    /// 探险队的心情
+    /// </summary>
     public float outMood = 0;
     public float outMoodMax = 100;
 
@@ -139,7 +153,7 @@ public class World
     /// </returns>
     public WorldMap.Model.NPC FindNPCByID(int id)
     {
-        foreach(WorldMap.Model.Town town in towns)
+        foreach (WorldMap.Model.Town town in towns)
         {
             WorldMap.Model.NPC npc = town.FindNPCByID(id);
             if (npc != null) return npc;
@@ -170,7 +184,7 @@ public class World
     public int numOut;
     public int personNumMax = 15;
 
-    public TaskController taskCon=null;
+    public TaskController taskCon = null;
 
     /// <summary>
     /// ID自增值
@@ -455,9 +469,9 @@ public class World
         return 1;
     }
     /// <summary>
-    /// num可为负代表减少
+    /// 增加/减少探险队的体力
     /// </summary>
-    /// <param name="num"></param>
+    /// <param name="num">num可为负代表减少</param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addOutVit(int num)
     {
@@ -493,23 +507,19 @@ public class World
         return addFoodOut((int)-(foodConsumed_eachPerson * numOut));
     }
     /// <summary>
-    /// 获取队伍的总属性（基本五属性和）
+    /// 获取队伍的总属性
     /// </summary>
-    /// <param name="isOuting">true即获取探险队的总属性,false即列车内人员的总属性</param>
     /// <returns></returns>
-    public int getTotalProperty(bool isOuting)
+    public int getTotalProperty()
     {
         int totalProperty = 0;
         foreach (Person p in persons)
         {
-            if (p.ifOuting == isOuting)
-            {
-                totalProperty += p.intelligence;
-                totalProperty += p.vitality;
-                totalProperty += p.strength;
-                totalProperty += p.technique;
-                totalProperty += p.agile;
-            }
+            totalProperty += p.intelligence;
+            totalProperty += p.vitality;
+            totalProperty += p.strength;
+            totalProperty += p.technique;
+            totalProperty += p.agile;
         }
         return totalProperty;
     }

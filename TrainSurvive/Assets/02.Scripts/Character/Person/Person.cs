@@ -56,9 +56,9 @@ public class Person
     public bool hasWeapon = false;
     public int weaponId = 0;
     /// <summary>
-    /// 是否外出，即是否在探险队里（探险队不一定处于出动状态）
+    /// 人物是否出战
     /// </summary>
-    public bool ifOuting = false;
+    public bool ifReadyForFighting = false;
     public string name = "";
     /// <summary>
     /// 性别用ismale代替
@@ -191,6 +191,7 @@ public class Person
         attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
         //初始专精槽数为1
         professionAvaliable = 1;
+        ifReadyForFighting = false;
     }
     /// <summary>
     /// 生成一个随机属性的人物（未持有武器）
@@ -205,7 +206,6 @@ public class Person
         {
             p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
         }
-        p.ifOuting = false;
         //获得无条件获得的技能
         SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber);
         if (avaliableSkills != null)

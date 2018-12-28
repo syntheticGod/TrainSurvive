@@ -106,7 +106,7 @@ public class Gather {
                 terranGatherRate = 0.7;
                 break;
         }
-        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut)*(1+World.getInstance().getTotalProperty(true)*0.01);
+        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut)*(1+World.getInstance().getTotalProperty()*0.01);
         double randomResult = Random.Range(Mathf.Floor((float)gatherRate), Mathf.Ceil((float)gatherRate));
         int itemNums = 0;
         if (randomResult < gatherRate)
