@@ -37,43 +37,43 @@ MonoBehaviour:
     Item2EnergyStructure_ConversionArrayValue:
     - ItemID: 201
       EnergyRate: 1
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 211
       EnergyRate: 0.6
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 212
       EnergyRate: 2.5
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 213
       EnergyRate: 1.2
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 214
       EnergyRate: 1.5
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 221
       EnergyRate: 3
-      ProcessTimeRatio: 2
+      ProcessTimeRatio: 0.2
       ProduceEnergyRatio: 10
     - ItemID: 222
       EnergyRate: 3
-      ProcessTimeRatio: 2
+      ProcessTimeRatio: 0.2
       ProduceEnergyRatio: 10
     - ItemID: 223
       EnergyRate: 0.8
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 224
       EnergyRate: 0.8
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     - ItemID: 225
       EnergyRate: 0.4
-      ProcessTimeRatio: 4
+      ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _conversionRate

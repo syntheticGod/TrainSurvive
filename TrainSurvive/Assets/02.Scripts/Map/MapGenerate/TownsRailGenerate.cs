@@ -13,10 +13,8 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-namespace WorldMap
-{
-    public class TownsRailGenerate : MonoBehaviour
-    {
+namespace WorldMap {
+    public class TownsRailGenerate : MonoBehaviour {
         //private const float levelOfRail = -0.5F;
         //private const float levelOfTown = -0.5F;
         //城镇的图标
@@ -49,8 +47,7 @@ namespace WorldMap
         public Map mapData;
 
         //开始生成
-        public void StartGenerate()
-        {
+        public void StartGenerate() {
             //对各对象进行初始化
             mapGenerate = GameObject.Find("MapBuild").GetComponent<MapGenerate>();
             townParentObject = new GameObject("towns");
@@ -63,8 +60,7 @@ namespace WorldMap
             towns = mapData.towns;
 
             //如果是第一次载入就生成城镇
-            if (mapGenerate.isCreateMap)
-            {
+            if (mapGenerate.isCreateMap) {
                 //生成城镇
                 BuildTowns();
                 //设置特殊城镇信息
@@ -85,8 +81,7 @@ namespace WorldMap
          * 只会生成城镇个数的pow(floor(sqrt(n)), 2)
          * 城镇单位为1x1
         **/
-        private void BuildTowns()
-        {
+        private void BuildTowns() {
             //先计算出将整块地图分成多少个大块
             int townRowNum = Mathf.FloorToInt(Mathf.Sqrt((float)townsNum));
             int townColNum = townRowNum;
@@ -107,20 +102,15 @@ namespace WorldMap
 
             //按照大块来生成城镇，每个大块生成一个城镇
             //每个大块靠边界的地方不生成城镇，保证每个城镇的最远距离
-            for (int i = 0; i < townRowNum; i++)
-            {
-                for (int j = 0; j < townColNum; j++)
-                {
+            for (int i = 0; i < townRowNum; i++) {
+                for (int j = 0; j < townColNum; j++) {
                     //生成在该区域内的城镇
                     int posx, posz;
                     //如果城镇在最中间的位置，不随机位置，放在最中间
-                    if (midTownPos.x == i && midTownPos.y == j)
-                    {
+                    if (midTownPos.x == i && midTownPos.y == j) {
                         posx = mapData.rowNum / 2;
                         posz = mapData.colNum / 2;
-                    }
-                    else
-                    {
+                    } else {
                         //其余随机
                         posx = Random.Range(marginX, offsetX - marginX) + i * offsetX;
                         posz = Random.Range(marginZ, offsetZ - marginZ) + j * offsetZ;
@@ -139,16 +129,13 @@ namespace WorldMap
         /// 在地图上进行城镇的绘画
         /// 并赋予地块相应的属性
         /// </summary>
-        private void PaintTowns()
-        {
+        private void PaintTowns() {
             //获取行数和列数
             int townRowNum = towns.GetLength(0);
             int townColNum = towns.GetLength(1);
 
-            for (int i = 0; i < townRowNum; i++)
-            {
-                for (int j = 0; j < townColNum; j++)
-                {
+            for (int i = 0; i < townRowNum; i++) {
+                for (int j = 0; j < townColNum; j++) {
                     Vector2Int mapPos = towns[i, j].position;
                     //对城镇图标进行绘画
                     GameObject o = Instantiate(townObject,
@@ -171,8 +158,7 @@ namespace WorldMap
         /// <param name="map"></param>
         /// <param name="townPos"></param>
         /// <param name="mapPos"></param>
-        public static void SetTownProperty(Map map, Vector2Int townPos, Vector2Int mapPos)
-        {
+        public static void SetTownProperty(Map map, Vector2Int townPos, Vector2Int mapPos) {
             //设置城镇属性
             map.spowns[mapPos.x, mapPos.y].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.TOWN);
             map.spowns[mapPos.x, mapPos.y].SetTownId(townPos);
@@ -182,8 +168,7 @@ namespace WorldMap
          *只在相邻大块的城镇生成铁轨
          * 城镇连接规律，TownPos的x轴或y轴越小为from，下一个为to
          */
-        public static void BuildRails(Map map)
-        {
+        public static void BuildRails(Map map) {
             //获取行数和列数
             int townRowNum = map.towns.GetLength(0);
             int townColNum = map.towns.GetLength(1);
@@ -191,19 +176,16 @@ namespace WorldMap
             Town[,] towns = map.towns;
 
             //先连接第一行
-            for (int j = 1; j < townRowNum; j++)
-            {
+            for (int j = 1; j < townRowNum; j++) {
                 ConnectTown(map, towns[0, j - 1], towns[0, j]);
             }
 
             //在连接每一行
-            for (int i = 1; i < townRowNum; i++)
-            {
+            for (int i = 1; i < townRowNum; i++) {
                 //连接每一行的第一个
                 ConnectTown(map, towns[i - 1, 0], towns[i, 0]);
 
-                for (int j = 1; j < townColNum; j++)
-                {
+                for (int j = 1; j < townColNum; j++) {
                     ConnectTown(map, towns[i, j - 1], towns[i, j]);
                     ConnectTown(map, towns[i - 1, j], towns[i, j]);
                 }
@@ -213,17 +195,14 @@ namespace WorldMap
         /// <summary>
         /// 在25个区块中放置如下6个特殊城镇（对应类型ID1~6）与其他19个普通城镇（类型ID=0）
         /// </summary>
-        public static void SetSpecialTownInfo(Map map)
-        {
+        public static void SetSpecialTownInfo(Map map) {
             //获取行数和列数
             int townRowNum = map.towns.GetLength(0);
             int townColNum = map.towns.GetLength(1);
 
             //设置城镇的类型id
-            for (int i = 0; i < townRowNum; i++)
-            {
-                for (int j = 0; j < townColNum; j++)
-                {
+            for (int i = 0; i < townRowNum; i++) {
+                for (int j = 0; j < townColNum; j++) {
                     //设置类型为普通类型
                     map.towns[i, j].typeId = ETownType.COMMON;
                     //设置城镇名字
@@ -241,8 +220,7 @@ namespace WorldMap
             //查找<Towns>
             XmlNode rootNode = xmlDoc.SelectSingleNode("Towns");
             //遍历所有子节点
-            foreach (XmlNode curBuffNode in rootNode.ChildNodes)
-            {
+            foreach (XmlNode curBuffNode in rootNode.ChildNodes) {
                 //获取城镇的位置
                 int posx = int.Parse(curBuffNode.Attributes["posx"].Value);
                 int posy = int.Parse(curBuffNode.Attributes["posy"].Value);
@@ -259,8 +237,7 @@ namespace WorldMap
          * 铁轨的生成算法是，先使x轴相等，再使y轴相等
          * 根据铁轨的路径和转折点绘画出当前铁轨
          */
-        private static void ConnectTown(Map map, Town fromTown, Town toTown)
-        {
+        private static void ConnectTown(Map map, Town fromTown, Town toTown) {
             //获得城镇的坐标
             Vector2Int from = fromTown.position;
             Vector2Int to = toTown.position;
@@ -274,17 +251,14 @@ namespace WorldMap
             int railTurnAngle = -1;
 
             //先使x轴相等
-            if (from.x != to.x)
-            {
+            if (from.x != to.x) {
                 int dir = from.x < to.x ? 1 : -1;
                 int posx = 0;
                 int posz = from.y;
 
-                for (posx = from.x + dir; posx != to.x; posx += dir)
-                {
+                for (posx = from.x + dir; posx != to.x; posx += dir) {
                     //去掉重复铁轨
-                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE)
-                    {
+                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
                     railPath.Add(new Vector2Int(posx, posz));
@@ -293,35 +267,24 @@ namespace WorldMap
                 xRailNum = railPath.Count;
 
                 //x轴最后一段铁轨特殊处理（拐弯处）
-                if (from.y != to.y)
-                {
+                if (from.y != to.y) {
                     posx = to.x;
                     posz = from.y;
-                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE)
-                    {
+                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
 
                     //对铁轨图标进行旋转
-                    if (from.x < to.x)
-                    {
-                        if (from.y < to.y)
-                        {
+                    if (from.x < to.x) {
+                        if (from.y < to.y) {
                             railTurnAngle = 180;
-                        }
-                        else
-                        {
+                        } else {
                             railTurnAngle = 270;
                         }
-                    }
-                    else
-                    {
-                        if (from.y < to.y)
-                        {
+                    } else {
+                        if (from.y < to.y) {
                             railTurnAngle = 90;
-                        }
-                        else
-                        {
+                        } else {
                             railTurnAngle = 0;
                         }
                     }
@@ -329,15 +292,12 @@ namespace WorldMap
             }
 
             //让z轴相等
-            if (from.y != to.y)
-            {
+            if (from.y != to.y) {
                 int dir = from.y < to.y ? 1 : -1;
                 int posx = (int)to.x;
-                for (int posz = (int)from.y + dir; posz != (int)to.y; posz += dir)
-                {
+                for (int posz = (int)from.y + dir; posz != (int)to.y; posz += dir) {
                     //去掉重复铁轨
-                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE)
-                    {
+                    if (map.spowns[posx, posz].specialTerrainType != SpawnPoint.SpecialTerrainEnum.NONE) {
                         return;
                     }
                     railPath.Add(new Vector2Int(posx, posz));
@@ -345,8 +305,7 @@ namespace WorldMap
             }
 
             //如果有拐弯的铁轨，将其在最后加入
-            if (railTurnAngle != -1)
-            {
+            if (railTurnAngle != -1) {
                 railPath.Add(new Vector2Int(to.x, from.y));
             }
 
@@ -371,8 +330,7 @@ namespace WorldMap
             //如果无拐弯的铁轨
             int directRailNum = railTurnAngle == -1 ? railPath.Count : railPath.Count - 1;
             //先绘画出x轴方向的铁轨
-            for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++)
-            {
+            for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++) {
                 //设置铁轨属性
                 SetSpawnPointRailProperty(map,
                     railPath[curRailIndex].x,
@@ -381,8 +339,7 @@ namespace WorldMap
             }
 
             //x轴最后一段铁轨特殊处理（拐弯处）
-            if (railTurnAngle != -1)
-            {
+            if (railTurnAngle != -1) {
                 //设置铁轨属性
                 SetSpawnPointRailProperty(map,
                     railPath[railPath.Count - 1].x,
@@ -391,19 +348,15 @@ namespace WorldMap
             }
         }
 
-        private void PaintRails()
-        {
+        private void PaintRails() {
             //获取城镇的行数和列数
             int townRowNum = towns.GetLength(0);
             int townColNum = towns.GetLength(1);
 
-            for (int i = 0; i < townRowNum; i++)
-            {
-                for (int j = 0; j < townColNum; j++)
-                {
+            for (int i = 0; i < townRowNum; i++) {
+                for (int j = 0; j < townColNum; j++) {
                     //根据是否有下一个城镇，对铁轨进行绘画
-                    for (int k = 0; k < towns[i, j].connectTowns.Count; k++)
-                    {
+                    for (int k = 0; k < towns[i, j].connectTowns.Count; k++) {
                         PaintRailPath(towns[i, j].railPaths[k], towns[i, j], towns[i, j].connectTowns[k]);
                     }
                 }
@@ -418,8 +371,7 @@ namespace WorldMap
         /// <param name="railTurnAngle">如果有转弯的铁轨，这是转弯铁轨的角度；如果没有，则为-1</param>
         /// <param name="from">起点城镇位置</param>
         /// <param name="to">终点城镇的位置</param>
-        private void PaintRailPath(Town.RailPath townRailPaths, Town fromTown, Town toTown)
-        {
+        private void PaintRailPath(Town.RailPath townRailPaths, Town fromTown, Town toTown) {
             //获取railPath三个属性
             List<Vector2Int> railPath = townRailPaths.railPath;
             int railTurnAngle = townRailPaths.railTurnAngle;
@@ -436,26 +388,21 @@ namespace WorldMap
             //如果无拐弯的铁轨
             int directRailNum = railTurnAngle == -1 ? railPath.Count : railPath.Count - 1;
             //先绘画出x轴方向的铁轨
-            for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++)
-            {
+            for (int curRailIndex = 0; curRailIndex < directRailNum; curRailIndex++) {
                 int posx = railPath[curRailIndex].x;
                 int posz = railPath[curRailIndex].y;
 
                 //对铁轨图标进行绘画
-                if (curRailIndex < xRailNum)
-                {
+                if (curRailIndex < xRailNum) {
                     PaintSingleRail(posx, posz, true, new Vector3());
-                }
-                else
-                {
+                } else {
                     PaintSingleRail(posx, posz, true, new Vector3(0, 0, 90));
                 }
                 //Debug.Log(mapData.data[posx, posz].townPos + "  " + mapData.data[posx, posz].startTownPos);
             }
 
             //x轴最后一段铁轨特殊处理（拐弯处）
-            if (railTurnAngle != -1)
-            {
+            if (railTurnAngle != -1) {
                 int posx = railPath[railPath.Count - 1].x;
                 int posz = railPath[railPath.Count - 1].y;
 
@@ -471,8 +418,7 @@ namespace WorldMap
         /// <param name="posz"></param>
         /// <param name="fromTownPos">起始城镇的位置</param>
         /// <param name="toTownPos">终点城镇的位置</param>
-        private static void SetSpawnPointRailProperty(Map map, int posx, int posz, Vector2Int fromTownPos, Vector2Int toTownPos)
-        {
+        private static void SetSpawnPointRailProperty(Map map, int posx, int posz, Vector2Int fromTownPos, Vector2Int toTownPos) {
             map.spowns[posx, posz].SetSpecialTerrain(SpawnPoint.SpecialTerrainEnum.RAIL);
             map.spowns[posx, posz].SetStartTownId(fromTownPos);
             map.spowns[posx, posz].SetTownId(toTownPos);
@@ -485,13 +431,11 @@ namespace WorldMap
         /// <param name="posz">当前铁轨z轴位置</param>
         /// <param name="isDirect">当前铁轨是否是直的铁轨</param>
         /// <param name="rotate">当前铁轨需要旋转的角度</param>
-        private void PaintSingleRail(int posx, int posz, bool isDirect, Vector3 rotate)
-        {
+        private void PaintSingleRail(int posx, int posz, bool isDirect, Vector3 rotate) {
             //判断是转弯的object还是旋转的object
             GameObject railObject = isDirect ? railDirectObject : railTurnObject;
 
-            if (mapGenerate == null || railObject == null)
-            {
+            if (mapGenerate == null || railObject == null) {
                 return;
             }
 

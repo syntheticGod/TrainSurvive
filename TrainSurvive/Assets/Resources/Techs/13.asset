@@ -17,8 +17,9 @@ MonoBehaviour:
   Description: 
   TotalWorks: 6
   OnCompleted:
-    Class: 
+    Class: AutomataTech
     AcceptTypes: []
-    MethodCandidateNames: []
+    MethodCandidateNames:
+    - Run|Tech
     CandidateSelection: 0
-    ClassObject: {fileID: 0}
+    ClassObject: {fileID: 11500000, guid: 3b2ef0de5e200b048bb02c6e78104a6e, type: 3}
