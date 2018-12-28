@@ -17,14 +17,15 @@ namespace WorldMap.Controller
 {
     public class TeamController : BaseController, Observer
     {
+        //探险队icon最多显示个数
+        public const int MAX_NUM_OF_TEAM_INVIEW = 5;
         private int levelOfTeam = -2;
         //视图
         private RectTransform teamModeBTs;
         private SpriteRenderer[] teamPersons;
         //数据
-        private static string[] bottomBtnsStrs = { "进入区域", "上车", "采集", "背包","人物" };
+        private static string[] bottomBtnsStrs = { "进入区域", "上车", "采集", "背包", "探险队信息" };
         private Button[] bottomBtns;
-        private static string[] teamActionBtnStrs = { "采集", "停止采集" };
         private Text teamActionBtn;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
@@ -59,8 +60,8 @@ namespace WorldMap.Controller
             ActiveBTs(false);
             teamActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
             //根据探险队数量，放至探险队图标
-            teamPersons = new SpriteRenderer[Team.MAX_NUMBER_OF_TEAM_MEMBER];
-            for (int i = 0; i < Team.MAX_NUMBER_OF_TEAM_MEMBER; i++)
+            teamPersons = new SpriteRenderer[MAX_NUM_OF_TEAM_INVIEW];
+            for (int i = 0; i < MAX_NUM_OF_TEAM_INVIEW; i++)
             {
                 teamPersons[i] = GOTool.CreateSpriteRenderer("Person" + i, transform, false);
             }
@@ -89,7 +90,7 @@ namespace WorldMap.Controller
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
             }
             //FOR TEST：检测背包重量测试
-            if(!Mathf.Approximately(lastSize, team.Inventory.GetWeight()))
+            if (!Mathf.Approximately(lastSize, team.Inventory.GetWeight()))
             {
                 Debug.Log("探险队背包变化：" + team.Inventory.GetWeight());
                 lastSize = team.Inventory.GetWeight();
@@ -128,17 +129,10 @@ namespace WorldMap.Controller
                     Hide();
                     break;
                 case BUTTON_ID.TEAM_GATHER:
-                    if (world.IfTeamGathering)
+                    Debug.Log("采集指令");
+                    if (world.DoGather())
                     {
-                        Debug.Log("停止采集指令");
-                        world.StopGather();
-                        teamActionBtn.text = teamActionBtnStrs[0];
-                    }
-                    else
-                    {
-                        Debug.Log("采集指令");
-                        world.DoGather();
-                        teamActionBtn.text = teamActionBtnStrs[1];
+                        //TODO 将地块改为已采集状态
                     }
                     break;
                 case BUTTON_ID.TEAM_PACK:
@@ -182,11 +176,11 @@ namespace WorldMap.Controller
         public void RefreshView()
         {
             int i;
-            for(i = 0; i< world.TeamNumber(); i++)
+            for (i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
             {
                 teamPersons[i].gameObject.SetActive(true);
             }
-            for(; i < teamPersons.Length; i++)
+            for (; i < teamPersons.Length; i++)
             {
                 teamPersons[i].gameObject.SetActive(false);
             }
@@ -286,11 +280,6 @@ namespace WorldMap.Controller
         public void ObserverUpdate(int state, int echo)
         {
             Team.STATE tState = (Team.STATE)state;
-            if (tState != Team.STATE.GATHERING)
-            {
-                world.StopGather();
-                teamActionBtn.text = teamActionBtnStrs[0];
-            }
             switch (tState)
             {
                 case Team.STATE.MOVING_TOP:

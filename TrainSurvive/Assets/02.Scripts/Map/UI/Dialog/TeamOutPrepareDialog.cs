@@ -83,7 +83,6 @@ namespace WorldMap.UI
         protected override void AfterDialogShow()
         {
             herosChoosedLV.Datas = new List<Person>();
-            herosGetReadyLV.Datas = new List<Person>(world.GetPersonInTrain());
             foodInTrain = world.TrainGetFoodIn();
             TryShowFood();
         }
@@ -128,21 +127,6 @@ namespace WorldMap.UI
         
         protected override bool OK()
         {
-            if (GetSelectedCount() == 0)
-            {
-                InfoDialog.Show("未选择任何人");
-                return false;
-            }
-            if (foodSelected == 0)
-            {
-                InfoDialog.Show("请选择食物");
-                return false;
-            }
-            if (GetSelectedCount() > Team.MAX_NUMBER_OF_TEAM_MEMBER)
-            {
-                InfoDialog.Show("至多选择" + Team.MAX_NUMBER_OF_TEAM_MEMBER + "个英雄");
-                return false;
-            }
             return true;
         }
 

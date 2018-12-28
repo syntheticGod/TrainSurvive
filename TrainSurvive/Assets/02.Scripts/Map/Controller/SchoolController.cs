@@ -12,6 +12,7 @@ using TTT.Utility;
 using WorldMap.UI;
 using TTT.Resource;
 using System.Text;
+using TTT.UI;
 
 namespace WorldMap.Controller
 {
@@ -24,6 +25,7 @@ namespace WorldMap.Controller
         private int[] deltaAttri;
         private Text[] attriViews;
         private Text[] attriViewsNew;
+        private AttributePanelView attributePanelView;
         //花费金额视图
         private Text moneyView;
         //被选中的英雄
@@ -44,6 +46,7 @@ namespace WorldMap.Controller
             base.CreateModel();
             SetBackground("tavern_bg_01");
             int attriCount = StaticResource.AttributeCount;
+            attributePanelView = ViewTool.ForceGetComponentInChildren<AttributePanelView>(this,"AttributePanel");
             attriViews = new Text[attriCount];
             attriViewsNew = new Text[attriCount];
             deltaAttri = new int[attriCount];
@@ -65,10 +68,7 @@ namespace WorldMap.Controller
                     heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
                     {
                         HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
-                        if (world.IfTeamOuting)
-                            dialog.SetDatas(world.GetPersonInTeam());
-                        else
-                            dialog.SetDatas(world.GetPersonInTrain());
+                        dialog.SetDatas(world.GetAllPersons());
                         dialog.DialogCallBack = this;
                         dialog.ShowDialog();
                     });
@@ -200,10 +200,7 @@ namespace WorldMap.Controller
         {
             professionListView.SetData(new List<Profession>());
             List<Person> heros;
-            if (world.IfTeamOuting)
-                heros = world.GetPersonInTeam();
-            else
-                heros = world.GetPersonInTrain();
+            heros = world.GetAllPersons();
             if (heros.Count > 0)
             {
                 ShowHero(heros[0]);

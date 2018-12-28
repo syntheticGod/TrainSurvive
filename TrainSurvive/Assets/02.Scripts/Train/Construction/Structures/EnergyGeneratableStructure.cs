@@ -42,7 +42,7 @@ public class EnergyGeneratableStructure : Structure {
     /// </summary>
     public float AddEnergy {
         get {
-            return _addElect;
+            return _addEnergy;
         }
     }
     /// <summary>

@@ -51,9 +51,9 @@ public class TimeController : MonoBehaviour {
                 world.consumeFoodIn();
                 world.consumeFoodOut();
             }
-            if (world.ifMoving)
+            if (world.ifTrainMoving)
             {
-                if (world.ifOuting)
+                if (world.ifTeamOuting)
                 {
                     world.addOutMood(-1);
                     world.addOutVit(-2);
@@ -65,14 +65,27 @@ public class TimeController : MonoBehaviour {
             }
             else
             {
-                if (world.ifOuting)
+                if (world.ifTeamOuting)
                 {
-                    if (world.ifGather)
+                    //现在采集
+                    //if (world.ifGather)
+                    //{
+                    //    Gather.gather();
+                    //}
+                    //else
+                    //TODO 存在时间间隔上的问题
+                    if (world.ifTeamMoving)
                     {
-                        Gather.gather();
+                        world.addOutMood(-1);
+                        world.addOutVit(-2);
                     }
                     else
+                    {
+                        //现在除了移动状态外都算处于休息状态了
+                        //见a第6次任务
                         world.addOutMood(2);
+                    }
+                        
                 }
             }
             yield return new WaitForSeconds((float)(System.Math.Ceiling(game_time)- game_time));

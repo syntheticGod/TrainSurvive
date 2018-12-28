@@ -297,6 +297,10 @@ namespace TTT.Utility
         }
         public static Button CreateBtn(string name, string content, Transform parent)
         {
+            return CreateBtn(name, content, parent);
+        }
+        public static Button CreateBtn(string name, string content, Component parent)
+        {
             Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();
             SetParent(btn, parent);
             Image image = btn.GetComponent<Image>();
@@ -327,6 +331,12 @@ namespace TTT.Utility
         public static Image CreateImage(string name)
         {
             return new GameObject(name, typeof(Image)).GetComponent<Image>();
+        }
+        public static Image CreateImage(string name, Component parent)
+        {
+            Image image = new GameObject(name, typeof(Image)).GetComponent<Image>();
+            SetParent(image, parent);
+            return image;
         }
         public static Text CreateText(string name, string content = "")
         {
@@ -379,6 +389,13 @@ namespace TTT.Utility
             rect.offsetMax = new Vector2(width / 2, 0);
             rect.offsetMin = -rect.offsetMax;
         }
+        /// <summary>
+        /// 将对象固定在右上角
+        /// </summary>
+        /// <param name="comp"></param>
+        /// <param name="pivot">本对象的中心点</param>
+        /// <param name="size">大小</param>
+        /// <param name="vector">偏移量</param>
         public static void RightTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
@@ -387,6 +404,16 @@ namespace TTT.Utility
             rect.anchorMax = Vector2.one;
             rect.offsetMin = vector + (size * -pivot);
             rect.offsetMax = rect.offsetMin + size;
+        }
+        /// <summary>
+        /// 将对象固定在右上角
+        /// </summary>
+        /// <param name="comp"></param>
+        /// <param name="pivot">本对象的中心点</param>
+        /// <param name="size">大小</param>
+        public static void RightTop(Component comp, Vector2 pivot, Vector2 size)
+        {
+            RightTop(comp, pivot, size, Vector2.zero);
         }
         public static void RightCenter(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {

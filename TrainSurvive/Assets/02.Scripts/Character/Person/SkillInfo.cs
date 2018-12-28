@@ -49,6 +49,11 @@ public class SkillInfo
         BigSprite = StaticResource.GetSprite(ESprite.DEVELOPING_BIG);
         SmallSprite = StaticResource.GetSprite(ESprite.DEVELOPING_SMALL);
     }
+    /// <summary>
+    /// 判断该技能是否达到传入的属性的要求
+    /// </summary>
+    /// <param name="attribute">传入属性要求</param>
+    /// <returns></returns>
     public bool IfAvailable(int[] attribute)
     {
         //无条件获得的技能AbiReqs为NULL

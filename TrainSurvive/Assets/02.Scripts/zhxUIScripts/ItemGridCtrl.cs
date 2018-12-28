@@ -353,12 +353,15 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(eventData.button == PointerEventData.InputButton.Right && belongController != null && item.currPileNum > 1)
-        {
-            GameObject temp = Instantiate(splitPanel);
+        if(eventData.button == PointerEventData.InputButton.Right && belongController != null && item.currPileNum > 1) {
+            GameObject temp;
+            if (belongController.transform.GetComponentInParent<AutoClose>() == null) {
+                temp = Instantiate(splitPanel, belongCanvas.transform);
+                temp.GetComponent<RectTransform>().position = new Vector2(Screen.width / 2, Screen.height / 2);
+            } else {
+                temp = Instantiate(splitPanel, belongController.transform.GetComponentInParent<AutoClose>().transform, false);
+            }
             temp.GetComponent<SplitPanelCtrl>().BindGrid(this);
-            temp.GetComponent<RectTransform>().position = new Vector2(Screen.width / 2, Screen.height / 2);
-            temp.transform.SetParent(belongCanvas.transform);
             temp.transform.SetAsLastSibling();
         }
     }

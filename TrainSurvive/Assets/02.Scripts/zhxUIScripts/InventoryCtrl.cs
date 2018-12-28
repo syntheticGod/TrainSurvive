@@ -142,10 +142,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     public void AddMaterial()
     {
-        Item[] temp = PublicMethod.GenerateItem(Random.Range(211,215), 3);
-        for(int i=0; i<temp.Length; ++i)
-            coreInventory.PushItem(temp[i]);
-
+        PublicMethod.AppendItemsInBackEnd(new ItemData[] { new ItemData(Random.Range(211, 215), 3) });
     }
 
     public void AddSpecialItem()

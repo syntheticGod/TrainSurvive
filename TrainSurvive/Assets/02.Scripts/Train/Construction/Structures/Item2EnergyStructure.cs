@@ -4,6 +4,7 @@
  * 创建时间：2018/12/13 17:10:33
  * 版本：v0.1
  */
+using Assets._02.Scripts.zhxUIScripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,6 +44,9 @@ public class Item2EnergyStructure : Structure {
         Gas = (ItemData)info.GetValue("Gas", typeof(ItemData));
         ConversionRateRatio = (float)info.GetValue("ConversionRateRatio", typeof(float));
         ProcessSpeedRatio = (float)info.GetValue("ProcessSpeedRatio", typeof(float));
+        AutomataEnabled = info.GetBoolean("AutomataEnabled");
+        AutomataCount = info.GetInt32("AutomataCount");
+        AutomataItem = info.GetInt32("AutomataItem");
     }
 
     public override void GetObjectData(SerializationInfo info, StreamingContext context) {
@@ -51,6 +55,9 @@ public class Item2EnergyStructure : Structure {
         info.AddValue("Gas", Gas);
         info.AddValue("ConversionRateRatio", ConversionRateRatio);
         info.AddValue("ProcessSpeedRatio", ProcessSpeedRatio);
+        info.AddValue("AutomataEnabled", AutomataEnabled);
+        info.AddValue("AutomataCount", AutomataCount);
+        info.AddValue("AutomataItem", AutomataItem);
         info.AddValue("_conversions", _conversions);
         info.AddValue("_conversionRate", _conversionRate);
         info.AddValue("_processSpeed", _processSpeed);
@@ -131,11 +138,26 @@ public class Item2EnergyStructure : Structure {
             _gas = value;
         }
     }
+    /// <summary>
+    /// 自动化是否启动
+    /// </summary>
+    public bool AutomataEnabled { get; set; }
+    /// <summary>
+    /// 自动化次数
+    /// </summary>
+    public int AutomataCount { get; set; }
+    /// <summary>
+    /// 自动化配方
+    /// </summary>
+    public int AutomataItem { get; set; }
+
 
     public Action<ItemData> OnGasUpdate;
     public RefAction<ItemData> OnAcquireGas;
+    public Action<int> OnAutomataCountChange;
 
     private Coroutine RunningCoroutine { get; set; }
+    private Coroutine AutoFillCoroutine { get; set; }
 
     [StructurePublicField(Tooltip = "转化列表")]
     private Conversion[] _conversions;
@@ -153,12 +175,15 @@ public class Item2EnergyStructure : Structure {
     protected override void OnStart() {
         base.OnStart();
         RunningCoroutine = TimeController.getInstance().StartCoroutine(Run());
+        AutoFillCoroutine = TimeController.getInstance().StartCoroutine(AutoFill());
     }
 
     protected override void OnRemoving() {
         base.OnRemoving();
         if (RunningCoroutine != null)
             TimeController.getInstance().StopCoroutine(RunningCoroutine);
+        if (AutoFillCoroutine != null)
+            TimeController.getInstance().StopCoroutine(AutoFillCoroutine);
     }
 
     public override LinkedList<ButtonAction> GetButtonActions() {
@@ -178,6 +203,11 @@ public class Item2EnergyStructure : Structure {
                 Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
             } else {
                 Progress = 0;
+                AutomataItem = Gas.id;
+                if (AutomataCount > 0 && AutomataEnabled) {
+                    AutomataCount--;
+                    OnAutomataCountChange?.Invoke(AutomataCount);
+                }
                 World.getInstance().addEnergy(Conversions[Gas.id].ProduceEnergy * ConversionRate * ConversionRateRatio);
                 if (--Gas.num == 0) {
                     Gas = null;
@@ -185,6 +215,16 @@ public class Item2EnergyStructure : Structure {
                 OnGasUpdate?.Invoke(_gas);
             }
             yield return 1;
+        }
+    }
+
+    private IEnumerator AutoFill() {
+        WaitUntil wait = new WaitUntil(() => AutomataEnabled && AutomataCount != 0 && Gas == null && PublicMethod.CanConsumeItems(new ItemData[] { new ItemData(AutomataItem, 1) }));
+        while (FacilityState == State.WORKING) {
+            yield return wait;
+            _gas = new ItemData(AutomataItem, 1);
+            PublicMethod.ConsumeItems(new ItemData[] { _gas });
+            OnGasUpdate?.Invoke(_gas);
         }
     }
 }

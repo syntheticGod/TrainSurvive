@@ -16,8 +16,6 @@ namespace WorldMap.Model
 {
     public class Team : SubjectBase
     {
-        //探险队的最多人数
-        public const int MAX_NUMBER_OF_TEAM_MEMBER = 5;
         //最大运动速度
         public float MaxSpeed { set; get; } = 1.0F;
         //最小移动距离
@@ -39,9 +37,6 @@ namespace WorldMap.Model
                 this.Notify((int)state);
                 switch (state)
                 {
-                    case STATE.GATHERING:
-                        WorldForMap.Instance.DoGather();
-                        break;
                     case STATE.STOP_OUT:
                     case STATE.STOP_TOWN:
                         WorldForMap.Instance.TeamStandeBy();
@@ -141,10 +136,10 @@ namespace WorldMap.Model
         /// <param name="initPosition">出现的世界坐标</param>
         /// <param name="selectedFood">外带的食物</param>
         /// <param name="selectedPersons">选择的成员</param>
-        public void OutPrepare(Vector2 initPosition, int selectedFood, List<Person> selectedPersons)
+        public void OutPrepare(Vector2 initPosition)
         {
             PosTeam = initPosition;
-            WorldForMap.Instance.TeamGetOut(selectedFood, selectedPersons);
+            WorldForMap.Instance.TeamGetOut();
             State = IfInTown()? STATE.STOP_TOWN : STATE.STOP_OUT;
             OnPassBlockCenter?.Invoke(MapPosTeam);
         }
@@ -238,13 +233,6 @@ namespace WorldMap.Model
                 return MathTool.IfBetweenBoth((int)STATE.MOVING_TOP, (int)STATE.MOVING_LEFT, (int)state);
             }
         }
-        public bool IsGathering
-        {
-            get
-            {
-                return state == STATE.GATHERING;
-            }
-        }
         private bool IfInTown()
         {
             return Map.GetIntanstance().IfTown(StaticResource.BlockIndex(PosTeam));
@@ -257,7 +245,6 @@ namespace WorldMap.Model
             STOP_OUT, //在外面停止
             STOP_TOWN,//停在城镇
             RELEXING,//休息
-            GATHERING,//采集
             //相对运动
             MOVING_TOP,
             MOVING_RIGHT,

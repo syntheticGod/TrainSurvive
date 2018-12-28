@@ -20,7 +20,7 @@ namespace WorldMap.Controller
         public enum EWindowSizeType
         {
             SMALL,             // 6:5     => 720*600 
-            MIDDLE14x12,     //     => 840*720
+            MIDDLE14x12,     //     => 840*720 默认大小
             BIG26x14,          //     => 1560*840 
             FULL32x18         //    => 1920*1080 
         }

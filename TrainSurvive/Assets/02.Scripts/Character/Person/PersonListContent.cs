@@ -31,7 +31,7 @@ public class PersonListContent : MonoBehaviour {
         int index = 0;
         foreach (Person person in world.persons)
         {
-            if((trainPerson_display&&!person.ifOuting)|| (teamPerson_display && person.ifOuting))
+            if((trainPerson_display&&!person.ifReadyForFighting)|| (teamPerson_display && person.ifReadyForFighting))
             {
                 GameObject personCell = Resources.Load("Prefabs/PersonList/cell") as GameObject;
                 GameObject cellInstance = Instantiate(personCell);
