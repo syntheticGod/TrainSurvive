@@ -169,7 +169,7 @@ public class World
     public int numIn;
     public int numOut;
     public int personNumMax = 15;
-
+    private uint teamPoint=0;
     public TaskController taskCon=null;
 
     /// <summary>
@@ -408,6 +408,31 @@ public class World
         }
         return result;
     }
+
+    public uint getTeamPoint()
+    {
+        return teamPoint;
+    }
+    /// <summary>
+    /// num可为负代表减少
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns>false代表战略点不够</returns>
+    public bool addTeamPoint(int num)
+    {
+        bool result = true;
+        if ((teamPoint + num) < 0)
+        {
+            result = false;
+        }
+        else
+            teamPoint = (uint)(teamPoint + num);
+        if (resourceUI != null)
+        {
+           // resourceUI.setMoney(money);
+        }
+        return result;
+    }
     /// <summary>
     /// num可为负代表减少
     /// </summary>
@@ -495,21 +520,19 @@ public class World
     /// <summary>
     /// 获取队伍的总属性（基本五属性和）
     /// </summary>
-    /// <param name="isOuting">true即获取探险队的总属性,false即列车内人员的总属性</param>
     /// <returns></returns>
-    public int getTotalProperty(bool isOuting)
+    public int getTotalProperty()
     {
         int totalProperty = 0;
         foreach (Person p in persons)
         {
-            if (p.ifOuting == isOuting)
-            {
+          
                 totalProperty += p.intelligence;
                 totalProperty += p.vitality;
                 totalProperty += p.strength;
                 totalProperty += p.technique;
                 totalProperty += p.agile;
-            }
+            
         }
         return totalProperty;
     }

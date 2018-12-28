@@ -73,6 +73,20 @@ public class Person
     /// </summary>
     public Weapon weapon = null;
     //----------技能----------↓
+    private List<int> skillsCarryed = new List<int>();
+    private int skill_carryed_maxNum = 2;
+    /// <summary>
+    /// 获得已携带的技能id，技能下标超过最大值（当前为2,即取值范围1~2）或者未携带技能则返回-1
+    /// </summary>
+    /// <param name="index">技能下标，1基</param>
+    /// <returns></returns>
+    public int getSkillCarryed(int index)
+    {
+        if (index > skill_carryed_maxNum)
+            return -1;
+        return skillsCarryed[index-1];
+    }
+
     private List<int> skillsGot = new List<int>();
     /// <summary>
     /// 添加人物学习到的技能
