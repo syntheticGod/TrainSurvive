@@ -124,7 +124,7 @@ namespace WorldMap.Model
             map.MoveToThisSpawn(StaticResource.BlockIndex(position));
             WorldForMap.Instance.TeamSetMapPos(position);
             OnPassBlockCenter?.Invoke(position);
-            if (map.IfMonsterArea(position) && MathTool.RandomProbability(0.5f))
+            if (map.IfMonsterArea(position))
             {
                 TimeController.getInstance()?.changeScene(true);
                 //触发战斗

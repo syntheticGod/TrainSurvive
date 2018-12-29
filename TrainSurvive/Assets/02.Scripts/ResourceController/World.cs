@@ -256,6 +256,9 @@ public class World
         }
         return result;
     }
+    /// <summary>
+    /// 设置探险队携带的食物
+    /// </summary>
     /// <param name="food"></param>
     /// <returns>返回false代表资源超过最大值</returns>
     public bool setFoodOut(uint food)
@@ -269,8 +272,6 @@ public class World
         }
         return true;
     }
-    /// <param name="food"></param>
-    /// <returns>返回false代表资源超过最大值</returns>
     public bool setEnergy(float energyNum)
     {
         bool result = true;
@@ -539,7 +540,13 @@ public class World
         outVit = (uint)(outVit + num);
         return 1;
     }
-
+    /// <summary>
+    /// 充满探险队的体力
+    /// </summary>
+    public void FullOutVit()
+    {
+        outVit = outVitMax;
+    }
     //食物管理
     /// <summary>
     /// 列车内人员消耗食物

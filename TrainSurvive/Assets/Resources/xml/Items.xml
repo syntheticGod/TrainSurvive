@@ -16,6 +16,7 @@
   <material id="232" name="铜锭" rarity="2" size="1" pilenum="5" description="铜矿精炼而成" spritepath="ItemSprite/Material_img" />
   <material id="233" name="铁矿" rarity="2" size="0.5" pilenum="10" description="我不想写描述了" spritepath="ItemSprite/Material_img" />
   <material id="234" name="铁锭" rarity="2" size="1" pilenum="5" description="铁矿精炼而成" spritepath="ItemSprite/Material_img" />
+  <material id="235" name="岩石" rarity="2" size="1" pilenum="5" description="岩石" spritepath="ItemSprite/Material_img" />
   
   <special id="700" name="隔壁老王之魂" rarity="2" pilenum="1" description="老王的怨念所化成的结晶体" spritepath="ItemSprite/Other_img" />
 </items>

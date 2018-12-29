@@ -239,8 +239,8 @@ namespace WorldMap
             {
                 Debug.LogWarning("探险队携带外出食物不正常！");
             }
-
             Debug.Log("探险队：我们（一共" + world.numOut + "人）外出了，带走了" + world.getFoodOut() + "点食物");
+            world.FullOutVit();
             world.ifTeamOuting = true;
         }
         public void TeamRecruit(Person person)
