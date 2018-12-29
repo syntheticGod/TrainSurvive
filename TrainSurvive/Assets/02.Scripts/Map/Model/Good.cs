@@ -5,13 +5,14 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
 using System;
-using Assets._02.Scripts.zhxUIScripts;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
-using WorldMap.UI;
+
+using TTT.UI;
 using TTT.Utility;
+
+using Assets._02.Scripts.zhxUIScripts;
 
 namespace WorldMap.Model
 {

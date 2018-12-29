@@ -23,7 +23,8 @@ namespace WorldMap.Model
         public float SmoothTime { set; get; } = 0.3F;
         //探险队位置
         public Vector2 PosTeam { private set; get; }
-        public Vector2Int MapPosTeam {
+        public Vector2Int MapPosTeam
+        {
             get { return StaticResource.BlockIndex(PosTeam); }
         }
         //小队状态
@@ -96,7 +97,11 @@ namespace WorldMap.Model
             if (!IsMoving || !IsMovable) return false;
             Vector2 currentNext = current;
             Vector2 direction = nextStopPosition - current;
+<<<<<<< HEAD
             IMapForTrain map = Map.GetInstance();
+=======
+            IMapForTrain map = Map.GetIntance();
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
             if (MathTool.ApproximatelyInView(direction, Vector2.zero))
             {
                 //到达目的地
@@ -119,12 +124,16 @@ namespace WorldMap.Model
         }
         public void PassCenterCallBack(Vector2Int position)
         {
+<<<<<<< HEAD
             Map.GetInstance().MoveToThisSpawn(StaticResource.BlockIndex(position));
+=======
+            Map map = Map.GetIntance();
+            map.MoveToThisSpawn(StaticResource.BlockIndex(position));
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
             WorldForMap.Instance.TeamSetMapPos(position);
             OnPassBlockCenter?.Invoke(position);
-            if (MathTool.RandomInt(100) <= 20)
+            if (map.IfMonsterArea(position) && MathTool.RandomProbability(0.5f))
             {
-                //
                 TimeController.getInstance()?.changeScene(true);
                 //触发战斗
                 SceneManager.LoadScene("BattleScene");
@@ -140,7 +149,7 @@ namespace WorldMap.Model
         {
             PosTeam = initPosition;
             WorldForMap.Instance.TeamGetOut();
-            State = IfInTown()? STATE.STOP_TOWN : STATE.STOP_OUT;
+            State = IfInTown() ? STATE.STOP_TOWN : STATE.STOP_OUT;
             OnPassBlockCenter?.Invoke(MapPosTeam);
         }
         /// <summary>
@@ -188,7 +197,11 @@ namespace WorldMap.Model
         private bool WalkTo(Vector2Int target)
         {
             //判断目标坐标是否在地图内
+<<<<<<< HEAD
             if (!Map.GetInstance().IfInter(target)) return false;
+=======
+            if (!Map.GetIntance().IfInter(target)) return false;
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
             //判断目标是否正在移动、或者不可移动
             if (IsMoving || !IsMovable) return false;
             nextStopPosition = StaticResource.BlockCenter(target);
@@ -202,15 +215,15 @@ namespace WorldMap.Model
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.y++;
             if (WalkTo(teamIndex) && State != STATE.MOVING_TOP)
-                    State = STATE.MOVING_TOP;
-                
+                State = STATE.MOVING_TOP;
+
         }
         public void MoveBottom()
         {
             Vector2Int teamIndex = StaticResource.BlockIndex(PosTeam);
             teamIndex.y--;
-            if(WalkTo(teamIndex) && State != STATE.MOVING_BOTTOM)
-                    State = STATE.MOVING_BOTTOM;
+            if (WalkTo(teamIndex) && State != STATE.MOVING_BOTTOM)
+                State = STATE.MOVING_BOTTOM;
         }
         public void MoveLeft()
         {
@@ -235,7 +248,11 @@ namespace WorldMap.Model
         }
         private bool IfInTown()
         {
+<<<<<<< HEAD
             return Map.GetInstance().IfTown(StaticResource.BlockIndex(PosTeam));
+=======
+            return Map.GetIntance().IfTown(StaticResource.BlockIndex(PosTeam));
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
         }
         public enum STATE
         {

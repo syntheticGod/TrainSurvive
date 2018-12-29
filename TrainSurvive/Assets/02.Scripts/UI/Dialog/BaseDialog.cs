@@ -22,7 +22,8 @@ namespace WorldMap.UI
         private static string[] btnStrs = { "确定", "取消" };
         public DialogCallBack DialogCallBack { set; get; }
         protected Vector2 m_dialogSize = new Vector2(840F, 720F);
-        public enum EDialogSizeType {
+        public enum EDialogSizeType
+        {
             SMALL7x6,     //420*360
             MIDDLE12x12, //720*720
             MIDDLE14x12   //840*720
@@ -52,7 +53,7 @@ namespace WorldMap.UI
                             m_dialogSize.y = scale * 12;
                             break;
                     }
-                    ViewTool.CenterAt(this, new Vector2(0.5F, 0.5F), m_dialogSize);
+                    ViewTool.CenterAt(this, new Vector2(0.5F, 0.5F), new Vector2(0.5F, 0.5F), m_dialogSize);
                 }
             }
             get
@@ -101,13 +102,13 @@ namespace WorldMap.UI
             ViewTool.Anchor(btnsRect, new Vector2(0, 0), new Vector2(1, 0));
             btns = new Button[btnStrs.Length];
             Vector2 btnSize = new Vector2(120F, 60F);
-            float mid = (btns.Length-1) / 2F;
-            for(int i = 0; i < btns.Length; i++)
+            float mid = (btns.Length - 1) / 2F;
+            for (int i = 0; i < btns.Length; i++)
             {
                 btns[i] = ViewTool.CreateBtn("Btn" + i, btnStrs[i]);
                 ViewTool.SetParent(btns[i], btnsRect);
                 //居中排序
-                ViewTool.CenterAt(btns[i], new Vector2(0.5F, 0.5F), btnSize, new Vector2((i-mid)*btnSize.x, 0));
+                ViewTool.CenterAt(btns[i], new Vector2(0.5F, 0.5F), new Vector2(0.5F, 0.5F), btnSize, new Vector2((i - mid) * btnSize.x, 0));
                 btns[i].GetComponent<RectTransform>().pivot = new Vector2(0.5F, 0F);
             }
             btns[0].onClick.AddListener(delegate () { if (OK()) { DialogCallBack?.OK(this); CloseDialog(); } });

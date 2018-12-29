@@ -193,7 +193,10 @@ namespace TTT.Resource
             }
         }
         //----------专精----------↑
+<<<<<<< .merge_file_a13428
 
+=======
+>>>>>>> .merge_file_a23776
         /// <summary>
         /// 方块大小
         /// </summary>
@@ -269,6 +272,7 @@ namespace TTT.Resource
         {
             return MathTool.AcceptZ(mapPosition, level);
         }
+<<<<<<< .merge_file_a13428
 
         private static string[] TOWN_NAME = {
             "香格里拉", "枫丹白露", "翡冷翠", "米兰", "墨尔本",
@@ -283,6 +287,9 @@ namespace TTT.Resource
         {
             "阿比盖尔","艾比","艾达","阿德莱德","艾德","亚伦","亚伯","亚伯拉罕","亚当","艾德里安","阿尔瓦","亚历克斯","亚历山大","艾伦","艾伯特","阿尔弗雷德","安德鲁","安迪","安格斯","安东尼","亚瑟","奥斯汀","本","本森","比尔","鲍伯","布兰登","布兰特","布伦特","布莱恩","布鲁斯","卡尔","凯里","卡斯帕","查尔斯","采尼","克里斯","克里斯蒂安","克里斯多夫","科林","科兹莫","丹尼尔","丹尼斯","德里克","唐纳德","道格拉斯","大卫","丹尼","埃德加","爱德华","艾德文","艾略特","埃尔维斯","埃里克","埃文","弗朗西斯","弗兰克","富兰克林","弗瑞德","加百利","加比","加菲尔德","加里","加文","乔治","基诺","格林","格林顿","哈里森","雨果","汉克","霍华德","亨利","伊格纳缇伍兹","伊凡","艾萨克","杰克","杰克逊","雅各布","詹姆士","詹森","杰弗瑞","杰罗姆","杰瑞","杰西","吉姆","吉米","乔","约翰","约翰尼","约瑟夫","约书亚","贾斯汀","凯斯","肯","肯尼斯","肯尼","凯文","兰斯","拉里","劳伦特","劳伦斯","利安德尔","李","雷欧","雷纳德","利奥波特","劳伦","劳瑞","劳瑞恩","卢克","马库斯","马西","马克","马科斯","马尔斯","马丁","马修","迈克尔","麦克","尼尔","尼古拉斯","奥利弗","奥斯卡","保罗","帕特里克","彼得","菲利普","菲比","昆廷","兰德尔","伦道夫","兰迪","列得","雷克斯","理查德","里奇","罗伯特","罗宾","罗宾逊","洛克","罗杰","罗伊","赖安","阿比盖尔","艾比","艾达","阿德莱德","艾德"
         };
+=======
+        //----------属性----------↓
+>>>>>>> .merge_file_a23776
         private static string[] AttributeName { get; } = { "体力", "力量", "敏捷", "技巧", "智力" };
         public static int AttributeCount { get { return AttributeName.Length; } }
         public static string GetAttributeName(int index)
@@ -294,8 +301,35 @@ namespace TTT.Resource
                 return "";
             }
 #endif
+<<<<<<< .merge_file_a13428
             return AttributeName[index];
         }
+=======
+            if (index < 0)
+                return "无";
+            return AttributeName[index];
+        }
+        public static string GetAttributeName(EAttribute attribute)
+        {
+            if (attribute == EAttribute.NONE)
+                return "无";
+            return AttributeName[(int)attribute];
+        }
+        //----------属性----------↑----------名字----------↓
+        private static string[] TOWN_NAME = {
+            "香格里拉", "枫丹白露", "翡冷翠", "米兰", "墨尔本",
+            "爱丁堡", "普罗旺斯", "哥本哈根", "耶路撒冷", "柏林", "布达佩斯",
+            "都灵", "伯尔尼", "阿姆斯特布", "布里斯班", "达累斯萨拉姆",
+            "斯德哥尔摩", "赫尔辛基", "布依诺斯艾利斯", "凤凰城" };
+        private static string[] NPC_NAME_MAN =
+        {
+            "亚伦", "亚伯", "亚伯拉罕", "亚当", "艾德里安","阿尔瓦", "亚历克斯", "艾伯特" ,"阿尔弗雷德","安德鲁","安迪","安格斯","安东尼","亚瑟","奥斯汀","本森","布兰特","布伦特","卡尔","凯里","卡斯帕","查尔斯","采尼","克里斯蒂安","克里斯多夫","科林","科兹莫","丹尼尔","丹尼斯","德里克","唐纳德","道格拉斯","埃德加","艾德文","艾略特","埃尔维斯","埃里克","埃文","弗朗西斯","弗兰克","加百利","加比","加菲尔德","加里","加文","乔治","基诺","格林","格林顿","哈里森","汉克","霍华德","亨利","伊凡","艾萨克","杰克","杰克逊","雅各布","詹森","杰弗瑞","杰罗姆","杰西","吉姆","吉米","乔","约翰","约翰尼","约瑟夫","约书亚","贾斯汀","凯斯","肯","肯尼斯","肯尼","凯文","兰斯","拉里","劳伦特","劳伦斯","利安德尔","李","雷","雷纳德","利奥波特","劳瑞","劳瑞恩","卢克","马库斯","马西","马克","马尔斯","马丁","马修","迈克尔","麦克","尼尔","保罗","帕特里克","菲利普","菲比","昆廷","兰德尔","伦道夫","兰迪","列得","雷克斯","理查德","里奇","罗伯特","罗宾逊","洛克","罗杰","罗伊","赖安"
+        };
+        private static string[] NPC_NAME_WOMAN =
+        {
+            "阿比盖尔","艾比","艾达","阿德莱德","艾德","亚伦","亚伯","亚伯拉罕","亚当","艾德里安","阿尔瓦","亚历克斯","亚历山大","艾伦","艾伯特","阿尔弗雷德","安德鲁","安迪","安格斯","安东尼","亚瑟","奥斯汀","本","本森","比尔","鲍伯","布兰登","布兰特","布伦特","布莱恩","布鲁斯","卡尔","凯里","卡斯帕","查尔斯","采尼","克里斯","克里斯蒂安","克里斯多夫","科林","科兹莫","丹尼尔","丹尼斯","德里克","唐纳德","道格拉斯","大卫","丹尼","埃德加","爱德华","艾德文","艾略特","埃尔维斯","埃里克","埃文","弗朗西斯","弗兰克","富兰克林","弗瑞德","加百利","加比","加菲尔德","加里","加文","乔治","基诺","格林","格林顿","哈里森","雨果","汉克","霍华德","亨利","伊格纳缇伍兹","伊凡","艾萨克","杰克","杰克逊","雅各布","詹姆士","詹森","杰弗瑞","杰罗姆","杰瑞","杰西","吉姆","吉米","乔","约翰","约翰尼","约瑟夫","约书亚","贾斯汀","凯斯","肯","肯尼斯","肯尼","凯文","兰斯","拉里","劳伦特","劳伦斯","利安德尔","李","雷欧","雷纳德","利奥波特","劳伦","劳瑞","劳瑞恩","卢克","马库斯","马西","马克","马科斯","马尔斯","马丁","马修","迈克尔","麦克","尼尔","尼古拉斯","奥利弗","奥斯卡","保罗","帕特里克","彼得","菲利普","菲比","昆廷","兰德尔","伦道夫","兰迪","列得","雷克斯","理查德","里奇","罗伯特","罗宾","罗宾逊","洛克","罗杰","罗伊","赖安","阿比盖尔","艾比","艾达","阿德莱德","艾德"
+        };
+>>>>>>> .merge_file_a23776
         public static string RandomTownName()
         {
             return TOWN_NAME[MathTool.RandomInt(TOWN_NAME.Length)];
@@ -307,8 +341,12 @@ namespace TTT.Resource
             else
                 return NPC_NAME_WOMAN[MathTool.RandomInt(NPC_NAME_WOMAN.Length)];
         }
+<<<<<<< .merge_file_a13428
 
         //----------Sprite----------↓
+=======
+        //----------名字----------↑----------Sprite----------↓
+>>>>>>> .merge_file_a23776
         private static Sprite[] spriteStore = new Sprite[(int)ESprite.NUM];
         private static string[] spriteFileName = {
             "Commen/developing_icon_01_big","Commen/developing_icon_01_small",
@@ -411,6 +449,12 @@ namespace TTT.Resource
              "ProfessionIcon/profession333_icon_small",
 
              "ProfessionIcon/profession444_icon_small",
+<<<<<<< .merge_file_a13428
+=======
+
+             "ItemSprite/Money",
+             "ItemSprite/Money"//战略点图标，暂时使用金钱
+>>>>>>> .merge_file_a23776
         };
         public static Sprite GetSprite(ESprite eSprite)
         {
@@ -537,13 +581,25 @@ namespace TTT.Resource
             }
             return availableSkills.ToArray();
         }
+<<<<<<< .merge_file_a13428
         //----------技能----------↑
+=======
+        //----------技能----------↑----------计算公式----------↓
+
+        //----------计算公式----------↑
+>>>>>>> .merge_file_a23776
     }
     public enum ESprite
     {
         NONE = -1,
         DEVELOPING_BIG,
         DEVELOPING_SMALL,
+<<<<<<< .merge_file_a13428
+=======
+        /// <summary>
+        /// 人物在大地图中的图标
+        /// </summary>
+>>>>>>> .merge_file_a23776
         PERSON1_B,
         PERSON1_L,
         PERSON1_T,
@@ -559,8 +615,20 @@ namespace TTT.Resource
         PERSON5_B,
         PERSON5_L,
         PERSON5_T,
+<<<<<<< .merge_file_a13428
         TRAIN,
 
+=======
+
+        /// <summary>
+        /// 列车在大地图中的图标
+        /// </summary>
+        TRAIN,
+
+        /// <summary>
+        /// 专精大图标
+        /// </summary>
+>>>>>>> .merge_file_a23776
         PROFESSION0_BIG,
         PROFESSION1_BIG,
         PROFESSION2_BIG,
@@ -607,6 +675,12 @@ namespace TTT.Resource
 
         PROFESSION444_BIG,
 
+<<<<<<< .merge_file_a13428
+=======
+        /// <summary>
+        /// 专精小图标
+        /// </summary>
+>>>>>>> .merge_file_a23776
         PROFESSION0_SMALL,
         PROFESSION1_SMALL,
         PROFESSION2_SMALL,
@@ -652,6 +726,12 @@ namespace TTT.Resource
         PROFESSION333_SMALL,
 
         PROFESSION444_SMALL,
+<<<<<<< .merge_file_a13428
+=======
+
+        MONEY_ICON,//金钱图标
+        STRATEGY_ICON,//战略点图标
+>>>>>>> .merge_file_a23776
         NUM
     }
     public enum EAttribute

@@ -20,7 +20,6 @@ public class World
     {
         if (instance == null)
         {
-            //TEST：加载测试 xys
             string path = PathManager.getInstance().getWorldPath();
 
             if (File.Exists(path))
@@ -82,11 +81,11 @@ public class World
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
     private float energy = 0;
-    private uint money = 100000;
+    private uint money = 0;
+    private uint strategy = 0;
     private float electricity = 0;
     private uint foodInMax = 10000;
-    //外出携带默认食物，不需要玩家选择，意味着无外带食物上限
-    private uint foodOutMax = 99999999;
+    private uint foodOutMax = 0;
     private float energyMax = 1000;
     private float electricityMax = 1000;
 
@@ -261,19 +260,14 @@ public class World
     /// <returns>返回false代表资源超过最大值</returns>
     public bool setFoodOut(uint food)
     {
-        bool result = true;
-        if (food > foodOutMax)
-        {
-            foodOut = foodOutMax;
-            result = false;
-        }
-        else
-            foodOut = food;
+        //外出时，默认携带人数*200点食物，所以最大上限直接等于携带的食物。
+        foodOut = food;
+        foodOutMax = food;
         if (resourceUI != null)
         {
             resourceUI.setFoodOut(foodOut, foodOutMax);
         }
-        return result;
+        return true;
     }
     /// <param name="food"></param>
     /// <returns>返回false代表资源超过最大值</returns>
@@ -404,9 +398,9 @@ public class World
         return result;
     }
     /// <summary>
-    /// num可为负代表减少
+    /// 添加/减少 金钱
     /// </summary>
-    /// <param name="num"></param>
+    /// <param name="num">正代表增加，负代表减少</param>
     /// <returns>false代表金钱不够，true代表金钱够</returns>
     public bool addMoney(int num)
     {
@@ -424,9 +418,65 @@ public class World
         return result;
     }
     /// <summary>
-    /// num可为负代表减少
+    /// 支付金额 同 addMoney(-cost)
     /// </summary>
-    /// <param name="num"></param>
+    /// <param name="cost">需要支付的金额</param>
+    /// <returns></returns>
+    public bool PayByMoney(int cost)
+    {
+        return addMoney(-cost);
+    }
+    /// <summary>
+    /// 判断是否有足够的金币支付
+    /// </summary>
+    /// <param name="cost">花费的金额</param>
+    /// <returns>
+    /// TRUE：足够
+    /// FALSE：不够
+    /// </returns>
+    public bool IfMoneyEnough(int cost)
+    {
+        return money >= cost;
+    }
+    /// <summary>
+    /// 增加/减少 策略点
+    /// </summary>
+    /// <param name="num">正代表增加，负代表减少</param>
+    /// <returns>false代表金钱不够，true代表金钱够</returns>
+    public bool addStrategy(int num)
+    {
+        bool result = true;
+        if ((strategy + num) < 0)
+            result = false;
+        else
+            strategy = (uint)(strategy + num);
+        return result;
+    }
+    /// <summary>
+    /// 支付策略点 同 addStrategy(-cost)
+    /// </summary>
+    /// <param name="cost">需要支付的策略点</param>
+    /// <returns></returns>
+    public bool PayByStrategy(int cost)
+    {
+        return addStrategy(-cost);
+    }
+    /// <summary>
+    /// 判断是否有足够的金币支付
+    /// </summary>
+    /// <param name="cost">花费的金额</param>
+    /// <returns>
+    /// TRUE：足够
+    /// FALSE：不够
+    /// </returns>
+    public bool IfStrategyEnough(int cost)
+    {
+        return strategy >= cost;
+    }
+    /// <summary>
+    /// 增加/减少 电力
+    /// </summary>
+    /// <param name="num">正代表增加，负代表减少</param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
     public int addElectricity(float num)
     {

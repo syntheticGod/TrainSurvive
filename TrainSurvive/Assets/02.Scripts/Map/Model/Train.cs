@@ -88,7 +88,11 @@ namespace WorldMap.Model
         public void Init()
         {
             Vector2Int initPosition = MapPosTrain;
+<<<<<<< HEAD
             State = Map.GetInstance().IfTown(initPosition) == true ? STATE.STOP_TOWN : STATE.STOP_RAIL;
+=======
+            State = Map.GetIntance().IfTown(initPosition) == true ? STATE.STOP_TOWN : STATE.STOP_RAIL;
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
             //初始化时
             PassCenterCallBack(initPosition);
         }
@@ -106,9 +110,15 @@ namespace WorldMap.Model
             Vector2Int currentIndex = StaticResource.BlockIndex(PosTrain);
             Vector2Int clickIndex = StaticResource.BlockIndex(clickPosition);
             Vector2Int clickedStart, clickedEnd, currentStart, currentEnd;
+<<<<<<< HEAD
             bool trainOnTheTown = Map.GetInstance().IfTown(currentIndex);
             bool clickOnTheTown = Map.GetInstance().IfTown(clickIndex);
             IMapForTrain map = Map.GetInstance();
+=======
+            bool trainOnTheTown = Map.GetIntance().IfTown(currentIndex);
+            bool clickOnTheTown = Map.GetIntance().IfTown(clickIndex);
+            IMapForTrain map = Map.GetIntance();
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
             //列车位于城镇上，点击处也是城镇
             if (trainOnTheTown && clickOnTheTown)
             {
@@ -232,7 +242,11 @@ namespace WorldMap.Model
         /// <param name="center">块的地图坐标</param>
         private void PassCenterCallBack(Vector2Int center)
         {
+<<<<<<< HEAD
             Map.GetInstance().MoveToThisSpawn(center);
+=======
+            Map.GetIntance().MoveToThisSpawn(center);
+>>>>>>> 0e996e9a2521d599a83caa03eaab185c82579e42
             WorldForMap.Instance.TrainSetMapPos(center);
             //暂时性停车
             if (ifTemporarilyStop)
