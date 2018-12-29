@@ -16,6 +16,19 @@ using TTT.Utility;
 public class Person
 {
     /// <summary>
+    /// 人物姓名
+    /// </summary>
+    public string name = "";
+    /// <summary>
+    /// 性别用ismale代替
+    /// </summary>
+    public bool ismale = true;
+    /// <summary>
+    /// 人物是否出战
+    /// </summary>
+    public bool ifReadyForFighting = false;
+    //----------属性----------↓
+    /// <summary>
     /// 体力
     /// </summary>
     public int vitality { get { return attriNumber[(int)EAttribute.VITALITY]; } set { attriNumber[(int)EAttribute.VITALITY] = value; } }
@@ -35,6 +48,10 @@ public class Person
     /// 智力
     /// </summary>
     public int intelligence { get { return attriNumber[(int)EAttribute.INTELLIGENCE]; } set { attriNumber[(int)EAttribute.INTELLIGENCE] = value; } }
+    /// <summary>
+    /// 小数属性保留的位数
+    /// </summary>
+    private const int numsLeft = 3;
     private int[] attriNumber;
     public int GetAttriNumber(EAttribute eAttribute)
     {
@@ -48,188 +65,6 @@ public class Person
     public int GetAttriMaxNumber(EAttribute eAttribute)
     {
         return attriMaxNumber[(int)eAttribute];
-    }
-    /// <summary>
-    /// 已训练次数
-    /// </summary>
-    public int trainCnt = 0;
-    public bool hasWeapon = false;
-    public int weaponId = 0;
-    /// <summary>
-    /// 人物是否出战
-    /// </summary>
-    public bool ifReadyForFighting = false;
-    public string name = "";
-    /// <summary>
-    /// 性别用ismale代替
-    /// </summary>
-    public bool ismale = true;
-    /// <summary>
-    /// 小数属性保留的位数
-    /// </summary>
-    private const int numsLeft = 3;
-    /// <summary>
-    /// 人物所持有的武器对象
-    /// </summary>
-    public Weapon weapon = null;
-    //----------技能----------↓
-    private List<int> skillsCarryed = new List<int>();
-    private int skill_carryed_maxNum = 2;
-    /// <summary>
-    /// 获得已携带的技能id，技能下标超过最大值（当前为2,即取值范围1~2）或者未携带技能则返回-1
-    /// </summary>
-    /// <param name="index">技能下标，1基</param>
-    /// <returns></returns>
-    public int getSkillCarryed(int index)
-    {
-        if (index > skill_carryed_maxNum)
-            return -1;
-        return skillsCarryed[index-1];
-    }
-
-    private List<int> skillsGot = new List<int>();
-    /// <summary>
-    /// 添加人物学习到的技能
-    /// 如果已经存在则不添加
-    /// </summary>
-    /// <param name="skillID"></param>
-    public void AddGotSkill(int skillID)
-    {
-        ContainerTool.InsertSortUnique(skillsGot, skillID);
-    }
-    public List<int> GetSkillsGot()
-    {
-        return skillsGot;
-    }
-    public bool IfHaveGotTheSkill(int skillID)
-    {
-        return ContainerTool.IfContainByBinarySearching(skillsGot, skillID);
-    }
-    public bool IfHaveGotTheSkill(SkillInfo skill)
-    {
-        return ContainerTool.IfContainByBinarySearching(skillsGot, skill.ID);
-    }
-    //----------技能----------↑
-
-    //----------专精----------↓
-    /// <summary>
-    /// 三个专精槽位
-    /// </summary>
-    private int[] professions;
-    /// <summary>
-    /// 允许的槽位
-    /// </summary>
-    private int professionAvaliable;
-    /// <summary>
-    /// 获取第index级专精
-    /// </summary>
-    /// <param name="index">[0,1,2] => 第一级 第二级 第三级</param>
-    /// <returns>
-    /// NULL：未专精
-    /// NOT NULL：专精对象
-    /// </returns>
-    public Profession getProfession(int index)
-    {
-        if (professions[index] == -1)
-            return null;
-        return StaticResource.GetProfessionByID(professions[index]);
-    }
-    /// <summary>
-    /// 判断专精槽是否足够
-    /// </summary>
-    /// <returns></returns>
-    public bool IfProfessionAvailable()
-    {
-        return professions[professionAvaliable - 1] == -1;
-    }
-    /// <summary>
-    /// 判断指定属性是否已专精
-    /// </summary>
-    /// <param name="attribute"></param>
-    /// <returns></returns>
-    public bool IfProfession(EAttribute attribute)
-    {
-        for(int i = 0; i < professions.Length; i++)
-        {
-            Profession profession = getProfession(i);
-            if (profession == null) continue;
-            foreach(Profession.AbiReq req in profession.AbiReqs)
-            {
-                //如果已学的专精的属性要求中包含该属性，则返回真
-                if(req.Abi == attribute)
-                    return true;
-            }
-        }
-        return false;
-    }
-    /// <summary>
-    /// 获取最高级的专精
-    /// </summary>
-    /// <returns>
-    /// NOT NULL：最高级专精
-    /// NULL：没有修过专精
-    /// </returns>
-    public Profession getTopProfession()
-    {
-        for (int i = professions.Length - 1; i >= 0; i--)
-        {
-            if (professions[i] != -1)
-                return StaticResource.GetProfessionByID(professions[i]);
-        }
-        return null;
-    }
-    /// <summary>
-    /// 根据专精的Level绑定专精
-    /// </summary>
-    /// <param name="profession"></param>
-    public void setProfession(Profession profession)
-    {
-        if (profession.Level == EProfessionLevel.NONE)
-        {
-            Debug.LogError("专精错误");
-            return;
-        }
-        professions[(int)profession.Level] = profession.ID;
-    }
-    
-    //----------专精----------↑
-
-    [NonSerialized]
-    private int lastWeaponId = -1;
-    private Person()
-    {
-        //保留以后用
-        professions = new int[3] { -1, -1, -1 };
-        attriNumber = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
-        //默认最大属性为10
-        attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
-        //初始专精槽数为1
-        professionAvaliable = 1;
-        ifReadyForFighting = false;
-    }
-    /// <summary>
-    /// 生成一个随机属性的人物（未持有武器）
-    /// </summary>
-    /// <returns></returns>
-    public static Person RandomPerson()
-    {
-        Person p = new Person();
-        p.ismale = MathTool.RandomInt(2) == 0;
-        p.name = StaticResource.RandomNPCName(p.ismale);
-        for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)
-        {
-            p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
-        }
-        //获得无条件获得的技能
-        SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber);
-        if (avaliableSkills != null)
-        {
-            foreach (SkillInfo skill in avaliableSkills)
-            {
-                p.AddGotSkill(skill.ID);
-            }
-        }
-        return p;
     }
     //以下获取的属性均保留numsLeft位小数
     public double getHpMax()
@@ -329,17 +164,184 @@ public class Person
         }
         return Math.Round(num, numsLeft);
     }
+    //----------属性----------↑----------武器----------↓
+    public bool hasWeapon = false;
+    public int weaponId = 0;
+    /// <summary>
+    /// 人物所持有的武器对象
+    /// </summary>
+    public Weapon weapon = null;
+    [NonSerialized]
+    private int lastWeaponId = -1;
     public void equipWeapon(Weapon weapon)
     {
         this.weapon = (Weapon)weapon.Clone();
         weaponId = weapon.id;
         hasWeapon = true;
     }
-
     public void unequipWeapon()
     {
         weapon = null;
         weaponId = -1;
         hasWeapon = false;
+    }
+    //----------武器----------↑----------技能----------↓
+    private List<int> skillsCarryed = new List<int>();
+    private int skill_carryed_maxNum = 2;
+    /// <summary>
+    /// 获得已携带的技能id，技能下标超过最大值（当前为2,即取值范围1~2）或者未携带技能则返回-1
+    /// </summary>
+    /// <param name="index">技能下标，1基</param>
+    /// <returns></returns>
+    public int getSkillCarryed(int index)
+    {
+        if (index > skill_carryed_maxNum)
+            return -1;
+        return skillsCarryed[index-1];
+    }
+    /// <summary>
+    /// 已经获得的技能
+    /// </summary>
+    private List<int> skillsGot = new List<int>();
+    /// <summary>
+    /// 添加人物学习到的技能
+    /// 如果已经存在则不添加
+    /// </summary>
+    /// <param name="skillID"></param>
+    public void AddGotSkill(int skillID)
+    {
+        ContainerTool.InsertSortUnique(skillsGot, skillID);
+    }
+    public List<int> GetSkillsGot()
+    {
+        return skillsGot;
+    }
+    public bool IfHaveGotTheSkill(int skillID)
+    {
+        return ContainerTool.IfContainByBinarySearching(skillsGot, skillID);
+    }
+    public bool IfHaveGotTheSkill(SkillInfo skill)
+    {
+        return ContainerTool.IfContainByBinarySearching(skillsGot, skill.ID);
+    }
+    //----------技能----------↑----------专精----------↓
+    /// <summary>
+    /// 已训练次数
+    /// </summary>
+    public int trainCnt = 0;
+    /// <summary>
+    /// 三个专精槽位
+    /// </summary>
+    private int[] professions;
+    /// <summary>
+    /// 允许的槽位
+    /// </summary>
+    private int professionAvaliable;
+    /// <summary>
+    /// 获取第index级专精
+    /// </summary>
+    /// <param name="index">[0,1,2] => 第一级 第二级 第三级</param>
+    /// <returns>
+    /// NULL：未专精
+    /// NOT NULL：专精对象
+    /// </returns>
+    public Profession getProfession(int index)
+    {
+        if (professions[index] == -1)
+            return null;
+        return StaticResource.GetProfessionByID(professions[index]);
+    }
+    /// <summary>
+    /// 判断专精槽是否足够
+    /// </summary>
+    /// <returns></returns>
+    public bool IfProfessionAvailable()
+    {
+        return professions[professionAvaliable - 1] == -1;
+    }
+    /// <summary>
+    /// 判断指定属性是否已专精
+    /// </summary>
+    /// <param name="attribute"></param>
+    /// <returns></returns>
+    public bool IfProfession(EAttribute attribute)
+    {
+        for(int i = 0; i < professions.Length; i++)
+        {
+            Profession profession = getProfession(i);
+            if (profession == null) continue;
+            foreach(Profession.AbiReq req in profession.AbiReqs)
+            {
+                //如果已学的专精的属性要求中包含该属性，则返回真
+                if(req.Abi == attribute)
+                    return true;
+            }
+        }
+        return false;
+    }
+    /// <summary>
+    /// 获取最高级的专精
+    /// </summary>
+    /// <returns>
+    /// NOT NULL：最高级专精
+    /// NULL：没有修过专精
+    /// </returns>
+    public Profession getTopProfession()
+    {
+        for (int i = professions.Length - 1; i >= 0; i--)
+        {
+            if (professions[i] != -1)
+                return StaticResource.GetProfessionByID(professions[i]);
+        }
+        return null;
+    }
+    /// <summary>
+    /// 根据专精的Level绑定专精
+    /// </summary>
+    /// <param name="profession"></param>
+    public void setProfession(Profession profession)
+    {
+        if (profession.Level == EProfessionLevel.NONE)
+        {
+            Debug.LogError("专精错误");
+            return;
+        }
+        professions[(int)profession.Level] = profession.ID;
+    }
+    //----------专精----------↑
+    private Person()
+    {
+        //保留以后用
+        professions = new int[3] { -1, -1, -1 };
+        attriNumber = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
+        //默认最大属性为10
+        attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
+        //初始专精槽数为1
+        professionAvaliable = 1;
+        ifReadyForFighting = false;
+    }
+    /// <summary>
+    /// 生成一个随机属性的人物（未持有武器）
+    /// </summary>
+    /// <returns></returns>
+    public static Person RandomPerson()
+    {
+        Person p = new Person();
+        p.ismale = MathTool.RandomInt(2) == 0;
+        p.name = StaticResource.RandomNPCName(p.ismale);
+        for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)
+        {
+            p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
+        }
+        //获得无条件获得的技能
+        SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber);
+        if (avaliableSkills != null)
+        {
+            foreach (SkillInfo skill in avaliableSkills)
+            {
+                p.AddGotSkill(skill.ID);
+            }
+        }
+        return p;
     }
 }
