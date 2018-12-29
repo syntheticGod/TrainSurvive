@@ -96,7 +96,7 @@ namespace WorldMap.Model
             if (!IsMoving || !IsMovable) return false;
             Vector2 currentNext = current;
             Vector2 direction = nextStopPosition - current;
-            IMapForTrain map = Map.GetIntanstance();
+            IMapForTrain map = Map.GetInstance();
             if (MathTool.ApproximatelyInView(direction, Vector2.zero))
             {
                 //到达目的地
@@ -119,7 +119,7 @@ namespace WorldMap.Model
         }
         public void PassCenterCallBack(Vector2Int position)
         {
-            Map.GetIntanstance().MoveToThisSpawn(StaticResource.BlockIndex(position));
+            Map.GetInstance().MoveToThisSpawn(StaticResource.BlockIndex(position));
             WorldForMap.Instance.TeamSetMapPos(position);
             OnPassBlockCenter?.Invoke(position);
             if (MathTool.RandomInt(100) <= 20)
@@ -188,7 +188,7 @@ namespace WorldMap.Model
         private bool WalkTo(Vector2Int target)
         {
             //判断目标坐标是否在地图内
-            if (!Map.GetIntanstance().IfInter(target)) return false;
+            if (!Map.GetInstance().IfInter(target)) return false;
             //判断目标是否正在移动、或者不可移动
             if (IsMoving || !IsMovable) return false;
             nextStopPosition = StaticResource.BlockCenter(target);
@@ -235,7 +235,7 @@ namespace WorldMap.Model
         }
         private bool IfInTown()
         {
-            return Map.GetIntanstance().IfTown(StaticResource.BlockIndex(PosTeam));
+            return Map.GetInstance().IfTown(StaticResource.BlockIndex(PosTeam));
         }
         public enum STATE
         {

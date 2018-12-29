@@ -79,7 +79,7 @@ namespace TestWorldMap {
         [OneTimeSetUp]
         public void OneTimeSetUp() {
             //初始化map
-            map = Map.GetIntanstance();
+            map = Map.GetInstance();
             map.initMap(mapRowNum, mapColNum);
             iMapForTrain = map;
 

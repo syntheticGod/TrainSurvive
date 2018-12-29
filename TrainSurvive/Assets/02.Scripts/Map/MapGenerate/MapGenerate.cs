@@ -119,14 +119,14 @@ namespace WorldMap {
 
             //对地图进行初始化处理
             if (Map.map == null) {
-                mapData = Map.GetIntanstance();
+                mapData = Map.GetInstance();
                 mapData.initMap(mapWidth, mapHeight);
                 //先读取地图的信息
                 SaveReadMap.ReadMapInfo();
                 //获取是否保存地图
                 isCreateMap = SaveReadMap.isCreateMap;
             } else {
-                mapData = Map.GetIntanstance();
+                mapData = Map.GetInstance();
                 SaveReadMap.isCreateMap = false;
                 isCreateMap = false;
             }

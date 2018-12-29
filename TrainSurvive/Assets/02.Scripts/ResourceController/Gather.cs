@@ -67,7 +67,7 @@ public class Gather {
     public static void gather()
     {
         World world = World.getInstance();
-        Map mp = Map.GetIntanstance();
+        Map mp = Map.GetInstance();
         SpawnPoint teamPlace = mp.spowns[world.posTeamX, world.posTeamY];
 
         double climateGatherRate = 1;
