@@ -9,10 +9,7 @@ using UnityEngine.UI;
 
 using TTT.Resource;
 using TTT.Utility;
-<<<<<<< .merge_file_a02996
-=======
 using TTT.UI;
->>>>>>> .merge_file_a21268
 
 namespace WorldMap.UI
 {
@@ -28,13 +25,8 @@ namespace WorldMap.UI
         protected override void Start()
         {
             base.Start();
-<<<<<<< .merge_file_a02996
-            cellSize.x = -1;
-            cellSize.y = viewPortSize.y / StaticResource.AttributeCount;
-=======
             m_cellSize.x = -1;
             m_cellSize.y = viewPortSize.y / StaticResource.AttributeCount;
->>>>>>> .merge_file_a21268
             ConfigCellSize();
         }
         protected override void OnItemView(ListViewItem item, Profession data, int itemIndex)

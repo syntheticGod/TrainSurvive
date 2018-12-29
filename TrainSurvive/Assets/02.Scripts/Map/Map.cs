@@ -113,6 +113,20 @@ namespace WorldMap {
         }
 
         /// <summary>
+        /// 判断是否是怪物区域
+        /// </summary>
+        /// <param name="position">地图坐标，不是世界坐标</param>
+        /// <returns>
+        /// TRUE：是怪物区域
+        /// FALSE：不是怪物区域
+        /// </returns>
+        public bool IfMonsterArea(Vector2Int position)
+        {
+            return IfInter(position) &&
+                spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.MONSTER;
+        }
+
+        /// <summary>
         /// 判断地图坐标是不是处于可见状态
         /// </summary>
         /// <param name="position"></param>

@@ -104,11 +104,7 @@ namespace WorldMap {
 
         //将地图数据保存成一系列字符串
         private static void SaveStaticMap(StreamWriter sw) {
-<<<<<<< .merge_file_a18608
             Map map = Map.GetInstance();
-=======
-            Map map = Map.GetIntance();
->>>>>>> .merge_file_a24660
             if (map.rowNum == 0 || map.colNum == 0) {
                 Debug.Log("地图保存失败！width或length为0");
                 return;
@@ -146,11 +142,7 @@ namespace WorldMap {
         //保存地图的动态信息
         //迷雾信息
         private static void SaveDynamicMap(StreamWriter sw) {
-<<<<<<< .merge_file_a18608
             Map map = Map.GetInstance();
-=======
-            Map map = Map.GetIntance();
->>>>>>> .merge_file_a24660
             if (map.rowNum == 0 || map.colNum == 0) {
                 Debug.Log("地图保存失败！width或length为0");
                 return;
@@ -207,11 +199,7 @@ namespace WorldMap {
 
         //读取地图的静态数据
         private static void ReadStaticMap(string mapData) {
-<<<<<<< .merge_file_a18608
             Map map = Map.GetInstance();
-=======
-            Map map = Map.GetIntance();
->>>>>>> .merge_file_a24660
             // 将空元素删除的选项
             System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
 
@@ -266,12 +254,7 @@ namespace WorldMap {
 
         //读取地图的动态数据
         private static void ReadDynamicMap(string mapData) {
-<<<<<<< .merge_file_a18608
             Map map = Map.GetInstance();
-=======
-            Map map = Map.GetIntance();
->>>>>>> .merge_file_a24660
-            
             // 将空元素删除的选项
             StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries;
 

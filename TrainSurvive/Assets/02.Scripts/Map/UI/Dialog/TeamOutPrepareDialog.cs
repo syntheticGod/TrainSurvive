@@ -9,11 +9,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
-using WorldMap.Model;
-<<<<<<< .merge_file_a22384
-=======
 using TTT.UI;
->>>>>>> .merge_file_a16280
+
 
 namespace WorldMap.UI
 {

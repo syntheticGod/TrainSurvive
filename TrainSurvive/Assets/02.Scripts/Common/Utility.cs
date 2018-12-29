@@ -39,21 +39,12 @@ namespace TTT.Utility
         {
             int mid;
             int left = 0, right = container.Count - 1;
-            //TODO 死循环
-<<<<<<< .merge_file_a19412
-            while(left <= right)
-=======
             while (left <= right)
->>>>>>> .merge_file_a19224
             {
                 mid = (left + right) / 2;
                 if (container[mid] == data)
                     return true;
-<<<<<<< .merge_file_a19412
                 else if(container[mid] > data)
-=======
-                else if (container[mid] > data)
->>>>>>> .merge_file_a19224
                     right = mid - 1;
                 else
                     left = mid + 1;
@@ -204,14 +195,10 @@ namespace TTT.Utility
         {
             return rand.Next(minValue, maxValue);
         }
-<<<<<<< .merge_file_a19412
-        
-=======
         public static bool RandomProbability(float probability)
         {
             return RandomInt(100) <= Mathf.RoundToInt(100 * probability);
         }
->>>>>>> .merge_file_a19224
         public static int GenerateID()
         {
             return World.getInstance().IncreasementOfID++;
@@ -310,29 +297,11 @@ namespace TTT.Utility
             inputField.placeholder = placeHolder;
             return inputField;
         }
-<<<<<<< .merge_file_a19412
-        public static Button CreateBtn(string name, string content, Transform parent)
-        {
-            return CreateBtn(name, content, parent);
-        }
-        public static Button CreateBtn(string name, string content, Component parent)
-        {
-            Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();
-            SetParent(btn, parent);
-            Image image = btn.GetComponent<Image>();
-            //image.sprite = Resources.Load<Sprite>("unity_builtin_extra/UISprite");
-            btn.targetGraphic = image;
-            Text text = CreateText("Text");
-            text.text = content;
-            SetParent(text, btn);
-            FullFillRectTransform(text, Vector2.zero, Vector2.zero);
-=======
         //----------按钮----------↓
         public static Button CreateBtn(string name, string content, Component parent)
         {
             Button btn = CreateBtn(name, content);
             SetParent(btn, parent);
->>>>>>> .merge_file_a19224
             return btn;
         }
         public static Button CreateBtn(string name, string content)
@@ -347,8 +316,6 @@ namespace TTT.Utility
             FullFillRectTransform(text, Vector2.zero, Vector2.zero);
             return btn;
         }
-<<<<<<< .merge_file_a19412
-=======
         /// <summary>
         /// 给按钮设置纯色的颜色，根据基础色生成其他颜色，包括：正常色、高亮色、按下时的颜色、不可用时的颜色
         /// </summary>
@@ -363,15 +330,10 @@ namespace TTT.Utility
             colorBlock.disabledColor = baseColor * 0.4f;
             btn.colors = colorBlock;
         }
->>>>>>> .merge_file_a19224
         public static void SetBtnContent(Button btn, string content)
         {
             btn.transform.Find("Text").GetComponent<Text>().text = content;
         }
-<<<<<<< .merge_file_a19412
-=======
-        //----------按钮----------↑
->>>>>>> .merge_file_a19224
         public static Image CreateImage(string name)
         {
             return new GameObject(name, typeof(Image)).GetComponent<Image>();
@@ -387,48 +349,22 @@ namespace TTT.Utility
             Text text = new GameObject(name, typeof(Text)).GetComponent<Text>();
             text.color = Color.black;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-<<<<<<< .merge_file_a19412
-            text.fontSize = 20;
-=======
             text.fontSize = 14;
->>>>>>> .merge_file_a19224
             text.alignment = TextAnchor.MiddleCenter;
             text.text = content;
             return text;
         }
-<<<<<<< .merge_file_a19412
-=======
         public static Text CreateText(string name, string content, Component parent)
         {
             Text text = CreateText(name, content);
             SetParent(text, parent);
             return text;
         }
->>>>>>> .merge_file_a19224
         public static void SetParent(Component child, Component parent)
         {
             child.transform.SetParent(parent.transform);
             child.transform.localPosition = Vector2.zero;
         }
-<<<<<<< .merge_file_a19412
-        public static void CenterAt(Component comp, Vector2 anchor, Vector2 size)
-        {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5F, 0.5F);
-            rect.anchorMin = anchor;
-            rect.anchorMax = anchor;
-            rect.offsetMax = size / 2;
-            rect.offsetMin = -rect.offsetMax;
-        }
-        public static void CenterAt(Component comp, Vector2 anchor, Vector2 size, Vector2 vector)
-        {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5F, 0.5F);
-            rect.anchorMin = anchor;
-            rect.anchorMax = anchor;
-            rect.offsetMin = vector - size / 2;
-            rect.offsetMax = vector + size / 2;
-=======
         public static void CenterAt(Component comp, Vector2 pivot, Vector2 anchor, Vector2 size, Vector2 vector)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
@@ -455,7 +391,6 @@ namespace TTT.Utility
             rect.anchorMax = new Vector2(1F, 1F);
             rect.offsetMin = new Vector2(0F, -height);
             rect.offsetMax = Vector2.zero;
->>>>>>> .merge_file_a19224
         }
         public static void HLineAt(Component comp, float anchor, float height)
         {
@@ -484,16 +419,7 @@ namespace TTT.Utility
         /// <param name="vector">偏移量</param>
         public static void RightTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
-<<<<<<< .merge_file_a19412
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = Vector2.one;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
-=======
             CenterAt(comp, pivot, Vector2.one, size, vector);
->>>>>>> .merge_file_a19224
         }
         /// <summary>
         /// 将对象固定在右上角
@@ -503,50 +429,7 @@ namespace TTT.Utility
         /// <param name="size">大小</param>
         public static void RightTop(Component comp, Vector2 pivot, Vector2 size)
         {
-<<<<<<< .merge_file_a19412
             RightTop(comp, pivot, size, Vector2.zero);
-        }
-        public static void RightCenter(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
-        {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = new Vector2(1F, 0.5F);
-            rect.anchorMax = rect.anchorMin;
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
-        }
-        public static void RightBottom(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
-        {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = new Vector2(1, 0);
-            rect.anchorMax = new Vector2(1, 0);
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
-        }
-        public static void TopFull(Component comp, float height)
-        {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5F, 1F);
-            rect.anchorMin = new Vector2(0F, 1F);
-            rect.anchorMax = new Vector2(1F, 1F);
-            rect.offsetMin = new Vector2(0F, -height);
-            rect.offsetMax = Vector2.zero;
-        }
-        public static void LeftTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
-        {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = new Vector2(0, 1);
-            rect.anchorMax = new Vector2(0, 1);
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
-        }
-        public static void LeftTop(Component comp, Vector2 pivot, Vector2 size)
-        {
-            LeftTop(comp, pivot, size, Vector2.zero);
-=======
-            CenterAt(comp, pivot, Vector2.one, size);
         }
         public static void RightCenter(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
@@ -579,7 +462,6 @@ namespace TTT.Utility
         public static void LeftBottom(Component comp, Vector2 pivot, Vector2 size)
         {
             CenterAt(comp, pivot, new Vector2(1, 0), size);
->>>>>>> .merge_file_a19224
         }
     }
     /// <summary>
