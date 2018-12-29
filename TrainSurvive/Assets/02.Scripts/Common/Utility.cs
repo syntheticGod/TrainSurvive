@@ -351,7 +351,7 @@ namespace TTT.Utility
             Text text = new GameObject(name, typeof(Text)).GetComponent<Text>();
             text.color = Color.black;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 20;
+            text.fontSize = 14;
             text.alignment = TextAnchor.MiddleCenter;
             text.text = content;
             return text;

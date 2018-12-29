@@ -11,6 +11,8 @@ using UnityEngine;
 using Assets._02.Scripts.zhxUIScripts;
 using TTT.Resource;
 using TTT.Utility;
+using WorldMap.UI;
+using System.Text;
 
 [System.Serializable]
 public class Person
@@ -88,22 +90,149 @@ public class Person
     /// </summary>
     private const int numsLeft = 3;
     private int[] attriNumber;
+    private int[] attriMaxNumber;
     public int[] GetAttriNumbers()
     {
         return attriNumber;
     }
+    /// <summary>
+    /// 获得相应属性值
+    /// </summary>
+    /// <param name="eAttribute">属性</param>
+    /// <returns>属性值</returns>
     public int GetAttriNumber(EAttribute eAttribute)
     {
         return attriNumber[(int)eAttribute];
     }
-    public void AddAttriNumber(EAttribute eAttribute, int delta)
-    {
-        attriNumber[(int)eAttribute] += delta;
-    }
-    private int[] attriMaxNumber;
+    /// <summary>
+    /// 获得相应最大属性值
+    /// </summary>
+    /// <param name="eAttribute">属性</param>
+    /// <returns>最大属性值</returns>
     public int GetAttriMaxNumber(EAttribute eAttribute)
     {
         return attriMaxNumber[(int)eAttribute];
+    }
+    /// <summary>
+    /// 增加人物属性，同时获得相应技能
+    /// </summary>
+    /// <param name="eAttribute">属性</param>
+    /// <param name="delta">增值</param>
+    public void AddAttriNumber(EAttribute eAttribute, int delta)
+    {
+        attriNumber[(int)eAttribute] += delta;
+        trainCnt++;
+        SkillInfo[] skills = StaticResource.GetAvailableSkills(attriNumber);
+        List<SkillInfo> newSkills = new List<SkillInfo>();
+        for (int i = 0; i < skills.Length; i++)
+        {
+            if (IfHaveGotTheSkill(skills[i]) == false)
+            {
+                newSkills.Add(skills[i]);
+                AddGotSkill(skills[i].ID);
+            }
+        }
+        if (newSkills.Count != 0)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("学习到新技能：");
+            foreach (SkillInfo skill in newSkills)
+            {
+                sb.AppendFormat("{0},", skill.Name);
+            }
+            sb.Remove(sb.Length - 1, 1);
+            InfoDialog.Show(sb.ToString());
+        }
+    }
+    /// <summary>
+    /// 先支付金额或策略点后加属性
+    /// </summary>
+    /// <param name="attribute">属性</param>
+    /// <param name="delta">增加差值</param>
+    /// <param name="payByWhat">0：金钱 1：策略点</param>
+    /// <returns>
+    /// 1：添加属性成功
+    /// -1：失败，金钱/策略点 不足
+    /// -2：失败，属性达到上限
+    /// -3：失败，扣款/扣策略点 失败（检测时金钱足够，扣款时金钱不足）
+    /// </returns>
+    public int AddAttributeWithPay(EAttribute attribute, int delta, int payByWhat)
+    {
+        World world = World.getInstance();
+        //计算金币
+        int cost;
+        if (payByWhat == 0)
+        {
+            cost = CalMoneyByAttribute(attribute, delta);
+            if (!world.IfMoneyEnough(cost))
+                return -1;
+        }
+        else
+        {
+            cost = CallStrategyByAttribute(attribute, delta);
+            if (!world.IfStrategyEnough(cost))
+                return -1;
+        }
+        //检查属性上限
+        int maxAttributeNumber;
+        //专精可以解锁属性上限
+        if (IfProfession(attribute))
+            maxAttributeNumber = 999;
+        else
+            maxAttributeNumber = GetAttriMaxNumber(attribute);
+        if (GetAttriNumber(attribute) + delta > maxAttributeNumber)
+            return -2;
+        //扣款 加属性
+        if (payByWhat == 0)
+        {
+            if (!world.PayByMoney(cost))
+                return -3;
+        }
+        else
+        {
+            if (!world.PayByStrategy(cost))
+                return -3;
+        }
+        AddAttriNumber(attribute, delta);
+        return 1;
+    }
+    /// <summary>
+    /// 根据训练次数计算金钱花费增值百分比
+    /// </summary>
+    /// <returns>
+    /// 单位为 %
+    /// </returns>
+    public int CallMoneyIncreaseByTrainCnt()
+    {
+        return trainCnt * 5;
+    }
+    /// <summary>
+    /// 计算增加delta点属性时所需要的金钱
+    /// </summary>
+    /// <param name="attribute">属性</param>
+    /// <param name="deltaNumber">属性差值</param>
+    /// <returns>
+    /// 所需的金钱数额
+    /// </returns>
+    public int CalMoneyByAttribute(EAttribute attribute, int deltaNumber)
+    {
+        float money = deltaNumber * 1000F * (1 + GetAttriNumber(attribute) * 0.05F) * (1 + CallMoneyIncreaseByTrainCnt() / 100.0f);
+        if (IfProfession(attribute))
+            money *= getTopProfession().GetDiscountByAttri(attribute);
+        return Mathf.RoundToInt(money);
+    }
+    /// <summary>
+    /// 计算增加delta点属性时所需要的策略点
+    /// </summary>
+    /// <param name="attribute">属性</param>
+    /// <param name="deltaNumber">策略点</param>
+    /// <returns>
+    /// 所需的策略点数
+    /// </returns>
+    public int CallStrategyByAttribute(EAttribute attribute, int deltaNumber)
+    {
+        float money = CalMoneyByAttribute(attribute, deltaNumber);
+        return Mathf.RoundToInt(money * 0.1f);
     }
     //以下获取的属性均保留numsLeft位小数
     public double getHpMax()
@@ -310,16 +439,10 @@ public class Person
     /// <returns></returns>
     public bool IfProfession(EAttribute attribute)
     {
-        for (int i = 0; i < professions.Length; i++)
+        for (int i = 0; i < proAttributes.Length; i++)
         {
-            Profession profession = getProfession(i);
-            if (profession == null) continue;
-            foreach (Profession.AbiReq req in profession.AbiReqs)
-            {
-                //如果已学的专精的属性要求中包含该属性，则返回真
-                if (req.Abi == attribute)
-                    return true;
-            }
+            if (proAttributes[i] == attribute)
+                return true;
         }
         return false;
     }

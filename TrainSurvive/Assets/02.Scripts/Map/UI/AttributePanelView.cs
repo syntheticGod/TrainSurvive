@@ -9,8 +9,9 @@ using System.Collections;
 using UnityEngine.UI;
 using TTT.Resource;
 using TTT.Utility;
+using TTT.UI;
 
-namespace TTT.UI
+namespace WorldMap.UI
 {
     public class AttributePanelView : BaseView
     {

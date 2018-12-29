@@ -11,6 +11,7 @@ using WorldMap.Model;
 using TTT.Utility;
 using TTT.Resource;
 using WorldMap.UI;
+using System;
 
 namespace WorldMap
 {
@@ -26,11 +27,11 @@ namespace WorldMap
         }
         public bool IfMoneyEnough(int cost)
         {
-            return world.getMoney() >= cost;
+            return world.IfMoneyEnough(cost);
         }
         public bool Pay(int cost)
         {
-            return world.addMoney(-cost);
+            return world.PayByMoney(cost);
         }
         public void AddMoney(int money)
         {
@@ -107,13 +108,7 @@ namespace WorldMap
             }
             return goods;
         }
-        public int Money
-        {
-            get
-            {
-                return (int)world.getMoney();
-            }
-        }
+        public int Money { get { return (int)world.getMoney(); } }
         /// <summary>
         /// 在列车内部随机生成人物
         /// </summary>
@@ -131,6 +126,16 @@ namespace WorldMap
                 }
                 AddPerson(person);
             }
+        }
+        /// <summary>
+        /// DEBUG模式，添加金钱等
+        /// </summary>
+        public void InitInDebug()
+        {
+#if DEBUG
+            world.addMoney(10000);
+            world.addStrategy(1000);
+#endif
         }
         /// <summary>
         /// 添加英雄
