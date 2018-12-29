@@ -6,8 +6,10 @@
  */
 using UnityEngine;
 using UnityEngine.UI;
+
 using System.Collections.Generic;
 
+using TTT.UI;
 using TTT.Utility;
 using WorldMap.UI;
 using WorldMap.Model;
@@ -47,7 +49,7 @@ namespace WorldMap.Controller
             Vector2 btnSize = new Vector2(120, 80);
             Button cancel = ViewTool.CreateBtn("Cancel", btnStrs[0]);
             ViewTool.SetParent(cancel, btns);
-            ViewTool.CenterAt(cancel, new Vector2(0.5F, 0.5F), btnSize);
+            ViewTool.CenterAt(cancel, new Vector2(0.5f, 0.5f), new Vector2(0.5F, 0.5F), btnSize);
             cancel.onClick.AddListener(delegate () { Hide(); });
         }
         private void ConfigListView(GoodsListView listView, float xAnchor)

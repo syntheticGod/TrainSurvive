@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
+using TTT.UI;
 using WorldMap.UI;
 using WorldMap.Model;
 using Assets._02.Scripts.zhxUIScripts;

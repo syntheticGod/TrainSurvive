@@ -8,7 +8,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WorldMap.UI
+namespace TTT.UI
 {
     public abstract class MergableListView<M> : BaseListView<M>
         where M : Mergable

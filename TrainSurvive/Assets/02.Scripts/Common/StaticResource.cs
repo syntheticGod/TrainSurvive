@@ -294,7 +294,15 @@ namespace TTT.Resource
                 return "";
             }
 #endif
+            if (index < 0)
+                return "无";
             return AttributeName[index];
+        }
+        public static string GetAttributeName(EAttribute attribute)
+        {
+            if (attribute == EAttribute.NONE)
+                return "无";
+            return AttributeName[(int)attribute];
         }
         public static string RandomTownName()
         {
@@ -544,6 +552,9 @@ namespace TTT.Resource
         NONE = -1,
         DEVELOPING_BIG,
         DEVELOPING_SMALL,
+        /// <summary>
+        /// 人物在大地图中的图标
+        /// </summary>
         PERSON1_B,
         PERSON1_L,
         PERSON1_T,
@@ -559,8 +570,15 @@ namespace TTT.Resource
         PERSON5_B,
         PERSON5_L,
         PERSON5_T,
+
+        /// <summary>
+        /// 列车在大地图中的图标
+        /// </summary>
         TRAIN,
 
+        /// <summary>
+        /// 专精大图标
+        /// </summary>
         PROFESSION0_BIG,
         PROFESSION1_BIG,
         PROFESSION2_BIG,
@@ -607,6 +625,9 @@ namespace TTT.Resource
 
         PROFESSION444_BIG,
 
+        /// <summary>
+        /// 专精小图标
+        /// </summary>
         PROFESSION0_SMALL,
         PROFESSION1_SMALL,
         PROFESSION2_SMALL,
@@ -652,6 +673,10 @@ namespace TTT.Resource
         PROFESSION333_SMALL,
 
         PROFESSION444_SMALL,
+        /// <summary>
+        /// 人物头像
+        /// </summary>
+
         NUM
     }
     public enum EAttribute

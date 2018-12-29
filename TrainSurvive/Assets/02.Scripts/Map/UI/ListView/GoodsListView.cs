@@ -4,10 +4,13 @@
  * 创建时间：2018/12/5 4:06:31
  * 版本：v0.1
  */
-using UnityEngine.UI;
-using WorldMap.Model;
-using TTT.Utility;
 using UnityEngine;
+using UnityEngine.UI;
+
+using WorldMap.Model;
+
+using TTT.Utility;
+using TTT.UI;
 
 namespace WorldMap.UI
 {

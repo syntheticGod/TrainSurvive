@@ -59,13 +59,13 @@ namespace WorldMap
         {
             foreach (ItemData item in world.itemDataInTeam)
             {
-                if(item.id == itemID)
+                if (item.id == itemID)
                 {
                     item.num -= numberSell;
                     if (item.num <= 0)
                     {
                         Debug.Assert(world.itemDataInTeam.Remove(item));
-                        if(item.num < 0)
+                        if (item.num < 0)
                             Debug.LogError("系统：探险队售卖数量减扣错误");
                     }
                     break;
@@ -82,7 +82,7 @@ namespace WorldMap
                     if (item.num <= 0)
                     {
                         Debug.Assert(world.itemDataInTrain.Remove(item));
-                        if(item.num < 0)
+                        if (item.num < 0)
                             Debug.LogError("系统：探险队售卖数量减扣错误");
                     }
                     break;
@@ -92,7 +92,7 @@ namespace WorldMap
         public List<Good> GetGoodsInTeam()
         {
             List<Good> goods = new List<Good>();
-            foreach(ItemData item in world.itemDataInTeam)
+            foreach (ItemData item in world.itemDataInTeam)
             {
                 goods.Add(new Good(item));
             }
@@ -123,7 +123,13 @@ namespace WorldMap
             world.numIn = count;
             for (int i = 0; i < count; i++)
             {
-                AddPerson(Person.RandomPerson());
+                Person person = Person.RandomPerson();
+                //默认全部出战，直到上限
+                if (i < MAX_NUMBER_FIGHER)
+                {
+                    person.ifReadyForFighting = true;
+                }
+                AddPerson(person);
             }
         }
         /// <summary>
@@ -170,14 +176,14 @@ namespace WorldMap
         /// </summary>
         public bool DoGather()
         {
-            if(world.outVit < 20)
+            if (world.outVit < 20)
             {
                 InfoDialog.Show("探险队体力不足，无法采集");
                 return false;
             }
             world.addOutVit(-20);
             //马上采集五次
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
                 Gather.gather();
             return true;
         }
@@ -228,7 +234,7 @@ namespace WorldMap
             {
                 Debug.LogWarning("探险队携带外出食物不正常！");
             }
-            
+
             Debug.Log("探险队：我们（一共" + world.numOut + "人）外出了，带走了" + world.getFoodOut() + "点食物");
             world.ifTeamOuting = true;
         }
@@ -264,6 +270,39 @@ namespace WorldMap
         public int TeamAddFoodIn(int food)
         {
             return world.addFoodIn(food);
+        }
+        public const int MAX_NUMBER_FIGHER = 5;
+        /// <summary>
+        /// 设置指定人物的出战设置
+        /// </summary>
+        /// <param name="person">人物</param>
+        /// <param name="ifReadyForFight">是否出战</param>
+        /// <returns>
+        /// TRUE：设置成功
+        /// FALSE：
+        /// 当ifReadyForFight为TRUE时，出战人数不能超过上限
+        /// 当ifReadyForFight为FALSE时，出战人数不能少于一人
+        /// </returns>
+        public bool TeamConfigFight(Person person, bool ifReadyForFight)
+        {
+            int num = 0;
+            foreach (Person itr in world.persons)
+            {
+                if (itr.ifReadyForFighting) num++;
+            }
+
+            if (ifReadyForFight)
+            {
+                if (num >= MAX_NUMBER_FIGHER)
+                    return false;
+            }
+            else
+            {
+                if (num <= 1)
+                    return false;
+            }
+            person.ifReadyForFighting = ifReadyForFight;
+            return true;
         }
         //-----------------------------Team----------↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -318,7 +357,7 @@ namespace WorldMap
                     town.TownType = towns[x, z].typeId;
                     town.PosIndexX = towns[x, z].position.x;
                     town.PosIndexY = towns[x, z].position.y;
-                    if(town.TownType != ETownType.COMMON)
+                    if (town.TownType != ETownType.COMMON)
                     {
                         town.SpecialBuilding = towns[x, z].description;
                         town.Name = towns[x, z].name;

@@ -7,11 +7,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections.Generic;
-
 using TTT.Resource;
 using TTT.Utility;
 using WorldMap.Model;
+using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
@@ -141,6 +140,7 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TEAM_CHARACTER:
                     Debug.Log("查看小队指令");
+                    ControllerManager.Instance.GetWindow<TeamInfoController>("TeamInfoController").Show();
                     break;
             }
         }

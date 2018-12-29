@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 using TTT.Resource;
 using TTT.Utility;
+using TTT.UI;
 
 namespace WorldMap.UI
 {
@@ -24,8 +25,8 @@ namespace WorldMap.UI
         protected override void Start()
         {
             base.Start();
-            cellSize.x = -1;
-            cellSize.y = viewPortSize.y / StaticResource.AttributeCount;
+            m_cellSize.x = -1;
+            m_cellSize.y = viewPortSize.y / StaticResource.AttributeCount;
             ConfigCellSize();
         }
         protected override void OnItemView(ListViewItem item, Profession data, int itemIndex)

@@ -46,7 +46,7 @@ namespace WorldMap.Controller
             base.CreateModel();
             SetBackground("tavern_bg_01");
             int attriCount = StaticResource.AttributeCount;
-            attributePanelView = ViewTool.ForceGetComponentInChildren<AttributePanelView>(this,"AttributePanel");
+            attributePanelView = ViewTool.ForceGetComponentInChildren<AttributePanelView>(this, "AttributePanel");
             attriViews = new Text[attriCount];
             attriViewsNew = new Text[attriCount];
             deltaAttri = new int[attriCount];
@@ -342,7 +342,7 @@ namespace WorldMap.Controller
                 InfoDialog.Show("无更多专精槽，专精槽可以通过剧情解锁");
                 return;
             }
-            heroChoosed.setProfession(wanted);
+            heroChoosed.setProfession(wanted, EAttribute.NONE + 1 + professionListView.SelectIndex);
             InitProfessions();
             ShowProfession();
             //重新计算金钱

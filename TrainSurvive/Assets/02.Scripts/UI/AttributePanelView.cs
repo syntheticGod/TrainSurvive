@@ -38,6 +38,13 @@ namespace TTT.UI
         {
             attributeNumberText[(int)attribute].text = number + "";
         }
+        public void SetNumbers(int[] numbers)
+        {
+            for (int i = 0; i < numbers.Length && i < attributeNumberText.Length; i++)
+            {
+                attributeNumberText[i].text = numbers[i] + "";
+            }
+        }
     }
 }
 

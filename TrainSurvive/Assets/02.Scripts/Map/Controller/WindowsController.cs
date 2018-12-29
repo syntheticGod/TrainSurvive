@@ -122,12 +122,7 @@ namespace WorldMap.Controller
                 closeBtn.onClick.AddListener(delegate () { Hide(); });
                 ViewTool.SetParent(closeBtn, titleBar);
                 ViewTool.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
-                ColorBlock redColorBlock = closeBtn.colors;
-                redColorBlock.normalColor = new Color(1, 0, 0);
-                redColorBlock.highlightedColor = new Color(0.9F, 0, 0);
-                redColorBlock.pressedColor = new Color(0.8F, 0, 0);
-                redColorBlock.disabledColor = new Color(0.8F, 0.8F, 0.8F);
-                closeBtn.colors = redColorBlock;
+                ViewTool.SetBtnColor(closeBtn, Color.red);
             }
         }
         protected void SetTitle(string title)

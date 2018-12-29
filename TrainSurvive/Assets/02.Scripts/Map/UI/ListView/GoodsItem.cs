@@ -42,11 +42,11 @@ namespace WorldMap.UI
         protected override void PlaceModel()
         {
             base.PlaceModel();
-            ViewTool.CenterAt(itemView, new Vector2(0.2F, 0.5F), new Vector2(100F, 100F));
-            ViewTool.CenterAt(priceView, new Vector2(0.4F, 0.5F), new Vector2(80F, 40F));
-            ViewTool.CenterAt(numView, new Vector2(0.6F, 0.5F), new Vector2(80F, 40F));
-            ViewTool.CenterAt(actionBtn, new Vector2(0.8F, 0.5F), new Vector2(90F, 100F));
-            ViewTool.CenterAt(this, new Vector2(0.5F, 0.5F), defaultSize);
+            ViewTool.CenterAt(itemView, new Vector2(0.5f, 0.5f),new Vector2(0.2F, 0.5F), new Vector2(100F, 100F));
+            ViewTool.CenterAt(priceView, new Vector2(0.5f, 0.5f), new Vector2(0.4F, 0.5F), new Vector2(80F, 40F));
+            ViewTool.CenterAt(numView, new Vector2(0.5f, 0.5f), new Vector2(0.6F, 0.5F), new Vector2(80F, 40F));
+            ViewTool.CenterAt(actionBtn, new Vector2(0.5f, 0.5f), new Vector2(0.8F, 0.5F), new Vector2(90F, 100F));
+            ViewTool.CenterAt(this, new Vector2(0.5f, 0.5f), new Vector2(0.5F, 0.5F), defaultSize);
         }
         public void SetNumber(int num)
         {

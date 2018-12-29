@@ -15,6 +15,7 @@ using TTT.Utility;
 [System.Serializable]
 public class Person
 {
+    //----------个人信息----------↓
     /// <summary>
     /// 人物姓名
     /// </summary>
@@ -24,10 +25,44 @@ public class Person
     /// </summary>
     public bool ismale = true;
     /// <summary>
+    /// 人物的小头像 60*60像素
+    /// </summary>
+    public Sprite IconSmall { get { return StaticResource.GetSprite(ESprite.DEVELOPING_SMALL); } }
+    /// <summary>
+    /// 人物的大头像 120*120像素
+    /// </summary>
+    public Sprite IconBig { get { return StaticResource.GetSprite(ESprite.DEVELOPING_BIG); } }
+    public string SimpleInfo
+    {
+        get
+        {
+            Profession topProfession = getTopProfession();
+            if (topProfession == null)
+                return string.Format("{0}", name);
+            else
+                return string.Format("{0},{1}", name, topProfession.Name);
+        }
+    }
+    public string ProfessionInfo
+    {
+        get
+        {
+            return string.Format("{0}/{1}/{2}", StaticResource.GetAttributeName(proAttributes[0]), StaticResource.GetAttributeName(proAttributes[1]), StaticResource.GetAttributeName(proAttributes[2]));
+        }
+    }
+    public string BackgroundStoreInfo
+    {
+        get
+        {
+            return "背景故事正在路上。。。";
+        }
+    }
+    //----------个人信息----------↑----------人物状态----------↓
+    /// <summary>
     /// 人物是否出战
     /// </summary>
     public bool ifReadyForFighting = false;
-    //----------属性----------↓
+    //----------人物状态----------↑----------属性----------↓
     /// <summary>
     /// 体力
     /// </summary>
@@ -53,6 +88,10 @@ public class Person
     /// </summary>
     private const int numsLeft = 3;
     private int[] attriNumber;
+    public int[] GetAttriNumbers()
+    {
+        return attriNumber;
+    }
     public int GetAttriNumber(EAttribute eAttribute)
     {
         return attriNumber[(int)eAttribute];
@@ -197,7 +236,7 @@ public class Person
     {
         if (index > skill_carryed_maxNum)
             return -1;
-        return skillsCarryed[index-1];
+        return skillsCarryed[index - 1];
     }
     /// <summary>
     /// 已经获得的技能
@@ -231,12 +270,17 @@ public class Person
     public int trainCnt = 0;
     /// <summary>
     /// 三个专精槽位
+    /// 存放的是专精的ID
     /// </summary>
     private int[] professions;
     /// <summary>
     /// 允许的槽位
     /// </summary>
     private int professionAvaliable;
+    /// <summary>
+    /// 玩家选择的专精属性次序
+    /// </summary>
+    private EAttribute[] proAttributes;
     /// <summary>
     /// 获取第index级专精
     /// </summary>
@@ -266,14 +310,14 @@ public class Person
     /// <returns></returns>
     public bool IfProfession(EAttribute attribute)
     {
-        for(int i = 0; i < professions.Length; i++)
+        for (int i = 0; i < professions.Length; i++)
         {
             Profession profession = getProfession(i);
             if (profession == null) continue;
-            foreach(Profession.AbiReq req in profession.AbiReqs)
+            foreach (Profession.AbiReq req in profession.AbiReqs)
             {
                 //如果已学的专精的属性要求中包含该属性，则返回真
-                if(req.Abi == attribute)
+                if (req.Abi == attribute)
                     return true;
             }
         }
@@ -299,7 +343,7 @@ public class Person
     /// 根据专精的Level绑定专精
     /// </summary>
     /// <param name="profession"></param>
-    public void setProfession(Profession profession)
+    public void setProfession(Profession profession, EAttribute attribute)
     {
         if (profession.Level == EProfessionLevel.NONE)
         {
@@ -307,12 +351,14 @@ public class Person
             return;
         }
         professions[(int)profession.Level] = profession.ID;
+        proAttributes[(int)profession.Level] = attribute;
     }
     //----------专精----------↑
     private Person()
     {
         //保留以后用
         professions = new int[3] { -1, -1, -1 };
+        proAttributes = new EAttribute[3] { EAttribute.NONE, EAttribute.NONE, EAttribute.NONE };
         attriNumber = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
         //默认最大属性为10
         attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
