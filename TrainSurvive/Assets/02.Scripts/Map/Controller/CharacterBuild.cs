@@ -78,10 +78,9 @@ namespace WorldMap
             if (mapGenerate.isCreateMap)
             {
                 world.TrainSetMapPos(initIndexForTrain);
-                world.RandomTownsInfo(Map.GetIntance().towns);
+                world.RandomTownsInfo(Map.GetInstance().towns);
                 //初始化档案时随机生成3个人物
                 world.RandomPersonInTrain(3);
-                world.InitInDebug();
                 world.SaveGame();
             }
             world.PrepareData();

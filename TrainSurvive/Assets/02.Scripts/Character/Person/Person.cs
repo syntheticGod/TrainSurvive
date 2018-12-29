@@ -11,12 +11,17 @@ using UnityEngine;
 using Assets._02.Scripts.zhxUIScripts;
 using TTT.Resource;
 using TTT.Utility;
+<<<<<<< .merge_file_a25024
+=======
 using WorldMap.UI;
 using System.Text;
+>>>>>>> .merge_file_a05700
 
 [System.Serializable]
 public class Person
 {
+<<<<<<< .merge_file_a25024
+=======
     //----------个人信息----------↓
     /// <summary>
     /// 人物姓名
@@ -65,6 +70,7 @@ public class Person
     /// </summary>
     public bool ifReadyForFighting = false;
     //----------人物状态----------↑----------属性----------↓
+>>>>>>> .merge_file_a05700
     /// <summary>
     /// 体力
     /// </summary>
@@ -85,6 +91,18 @@ public class Person
     /// 智力
     /// </summary>
     public int intelligence { get { return attriNumber[(int)EAttribute.INTELLIGENCE]; } set { attriNumber[(int)EAttribute.INTELLIGENCE] = value; } }
+<<<<<<< .merge_file_a25024
+    private int[] attriNumber;
+    public int GetAttriNumber(EAttribute eAttribute)
+    {
+        return attriNumber[(int)eAttribute];
+    }
+    public void AddAttriNumber(EAttribute eAttribute, int delta)
+    {
+        attriNumber[(int)eAttribute] += delta;
+    }
+    private int[] attriMaxNumber;
+=======
     /// <summary>
     /// 小数属性保留的位数
     /// </summary>
@@ -109,11 +127,32 @@ public class Person
     /// </summary>
     /// <param name="eAttribute">属性</param>
     /// <returns>最大属性值</returns>
+>>>>>>> .merge_file_a05700
     public int GetAttriMaxNumber(EAttribute eAttribute)
     {
         return attriMaxNumber[(int)eAttribute];
     }
     /// <summary>
+<<<<<<< .merge_file_a25024
+    /// 已训练次数
+    /// </summary>
+    public int trainCnt = 0;
+    public bool hasWeapon = false;
+    public int weaponId = 0;
+    /// <summary>
+    /// 人物是否出战
+    /// </summary>
+    public bool ifReadyForFighting = false;
+    public string name = "";
+    /// <summary>
+    /// 性别用ismale代替
+    /// </summary>
+    public bool ismale = true;
+    /// <summary>
+    /// 小数属性保留的位数
+    /// </summary>
+    private const int numsLeft = 3;
+=======
     /// 增加人物属性，同时获得相应技能
     /// </summary>
     /// <param name="eAttribute">属性</param>
@@ -335,10 +374,14 @@ public class Person
     //----------属性----------↑----------武器----------↓
     public bool hasWeapon = false;
     public int weaponId = 0;
+>>>>>>> .merge_file_a05700
     /// <summary>
     /// 人物所持有的武器对象
     /// </summary>
     public Weapon weapon = null;
+<<<<<<< .merge_file_a25024
+    //----------技能----------↓
+=======
     [NonSerialized]
     private int lastWeaponId = -1;
     public void equipWeapon(Weapon weapon)
@@ -354,6 +397,7 @@ public class Person
         hasWeapon = false;
     }
     //----------武器----------↑----------技能----------↓
+>>>>>>> .merge_file_a05700
     private List<int> skillsCarryed = new List<int>();
     private int skill_carryed_maxNum = 2;
     /// <summary>
@@ -365,11 +409,17 @@ public class Person
     {
         if (index > skill_carryed_maxNum)
             return -1;
+<<<<<<< .merge_file_a25024
+        return skillsCarryed[index-1];
+    }
+
+=======
         return skillsCarryed[index - 1];
     }
     /// <summary>
     /// 已经获得的技能
     /// </summary>
+>>>>>>> .merge_file_a05700
     private List<int> skillsGot = new List<int>();
     /// <summary>
     /// 添加人物学习到的技能
@@ -392,6 +442,13 @@ public class Person
     {
         return ContainerTool.IfContainByBinarySearching(skillsGot, skill.ID);
     }
+<<<<<<< .merge_file_a25024
+    //----------技能----------↑
+
+    //----------专精----------↓
+    /// <summary>
+    /// 三个专精槽位
+=======
     //----------技能----------↑----------专精----------↓
     /// <summary>
     /// 已训练次数
@@ -400,6 +457,7 @@ public class Person
     /// <summary>
     /// 三个专精槽位
     /// 存放的是专精的ID
+>>>>>>> .merge_file_a05700
     /// </summary>
     private int[] professions;
     /// <summary>
@@ -407,10 +465,13 @@ public class Person
     /// </summary>
     private int professionAvaliable;
     /// <summary>
+<<<<<<< .merge_file_a25024
+=======
     /// 玩家选择的专精属性次序
     /// </summary>
     private EAttribute[] proAttributes;
     /// <summary>
+>>>>>>> .merge_file_a05700
     /// 获取第index级专精
     /// </summary>
     /// <param name="index">[0,1,2] => 第一级 第二级 第三级</param>
@@ -439,10 +500,23 @@ public class Person
     /// <returns></returns>
     public bool IfProfession(EAttribute attribute)
     {
+<<<<<<< .merge_file_a25024
+        for(int i = 0; i < professions.Length; i++)
+        {
+            Profession profession = getProfession(i);
+            if (profession == null) continue;
+            foreach(Profession.AbiReq req in profession.AbiReqs)
+            {
+                //如果已学的专精的属性要求中包含该属性，则返回真
+                if(req.Abi == attribute)
+                    return true;
+            }
+=======
         for (int i = 0; i < proAttributes.Length; i++)
         {
             if (proAttributes[i] == attribute)
                 return true;
+>>>>>>> .merge_file_a05700
         }
         return false;
     }
@@ -466,7 +540,11 @@ public class Person
     /// 根据专精的Level绑定专精
     /// </summary>
     /// <param name="profession"></param>
+<<<<<<< .merge_file_a25024
+    public void setProfession(Profession profession)
+=======
     public void setProfession(Profession profession, EAttribute attribute)
+>>>>>>> .merge_file_a05700
     {
         if (profession.Level == EProfessionLevel.NONE)
         {
@@ -474,14 +552,26 @@ public class Person
             return;
         }
         professions[(int)profession.Level] = profession.ID;
+<<<<<<< .merge_file_a25024
+    }
+    
+    //----------专精----------↑
+
+    [NonSerialized]
+    private int lastWeaponId = -1;
+=======
         proAttributes[(int)profession.Level] = attribute;
     }
     //----------专精----------↑
+>>>>>>> .merge_file_a05700
     private Person()
     {
         //保留以后用
         professions = new int[3] { -1, -1, -1 };
+<<<<<<< .merge_file_a25024
+=======
         proAttributes = new EAttribute[3] { EAttribute.NONE, EAttribute.NONE, EAttribute.NONE };
+>>>>>>> .merge_file_a05700
         attriNumber = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
         //默认最大属性为10
         attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
@@ -513,4 +603,118 @@ public class Person
         }
         return p;
     }
+<<<<<<< .merge_file_a25024
+    //以下获取的属性均保留numsLeft位小数
+    public double getHpMax()
+    {
+        double hpMax = 100 * (1 + 0.05 * vitality);
+        return Math.Round(hpMax, numsLeft);
+    }
+    public double getApMax()
+    {
+        double apMax = 100 * (1 + 0.05 * intelligence);
+        return Math.Round(apMax, numsLeft);
+    }
+    public double getHpRec()
+    {
+        return Math.Round(5.000, numsLeft);
+    }
+    public double getApRec()
+    {
+        double apRec = 5 * (1 + 0.05 * intelligence);
+        if (hasWeapon)
+        {
+            apRec = apRec * weapon.facArec;
+        }
+        return Math.Round(apRec, numsLeft);
+    }
+    public double getValAtk()
+    {
+        double atk = 10 * (1 + 0.05 * strength);
+        if (hasWeapon)
+        {
+            atk = atk * weapon.facAtk;
+        }
+        return Math.Round(atk, numsLeft);
+    }
+    public double getValAts()
+    {
+        double ats = 1 * (1 + 0.03 * agile);
+        if (hasWeapon)
+        {
+            ats = ats * weapon.facAts;
+        }
+        return Math.Round(ats, numsLeft);
+    }
+    public double getValSpd()
+    {
+        double spd = 1 * (1 + 0.02 * agile);
+        if (hasWeapon)
+        {
+            spd = spd * weapon.facSpd;
+        }
+        return Math.Round(spd, numsLeft);
+    }
+    public double getValCrc()
+    {
+        double crc = 0.02 * technique;
+        if (hasWeapon)
+        {
+            crc = crc + weapon.modCrc;
+        }
+        return Math.Round(crc, numsLeft);
+    }
+    public double getValCrd()
+    {
+        double crd = 1.6 + 0.03 * technique;
+        if (hasWeapon)
+        {
+            crd = crd + weapon.modCrd;
+        }
+        return Math.Round(crd, numsLeft);
+    }
+    public double getValHrate()
+    {
+        double num = 1 * (1 + 0.025 * technique);
+        return Math.Round(num, numsLeft);
+    }
+    public double getValErate()
+    {
+        double num = 0.02 * agile;
+        return Math.Round(num, numsLeft);
+    }
+    public double getRange()
+    {
+        double num = 1;
+        if (hasWeapon)
+        {
+            num = weapon.range;
+        }
+        num = num * (1 + 0.03 * technique);
+        return Math.Round(num, numsLeft);
+    }
+    public double getValHit()
+    {
+        double num = 1;
+        if (hasWeapon)
+        {
+            num = weapon.modHit;
+        }
+        return Math.Round(num, numsLeft);
+    }
+    public void equipWeapon(Weapon weapon)
+    {
+        this.weapon = (Weapon)weapon.Clone();
+        weaponId = weapon.id;
+        hasWeapon = true;
+    }
+
+    public void unequipWeapon()
+    {
+        weapon = null;
+        weaponId = -1;
+        hasWeapon = false;
+    }
+=======
+>>>>>>> .merge_file_a05700
 }

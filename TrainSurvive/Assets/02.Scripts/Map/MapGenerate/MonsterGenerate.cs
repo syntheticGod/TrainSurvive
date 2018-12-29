@@ -22,8 +22,14 @@ namespace WorldMap {
         //表明特殊区域的图片
         public GameObject specialAreaPic;
 
-        //图片偏移位置
-        public Vector3 picOffset = new Vector3(0, 0, -1.0f);
+        //表明资源已被采集的图片
+        public GameObject isGatheredPic;
+
+        //怪物图片偏移位置
+        public Vector3 monsterPicOffset = new Vector3(0, 0, -1.0f);
+
+        //资源已被采集图标的位置
+        public static Vector3 isGatheredPicOffset = new Vector3(0.3f, -0.3f, -1.0f);
 
         //开始生成
         public void StartGenerate() {
@@ -46,7 +52,7 @@ namespace WorldMap {
         //生成怪物布局
         public void generateMonster() {
             //获取地图类
-            Map map = Map.GetIntance();
+            Map map = Map.GetInstance();
 
             //每个网格有25%存在怪物，怪物难度(3/4概率为难度1，3/16概率为难度2，1/16概率为难度3）
             int []monsterCount = new int[3] { 0,0,0 };
@@ -92,7 +98,7 @@ namespace WorldMap {
         //生成特殊区域
         public void generateSpecialBattle() {
             //获取地图类
-            Map map = Map.GetIntance();
+            Map map = Map.GetInstance();
 
             //初始化时有25%概率生成特殊战斗
             int specialCount = 0;
@@ -119,10 +125,12 @@ namespace WorldMap {
         //对怪物布局和特殊区域进行绘画
         public void paintMonster() {
             //获取地图类
-            Map map = Map.GetIntance();
+            Map map = Map.GetInstance();
 
             //设置保存怪物图片的位置
-            Transform parent = new GameObject("monsterId").transform;
+            Transform monsterParent = new GameObject("monsterId").transform;
+            //设置保存资源图片的位置
+            Transform isGatheredParent = new GameObject("isGathered").transform;
 
             //放置怪物等级或者特殊区域标识
             for (int i = 0; i < map.rowNum; i++) {
@@ -132,10 +140,10 @@ namespace WorldMap {
                         //对怪物等级图标进行绘画
                         case SpecialTerrainEnum.MONSTER: {
                             GameObject o = Instantiate(levelPic[map.spowns[i, j].monsterId - 1],
-                                mapGenerate.orign + picOffset + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0),
+                                mapGenerate.orign + monsterPicOffset + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0),
                                 Quaternion.identity);
                             //设置父节点
-                            o.transform.parent = parent;
+                            o.transform.parent = monsterParent;
 
                             map.spowns[i, j].SetSpawnObject(SpawnObjectEnum.MONSTER_LEVEL, o);
                         }
@@ -144,18 +152,37 @@ namespace WorldMap {
                         //如果为特殊区域
                         case SpecialTerrainEnum.SPECIAL_AREA: {
                             GameObject o = Instantiate(specialAreaPic,
-                                mapGenerate.orign + picOffset + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0),
+                                mapGenerate.orign + monsterPicOffset + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0),
                                 Quaternion.identity);
                             //设置父节点
-                            o.transform.parent = parent;
+                            o.transform.parent = monsterParent;
 
                             map.spowns[i, j].SetSpawnObject(SpawnObjectEnum.SPECIAL_AREA, o);
                         }
                         break;
                     }
+
+                    //绘制当前资源是否被采集
+                    //如果已被采集
+                    GameObject isGatherObject = Instantiate(isGatheredPic,
+                            mapGenerate.orign + isGatheredPicOffset + new Vector3(mapGenerate.spawnOffsetX * i, mapGenerate.spawnOffsetZ * j, 0),
+                            Quaternion.identity);
+                    //设置父节点
+                    isGatherObject.transform.parent = isGatheredParent;
+
+                    map.spowns[i, j].SetSpawnObject(SpawnObjectEnum.IS_GATHERED, isGatherObject);
+
+                    //如果当前点没被采集，将其放入底下
+                    if (map.spowns[i, j].isGathered == false) {
+                        //将其位置移到下面（等同于删除）
+                        Vector3 curPos = isGatherObject.transform.position;
+                        curPos.z = 1;
+                        isGatherObject.transform.position = curPos;
+                    }
                 }
             }
         }
+
     }
 }
 
