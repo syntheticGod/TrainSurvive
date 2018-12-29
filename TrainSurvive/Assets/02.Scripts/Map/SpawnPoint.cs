@@ -168,8 +168,8 @@ namespace WorldMap {
             //    spawnObjects.Add(new GameObject("none"));
             //}
 
-            //初始地块都有资源
-            isGathered = true;
+            //初始地块都没被采集
+            isGathered = false;
 
             //设置初始的地块为不可见的状态
             if (MapGenerate.isFogState == true) {
@@ -240,22 +240,25 @@ namespace WorldMap {
         /// <returns>返回当前地块对象的位置</returns>
         private int getSpawnIndex(SpawnObjectEnum spawnObjectEnum) {
             int curSpawnIndex = (int)spawnObjectEnum;
+            //缺少的地块数量
+            int lackTerrain = 0;
 
             //如果没有地形object，减一
             if (curSpawnIndex > (int)SpawnObjectEnum.TERRAIN) {
                 if (terrainType == TerrainEnum.NONE || terrainType == TerrainEnum.PLAIN) {
-                    curSpawnIndex--;
+                    lackTerrain++;
                 }
             }
 
             //如果没有城镇铁轨等特殊地形，减一
             if (curSpawnIndex > (int)SpawnObjectEnum.TOWN) {
                 if (specialTerrainType == SpecialTerrainEnum.NONE) {
-                    curSpawnIndex--;
+                    lackTerrain++;
                 }
             }
 
-            return curSpawnIndex;
+            //返回当前index和缺少的数量
+            return curSpawnIndex - lackTerrain;
         }
 
         /// <summary>
