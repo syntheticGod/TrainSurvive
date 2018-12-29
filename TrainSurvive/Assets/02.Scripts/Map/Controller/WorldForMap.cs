@@ -177,15 +177,16 @@ namespace WorldMap
             world.ifTeamMoving = false;
         }
         /// <summary>
-        /// 探险队采集回调
+        /// 探险队采集
         /// </summary>
+        /// <returns>
+        /// TRUE：采集完成
+        /// FALSE：体力不足
+        /// </returns>
         public bool DoGather()
         {
             if (world.outVit < 20)
-            {
-                InfoDialog.Show("探险队体力不足，无法采集");
                 return false;
-            }
             world.addOutVit(-20);
             //马上采集五次
             for (int i = 0; i < 5; i++)
