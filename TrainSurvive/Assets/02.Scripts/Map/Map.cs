@@ -153,7 +153,7 @@ namespace WorldMap
         /// </returns>
         public bool IfCanGathered(Vector2Int position)
         {
-            return IfInter(position) && spowns[position.x, position.y].isGathered;
+            return IfInter(position) && spowns[position.x, position.y].isGathered == false;
         }
         /// <summary>
         /// 判断地图坐标是不是处于可见状态
@@ -279,7 +279,7 @@ namespace WorldMap
             }
 
             //设置当前资源已被采集
-            spowns[pos.x, pos.y].SetIsGathered(false);
+            spowns[pos.x, pos.y].SetIsGathered(true);
 
             //将其移动到玩家能看到的地方
             //获取对应的gameObject

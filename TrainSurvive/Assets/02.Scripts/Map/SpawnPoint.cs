@@ -153,7 +153,7 @@ namespace WorldMap {
         //如果是特殊区域，记录区域id
         public int monsterId { get; private set; }
 
-        //当前地块是否拥有资源
+        //当前地块是否被采集
         public bool isGathered { get; private set; }
 
         //地块的方法
