@@ -29,7 +29,7 @@ namespace WorldMap {
         public Vector3 monsterPicOffset = new Vector3(0, 0, -1.0f);
 
         //资源已被采集图标的位置
-        public static Vector3 isGatheredPicOffset = new Vector3(0.3f, -0.3f, -1.0f);
+        public static Vector3 isGatheredPicOffset = new Vector3(0.0f, -0.05f, -0.03f);
 
         //开始生成
         public void StartGenerate() {

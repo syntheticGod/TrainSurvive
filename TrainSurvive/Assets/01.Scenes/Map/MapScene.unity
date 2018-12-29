@@ -1128,8 +1128,8 @@ MonoBehaviour:
     type: 2}
   railTurnObject: {fileID: 1926940916425474, guid: 35802968785354e478a814d7624c638b,
     type: 2}
-  townOffsetVec3: {x: 0, y: 0, z: -0.03}
-  railOffsetVec3: {x: 0, y: 0, z: -0.02}
+  townOffsetVec3: {x: 0, y: 0, z: -0.05}
+  railOffsetVec3: {x: 0, y: 0, z: -0.04}
   minDist: 10
 --- !u!1 &1108445040
 GameObject:
