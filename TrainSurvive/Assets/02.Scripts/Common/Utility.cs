@@ -196,7 +196,10 @@ namespace TTT.Utility
         {
             return rand.Next(minValue, maxValue);
         }
-
+        public static bool RandomProbability(float probability)
+        {
+            return RandomInt(100) <= Mathf.RoundToInt(100 * probability);
+        }
         public static int GenerateID()
         {
             return World.getInstance().IncreasementOfID++;

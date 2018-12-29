@@ -86,7 +86,7 @@ namespace WorldMap.Controller
                 Debug.Log("origin of ray:" + ray.origin + " dire:" + ray.direction);
                 Debug.Log("mouse position " + Input.mousePosition);
                 Vector2 clickedPosition = StaticResource.WorldPosToMapPos(ray.origin);
-                if (Map.GetIntanstance().isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
+                if (Map.GetIntance().isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
                 {
                     if (!train.StartRun(clickedPosition))
                     {

@@ -46,7 +46,7 @@ namespace WorldMap {
         //生成怪物布局
         public void generateMonster() {
             //获取地图类
-            Map map = Map.GetIntanstance();
+            Map map = Map.GetIntance();
 
             //每个网格有25%存在怪物，怪物难度(3/4概率为难度1，3/16概率为难度2，1/16概率为难度3）
             int []monsterCount = new int[3] { 0,0,0 };
@@ -92,7 +92,7 @@ namespace WorldMap {
         //生成特殊区域
         public void generateSpecialBattle() {
             //获取地图类
-            Map map = Map.GetIntanstance();
+            Map map = Map.GetIntance();
 
             //初始化时有25%概率生成特殊战斗
             int specialCount = 0;
@@ -119,7 +119,7 @@ namespace WorldMap {
         //对怪物布局和特殊区域进行绘画
         public void paintMonster() {
             //获取地图类
-            Map map = Map.GetIntanstance();
+            Map map = Map.GetIntance();
 
             //设置保存怪物图片的位置
             Transform parent = new GameObject("monsterId").transform;

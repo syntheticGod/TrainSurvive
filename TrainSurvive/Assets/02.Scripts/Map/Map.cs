@@ -18,7 +18,7 @@ namespace WorldMap {
         public static Map map = null;
 
         //获取Map类的单例
-        public static Map GetIntanstance() {
+        public static Map GetIntance() {
             if (map == null) {
                 map = new Map();
             }
@@ -109,7 +109,16 @@ namespace WorldMap {
             return IfInter(position) &&
                 spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.TOWN;
         }
-
+        /// <summary>
+        /// 判断是否是怪物出没的地区
+        /// </summary>
+        /// <param name="position">地图坐标</param>
+        /// <returns></returns>
+        public bool IfMonsterArea(Vector2Int position)
+        {
+            return IfInter(position) &&
+                spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.MONSTER;
+        }
         /// <summary>
         /// 判断地图坐标是不是处于可见状态
         /// </summary>
