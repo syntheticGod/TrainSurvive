@@ -113,6 +113,10 @@ namespace WorldBattle {
         //攻击所需的前摇的时间
         public float atkWindUpTime { get; private set; }
 
+        public delegate void task_killMonster(int monsterId);
+        public task_killMonster task_kill_handler;
+        //任务用怪物id
+        public int task_monsterId;
         //本次战斗中本角色的id
         public int myId { get; set; }
         //本次战斗中是否是玩家角色
@@ -424,6 +428,8 @@ namespace WorldBattle {
 
             //如果当前生命值变成0，无论是技能，攻击，Buff，挂掉
             if (curHealthPoint <= 0.0f) {
+                if (!isPlayer)
+                    task_kill_handler(task_monsterId);
                 changeSubState(ActionStateEnum.DEAD);
             }
         }

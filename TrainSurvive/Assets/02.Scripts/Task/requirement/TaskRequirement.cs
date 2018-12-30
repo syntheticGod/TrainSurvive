@@ -48,5 +48,9 @@ public abstract class TaskRequirement  {
     /// 完成该条件的时候调用，需对派生类具体实现，在满足任务对应要求时设置finish未true，例子见killRequiment
     /// </summary>
     public abstract void achieveGoal(int nums);
-    
+    /// <summary>
+    /// 任务情况发生改变的适合调用，目前仅killreq会具体实现
+    /// </summary>
+    /// <param name="numOrId"></param>
+    public abstract void conditionChange(int numOrId);
 }
