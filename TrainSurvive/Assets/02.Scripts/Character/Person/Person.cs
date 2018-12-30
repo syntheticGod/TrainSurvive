@@ -82,11 +82,30 @@ public class Person
     /// <returns></returns>
     public int getSkillCarryed(int index)
     {
-        if (index > skill_carryed_maxNum)
+        if (index > skill_carryed_maxNum|| index> skillsCarryed.Count)
             return -1;
         return skillsCarryed[index-1];
     }
-
+  
+    public void carry_skill(int skillId)
+    {
+        if (!skillsCarryed.Contains(skillId))
+        {
+            if (skillsCarryed.Count < skill_carryed_maxNum)
+                skillsCarryed.Add(skillId);
+        }
+    }
+    public void uncarry_skill(int skillId)
+    {
+       for(int i=0;i< skill_carryed_maxNum&&i< skillsCarryed.Count; i++)
+        {
+            if(skillsCarryed[i]== skillId)
+            {
+                skillsCarryed.RemoveAt(i);
+                break;
+            }
+        }
+    }
     private List<int> skillsGot = new List<int>();
     /// <summary>
     /// 添加人物学习到的技能

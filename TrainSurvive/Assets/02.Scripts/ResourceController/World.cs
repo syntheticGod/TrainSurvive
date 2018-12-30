@@ -10,7 +10,7 @@ public class World
 {
     private World()
     {
-
+        //或许战略点一开始不为0？teamPoint = 10;
         //测试用 xys
         foodIn = (uint)foodInMax;
         //----
@@ -184,7 +184,11 @@ public class World
     public int numIn;
     public int numOut;
     public int personNumMax = 15;
-
+    public uint teamPoint
+    {
+        get { return teamPoint; }
+        private set { teamPoint = value; }
+    }
     public TaskController taskCon = null;
 
     /// <summary>
@@ -420,6 +424,26 @@ public class World
         if (resourceUI != null)
         {
             resourceUI.setMoney(money);
+        }
+        return result;
+    }
+    /// <summary>
+    /// num可为负代表减少
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns>false代表战略点不够</returns>
+    public bool addTeamPoint(int num)
+    {
+        bool result = true;
+        if ((teamPoint + num) < 0)
+        {
+            result = false;
+        }
+        else
+            teamPoint = (uint)(teamPoint + num);
+        if (resourceUI != null)
+        {
+            //resourceUI.setMoney(money);
         }
         return result;
     }

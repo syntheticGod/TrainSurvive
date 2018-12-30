@@ -23,7 +23,7 @@ public class PersonCell : MonoBehaviour {
         btn.onClick.AddListener(OnClick);
         textPanel = GameObject.Find("gcTextPanel");
         professionPanel= GameObject.Find("gcProfessionPanel");
-        skillContentOb = GameObject.Find("skillContent");
+        skillContentOb = GameObject.Find("gcSkillPanel");
     }
 
     // Update is called once per frame
@@ -44,8 +44,8 @@ public class PersonCell : MonoBehaviour {
         panelCs.updatePanel(index);
         ProfessionPanel professionpanelCs = professionPanel.GetComponent<ProfessionPanel>();
         professionpanelCs.updatePanel(index);
-        PersonSkillListContent personSkillContent = skillContentOb.GetComponent<PersonSkillListContent>();
-        personSkillContent.updatePanel(index);
+        PersonSkillPanel personSkillPanel = skillContentOb.GetComponent<PersonSkillPanel>();
+        personSkillPanel.updatePanel(index);
         Button bt = (Button)gameObject.GetComponent("Button");
         bt.Select();
     }
