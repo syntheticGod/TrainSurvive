@@ -9,8 +9,9 @@ using System.Collections;
 using UnityEngine.UI;
 using TTT.Resource;
 using TTT.Utility;
+using TTT.UI;
 
-namespace TTT.UI
+namespace WorldMap.UI
 {
     public class AttributePanelView : BaseView
     {
@@ -37,6 +38,13 @@ namespace TTT.UI
         public void SetNumber(EAttribute attribute, int number)
         {
             attributeNumberText[(int)attribute].text = number + "";
+        }
+        public void SetNumbers(int[] numbers)
+        {
+            for (int i = 0; i < numbers.Length && i < attributeNumberText.Length; i++)
+            {
+                attributeNumberText[i].text = numbers[i] + "";
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TTT.Utility;
+using TTT.UI;
 using System.Collections.Generic;
 
 namespace WorldMap.UI

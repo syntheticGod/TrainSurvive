@@ -39,8 +39,7 @@ namespace TTT.Utility
         {
             int mid;
             int left = 0, right = container.Count - 1;
-            //TODO 死循环
-            while(left <= right)
+            while (left <= right)
             {
                 mid = (left + right) / 2;
                 if (container[mid] == data)
@@ -196,7 +195,10 @@ namespace TTT.Utility
         {
             return rand.Next(minValue, maxValue);
         }
-        
+        public static bool RandomProbability(float probability)
+        {
+            return RandomInt(100) <= Mathf.RoundToInt(100 * probability);
+        }
         public static int GenerateID()
         {
             return World.getInstance().IncreasementOfID++;
@@ -295,21 +297,11 @@ namespace TTT.Utility
             inputField.placeholder = placeHolder;
             return inputField;
         }
-        public static Button CreateBtn(string name, string content, Transform parent)
-        {
-            return CreateBtn(name, content, parent);
-        }
+        //----------按钮----------↓
         public static Button CreateBtn(string name, string content, Component parent)
         {
-            Button btn = new GameObject(name, typeof(Button), typeof(RectTransform), typeof(Image)).GetComponent<Button>();
+            Button btn = CreateBtn(name, content);
             SetParent(btn, parent);
-            Image image = btn.GetComponent<Image>();
-            //image.sprite = Resources.Load<Sprite>("unity_builtin_extra/UISprite");
-            btn.targetGraphic = image;
-            Text text = CreateText("Text");
-            text.text = content;
-            SetParent(text, btn);
-            FullFillRectTransform(text, Vector2.zero, Vector2.zero);
             return btn;
         }
         public static Button CreateBtn(string name, string content)
@@ -323,6 +315,20 @@ namespace TTT.Utility
             SetParent(text, btn);
             FullFillRectTransform(text, Vector2.zero, Vector2.zero);
             return btn;
+        }
+        /// <summary>
+        /// 给按钮设置纯色的颜色，根据基础色生成其他颜色，包括：正常色、高亮色、按下时的颜色、不可用时的颜色
+        /// </summary>
+        /// <param name="btn">按钮</param>
+        /// <param name="baseColor">基础色</param>
+        public static void SetBtnColor(Button btn, Color baseColor)
+        {
+            ColorBlock colorBlock = btn.colors;
+            colorBlock.normalColor = baseColor;
+            colorBlock.highlightedColor = baseColor * 0.9f;
+            colorBlock.pressedColor = baseColor * 0.8f;
+            colorBlock.disabledColor = baseColor * 0.4f;
+            btn.colors = colorBlock;
         }
         public static void SetBtnContent(Button btn, string content)
         {
@@ -343,9 +349,15 @@ namespace TTT.Utility
             Text text = new GameObject(name, typeof(Text)).GetComponent<Text>();
             text.color = Color.black;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 20;
+            text.fontSize = 14;
             text.alignment = TextAnchor.MiddleCenter;
             text.text = content;
+            return text;
+        }
+        public static Text CreateText(string name, string content, Component parent)
+        {
+            Text text = CreateText(name, content);
+            SetParent(text, parent);
             return text;
         }
         public static void SetParent(Component child, Component parent)
@@ -353,23 +365,32 @@ namespace TTT.Utility
             child.transform.SetParent(parent.transform);
             child.transform.localPosition = Vector2.zero;
         }
-        public static void CenterAt(Component comp, Vector2 anchor, Vector2 size)
+        public static void CenterAt(Component comp, Vector2 pivot, Vector2 anchor, Vector2 size, Vector2 vector)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5F, 0.5F);
+            rect.pivot = pivot;
             rect.anchorMin = anchor;
             rect.anchorMax = anchor;
-            rect.offsetMax = size / 2;
-            rect.offsetMin = -rect.offsetMax;
+            rect.offsetMin = vector + (size * -pivot);
+            rect.offsetMax = rect.offsetMin + size;
         }
-        public static void CenterAt(Component comp, Vector2 anchor, Vector2 size, Vector2 vector)
+        public static void CenterAt(Component comp, Vector2 pivot, Vector2 anchor, Vector2 size)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5F, 0.5F);
+            rect.pivot = pivot;
             rect.anchorMin = anchor;
             rect.anchorMax = anchor;
-            rect.offsetMin = vector - size / 2;
-            rect.offsetMax = vector + size / 2;
+            rect.offsetMin = size * -pivot;
+            rect.offsetMax = rect.offsetMin + size;
+        }
+        public static void TopFull(Component comp, float height)
+        {
+            RectTransform rect = comp.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5F, 1F);
+            rect.anchorMin = new Vector2(0F, 1F);
+            rect.anchorMax = new Vector2(1F, 1F);
+            rect.offsetMin = new Vector2(0F, -height);
+            rect.offsetMax = Vector2.zero;
         }
         public static void HLineAt(Component comp, float anchor, float height)
         {
@@ -398,12 +419,7 @@ namespace TTT.Utility
         /// <param name="vector">偏移量</param>
         public static void RightTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = Vector2.one;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
+            CenterAt(comp, pivot, Vector2.one, size, vector);
         }
         /// <summary>
         /// 将对象固定在右上角
@@ -417,43 +433,35 @@ namespace TTT.Utility
         }
         public static void RightCenter(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = new Vector2(1F, 0.5F);
-            rect.anchorMax = rect.anchorMin;
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
+            CenterAt(comp, pivot, new Vector2(1F, 0.5F), size, vector);
         }
         public static void RightBottom(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = new Vector2(1, 0);
-            rect.anchorMax = new Vector2(1, 0);
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
+            CenterAt(comp, pivot, new Vector2(1F, 0F), size, vector);
         }
-        public static void TopFull(Component comp, float height)
+        public static void Center(Component comp, Vector2 pivot, Vector2 size)
         {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5F, 1F);
-            rect.anchorMin = new Vector2(0F, 1F);
-            rect.anchorMax = new Vector2(1F, 1F);
-            rect.offsetMin = new Vector2(0F, -height);
-            rect.offsetMax = Vector2.zero;
+            CenterAt(comp, pivot, new Vector2(0.5F, 0.5F), size);
+        }
+        public static void Center(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        {
+            CenterAt(comp, pivot, new Vector2(0.5F, 0.5F), size, vector);
         }
         public static void LeftTop(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
-            RectTransform rect = comp.GetComponent<RectTransform>();
-            rect.pivot = pivot;
-            rect.anchorMin = new Vector2(0, 1);
-            rect.anchorMax = new Vector2(0, 1);
-            rect.offsetMin = vector + (size * -pivot);
-            rect.offsetMax = rect.offsetMin + size;
+            CenterAt(comp, pivot, new Vector2(0, 1), size, vector);
         }
         public static void LeftTop(Component comp, Vector2 pivot, Vector2 size)
         {
-            LeftTop(comp, pivot, size, Vector2.zero);
+            CenterAt(comp, pivot, new Vector2(0, 1), size);
+        }
+        public static void LeftBottom(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
+        {
+            CenterAt(comp, pivot, new Vector2(1, 0), size, vector);
+        }
+        public static void LeftBottom(Component comp, Vector2 pivot, Vector2 size)
+        {
+            CenterAt(comp, pivot, new Vector2(1, 0), size);
         }
     }
     /// <summary>

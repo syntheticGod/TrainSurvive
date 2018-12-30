@@ -8,8 +8,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-using Assets._02.Scripts.zhxUIScripts;
 using TTT.Utility;
+using TTT.UI;
+
+using Assets._02.Scripts.zhxUIScripts;
 
 namespace WorldMap.UI
 {

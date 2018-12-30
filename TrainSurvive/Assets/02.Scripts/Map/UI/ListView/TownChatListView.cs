@@ -7,6 +7,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TTT.Utility;
+using TTT.UI;
 
 namespace WorldMap.UI
 {

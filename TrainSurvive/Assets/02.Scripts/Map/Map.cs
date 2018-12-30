@@ -10,7 +10,9 @@
 using UnityEngine;
 using System.Collections;
 using TTT.Utility;
+using WorldBattle;
 using System.Collections.Generic;
+using static WorldMap.SpawnPoint;
 
 namespace WorldMap {
     public class Map : IMapForTrain {
@@ -18,7 +20,7 @@ namespace WorldMap {
         public static Map map = null;
 
         //获取Map类的单例
-        public static Map GetIntanstance() {
+        public static Map GetInstance() {
             if (map == null) {
                 map = new Map();
             }
@@ -111,6 +113,29 @@ namespace WorldMap {
         }
 
         /// <summary>
+        /// 判断是否是怪物区域
+        /// </summary>
+        /// <param name="position">地图坐标，不是世界坐标</param>
+        /// <returns>
+        /// TRUE：是怪物区域
+        /// FALSE：不是怪物区域
+        /// </returns>
+        public bool IfMonsterArea(Vector2Int position) {
+            return IfInter(position) &&
+                spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.MONSTER;
+        }
+        /// <summary>
+        /// 判断地块是否可以采集
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>
+        /// TRUE：可采集
+        /// FALSE：不可采集
+        /// </returns>
+        public bool IfCanGathered(Vector2Int position) {
+            return IfInter(position) && !spowns[position.x, position.y].isGathered;
+        }
+        /// <summary>
         /// 判断地图坐标是不是处于可见状态
         /// </summary>
         /// <param name="position"></param>
@@ -178,6 +203,55 @@ namespace WorldMap {
 
             //返回这两个城镇是否相连
             return towns[startTownPos.x, startTownPos.y].connectTowns.Contains(towns[endTownPos.x, endTownPos.y]);
+        }
+
+        /// <summary>
+        /// 清除当前位置上的怪物或者是特殊区域的标记
+        /// 并且清除上面的gameObject
+        /// </summary>
+        /// <param name="pos"></param>
+        public void clearBattle(Vector2Int pos) {
+            if (IfInter(pos) == false) {
+                return;
+            }
+
+            switch (spowns[pos.x, pos.y].specialTerrainType) {
+                case SpecialTerrainEnum.SPECIAL_AREA:
+                case SpecialTerrainEnum.MONSTER: {
+                    //清空标记
+                    spowns[pos.x, pos.y].SetSpecialTerrain(SpecialTerrainEnum.NONE);
+                    //获取对应的gameObject
+                    GameObject curObject = spowns[pos.x, pos.y].getGameObject(SpawnObjectEnum.MONSTER_LEVEL);
+                    //将其位置移到下面（等同于删除）
+                    Vector3 curPos = curObject.transform.position;
+                    curPos.z = 1;
+                    curObject.transform.position = curPos;
+                }
+                break;
+            }
+        }
+
+        /// <summary>
+        /// 当前资源已经采集
+        /// 标上已经采集的图标，设置标记位
+        /// </summary>
+        /// <param name="pos"></param>
+        public void setGathered(Vector2Int pos) {
+            //在地图内且当前资源未被采集
+            if (IfInter(pos) == false && spowns[pos.x, pos.y].isGathered == false) {
+                return;
+            }
+
+            //设置当前资源已被采集
+            spowns[pos.x, pos.y].SetIsGathered(true);
+
+            //将其移动到玩家能看到的地方
+            //获取对应的gameObject
+            GameObject curObject = spowns[pos.x, pos.y].getGameObject(SpawnObjectEnum.IS_GATHERED);
+            //将其位置移到上面
+            Vector3 curPos = curObject.transform.position;
+            curPos.z = MonsterGenerate.isGatheredPicOffset.z;
+            curObject.transform.position = curPos;
         }
     }
 }

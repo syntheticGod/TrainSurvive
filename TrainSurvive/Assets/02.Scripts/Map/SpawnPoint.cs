@@ -103,6 +103,9 @@ namespace WorldMap {
             //特殊区域
             SPECIAL_AREA = 2,
 
+            //当前资源是否采集
+            IS_GATHERED = 3,
+
             NUM
         }
 
@@ -150,6 +153,9 @@ namespace WorldMap {
         //如果是特殊区域，记录区域id
         public int monsterId { get; private set; }
 
+        //当前地块是否被采集
+        public bool isGathered { get; private set; }
+
         //地块的方法
         //---------------------------------------------------------------------------
         //初始化当前气候为热带，地形为平原，不是特殊地带，不初始化城镇
@@ -161,6 +167,9 @@ namespace WorldMap {
             //for (int i = 0; i < (int)SpawnObjectEnum.NUM; i++) {
             //    spawnObjects.Add(new GameObject("none"));
             //}
+
+            //初始地块都没被采集
+            isGathered = false;
 
             //设置初始的地块为不可见的状态
             if (MapGenerate.isFogState == true) {
@@ -200,6 +209,11 @@ namespace WorldMap {
             this.monsterId = monsterId;
         }
 
+        //设置当前资源是否被采集
+        public void SetIsGathered(bool isGathered) {
+            this.isGathered = isGathered;
+        }
+
         /// <summary>
         /// 设置地块上的gameObject
         /// 并按照是否可见状态设置gameObject
@@ -208,17 +222,9 @@ namespace WorldMap {
         /// <param name="spawnObjectEnum">当前gameObject的类型</param>
         /// <param name="spawnObject">所要设置的gameObject</param>
         public void SetSpawnObject(SpawnObjectEnum spawnObjectEnum, GameObject spawnObject) {
-            //spawnObjects[(int)spawnObjectEnum] = spawnObject;
-            int curSpawnIndex = (int)spawnObjectEnum;
-            if (spawnObjectEnum == SpawnObjectEnum.TOWN ||
-                spawnObjectEnum == SpawnObjectEnum.RAIL) {
+            //计算出当前地块对象在对象队列的位置
+            int curSpawnIndex = getSpawnIndex(spawnObjectEnum);
 
-                //如果没有地形object，减一
-                if (terrainType == TerrainEnum.NONE ||
-                    terrainType == TerrainEnum.PLAIN) {
-                    curSpawnIndex--;
-                }
-            }
             if (this.spawnObjects.Count <= curSpawnIndex) {
                 this.spawnObjects.Insert(curSpawnIndex, spawnObject);
             } else {
@@ -226,6 +232,40 @@ namespace WorldMap {
             }
             //设置当前地块的可见状态
             UpdateViewStateDisplay(spawnObject);
+        }
+
+        /// <summary>
+        /// 根据地块对象的类型，计算出当前地块对象在对象队列的位置
+        /// </summary>
+        /// <returns>返回当前地块对象的位置</returns>
+        private int getSpawnIndex(SpawnObjectEnum spawnObjectEnum) {
+            int curSpawnIndex = (int)spawnObjectEnum;
+            //缺少的地块数量
+            int lackTerrain = 0;
+
+            //如果没有地形object，减一
+            if (curSpawnIndex > (int)SpawnObjectEnum.TERRAIN) {
+                if (terrainType == TerrainEnum.NONE || terrainType == TerrainEnum.PLAIN) {
+                    lackTerrain++;
+                }
+            }
+
+            //如果没有城镇铁轨等特殊地形，减一
+            if (curSpawnIndex > (int)SpawnObjectEnum.TOWN) {
+                if (specialTerrainType == SpecialTerrainEnum.NONE) {
+                    lackTerrain++;
+                }
+            }
+
+            //返回当前index和缺少的数量
+            return curSpawnIndex - lackTerrain;
+        }
+
+        /// <summary>
+        /// 根据地块对象的类型，获取相应的对象
+        /// </summary>
+        public GameObject getGameObject(SpawnObjectEnum spawnObjectEnum) {
+            return spawnObjects[getSpawnIndex(spawnObjectEnum)];
         }
 
         //改变当前地块的显示状态，如果当前状态不匹配，更新所有的gameObject的显示状态

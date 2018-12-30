@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 using TTT.Utility;
 
-namespace WorldMap.UI
+namespace TTT.UI
 {
     public enum ScrollType
     {
@@ -108,22 +108,22 @@ namespace WorldMap.UI
         /// <summary>
         /// item的大小
         /// </summary>
-        protected Vector2 cellSize = new Vector2(100.0F, 100.0F);
+        protected Vector2 m_cellSize = new Vector2(100.0F, 100.0F);
         protected void ConfigCellSize()
         {
-            if (cellSize.x < 0)
+            if (m_cellSize.x < 0)
             {
-                cellSize.x = viewPortSize.x;
+                m_cellSize.x = viewPortSize.x;
             }
-            if (cellSize.y < 0)
+            if (m_cellSize.y < 0)
             {
-                cellSize.y = viewPortSize.y;
+                m_cellSize.y = viewPortSize.y;
             }
-            gridLayout.cellSize = cellSize;
+            gridLayout.cellSize = m_cellSize;
         }
         public void SetCellSize(Vector2 cellSize)
         {
-            this.cellSize = cellSize;
+            this.m_cellSize = cellSize;
         }
         /// <summary>
         /// 视图的大小

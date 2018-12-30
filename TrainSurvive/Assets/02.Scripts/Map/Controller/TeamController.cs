@@ -7,11 +7,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections.Generic;
-
 using TTT.Resource;
 using TTT.Utility;
 using WorldMap.Model;
+using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
@@ -99,6 +98,7 @@ namespace WorldMap.Controller
         }
         public void OnClick(BUTTON_ID id)
         {
+            Map map = Map.GetInstance();
             switch (id)
             {
                 case BUTTON_ID.TEAM_ENTRY_AREA:
@@ -130,9 +130,16 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TEAM_GATHER:
                     Debug.Log("采集指令");
-                    if (world.DoGather())
+                    if (map.IfCanGathered(Team.Instance.MapPosTeam))
                     {
-                        //TODO 将地块改为已采集状态
+                        if (world.DoGather())
+                            map.setGathered(Team.Instance.MapPosTeam);
+                        else
+                            InfoDialog.Show("探险队体力不足，无法采集");
+                    }
+                    else
+                    {
+                        InfoDialog.Show("地块不可采集");
                     }
                     break;
                 case BUTTON_ID.TEAM_PACK:
@@ -141,6 +148,7 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TEAM_CHARACTER:
                     Debug.Log("查看小队指令");
+                    ControllerManager.Instance.GetWindow<TeamInfoController>("TeamInfoController").Show();
                     break;
             }
         }

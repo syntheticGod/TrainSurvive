@@ -104,7 +104,7 @@ namespace WorldMap {
 
         //将地图数据保存成一系列字符串
         private static void SaveStaticMap(StreamWriter sw) {
-            Map map = Map.GetIntanstance();
+            Map map = Map.GetInstance();
             if (map.rowNum == 0 || map.colNum == 0) {
                 Debug.Log("地图保存失败！width或length为0");
                 return;
@@ -142,7 +142,7 @@ namespace WorldMap {
         //保存地图的动态信息
         //迷雾信息
         private static void SaveDynamicMap(StreamWriter sw) {
-            Map map = Map.GetIntanstance();
+            Map map = Map.GetInstance();
             if (map.rowNum == 0 || map.colNum == 0) {
                 Debug.Log("地图保存失败！width或length为0");
                 return;
@@ -160,7 +160,9 @@ namespace WorldMap {
                         //写入特殊区域（怪物，特殊区域的数据）
                         + "," + (int)map.spowns[i, j].specialTerrainType
                         //写入怪物难度或是特殊区域id
-                        + "," + map.spowns[i, j].monsterId;
+                        + "," + map.spowns[i, j].monsterId
+                        //写入当前地块是否拥有资源
+                        + "," + map.spowns[i, j].isGathered;
                 }
                 sw.WriteLine(row);
             }
@@ -197,7 +199,7 @@ namespace WorldMap {
 
         //读取地图的静态数据
         private static void ReadStaticMap(string mapData) {
-            Map map = Map.GetIntanstance();
+            Map map = Map.GetInstance();
             // 将空元素删除的选项
             System.StringSplitOptions option = System.StringSplitOptions.RemoveEmptyEntries;
 
@@ -252,8 +254,7 @@ namespace WorldMap {
 
         //读取地图的动态数据
         private static void ReadDynamicMap(string mapData) {
-            Map map = Map.GetIntanstance();
-            
+            Map map = Map.GetInstance();
             // 将空元素删除的选项
             StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries;
 
@@ -268,7 +269,7 @@ namespace WorldMap {
             string[] sizewh = lines[lineIndex++].Split(spliter, option);
 
             //获取迷雾，怪物，怪物类型的数据(paraNum为3)
-            for (int lineCnt = 0, paraNum = 3; lineCnt < map.rowNum; lineCnt++) {
+            for (int lineCnt = 0, paraNum = 4; lineCnt < map.rowNum; lineCnt++) {
                 // 用“,”将每个字符分割开
                 string[] curLineData = lines[lineIndex++].Split(spliter, option);
                 for (int col = 0; col < map.colNum; col++) {
@@ -282,6 +283,8 @@ namespace WorldMap {
                     }
                     //获取怪物难度id
                     map.spowns[lineCnt, col].SetMonsterId(int.Parse(curLineData[col * paraNum + 2]));
+                    //读取资源是否采集
+                    map.spowns[lineCnt, col].SetIsGathered(bool.Parse(curLineData[col * paraNum + 3]));
                 }
             }
         }
