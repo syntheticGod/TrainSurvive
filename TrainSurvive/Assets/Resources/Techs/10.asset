@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 10
   Dependencies: 03000000
-  Name: "\u7535\u5B66I"
+  Name: "\u7535\u5B66"
   Description: 
   TotalWorks: 6
   OnCompleted:
