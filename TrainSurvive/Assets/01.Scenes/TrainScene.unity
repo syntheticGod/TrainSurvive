@@ -9009,6 +9009,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4b5a61f6f8fc5b4f958e631519c43ed, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &768579347 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1119148446657856, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 768579346}
 --- !u!1 &770781022
 GameObject:
   m_ObjectHideFlags: 0
@@ -9911,7 +9916,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 768579347}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
