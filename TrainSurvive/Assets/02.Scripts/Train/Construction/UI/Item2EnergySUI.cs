@@ -47,7 +47,7 @@ public class Item2EnergySUI : FacilityUI {
     private void UpdateUI() {
         Gas.Clear();
         if (Structure.Gas != null)
-            Gas.GeneratorItem(Structure.Gas.id, Structure.Gas.num);
+            Gas.GeneratorItem(Structure.Gas.ID, Structure.Gas.Number);
         Slider.value = Structure.Progress;
         AutomataUI.gameObject.SetActive(World.getInstance().automata);
         AutomataUI.Value = Structure.AutomataCount;
@@ -62,8 +62,8 @@ public class Item2EnergySUI : FacilityUI {
             if (old == null) { // item不空，old空
                 old = new ItemData(item.id, item.currPileNum);
             } else {
-                if (old.id == item.id) {  // item不空，old不空，item与old的id相同
-                    old.num = item.currPileNum;
+                if (old.ID == item.id) {  // item不空，old不空，item与old的id相同
+                    old.Number = item.currPileNum;
                 } else {  // item不空，old不空，item与old的id不同
                     old = new ItemData(item.id, item.currPileNum);
                 }
@@ -76,9 +76,9 @@ public class Item2EnergySUI : FacilityUI {
             Gas.Clear();
         } else {
             if (Gas.GetItem() == null) {
-                Gas.GeneratorItem(newItem.id, newItem.num);
+                Gas.GeneratorItem(newItem.ID, newItem.Number);
             } else {
-                Gas.GetItem().currPileNum = newItem.num;
+                Gas.GetItem().currPileNum = newItem.Number;
             }
         }
     }

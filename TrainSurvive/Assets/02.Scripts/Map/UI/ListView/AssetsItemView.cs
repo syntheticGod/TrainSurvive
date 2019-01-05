@@ -1,5 +1,5 @@
 /*
- * 描述：
+ * 描述：物品的UI视图。包括：物品图标、稀有度边框、物品数量
  * 作者：项叶盛
  * 创建时间：2018/12/3 9:25:40
  * 版本：v0.1
@@ -12,7 +12,7 @@ using TTT.UI;
 
 namespace WorldMap.UI
 {
-    public class TeamPackItem : ResourceItemBase
+    public class AssetsItemView : ResourceItemBase
     {
         protected Text numView;
         protected override void CreateModel()
@@ -39,6 +39,11 @@ namespace WorldMap.UI
         public void SetNumber(int number)
         {
             numView.text = number.ToString();
+        }
+        public void SetItemData(ItemData data)
+        {
+            SetItemInfo(data.Item);
+            SetNumber(data.Number);
         }
     }
 }

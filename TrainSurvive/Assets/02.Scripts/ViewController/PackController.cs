@@ -1,5 +1,5 @@
 /*
- * 描述：
+ * 描述：物品界面
  * 作者：项叶盛
  * 创建时间：2018/12/3 9:38:09
  * 版本：v0.1
@@ -14,12 +14,12 @@ using WorldMap.UI;
 using WorldMap.Model;
 using Assets._02.Scripts.zhxUIScripts;
 
-namespace WorldMap.Controller
+namespace TTT.Controller
 {
     public class PackController : WindowsController
     {
-        private TeamPackListView packLV;
-        private List<Good> items;
+        //视图
+        private AssetsListView packLV;
         private string[] rightUpBtnsName = { "AllItem", "Equipments", "Materials", "Specials" };
         private string[] rightUpBtnsContent = { "全部", "装备", "材料", "特殊" };
         private Button[] rightTopBtns;
@@ -29,6 +29,8 @@ namespace WorldMap.Controller
         private string[] topLeftBtnsName = { "Close" };
         private string[] topLeftBtnsContent = { "关 闭" };
         private Button[] topLeftBtns;
+        //数据
+        private List<ItemData> items;
         protected override void Start()
         { }
         protected override void Update()
@@ -38,7 +40,7 @@ namespace WorldMap.Controller
             enableTitileBar = false;
             base.CreateModel();
             //PackListView
-            packLV = ViewTool.ForceGetComponentInChildren<TeamPackListView>(gameObject, "PackListViewLayout");
+            packLV = ViewTool.ForceGetComponentInChildren<AssetsListView>(gameObject, "PackListViewLayout");
             packLV.SetBackgroudColor(containerColor);
             packLV.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
             packLV.GridConstraintCount = 8;
@@ -96,13 +98,13 @@ namespace WorldMap.Controller
                     packLV.onItemFilter = null;
                     break;
                 case 1:
-                    packLV.onItemFilter = (Good item) => { return item.ItemType != PublicData.ItemType.Weapon; };
+                    packLV.onItemFilter = (ItemData item) => { return item.Type != PublicData.ItemType.Weapon; };
                     break;
                 case 2:
-                    packLV.onItemFilter = (Good item) => { return item.ItemType != PublicData.ItemType.Material; };
+                    packLV.onItemFilter = (ItemData item) => { return item.Type != PublicData.ItemType.Material; };
                     break;
                 case 3:
-                    packLV.onItemFilter = (Good item) => { return item.ItemType != PublicData.ItemType.SpecialItem; };
+                    packLV.onItemFilter = (ItemData item) => { return item.Type != PublicData.ItemType.SpecialItem; };
                     break;
             }
             packLV.Refresh();
@@ -122,15 +124,7 @@ namespace WorldMap.Controller
 
         protected override bool PrepareDataBeforeShowWindow()
         {
-            //FOR TEST：背包测试数据
-            ////items.Add(new Weapon(000));
-            //items.Add(new Material(201));
-            //items.Add(new Material(211));
-            //items.Add(new Material(212));
-            //items[1].currPileNum = 100;
-            //items[2].currPileNum = 999;
-            //items[3].currPileNum = 555;
-            items = new List<Good>(world.GetGoodsInTeam());
+            items = World.getInstance().storage.CloneStorage();
             return true;
         }
         protected override void AfterShowWindow()

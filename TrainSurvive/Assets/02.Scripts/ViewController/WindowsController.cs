@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 
 using TTT.Utility;
 
-namespace WorldMap.Controller
+namespace TTT.Controller
 {
     public abstract class WindowsController : BaseController, IDragHandler
     {
@@ -145,8 +145,6 @@ namespace WorldMap.Controller
         }
         protected override bool FocusBehaviour()
         {
-            //ShowWindow可能会在Awake之前调用
-            world = WorldForMap.Instance;
             if (!PrepareDataBeforeShowWindow())
             {
                 Debug.Log("窗口数据未准备好，拒绝显示");

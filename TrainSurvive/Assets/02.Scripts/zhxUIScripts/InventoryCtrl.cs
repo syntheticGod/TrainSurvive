@@ -24,11 +24,11 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
         itemGridInst = new List<GameObject>();
         coreInventory.currSize = World.getInstance().trainInventoryCurSize;
         //jiazai item
-        for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
-        {
-            Item item = World.getInstance().itemDataInTrain[i].item;
-            coreInventory.LoadItem(World.getInstance().itemDataInTrain[i].item.Clone());    
-        }
+        //for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
+        //{
+        //    Item item = World.getInstance().itemDataInTrain[i].item;
+        //    coreInventory.LoadItem(World.getInstance().itemDataInTrain[i].item.Clone());    
+        //}
     }
     private void OnDisable()
     {
@@ -128,8 +128,10 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     {
         Item tempItem = PublicMethod.GenerateItem(Random.Range(0,2),1)[0];
         ItemData temp = new ItemData(Random.Range(0, 2), 1);
-        if(!gameObject.activeSelf)
-            World.getInstance().itemDataInTrain.Add(temp);
+        if (!gameObject.activeSelf)
+        {
+            //World.getInstance().AddItem(temp);
+        }
         else
             coreInventory.PushItem(tempItem);
     }
@@ -154,14 +156,14 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
 
     public void DataSynchronization()
     {
-        World.getInstance().itemDataInTrain.Clear();
-        for (int i = 0; i < itemGridInst.Count; ++i)
-        {
-            ItemData temp = new ItemData(itemGridInst[i].GetComponent<ItemGridCtrl>().item.id,
-                itemGridInst[i].GetComponent<ItemGridCtrl>().item.currPileNum);
-            World.getInstance().itemDataInTrain.Add(temp);
-        }
-        World.getInstance().trainInventoryCurSize = coreInventory.currSize;
+        //World.getInstance().itemDataInTrain.Clear();
+        //for (int i = 0; i < itemGridInst.Count; ++i)
+        //{
+        //    ItemData temp = new ItemData(itemGridInst[i].GetComponent<ItemGridCtrl>().item.id,
+        //        itemGridInst[i].GetComponent<ItemGridCtrl>().item.currPileNum);
+        //    World.getInstance().itemDataInTrain.Add(temp);
+        //}
+        //World.getInstance().trainInventoryCurSize = coreInventory.currSize;
         //Debug.Log("========================================================");
         //for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
         //{

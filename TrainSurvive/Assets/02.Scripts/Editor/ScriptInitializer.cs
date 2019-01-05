@@ -54,7 +54,7 @@ public class ScriptInitializer : UnityEditor.AssetModificationProcessor
                 content = content.Replace("#AUTHOR#", author);
                 content = content.Replace("#CREATETIME#",
                     System.DateTime.Now.ToString());
-                content = content.Replace("#VERSION#", "v0.1");
+                content = content.Replace("#VERSION#", "v0.7");
             }
             content += text;
             File.WriteAllText(path, content);

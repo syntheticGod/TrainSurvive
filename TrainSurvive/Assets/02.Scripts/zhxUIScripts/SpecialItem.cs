@@ -119,7 +119,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             _item_type = PublicData.ItemType.SpecialItem;
             _rarity = (PublicData.Rarity)int.Parse(aimNode.Attributes["rarity"].Value);
             _size = 0;
-            _max_pile_num = int.Parse(aimNode.Attributes["pilenum"].Value);
+            _max_pile_num = int.Parse(aimNode.Attributes["maxPileNum"].Value);
             _cur_pile_num = 1;
             _description = aimNode.Attributes["description"].Value;
             _sprite = Resources.Load<Sprite>(aimNode.Attributes["spritepath"].Value);

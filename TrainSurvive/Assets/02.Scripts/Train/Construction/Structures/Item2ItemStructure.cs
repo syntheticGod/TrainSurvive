@@ -87,7 +87,7 @@ public class Item2ItemStructure : EnergyCostableStructure {
             if (Raw == null) {
                 CallOnProgressChange(0, 0, value);
             } else {
-                CallOnProgressChange(0, Conversions[Raw.id].ProcessTime, value);
+                CallOnProgressChange(0, Conversions[Raw.ID].ProcessTime, value);
             }
         }
     }
@@ -151,30 +151,30 @@ public class Item2ItemStructure : EnergyCostableStructure {
     }
 
     private IEnumerator Run() {
-        WaitUntil wait = new WaitUntil(() => Raw != null && Raw.num >= Conversions[Raw.id].FromItemNum && (Output == null || (Output.id == Conversions[Raw.id].ToItemID && Output.item.maxPileNum - Output.num >= (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio))));
+        WaitUntil wait = new WaitUntil(() => Raw != null && Raw.Number >= Conversions[Raw.ID].FromItemNum && (Output == null || (Output.ID == Conversions[Raw.ID].ToItemID && Output.MaxPileNum - Output.Number >= (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio))));
         WaitWhile waitCosts = new WaitWhile(() => IsRunningOut);
         while (FacilityState == State.WORKING) {
-            if (!(Raw != null && Raw.num >= 1 && (Output == null || (Output.id == Conversions[Raw.id].ToItemID && Output.item.maxPileNum - Output.num >= (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio))))) {
+            if (!(Raw != null && Raw.Number >= 1 && (Output == null || (Output.ID == Conversions[Raw.ID].ToItemID && Output.MaxPileNum - Output.Number >= (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio))))) {
                 Progress = 0;
                 IsCosting = false;
                 yield return wait;
                 IsCosting = true;
             }
             yield return waitCosts;
-            if (Progress < Conversions[Raw.id].ProcessTime) {
+            if (Progress < Conversions[Raw.ID].ProcessTime) {
                 Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
             } else {
                 Progress = 0;
                 if (Output == null) {
-                    Output = new ItemData(Conversions[Raw.id].ToItemID, (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio));
+                    Output = new ItemData(Conversions[Raw.ID].ToItemID, (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio));
                 } else {
-                    Output.num += (int)(Conversions[Raw.id].ToItemNum * ConversionRateRatio);
+                    Output.Number += (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio);
                 }
-                int newNum = Raw.num - Conversions[Raw.id].FromItemNum;
+                int newNum = Raw.Number - Conversions[Raw.ID].FromItemNum;
                 if (newNum <= 0) {
                     Raw = null;
                 } else {
-                    Raw.num = newNum;
+                    Raw.Number = newNum;
                 }
                 OnOutputUpdate?.Invoke(_output);
                 OnRawUpdate?.Invoke(_raw);

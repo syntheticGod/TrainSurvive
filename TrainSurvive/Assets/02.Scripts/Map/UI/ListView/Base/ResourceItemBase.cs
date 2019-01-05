@@ -1,5 +1,5 @@
 /*
- * 描述：
+ * 描述：资源的UI视图。包括：物品图标、稀有度边框
  * 作者：项叶盛
  * 创建时间：2018/12/2 21:05:17
  * 版本：v0.1
@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 using TTT.Utility;
 using TTT.UI;
 
-using Assets._02.Scripts.zhxUIScripts;
+using TTT.Item;
 
 namespace WorldMap.UI
 {
@@ -99,32 +99,10 @@ namespace WorldMap.UI
         /// 通过item设置图片
         /// </summary>
         /// <param name="item"></param>
-        public void SetTarget(Item item)
+        public void SetItemInfo(ItemInfo item)
         {
-            SetTargetByName(GetSpriteFileName(item));
-        }
-        /// <summary>
-        /// 根据Item的itemType获取图片文件名
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public string GetSpriteFileName(Item item)
-        {
-            string filename;
-            switch (item.itemType)
-            {
-                case PublicData.ItemType.Weapon:
-                    filename = "Weapon_img";
-                    break;
-                default:
-                case PublicData.ItemType.Material:
-                    filename = "Material_img";
-                    break;
-                case PublicData.ItemType.SpecialItem:
-                    filename = "Material_img";
-                    break;
-            }
-            return filename;
+            targetImage.sprite = item.BigSprite;
+            markImage.color = markColors[(int)item.Rarity];
         }
     }
 }

@@ -8,14 +8,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-using WorldMap.Model;
-
 using TTT.Utility;
 using TTT.UI;
+using TTT.Item;
 
 namespace WorldMap.UI
 {
-    public abstract class ResourceListViewBase : MergableListView<Good>
+    public abstract class ResourceListViewBase : BaseListView<ItemData>
     {
         private RectTransform hoverPanel;
         private RectTransform panelContent;
@@ -51,25 +50,25 @@ namespace WorldMap.UI
             detailText.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
             detailText.alignment = TextAnchor.UpperLeft;
         }
-        protected sealed override void OnItemView(ListViewItem item, Good data, int itemIndex)
+        protected sealed override void OnItemView(ListViewItem item, ItemData data, int itemIndex)
         {
             ResourceItemBase view = GetResourceItemBase(item, data);
             view.onItemEnter = delegate (ResourceItemBase i) {
-                Good temp = data.Clone();
+                ItemData temp = data;
                 StartCoroutine(ShowPanel(temp));
             };
             view.onItemExit = CallbackItemExit;
         }
-        protected abstract ResourceItemBase GetResourceItemBase(ListViewItem item, Good data);
+        protected abstract ResourceItemBase GetResourceItemBase(ListViewItem item, ItemData data);
         
-        IEnumerator ShowPanel(Good data)
+        IEnumerator ShowPanel(ItemData data)
         {
             yield return new WaitForSeconds(0.5f);
             //防止出现闪烁现象
             hoverPanel.position = Input.mousePosition + new Vector3(0.1F, -0.1F, 0F);
             hoverPanel.DetachChildren();
-            infoText.text = data.item.ToString();
-            detailText.text = data.item.description;
+            infoText.text = data.Name;
+            detailText.text = data.Description;
             hoverPanel.gameObject.SetActive(true);
         }
         public void CallbackItemExit(ResourceItemBase item)

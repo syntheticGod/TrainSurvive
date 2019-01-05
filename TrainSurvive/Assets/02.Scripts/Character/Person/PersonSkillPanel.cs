@@ -122,7 +122,7 @@ public class PersonSkillPanel : MonoBehaviour {
             SkillInfo info=StaticResource.GetSkillByID(skillSelected_id);
             string skill_str = "";
             skill_str += ("技能名：" + info.Name + "\n");
-            skill_str += ("类型：" + info.Type + "\n");
+            skill_str += ("类型：" + info.TypeInfo + "\n");
             skill_str += ("需要ap：" + info.AP + "\n");
             skill_str += "\n";
             skill_str += info.Description;

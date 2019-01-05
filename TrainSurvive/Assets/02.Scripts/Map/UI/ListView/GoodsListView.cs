@@ -16,31 +16,34 @@ namespace WorldMap.UI
 {
     public class GoodsListView : ResourceListViewBase
     {
-        public delegate void CallBackGoodsBuy(Good good);
+        public delegate void CallBackGoodsBuy(ItemData good);
         public CallBackGoodsBuy callBackGoodsAction;
         public string ActionBtnString { set; get; } = "购买";
-        protected override ResourceItemBase GetResourceItemBase(ListViewItem item, Good data)
+        protected override ResourceItemBase GetResourceItemBase(ListViewItem item, ItemData data)
         { 
             GoodsItem view = CompTool.ForceGetComponent<GoodsItem>(item);
             ActionClickEvent buyClickEvent = new ActionClickEvent(data);
             buyClickEvent.callBackGoodsAction = callBackGoodsAction;
             view.SetActionBtnContent(ActionBtnString);
             view.BindActionBtnEvent(buyClickEvent);
-            view.SetTarget(data.item);
+            view.SetItemInfo(data.Item);
             view.SetNumber(data.Number);
-            view.SetPrice(data.Price);
+            view.SetPrice(data.SellPrice);
             return view;
         }
         
+        /// <summary>
+        /// 商店物品条款中的点击按钮
+        /// </summary>
         public class ActionClickEvent : Button.ButtonClickedEvent
         {
-            public Good goods;
+            public ItemData goods;
             public CallBackGoodsBuy callBackGoodsAction;
             public ActionClickEvent()
             {
 
             }
-            public ActionClickEvent(Good goods)
+            public ActionClickEvent(ItemData goods)
             {
                 this.goods = goods;
                 AddListener(OnBtnClick);

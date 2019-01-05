@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WorldMap.Model.Train">
+    <Position X="10" Y="0.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="WorldMap.Model.Train.STATE">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\02.Scripts\Map\Model\Train.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACEEAQQAQiAAgAgEEAAEQgAgABAQAAEGQEUCBAAAAAM=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\Train.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldMap.Model.Team">
+    <Position X="7.5" Y="0.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="WorldMap.Model.Team.STATE">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\02.Scripts\Map\Model\Team.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAEEQgAAAiABwIQAAAAMAgAgAACQAgEMQAQCBgAAAAI=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\Team.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldMap.Model.Town">
+    <Position X="12.75" Y="0.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AYCAAAAAAAKAAQAgAAAAACQAAIAQBEAAIIAAAUIACCA=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\Town.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldMap.Model.Rail">
+    <Position X="5.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAEIAAACAABAAEAAAAAAQAAAAAAAAgAAAEIAAAAAI=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\Rail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldMap.Model.NPC">
+    <Position X="16" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAgAAAIAACAAQAAABADAAAAAAAAEBAAAA=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\NPC.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldMap.Model.Good">
+    <Position X="17.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\Good.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="World" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>E1IVABcCAIHGCAQLFdKkoDQQGKBRO0RBBXBGFgWqkU0=</HashCode>
+      <FileName>Assets\02.Scripts\ResourceController\World.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Delegate Name="WorldMap.Model.PassBlockCenterCallBack">
+    <Position X="1" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\02.Scripts\Map\Model\Train.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

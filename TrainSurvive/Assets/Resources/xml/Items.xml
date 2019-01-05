@@ -1,22 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+物品信息配置文件。
+
+所有物品应该有的基础属性有如下：
+id：唯一标记符
+rarity：稀有度
+price：初始价格，即使不能在商店购买的物品也应该表明，因为需要用于计算售卖价格
+sellRatio：售卖价格比例（price*sellRatio）取值范围是[0,1]之间的浮点
+size：重量或体积（一个容量指标）
+maxPileNum：最大堆叠数
+name：物品名字
+description：物品描述
+-->
 <items>
-  <weapon id="000" name="隔壁老王的示范剑" type="1" rarity="4" size="13" range="1" atk="56" ats="1.2" spd="1" crc="0.15" crd="1.5" hit="1" hrec ="1" arec="1.5" sdmg="1" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
-  <weapon id="001" name="破败的铁剑" type="1" rarity="1" size="6" range="1" atk="13" ats="1" spd="1" crc="0" crd="0" hit="1" hrec ="1" arec="0.2" sdmg="1" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
+  <!-- 
+  武器特有属性：
+  type：武器类别 0盾、1剑、2长枪、3匕首、4机枪、5狙击步枪、6魔杖、7魔法书
+  range：攻击范围
+  atk：攻击系数（Attack）
+  ats：攻速系数（Attack Speed）
+  spd：移速系数（Speed）
+  hit：受伤系数
+  arec：AP恢复系数（Ability Point Recover）
+  sdmg：技能伤害系数（Skill Damage）
+  crc：暴击修正（Crit Carrey）
+  crd：暴伤修正（Crit Damage）
+  bbdist：击退距离（Beat Back）
+  -->
+  <weapon id="000" rarity="4" price="4000" sellRatio="0.3" size="13" maxPileNum="1" type="1" range="1" atk="56" ats="1.2" spd="1" hit="1" arec="1.5" sdmg="1"  crc="0.15" crd="1.5" bbdist="1" name="隔壁老王的示范剑" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
+  <weapon id="001" rarity="1" price="1000" sellRatio="0.3" size="6"   maxPileNum="1" type="1" range="1" atk="13" ats="1"   spd="1" hit="1"  arec="0.2" sdmg="1" crc="0"      crd="0"   bbdist="1" name="破败的铁剑"          description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
+
+  <!-- 
+  材料特有属性：
+  暂无
+  -->
+  <material id="200" rarity="3" price="3000" sellRatio="0.3" size="0.7"   maxPileNum="5"      name="隔壁老王遗落的裤头们" description="传说中的隔壁老王匆忙离去后忘记带走的絮状织物" spritepath="ItemSprite/Material_img" />
+  <material id="201" rarity="0" price="10" sellRatio="0.3" size="0.1"   maxPileNum="20"    name="浆果" description="放心吧，它没毒" spritepath="ItemSprite/Material_img" />
+  <material id="211" rarity="1" price="20" sellRatio="0.3" size="0.1"   maxPileNum="20"    name="小麦" description="人类与动物产生区别的第一种食品" spritepath="ItemSprite/Material_img" />
+  <material id="212" rarity="1" price="20" sellRatio="0.3" size="0.25" maxPileNum="10"    name="面包"  description="总算是个人吃的东西了" spritepath="ItemSprite/Material_img" />
+  <material id="213" rarity="1" price="20" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="生肉" description="生吃？不，咋是体面人"  spritepath="ItemSprite/Material_img" />
+  <material id="214" rarity="1" price="20" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="熟肉" description="至少管饱不是"  spritepath="ItemSprite/Material_img" />
+  <material id="221" rarity="1" price="20" sellRatio="0.3" size="0.2"   maxPileNum="20"    name="煤炭" description="基础动力源"     spritepath="ItemSprite/Material_img" />
+  <material id="222" rarity="0" price="10" sellRatio="0.3" size="0.15" maxPileNum="20"    name="木炭" description="发生了什么让你连木材都不放过？" spritepath="ItemSprite/Material_img" />
+  <material id="223" rarity="0" price="20" sellRatio="0.3" size="2"     maxPileNum="5"      name="原木" description="看啥，这就是原木啊" spritepath="ItemSprite/Material_img" />
+  <material id="231" rarity="2" price="300" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="铜矿" description="电子类基础资源" spritepath="ItemSprite/Material_img" />
+  <material id="232" rarity="2" price="300" sellRatio="0.3" size="1"     maxPileNum="5"      name="铜锭" description="铜矿精炼而成"    spritepath="ItemSprite/Material_img" />
+  <material id="233" rarity="2" price="300" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="铁矿" description="我不想写描述了" spritepath="ItemSprite/Material_img" />
+  <material id="234" rarity="2" price="300" sellRatio="0.3" size="1"     maxPileNum="5"      name="铁锭" description="铁矿精炼而成" spritepath="ItemSprite/Material_img" />
+  <material id="235" rarity="2" price="300" sellRatio="0.3" size="1"     maxPileNum="5"      name="岩石" description="岩石"             spritepath="ItemSprite/Material_img" />
   
-  <material id="200" name="隔壁老王遗落的裤头们" rarity="3" size="0.7" pilenum="5" description="传说中的隔壁老王匆忙离去后忘记带走的絮状织物" spritepath="ItemSprite/Material_img" />
-  <material id="201" name="浆果" rarity="0" size="0.1" pilenum="20" description="放心吧，它没毒" spritepath="ItemSprite/Material_img" />
-  <material id="211" name="小麦" rarity="1" size="0.1" pilenum="20" description="人类与动物产生区别的第一种食品" spritepath="ItemSprite/Material_img" />
-  <material id="212" name="面包" rarity="1" size="0.25" pilenum="10" description="总算是个人吃的东西了" spritepath="ItemSprite/Material_img" />
-  <material id="213" name="生肉" rarity="1" size="0.5" pilenum="10" description="生吃？不，咋是体面人" spritepath="ItemSprite/Material_img" />
-  <material id="214" name="熟肉" rarity="1" size="0.5" pilenum="10" description="至少管饱不是" spritepath="ItemSprite/Material_img" />
-  <material id="221" name="煤炭" rarity="1" size="0.2" pilenum="20" description="基础动力源" spritepath="ItemSprite/Material_img" />
-  <material id="222" name="木炭" rarity="0" size="0.15" pilenum="20" description="发生了什么让你连木材都不放过？" spritepath="ItemSprite/Material_img" />
-  <material id="223" name="原木" rarity="0" size="2" pilenum="5" description="看啥，这就是原木啊" spritepath="ItemSprite/Material_img" />  
-  <material id="231" name="铜矿" rarity="2" size="0.5" pilenum="10" description="电子类基础资源" spritepath="ItemSprite/Material_img" />
-  <material id="232" name="铜锭" rarity="2" size="1" pilenum="5" description="铜矿精炼而成" spritepath="ItemSprite/Material_img" />
-  <material id="233" name="铁矿" rarity="2" size="0.5" pilenum="10" description="我不想写描述了" spritepath="ItemSprite/Material_img" />
-  <material id="234" name="铁锭" rarity="2" size="1" pilenum="5" description="铁矿精炼而成" spritepath="ItemSprite/Material_img" />
-  <material id="235" name="岩石" rarity="2" size="1" pilenum="5" description="岩石" spritepath="ItemSprite/Material_img" />
-  
-  <special id="700" name="隔壁老王之魂" rarity="2" pilenum="1" description="老王的怨念所化成的结晶体" spritepath="ItemSprite/Other_img" />
+  <!-- 
+  特殊物品特有属性：
+  暂无
+  -->
+  <special id="700" rarity="2" price="300" sellRatio="0.3" size="0" maxPileNum="1" name="隔壁老王之魂" description="老王的怨念所化成的结晶体" spritepath="ItemSprite/Other_img" />
 </items>

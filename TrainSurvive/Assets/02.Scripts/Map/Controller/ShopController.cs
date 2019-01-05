@@ -11,6 +11,8 @@ using System.Collections.Generic;
 
 using TTT.UI;
 using TTT.Utility;
+using TTT.Controller;
+
 using WorldMap.UI;
 using WorldMap.Model;
 
@@ -67,21 +69,17 @@ namespace WorldMap.Controller
 
         protected override void AfterShowWindow()
         {
-            goodsInShopLV.Datas = new List<Good>(currentTown.Goods);
-            if (world.IfTeamOuting)
-                goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTeam());
-            else
-                goodsInPackLV.Datas = new List<Good>(world.GetGoodsInTrain());
+            goodsInShopLV.Datas = World.getInstance().storage.CloneStorage();
         }
         public void SetTown(Model.Town town)
         {
             currentTown = town;
         }
-        public void CallBackGoodsBuy(Good good)
+        public void CallBackGoodsBuy(ItemData good)
         {
             //TODO：弹出选择窗口
             int numberBuy = good.Number;
-            if (!world.Pay(good.Price * numberBuy))
+            if (!WorldForMap.Instance.Pay(good.OriginPrice * numberBuy))
             {
                 InfoDialog.Show("你的金额不足");
                 return;
@@ -91,33 +89,33 @@ namespace WorldMap.Controller
                 InfoDialog.Show("物品数量不足，另寻他处");
                 return;
             }
-            Good goodInPack = good.Clone();
-            goodInPack.SetNumber(numberBuy);
-            if (world.IfTeamOuting)
+            ItemData goodInPack = good.Clone();
+            goodInPack.Number = numberBuy;
+            if (WorldForMap.Instance.IfTeamOuting)
             {
                 InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
-                if (!inventoryForTeam.CanPushItemToPack(goodInPack.ItemID, goodInPack.Number))
+                if (!inventoryForTeam.CanPushItemToPack(goodInPack.ID, goodInPack.Number))
                 {
                     InfoDialog.Show("背包已满");
                     return;
                 }
-                inventoryForTeam.PushItemFromShop(goodInPack.ItemID, goodInPack.Number);
+                inventoryForTeam.PushItemFromShop(goodInPack.ID, goodInPack.Number);
             }
             else
             {
                 //TODO：需要列车中的仓库是否满
-                world.PushItemToTrain(good.item.id, numberBuy);
+                WorldForMap.Instance.PushItemToTrain(good.ID, numberBuy);
             }
             if (!currentTown.BuyGoods(good, numberBuy))
             {
                 Debug.LogError("系统：物品购买失败");
             }
-            Debug.Log("商店：你成功购买了" + goodInPack.Name + " 花费：" + good.Price * numberBuy + " 剩余：" + world.Money);
+            Debug.Log("商店：你成功购买了" + goodInPack.Name + " 花费：" + good.OriginPrice * numberBuy + " 剩余：" + WorldForMap.Instance.Money);
             //ListView会自动清楚数量为0的条款
             goodsInShopLV.Refresh();
             goodsInPackLV.AddItem(goodInPack);
         }
-        public void CallBackGoodsSell(Good good)
+        public void CallBackGoodsSell(ItemData good)
         {
             //TODO：弹出选择窗口
             int numberSell = good.Number;
@@ -126,20 +124,20 @@ namespace WorldMap.Controller
                 InfoDialog.Show("库存数量不足");
                 return;
             }
-            Good goodsInTown = good.Clone();
-            goodsInTown.SetNumber(numberSell);
+            ItemData goodsInTown = good.Clone();
+            goodsInTown.Number = numberSell;
             currentTown.SellGoods(goodsInTown);
-            if (world.IfTeamOuting)
+            if (WorldForMap.Instance.IfTeamOuting)
             {
-                world.SellGoodsFromTeam(good.ItemID, numberSell);
+                WorldForMap.Instance.SellGoodsFromTeam(good.ID, numberSell);
             }
             else
             {
-                world.SellGoodsFromTrain(good.ItemID, numberSell);
+                WorldForMap.Instance.SellGoodsFromTrain(good.ID, numberSell);
             }
-            world.AddMoney(numberSell * good.Price);
-            good.DecreaseNumber(numberSell);
-            Debug.Log("商店：你出售了" + numberSell + "个" + good.Name + " 剩余：" + good.Number + " 获得金币：" + numberSell * good.Price + " 现有金币：" + world.Money);
+            WorldForMap.Instance.AddMoney(numberSell * good.SellPrice);
+            good.Number -= numberSell;
+            Debug.Log("商店：你出售了" + numberSell + "个" + good.Name + " 剩余：" + good.Number + " 获得金币：" + numberSell * good.SellPrice + " 现有金币：" + WorldForMap.Instance.Money);
             //ListView会自动清楚数量为0的条款
             goodsInPackLV.Refresh();
             goodsInShopLV.AddItem(goodsInTown);

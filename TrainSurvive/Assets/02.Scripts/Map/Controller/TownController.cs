@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TTT.Utility;
+using TTT.Controller;
+
 using WorldMap.UI;
 
 namespace WorldMap.Controller
@@ -101,17 +103,17 @@ namespace WorldMap.Controller
             {
                 case BUTTON_ID.TOWN_TAVERN:
                     Debug.Log("进入酒馆");
-                    TavernController tavernController = ControllerManager.Instance.GetWindow<TavernController>("TavernViewer");
+                    TavernController tavernController = ControllerManager.GetWindow<TavernController>("TavernViewer");
                     tavernController.SetTown(currentTown);
                     tavernController.Show(this);
                     break;
                 case BUTTON_ID.TOWN_SCHOOL:
                     Debug.Log("进入学校");
-                    ControllerManager.Instance.GetWindow<SchoolController>("SchoolViewer").Show(this);
+                    ControllerManager.GetWindow<SchoolController>("SchoolViewer").Show(this);
                     break;
                 case BUTTON_ID.TOWN_SHOP:
                     Debug.Log("进入商店");
-                    ShopController shopController = ControllerManager.Instance.GetWindow<ShopController>("ShopController");
+                    ShopController shopController = ControllerManager.GetWindow<ShopController>("ShopController");
                     shopController.SetTown(currentTown);
                     shopController.Show(this);
                     break;

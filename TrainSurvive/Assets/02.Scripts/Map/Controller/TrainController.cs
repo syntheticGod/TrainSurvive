@@ -14,6 +14,7 @@ using WorldMap.Model;
 using WorldMap.UI;
 using TTT.Resource;
 using TTT.Utility;
+using TTT.Controller;
 
 namespace WorldMap.Controller
 {
@@ -48,7 +49,7 @@ namespace WorldMap.Controller
                 BUTTON_ID btnID = BUTTON_ID.TRAIN_NONE + i + 1;
                 bottomBtns[i].onClick.AddListener(delegate () { OnClick(btnID); });
             }
-            ActiveBTs(!world.IfTeamOuting);
+            ActiveBTs(!WorldForMap.Instance.IfTeamOuting);
             trainActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
             //列车图标
             GOTool.CreateSpriteRenderer("Train", transform).sprite = StaticResource.GetSprite(ESprite.TRAIN);
@@ -137,11 +138,11 @@ namespace WorldMap.Controller
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
                     Model.Town town;
-                    if (world.FindTown(train.MapPosTrain, out town))
+                    if (WorldForMap.Instance.FindTown(train.MapPosTrain, out town))
                     {
                         //进入城镇后不能操作列车
                         Train.Instance.IsMovable = false;
-                        TownController townController = ControllerManager.Instance.GetWindow<TownController>("TownViewer");
+                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
                         townController.Show(this);
                     }
@@ -162,7 +163,7 @@ namespace WorldMap.Controller
                         Train.Instance.IsMovable = false;
                         ActiveBTs(false);
                         Team.Instance.OutPrepare(Train.Instance.PosTrain);
-                        ControllerManager.Instance.ShowController("Team", "Character");
+                        ControllerManager.ShowController("Team", "Character");
                         UnFocus();
                     }
                     break;
