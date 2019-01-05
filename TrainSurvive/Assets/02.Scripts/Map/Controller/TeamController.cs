@@ -32,10 +32,12 @@ namespace WorldMap.Controller
         private float lastSize = 0;
         protected override void OnEnable()
         {
+            base.OnEnable();
             Team.Instance.Attach(this);
         }
         protected override void OnDisable()
         {
+            base.OnDisable();
             Team.Instance.Detach(this);
         }
         protected override void CreateModel()

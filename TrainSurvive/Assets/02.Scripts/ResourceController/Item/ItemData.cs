@@ -36,7 +36,7 @@ public class ItemData
     /// <summary>
     /// 物品类别
     /// </summary>
-    public PublicData.ItemType Type { get; protected set; }
+    public PublicData.ItemType Type { get { return Item.Type; } }
     /// <summary>
     /// 物品稀有度
     /// </summary>

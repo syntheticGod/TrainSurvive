@@ -4,6 +4,7 @@
  * 创建时间：2019/1/3 2:28:18
  * 版本：v0.7
  */
+using Assets._02.Scripts.zhxUIScripts;
 using System.Xml;
 
 namespace TTT.Item
@@ -13,6 +14,7 @@ namespace TTT.Item
         public SpecialInfo(XmlNode node)
             : base(node)
         {
+            Type = PublicData.ItemType.SpecialItem;
         }
     }
 }

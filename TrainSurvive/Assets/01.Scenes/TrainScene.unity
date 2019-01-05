@@ -3378,8 +3378,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 385327860}
-        m_MethodName: AddWeapon
+      - m_Target: {fileID: 2002818663}
+        m_MethodName: AddRandomWeapon
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4353,12 +4353,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 381523793}
   m_CullTransparentMesh: 0
---- !u!114 &385327860 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114484884477705012, guid: 71cbfae088e5c924c9864f7388af4243,
-    type: 2}
-  m_PrefabInternal: {fileID: 1486433299}
-  m_Script: {fileID: 11500000, guid: fe874c23e6667d04eb5bb8fec64c039b, type: 3}
 --- !u!224 &390819937 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224059694350720592, guid: 71cbfae088e5c924c9864f7388af4243,
@@ -18109,6 +18103,10 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
       objectReference: {fileID: 0}
+    - target: {fileID: 1287283405709568, guid: 71cbfae088e5c924c9864f7388af4243, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71cbfae088e5c924c9864f7388af4243, type: 2}
   m_IsPrefabAsset: 0
@@ -18652,8 +18650,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 385327860}
-        m_MethodName: AddMaterial
+      - m_Target: {fileID: 2002818663}
+        m_MethodName: AddRandomMaterial
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -24820,6 +24818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2002818661}
   - component: {fileID: 2002818662}
+  - component: {fileID: 2002818663}
   m_Layer: 5
   m_Name: InventoryPanel
   m_TagString: Untagged
@@ -24871,6 +24870,17 @@ MonoBehaviour:
   - {fileID: 243476046}
   CloseObjects:
   - {fileID: 2002818660}
+--- !u!114 &2002818663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2002818660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1bada34afd77ed49a4ecb8afa4706ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2005792204
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 using TTT.Utility;
+using System;
 //TODO 整理各个窗口 控制类之间的关系
 namespace TTT.Controller
 {
@@ -41,6 +42,16 @@ namespace TTT.Controller
                 baseController.gameObject.SetActive(true);
             return true;
         }
+        public static void ShowController(string path)
+        {
+            char[] splits = { '/' };
+            string[] nodes = path.Split(splits, StringSplitOptions.RemoveEmptyEntries);
+            FindBaseController(nodes)?.Show();
+        }
+        public static void hello()
+        {
+
+        }
         public static bool HideController(string path, string root)
         {
             BaseController baseController = FindBaseController(path, root);
@@ -57,9 +68,21 @@ namespace TTT.Controller
                 return null;
             return targetObject.GetComponent<BaseController>();
         }
+        private static BaseController FindBaseController(string[] nodes)
+        {
+            Transform targetObject = GameObject.Find(nodes[0])?.transform;
+            if (targetObject == null) return null;
+            for(int i = 1; i < nodes.Length;i++)
+            {
+                targetObject = targetObject.Find(nodes[i]);
+                if (targetObject == null) return null;
+            }
+            return targetObject.GetComponent<BaseController>();
+        }
         public static T GetWindow<T>(string windowName)
             where T : WindowsController
         {
+            Debug.Log("GetWIndow：" + windowName);
             return ViewTool.ForceGetComponentInChildren<T>(GameObject.Find("Canvas"), windowName, false);
         }
         public static bool LoadWindow(string prefabName)

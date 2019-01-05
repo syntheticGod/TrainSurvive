@@ -59,18 +59,21 @@ namespace TTT.Controller
                 float halfOfWidth = width / 2;
                 float halfOfHeight = height / 2;
                 RectTransform rect = rectTransform;
-                rect.offsetMin = new Vector2(-halfOfWidth, -halfOfHeight);
-                rect.offsetMax = new Vector2(halfOfWidth, halfOfHeight);
+                rect.offsetMin = new Vector2(-halfOfWidth, -halfOfHeight) + WinSizeMinOffset;
+                rect.offsetMax = new Vector2(halfOfWidth, halfOfHeight) + WinSizeMaxOffset;
             }
             get { return m_windowSizeType; }
         }
         public bool IsWinMovable { set; get; } = true;
-        public Vector2 WinSize { set; get; }
+        public Vector2 WinSize { set; get; } = Vector2.zero;
+        public Vector2 WinSizeMinOffset { set; get; } = Vector2.zero;
+        public Vector2 WinSizeMaxOffset { set; get; } = Vector2.zero;
         public Vector2 Padding { set; get; }
         protected static Vector2 defaultMinAnchor = new Vector2(0.5F, 0.5F);
         protected static Vector2 defaultMaxAnchor = new Vector2(0.5F, 0.5F);
         protected static Color containerColor = new Color(0.8F, 0.8F, 0.8F);
         //背景
+        protected bool enableBackgroudImage = true;
         protected Image backgroundImage;
         protected string backgroudFN;
         //左上角标题
@@ -82,15 +85,25 @@ namespace TTT.Controller
         protected string m_titleString;
         protected sealed override void Awake()
         {
+            //Debug.Log("Awake");
             base.Awake();
-            AfterShowWindow();
-        }
-        protected override void Start()
-        {
-            base.Start();
         }
         protected override void OnEnable()
         {
+            //Debug.Log("OnEnable");
+            base.OnEnable();
+            if (PrepareDataBeforeShowWindow())
+                AfterShowWindow();
+            else
+            {
+                Debug.Log("窗口数据未准备好，拒绝显示");
+                gameObject.SetActive(false);
+            }
+        }
+        protected override void Start()
+        {
+            //Debug.Log("Start");
+            base.Start();
         }
         protected override void Update()
         {
@@ -98,11 +111,10 @@ namespace TTT.Controller
         }
         protected override void CreateModel()
         {
-            RectTransform rect = rectTransform;
-            backgroundImage = CompTool.ForceGetComponent<Image>(gameObject);
-            rect.anchorMin = defaultMinAnchor;
-            rect.anchorMax = defaultMaxAnchor;
-            WinSizeType = m_windowSizeType;
+            if (enableBackgroudImage)
+            {
+                backgroundImage = CompTool.ForceGetComponent<Image>(gameObject);
+            }
             if (enableTitileBar)
             {
                 //TitleBar
@@ -124,6 +136,10 @@ namespace TTT.Controller
                 ViewTool.RightTop(closeBtn, new Vector2(1F, 1F), new Vector2(60, 60), Vector2.zero);
                 ViewTool.SetBtnColor(closeBtn, Color.red);
             }
+            RectTransform rect = rectTransform;
+            rect.anchorMin = defaultMinAnchor;
+            rect.anchorMax = defaultMaxAnchor;
+            WinSizeType = m_windowSizeType;
         }
         protected void SetTitle(string title)
         {
@@ -131,8 +147,11 @@ namespace TTT.Controller
         }
         public void SetBackground(string filename)
         {
-            backgroudFN = filename;
-            backgroundImage.sprite = Resources.Load<Sprite>(ImageFloder + filename);
+            if(backgroundImage != null)
+            {
+                backgroudFN = filename;
+                backgroundImage.sprite = Resources.Load<Sprite>(ImageFloder + filename);
+            }
         }
         public void OnDrag(PointerEventData eventData)
         {
@@ -145,11 +164,6 @@ namespace TTT.Controller
         }
         protected override bool FocusBehaviour()
         {
-            if (!PrepareDataBeforeShowWindow())
-            {
-                Debug.Log("窗口数据未准备好，拒绝显示");
-                return false;
-            }
             return true;
         }
         protected override bool UnfocusBehaviour()
@@ -164,8 +178,6 @@ namespace TTT.Controller
                 return false;
             }
             gameObject.SetActive(true);
-            if (gameObject.transform.parent != null)
-                AfterShowWindow();
             return true;
         }
         protected override bool HideBehaviour()

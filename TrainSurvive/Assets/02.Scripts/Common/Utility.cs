@@ -247,8 +247,8 @@ namespace TTT.Utility
                 transform.SetParent(gameo.GetComponent<Transform>());
                 FullFillRectTransform(transform, Vector2.zero, Vector2.zero);
             }
+            transform.gameObject.SetActive(active);
             t = CompTool.ForceGetComponent<T>(transform);
-            t.gameObject.SetActive(active);
             return t;
         }
         public static T ForceGetComponentInChildren<T>(Component comp, string name, bool active = true)

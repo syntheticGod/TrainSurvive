@@ -23,10 +23,6 @@ namespace WorldMap.Controller
         private Model.Town currentTown;
         private Text townInfoText;
         private Button[] btns;
-        protected override void OnEnable()
-        { }
-        protected override void OnDisable()
-        { }
         protected override void CreateModel()
         {
             m_windowSizeType = EWindowSizeType.BIG26x14;
@@ -95,7 +91,6 @@ namespace WorldMap.Controller
                 maxAnchor.y -= delta;
                 minAnchor.y -= delta;
             }
-
         }
         public void OnClick(BUTTON_ID id)
         {

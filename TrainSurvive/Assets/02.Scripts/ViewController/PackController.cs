@@ -31,61 +31,64 @@ namespace TTT.Controller
         private Button[] topLeftBtns;
         //数据
         private List<ItemData> items;
-        protected override void Start()
-        { }
-        protected override void Update()
-        { }
         protected override void CreateModel()
         {
+            Vector2 pivotOfRightBottom = new Vector2(0, 0);
+            Vector2 sizeOfRightBottom = new Vector2(120, 50);
+            Vector2 directionOfRightBottom = new Vector2(-sizeOfRightBottom.x, 0);
+            Vector2 pivotOfTopLeft = Vector2.zero;
+            Vector2 sizeOfTopLeft = new Vector2(100, 50);
+            Vector2 directionOfTopLeft = new Vector2(0, -sizeOfTopLeft.y);
+            Vector2 pivotOfRightTop = new Vector2(0, 1);
+            Vector2 sizeOfRightTop = new Vector2(80, 50);
+            Vector2 directionOfRightTop = new Vector2(-sizeOfRightBottom.x, -sizeOfTopLeft.y);
+
+            enableBackgroudImage = false;
             enableTitileBar = false;
+            WinSizeMaxOffset = new Vector2(sizeOfRightBottom.x, sizeOfTopLeft.y);            
             base.CreateModel();
+
+            //Backgroud Image
+            Image bg = ViewTool.ForceGetComponentInChildren<Image>(gameObject, "Backgroud");
+            ViewTool.FullFillRectTransform(bg, new Vector2(0, 0), -sizeOfRightBottom);
             //PackListView
-            packLV = ViewTool.ForceGetComponentInChildren<AssetsListView>(gameObject, "PackListViewLayout");
+            packLV = ViewTool.ForceGetComponentInChildren<AssetsListView>(gameObject, "PackListViewLayout", false);
             packLV.SetBackgroudColor(containerColor);
             packLV.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
             packLV.GridConstraintCount = 8;
             packLV.ScrollDirection = ScrollType.Vertical;
             packLV.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            ViewTool.FullFillRectTransform(packLV, new Vector2(20, 20), new Vector2(-20, -20));
+            ViewTool.FullFillRectTransform(packLV, new Vector2(20, 20), new Vector2(-20, -20) - sizeOfRightBottom);
             packLV.gameObject.SetActive(true);
             //Buttons
             RectTransform btns = new GameObject("Btns", typeof(RectTransform)).GetComponent<RectTransform>();
             ViewTool.SetParent(btns, this);
             ViewTool.FullFillRectTransform(btns, Vector2.zero, Vector2.zero);
-            Vector2 pivotOfRightUp = new Vector2(0, 1);
-            Vector2 sizeOfRightUp = new Vector2(80, 50);
-            Vector2 direction = Vector2.zero;
             rightTopBtns = new Button[rightUpBtnsName.Length];
             for (int i = 0; i < rightUpBtnsName.Length; i++)
             {
                 rightTopBtns[i] = ViewTool.CreateBtn(rightUpBtnsName[i], rightUpBtnsContent[i], btns);
-                ViewTool.RightTop(rightTopBtns[i], pivotOfRightUp, sizeOfRightUp, direction);
-                direction.y -= sizeOfRightUp.y;
+                ViewTool.RightTop(rightTopBtns[i], pivotOfRightTop, sizeOfRightTop, directionOfRightTop);
+                directionOfRightTop.y -= sizeOfRightTop.y;
             }
             rightTopBtns[0].onClick.AddListener(delegate () { OnRightTopBtnClick(0); });
             rightTopBtns[1].onClick.AddListener(delegate () { OnRightTopBtnClick(1); });
             rightTopBtns[2].onClick.AddListener(delegate () { OnRightTopBtnClick(2); });
             rightTopBtns[3].onClick.AddListener(delegate () { OnRightTopBtnClick(3); });
-            Vector2 pivotOfRightBottom = new Vector2(0, 0);
-            Vector2 sizeOfRightBottom = new Vector2(120, 50);
-            direction = Vector2.zero;
             rightBottomBtns = new Button[rightBottomBtnsName.Length];
             for (int i = 0; i < rightBottomBtnsName.Length; i++)
             {
                 rightBottomBtns[i] = ViewTool.CreateBtn(rightBottomBtnsName[i], rightBottomBtnsContent[i], btns);
-                ViewTool.RightBottom(rightBottomBtns[i], pivotOfRightBottom, sizeOfRightBottom, direction);
-                direction.y += sizeOfRightBottom.y;
+                ViewTool.RightBottom(rightBottomBtns[i], pivotOfRightBottom, sizeOfRightBottom, directionOfRightBottom);
+                directionOfRightBottom.y += sizeOfRightBottom.y;
             }
             rightBottomBtns[0].onClick.AddListener(delegate () { OnRightBottomBtnClick(0); });
-            Vector2 pivotOfTopLeft = Vector2.zero;
-            Vector2 sizeOfTopLeft = new Vector2(100, 50);
-            direction = Vector2.zero;
             topLeftBtns = new Button[topLeftBtnsName.Length];
             for (int i = 0; i < topLeftBtnsName.Length; i++)
             {
                 topLeftBtns[i] = ViewTool.CreateBtn(topLeftBtnsName[i], topLeftBtnsContent[i], btns);
-                ViewTool.LeftTop(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, direction);
-                direction.x += sizeOfTopLeft.x;
+                ViewTool.LeftTop(topLeftBtns[i], pivotOfTopLeft, sizeOfTopLeft, directionOfTopLeft);
+                directionOfTopLeft.x += sizeOfTopLeft.x;
                 int index = i;
                 topLeftBtns[i].onClick.AddListener(delegate () { OnTopLeftBtnClick(index); });
             }
@@ -131,5 +134,15 @@ namespace TTT.Controller
         {
             packLV.Datas = items;
         }
+#if DEBUG
+        public void AddRandomMaterial()
+        {
+            World.getInstance().storage.AddItem(ItemData.RandomMaterial());
+        }
+        public void AddRandomWeapon()
+        {
+            World.getInstance().storage.AddItem(ItemData.RandomWeapon());
+        }
+#endif
     }
 }

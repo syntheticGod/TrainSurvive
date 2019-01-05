@@ -33,10 +33,6 @@ namespace WorldMap.Controller
         {
             currentTown = town;
         }
-        protected override void OnEnable()
-        {}
-        protected override void OnDisable()
-        {}
         protected override void CreateModel()
         {
             m_titleString = "酒馆";

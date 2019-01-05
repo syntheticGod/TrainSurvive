@@ -57,10 +57,12 @@ namespace WorldMap.Controller
         }
         protected override void OnEnable()
         {
+            base.OnEnable();
             Train.Instance.Attach(this, ECHO_FROM_TRAIN);
         }
         protected override void OnDisable()
         {
+            base.OnDisable();
             Train.Instance.Detach(obs: this);
         }
         protected override void Start()
