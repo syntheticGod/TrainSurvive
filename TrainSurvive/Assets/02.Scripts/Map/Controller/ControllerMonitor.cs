@@ -5,11 +5,12 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
-using TTT.Utility;
 using UnityEngine.UI;
+
+using TTT.Utility;
+using TTT.Controller;
+
 using WorldMap.Model;
-using System.Text;
 
 namespace WorldMap.Controller
 {
@@ -31,13 +32,13 @@ namespace WorldMap.Controller
         {
             if (WorldForMap.Instance.IfTeamOuting)
             {
-                ControllerManager.Instance.UnfocusController("Train", "Character");
-                ControllerManager.Instance.ShowController("Team", "Character");
+                ControllerManager.UnfocusController("Train", "Character");
+                ControllerManager.ShowController("Team", "Character");
             }
             else
             {
-                ControllerManager.Instance.FocusController("Train", "Character");
-                ControllerManager.Instance.HideController("Team", "Character");
+                ControllerManager.FocusController("Train", "Character");
+                ControllerManager.HideController("Team", "Character");
             }
         }
         private void OnEnable()

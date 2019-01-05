@@ -8,6 +8,7 @@
 using Assets._02.Scripts.zhxUIScripts;
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Item;
 using TTT.Utility;
 using UnityEngine;
 using WorldMap.UI;
@@ -24,13 +25,13 @@ namespace WorldBattle {
         //设置图片初始的位置
         private static Vector2 orign = new Vector2(-200, 100);
 
-        public static void setItem(Transform parent, Item item, int index) {
+        public static void setItem(Transform parent, ItemData assets, int index) {
             //创建一个空的gameObject
-            GameObject gameObject = new GameObject(item.name);
+            GameObject gameObject = new GameObject(assets.Name);
             //将当前图片显示依附于此object
             ItemDisplay view = CompTool.ForceGetComponent<ItemDisplay>(gameObject);
-            //设置相应的图片
-            view.setItem(item);
+            //设置UI
+            view.setItem(assets);
 
             //更改gameObject的parent
             gameObject.transform.parent = parent;
@@ -59,19 +60,15 @@ namespace WorldBattle {
     /// <summary>
     /// 这个是用来显示图片的类
     /// </summary>
-    public class ItemDisplay : TeamPackItem {
+    public class ItemDisplay : AssetsItemView {
         /// <summary>
         /// 设置图片
         /// </summary>
         /// <param name="item">物品类型</param>
         /// <param name="itemNum">物品数量</param>
-        public void setItem(Item item, int itemNum = 1) {
-            //设置物品稀有度
-            SetMarkLevel((int)item.rarity);
-            //设置物品的图片
-            SetTarget(item);
-            //设置物品数量
-            SetNumber(itemNum);
+        public void setItem(ItemData assets) {
+            //设置物品信息
+            SetItemData(assets);
         }
     }
 }

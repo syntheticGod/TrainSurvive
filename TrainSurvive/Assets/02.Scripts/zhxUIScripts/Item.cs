@@ -1,10 +1,4 @@
 /*
- * 描述：
- * 作者：����
- * 创建时间：2018/11/6 23:29:41
- * 版本：v0.1
- */
-/*
  * 描述：物品祖先抽象类
  * 作者：张皓翔
  * 创建时间：2018/10/31 18:42:11
@@ -71,8 +65,5 @@ namespace Assets._02.Scripts.zhxUIScripts
         {
             return this.MemberwiseClone() as Item;
         }
-
-
-
     }
 }

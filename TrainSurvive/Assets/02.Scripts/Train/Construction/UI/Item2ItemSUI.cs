@@ -49,10 +49,10 @@ public class Item2ItemSUI : FacilityUI {
     private void UpdateUI() {
         Raw.Clear();
         if (Structure.Raw != null)
-            Raw.GeneratorItem(Structure.Raw.id, Structure.Raw.num);
+            Raw.GeneratorItem(Structure.Raw.ID, Structure.Raw.Number);
         Output.Clear();
         if (Structure.Output != null)
-            Output.GeneratorItem(Structure.Output.id, Structure.Output.num);
+            Output.GeneratorItem(Structure.Output.ID, Structure.Output.Number);
         Slider.value = Structure.Progress;
     }
 
@@ -64,8 +64,8 @@ public class Item2ItemSUI : FacilityUI {
             if (old == null) { // item不空，old空
                 old = new ItemData(item.id, item.currPileNum);
             } else {
-                if (old.id == item.id) {  // item不空，old不空，item与old的id相同
-                    old.num = item.currPileNum;
+                if (old.ID == item.id) {  // item不空，old不空，item与old的id相同
+                    old.Number = item.currPileNum;
                 } else {  // item不空，old不空，item与old的id不同
                     old = new ItemData(item.id, item.currPileNum);
                 }
@@ -77,7 +77,7 @@ public class Item2ItemSUI : FacilityUI {
         if (newItem == null) {
             Raw.Clear();
         } else {
-            Raw.GetItem().currPileNum = newItem.num;
+            Raw.GetItem().currPileNum = newItem.Number;
         }
     }
 
@@ -90,13 +90,13 @@ public class Item2ItemSUI : FacilityUI {
 
     private void OnOutputUpdate(ItemData newItem) {
         if (Output.GetItem() == null) { // item不空，old空
-            Output.GeneratorItem(newItem.id, newItem.num);
+            Output.GeneratorItem(newItem.ID, newItem.Number);
         } else {
-            if (Output.GetItem().id == newItem.id) {  // item不空，old不空，item与old的id相同
-                Output.GetItem().currPileNum = newItem.num;
+            if (Output.GetItem().id == newItem.ID) {  // item不空，old不空，item与old的id相同
+                Output.GetItem().currPileNum = newItem.Number;
             } else {  // item不空，old不空，item与old的id不同
                 Output.Clear();
-                Output.GeneratorItem(newItem.id, newItem.num);
+                Output.GeneratorItem(newItem.ID, newItem.Number);
             }
         }
     }

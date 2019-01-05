@@ -10,6 +10,8 @@ using System.Collections.Generic;
 
 using TTT.Utility;
 using TTT.UI;
+using TTT.Controller
+    ;
 using WorldMap.Model;
 using WorldMap.UI;
 
@@ -31,10 +33,6 @@ namespace WorldMap.Controller
         {
             currentTown = town;
         }
-        protected override void OnEnable()
-        {}
-        protected override void OnDisable()
-        {}
         protected override void CreateModel()
         {
             m_titleString = "酒馆";
@@ -168,7 +166,7 @@ namespace WorldMap.Controller
                     {
                         //私聊选项2：请加入我
                         Debug.Log("玩家：招募指令");
-                        if(world.PersonCount() >= world.MaxPersonCount())
+                        if(WorldForMap.Instance.PersonCount() >= WorldForMap.Instance.MaxPersonCount())
                         {
                             InfoDialog.Show("人物已满，无法招募更多的人");
                             return;
@@ -179,7 +177,7 @@ namespace WorldMap.Controller
                             Debug.LogError("系统：招募NPC失败");
                             break;
                         }
-                        if (world.IfTeamOuting)
+                        if (WorldForMap.Instance.IfTeamOuting)
                             Team.Instance.CallBackRecruit(currentNPC.PersonInfo);
                         else
                             Train.Instance.CallBackRecruit(currentNPC.PersonInfo);

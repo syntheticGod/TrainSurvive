@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 using TTT.Resource;
 using TTT.Utility;
+using TTT.Controller;
 using WorldMap.Model;
 using WorldMap.UI;
 
@@ -31,10 +32,12 @@ namespace WorldMap.Controller
         private float lastSize = 0;
         protected override void OnEnable()
         {
+            base.OnEnable();
             Team.Instance.Attach(this);
         }
         protected override void OnDisable()
         {
+            base.OnDisable();
             Team.Instance.Detach(this);
         }
         protected override void CreateModel()
@@ -105,11 +108,11 @@ namespace WorldMap.Controller
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
                     Model.Town town;
-                    if (world.FindTown(Team.Instance.MapPosTeam, out town))
+                    if (WorldForMap.Instance.FindTown(Team.Instance.MapPosTeam, out town))
                     {
                         //进入城镇后不能操作小队
                         Team.Instance.IsMovable = false;
-                        TownController townController = ControllerManager.Instance.GetWindow<TownController>("TownViewer");
+                        TownController townController = ControllerManager.GetWindow<TownController>("TownViewer");
                         townController.SetTown(town);
                         townController.Show(this);
                     }
@@ -125,14 +128,14 @@ namespace WorldMap.Controller
                         Debug.Log("回车指令执行失败");
                         return;
                     }
-                    ControllerManager.Instance.FocusController("Train", "Character");
+                    ControllerManager.FocusController("Train", "Character");
                     Hide();
                     break;
                 case BUTTON_ID.TEAM_GATHER:
                     Debug.Log("采集指令");
                     if (map.IfCanGathered(Team.Instance.MapPosTeam))
                     {
-                        if (world.DoGather())
+                        if (WorldForMap.Instance.DoGather())
                             map.setGathered(Team.Instance.MapPosTeam);
                         else
                             InfoDialog.Show("探险队体力不足，无法采集");
@@ -144,11 +147,11 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TEAM_PACK:
                     Debug.Log("背包指令");
-                    ControllerManager.Instance.GetWindow<PackController>("PackViewer").Show();
+                    ControllerManager.GetWindow<PackController>("PackViewer").Show();
                     break;
                 case BUTTON_ID.TEAM_CHARACTER:
                     Debug.Log("查看小队指令");
-                    ControllerManager.Instance.GetWindow<TeamInfoController>("TeamInfoController").Show();
+                    ControllerManager.GetWindow<TeamInfoController>("TeamInfoController").Show();
                     break;
             }
         }
@@ -184,7 +187,7 @@ namespace WorldMap.Controller
         public void RefreshView()
         {
             int i;
-            for (i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            for (i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
                 teamPersons[i].gameObject.SetActive(true);
             }
@@ -207,7 +210,7 @@ namespace WorldMap.Controller
         {
             int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
             ESprite type = ESprite.PERSON1_B;
-            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
                 teamPersons[i].sprite = StaticResource.GetSprite(type);
                 teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
@@ -218,7 +221,7 @@ namespace WorldMap.Controller
         {
             int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
             ESprite type = ESprite.PERSON1_T;
-            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
                 teamPersons[i].sprite = StaticResource.GetSprite(type);
                 teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
@@ -229,7 +232,7 @@ namespace WorldMap.Controller
         {
             int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
             ESprite type = ESprite.PERSON1_L;
-            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
                 teamPersons[i].sprite = StaticResource.GetSprite(type);
                 teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
@@ -240,7 +243,7 @@ namespace WorldMap.Controller
         {
             int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
             ESprite type = ESprite.PERSON1_L;
-            for (int i = 0; i < teamPersons.Length && i < world.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
                 teamPersons[i].sprite = StaticResource.GetSprite(type);
                 teamPersons[i].transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);

@@ -35,78 +35,61 @@ namespace WorldMap
         }
         public void AddMoney(int money)
         {
-            world.addMoney(money);
+            WorldForMap.Instance.AddMoney(money);
+        }
+        private bool PushItem(int itemID, int number)
+        {
+            world.storage.AddItem(itemID, number);
+            return true;
         }
         public void PushItemToTrain(int itemID, int numberBuy)
         {
-            world.itemDataInTrain.Add(new ItemData(itemID, numberBuy));
-        }
-        public bool CanPushGoodsToTeam(int itemID, int numberBuy)
-        {
-            //TODO 目前背包容量无限
-            return true;
+            PushItem(itemID, numberBuy);
         }
         public bool PushGoodsToTeam(int itemID, int numberBuy)
         {
-            world.itemDataInTeam.Add(new ItemData(itemID, numberBuy));
+            PushItem(itemID, numberBuy);
+            return true;
+        }
+        public bool CanPushGoodsToTeam(int itemID, int numberBuy)
+        {
+            //无限仓库
             return true;
         }
         public float GetPackWeightInTeam()
         {
             //TODO 暂时使用数量代替重量
-            return world.itemDataInTeam.Count;
+            return world.storage.Count;
         }
+        /// <summary>
+        /// 售卖仓库中的物品
+        /// </summary>
+        /// <param name="itemID">物品ID</param>
+        /// <param name="number">物品数量</param>
+        private void SellGoods(int itemID, int numberSell)
+        {
+            if (!world.storage.RemoveItem(itemID, numberSell))
+            {
+                Debug.LogError("售卖错误，数量不足，或商品不存在。ID：" + itemID + "数量：" + numberSell);
+            }
+        }
+        /// <summary>
+        /// 探险队售卖物品，售卖仓库中的物品
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <param name="numberSell"></param>
         public void SellGoodsFromTeam(int itemID, int numberSell)
         {
-            foreach (ItemData item in world.itemDataInTeam)
-            {
-                if (item.id == itemID)
-                {
-                    item.num -= numberSell;
-                    if (item.num <= 0)
-                    {
-                        Debug.Assert(world.itemDataInTeam.Remove(item));
-                        if (item.num < 0)
-                            Debug.LogError("系统：探险队售卖数量减扣错误");
-                    }
-                    break;
-                }
-            }
+            SellGoods(itemID, numberSell);
         }
+        /// <summary>
+        /// 列车售卖物品，售卖仓库中的物品
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <param name="numberSell"></param>
         public void SellGoodsFromTrain(int itemID, int numberSell)
         {
-            foreach (ItemData item in world.itemDataInTrain)
-            {
-                if (item.id == itemID)
-                {
-                    item.num -= numberSell;
-                    if (item.num <= 0)
-                    {
-                        Debug.Assert(world.itemDataInTrain.Remove(item));
-                        if (item.num < 0)
-                            Debug.LogError("系统：探险队售卖数量减扣错误");
-                    }
-                    break;
-                }
-            }
-        }
-        public List<Good> GetGoodsInTeam()
-        {
-            List<Good> goods = new List<Good>();
-            foreach (ItemData item in world.itemDataInTeam)
-            {
-                goods.Add(new Good(item));
-            }
-            return goods;
-        }
-        public List<Good> GetGoodsInTrain()
-        {
-            List<Good> goods = new List<Good>();
-            foreach (ItemData item in world.itemDataInTrain)
-            {
-                goods.Add(new Good(item));
-            }
-            return goods;
+            SellGoods(itemID, numberSell);
         }
         public int Money { get { return (int)world.getMoney(); } }
         /// <summary>
@@ -133,7 +116,7 @@ namespace WorldMap
         public void InitInDebug()
         {
 #if DEBUG
-            world.addMoney(10000);
+            WorldForMap.Instance.AddMoney(10000);
             world.addStrategy(1000);
 #endif
         }
@@ -211,13 +194,7 @@ namespace WorldMap
                 Debug.LogWarning("探险队增加内部食物不正常");
             }
             Debug.Log("探险队：我们（人数：" + world.numOut + "）回车了。" +
-                "带回食物：" + remain + "，列车现在有食物：" + world.getFoodIn() +
-                "带回东西：" + world.itemDataInTeam.Count + "个");
-            foreach (ItemData item in world.itemDataInTeam)
-            {
-                world.itemDataInTrain.Add(item);
-            }
-            world.itemDataInTeam.Clear();
+                "带回食物：" + remain + "，列车现在有食物：" + world.getFoodIn());
             world.numIn = world.persons.Count;
             world.numOut = 0;
         }
@@ -320,7 +297,7 @@ namespace WorldMap
         public void TrainMoving()
         {
             world.ifTrainMoving = true;
-            if (world.ifTeamOuting)
+            if (WorldForMap.Instance.IfTeamOuting)
                 Debug.LogError("错误，小队外出状态下，列车被允许移动");
         }
         public void TrainStop()

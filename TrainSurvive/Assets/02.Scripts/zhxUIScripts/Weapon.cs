@@ -230,7 +230,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             _weapon_type = (PublicData.WeaponType)int.Parse(aimNode.Attributes["type"].Value);
             _rarity = (PublicData.Rarity)int.Parse(aimNode.Attributes["rarity"].Value);
             _size = float.Parse(aimNode.Attributes["size"].Value);
-            _max_pile_num = 1;
+            _max_pile_num = int.Parse(aimNode.Attributes["maxPileNum"].Value);
             _cur_pile_num = 1;
             _range = float.Parse(aimNode.Attributes["range"].Value);
             _fac_atk = float.Parse(aimNode.Attributes["atk"].Value);
@@ -239,7 +239,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             _mod_crc = float.Parse(aimNode.Attributes["crc"].Value);
             _mod_crd = float.Parse(aimNode.Attributes["crd"].Value);
             _mod_hit = float.Parse(aimNode.Attributes["hit"].Value);
-            _fac_hrec = float.Parse(aimNode.Attributes["hrec"].Value);
+            //_fac_hrec = float.Parse(aimNode.Attributes["hrec"].Value);
             _fac_arec = float.Parse(aimNode.Attributes["arec"].Value);
             _fac_sdmg = float.Parse(aimNode.Attributes["sdmg"].Value);
             _description = aimNode.Attributes["description"].Value;

@@ -125,7 +125,7 @@ public class Person
     {
         attriNumber[(int)eAttribute] += delta;
         trainCnt++;
-        SkillInfo[] skills = StaticResource.GetAvailableSkills(attriNumber);
+        SkillInfo[] skills = StaticResource.GetAvailableSkills(attriNumber, ESkillComeFrom.SCHOOL);
         List<SkillInfo> newSkills = new List<SkillInfo>();
         for (int i = 0; i < skills.Length; i++)
         {
@@ -525,7 +525,7 @@ public class Person
             p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
         }
         //获得无条件获得的技能
-        SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber);
+        SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber, ESkillComeFrom.SCHOOL);
         if (avaliableSkills != null)
         {
             foreach (SkillInfo skill in avaliableSkills)

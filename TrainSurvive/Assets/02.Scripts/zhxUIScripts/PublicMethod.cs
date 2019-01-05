@@ -123,54 +123,54 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         private static bool CanConsumeItem(ItemData itemData)
         {
-            int totalNum = 0;
-            List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
-            for (int i=0; i< itemDataInTrain.Count; ++i)
-            {   //算出目标物品在仓库内共有几个
-                if(itemDataInTrain[i].id == itemData.id)
-                {
-                    totalNum += itemDataInTrain[i].num;
-                }
-            }
-            if(totalNum >= itemData.num)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            //int totalNum = 0;
+            //List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
+            //for (int i=0; i< itemDataInTrain.Count; ++i)
+            //{   //算出目标物品在仓库内共有几个
+            //    if(itemDataInTrain[i].ID == itemData.ID)
+            //    {
+            //        totalNum += itemDataInTrain[i].Number;
+            //    }
+            //}
+            //if(totalNum >= itemData.Number)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            return false;
+            //}
         }
 
         private static void ConsumeItem(ItemData itemData)
         {
-            List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
-            List<int> removeIndex = new List<int>();
-            int alreadyConsumeNum = 0;
-            for(int i=itemDataInTrain.Count-1; i>=0; --i)
-            {
-                if(itemDataInTrain[i].id == itemData.id)
-                {
-                    if(itemData.num - alreadyConsumeNum <= itemDataInTrain[i].num)
-                    {
-                        itemDataInTrain[i].num -= (itemData.num - alreadyConsumeNum);
-                        if(itemDataInTrain[i].num == 0)
-                        {
-                            removeIndex.Add(i);
-                        }
-                        break;
-                    }
-                    else
-                    {
-                        removeIndex.Add(i);
-                        alreadyConsumeNum += itemDataInTrain[i].num;
-                    }
-                }
-            }
-            foreach (int index in removeIndex)
-            {
-                itemDataInTrain.RemoveAt(index);
-            }
+            //List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
+            //List<int> removeIndex = new List<int>();
+            //int alreadyConsumeNum = 0;
+            //for(int i=itemDataInTrain.Count-1; i>=0; --i)
+            //{
+            //    if(itemDataInTrain[i].ID == itemData.ID)
+            //    {
+            //        if(itemData.Number - alreadyConsumeNum <= itemDataInTrain[i].Number)
+            //        {
+            //            itemDataInTrain[i].Number -= (itemData.Number - alreadyConsumeNum);
+            //            if(itemDataInTrain[i].Number == 0)
+            //            {
+            //                removeIndex.Add(i);
+            //            }
+            //            break;
+            //        }
+            //        else
+            //        {
+            //            removeIndex.Add(i);
+            //            alreadyConsumeNum += itemDataInTrain[i].Number;
+            //        }
+            //    }
+            //}
+            //foreach (int index in removeIndex)
+            //{
+            //    itemDataInTrain.RemoveAt(index);
+            //}
         }
 
         public static bool ConsumeItems(ItemData[] consumeList)    //测试成功
@@ -182,7 +182,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             for(int i=0; i< consumeList.Length; ++i)
             {
                 ConsumeItem(consumeList[i]);
-                consumeSize += consumeList[i].item.size * consumeList[i].item.currPileNum;
+                consumeSize += consumeList[i].Size * consumeList[i].Number;
             }
             World.getInstance().trainInventoryCurSize -= consumeSize;
             return true;
@@ -202,30 +202,30 @@ namespace Assets._02.Scripts.zhxUIScripts
         private static void appendAItem(ItemData item)
         {
             List<int> indexes = new List<int>();
-            int max = World.getInstance().itemDataInTrain.Count;
+            int max = World.getInstance().storage.Count;
             for (int i=0; i<max; ++i)
             {
-                if (World.getInstance().itemDataInTrain[i].id == item.id)
-                    indexes.Add(i);
+                //if (World.getInstance().itemDataInTrain[i].id == item.ID)
+                //    indexes.Add(i);
             }
          
             for (int i = 0; i<indexes.Count; ++i)
             {
-                int index = indexes[i];
-                Item aimItem = World.getInstance().itemDataInTrain[index].item;
+                //int index = indexes[i];
+                //Item aimItem = World.getInstance().itemDataInTrain[index].item;
                 
-                if (aimItem.maxPileNum - aimItem.currPileNum >= item.num)
-                {
-                    World.getInstance().itemDataInTrain[index].num += item.num;
-                    return;
-                }
-                else
-                {
-                    World.getInstance().itemDataInTrain[index].num = aimItem.maxPileNum;
-                    item.num -= aimItem.maxPileNum - aimItem.currPileNum;
-                }
+                //if (aimItem.maxPileNum - aimItem.currPileNum >= item.Number)
+                //{
+                //    World.getInstance().itemDataInTrain[index].num += item.Number;
+                //    return;
+                //}
+                //else
+                //{
+                //    World.getInstance().itemDataInTrain[index].num = aimItem.maxPileNum;
+                //    item.Number -= aimItem.maxPileNum - aimItem.currPileNum;
+                //}
             }
-            World.getInstance().itemDataInTrain.Add(item);  
+            //World.getInstance().itemDataInTrain.Add(item);  
         }
 
         public static bool AppendItemsInBackEnd(ItemData[] appendList)
@@ -233,7 +233,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             float appendSize = 0f;
             foreach(ItemData itemData in appendList)
             {
-                Item[] tempItem = GenerateItem(itemData.id, itemData.num);
+                Item[] tempItem = GenerateItem(itemData.ID, itemData.Number);
                 for(int i=0; i<tempItem.Length; ++i)
                 {
                     appendSize += tempItem[i].size;
@@ -247,7 +247,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             {
                 foreach (ItemData itemData in appendList)
                 {
-                    Item[] tempItem = GenerateItem(itemData.id, itemData.num);
+                    Item[] tempItem = GenerateItem(itemData.ID, itemData.Number);
                     for (int i = 0; i < tempItem.Length; ++i)
                     {
                         World.getInstance().trainInventoryCurSize += tempItem[i].size * tempItem[i].currPileNum;

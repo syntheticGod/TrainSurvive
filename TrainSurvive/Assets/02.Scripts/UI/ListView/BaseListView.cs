@@ -73,7 +73,6 @@ namespace TTT.UI
         /// Content的大小根据item数量自适应
         /// </summary>
         private ContentSizeFitter contentSizeFitter;
-        public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
         /// <summary>
         /// 也可以手动设置Item的Prefab，如果未设置就创建
         /// </summary>
@@ -177,6 +176,8 @@ namespace TTT.UI
                 }
             }
         }
+
+        public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
         /// <summary>
         /// Horizontal：先水平填充，填充满一行后，再填充下一行
         /// Vertical：先垂直填充，填充满一列后，再填充下一列
@@ -206,6 +207,7 @@ namespace TTT.UI
                 return m_startAxis;
             }
         }
+        private int m_gridConstraintCount = 1;
         /// <summary>
         /// 固定列或者固定行的数量
         /// </summary>
@@ -213,13 +215,16 @@ namespace TTT.UI
         {
             set
             {
-                gridLayout.constraintCount = value;
+                m_gridConstraintCount = value;
+                if (gridLayout != null)
+                    gridLayout.constraintCount = value;
             }
             get
             {
-                return gridLayout.constraintCount;
+                return m_gridConstraintCount;
             }
         }
+        public GridLayoutGroup.Constraint m_gridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
         /// <summary>
         /// 固定列或者固定行
         /// </summary>
@@ -227,11 +232,13 @@ namespace TTT.UI
         {
             set
             {
-                gridLayout.constraint = value;
+                m_gridConstraint = value;
+                if (gridLayout != null)
+                    gridLayout.constraint = value;
             }
             get
             {
-                return gridLayout.constraint;
+                return m_gridConstraint;
             }
         }
         public int ItemCount { get { return items.Count; } }
@@ -277,6 +284,7 @@ namespace TTT.UI
                 content = CompTool.ForceGetComponent<RectTransform>(contentTransform);
                 contentSizeFitter = CompTool.ForceGetComponent<ContentSizeFitter>(contentTransform);
             }
+
             ViewTool.FullFillRectTransform(content);
             content.pivot = new Vector2(0, 1);
 
@@ -284,18 +292,21 @@ namespace TTT.UI
             scrollRect.content = content;
             scrollRect.viewport = viewport;
             scrollRect.scrollSensitivity = defaultScrollRectSensitivity;
-            ScrollDirection = m_scrollType;
             //Config GridLayoutGroup
             gridLayout = content.GetComponent<GridLayoutGroup>();
             recycal = new List<ListViewItem>();
             items = new List<ListViewItem>();
+            //设置默认值
+            GridConstraint = m_gridConstraint;
+            GridConstraintCount = m_gridConstraintCount;
+            StartAxis = m_startAxis;
+            ScrollDirection = m_scrollType;
         }
         protected virtual void Start()
         {
             viewPortSize = viewport.rect.size;
-            Debug.Log("vireport:" + viewport.rect.size + " width:" + viewport.rect.width + " height:" + viewport.rect.height);
+            //Debug.Log("vireport:" + viewport.rect.size + " width:" + viewport.rect.width + " height:" + viewport.rect.height);
             ConfigCellSize();
-            StartAxis = m_startAxis;
         }
         protected void Update()
         { }
