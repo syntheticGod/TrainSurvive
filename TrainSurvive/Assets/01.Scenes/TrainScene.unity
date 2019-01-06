@@ -1476,7 +1476,6 @@ GameObject:
   - component: {fileID: 127494405}
   - component: {fileID: 127494404}
   - component: {fileID: 127494403}
-  - component: {fileID: 127494402}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -1503,29 +1502,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &127494402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 127494400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &127494403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1538,7 +1514,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &127494404
@@ -3279,7 +3254,6 @@ GameObject:
   - component: {fileID: 252546331}
   - component: {fileID: 252546330}
   - component: {fileID: 252546329}
-  - component: {fileID: 252546328}
   m_Layer: 5
   m_Name: UnitInventory (1)
   m_TagString: Untagged
@@ -3306,29 +3280,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.53052, y: -117}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &252546328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 252546326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &252546329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3341,7 +3292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &252546330
@@ -4870,7 +4820,6 @@ GameObject:
   - component: {fileID: 363013492}
   - component: {fileID: 363013491}
   - component: {fileID: 363013490}
-  - component: {fileID: 363013489}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -4897,29 +4846,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &363013489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 363013487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &363013490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4932,7 +4858,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &363013491
@@ -5793,7 +5718,6 @@ GameObject:
   - component: {fileID: 419635757}
   - component: {fileID: 419635756}
   - component: {fileID: 419635755}
-  - component: {fileID: 419635754}
   m_Layer: 5
   m_Name: UnitInventory (1)
   m_TagString: Untagged
@@ -5820,29 +5744,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.53052, y: -117}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &419635754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 419635752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &419635755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5855,7 +5756,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &419635756
@@ -7932,7 +7832,6 @@ GameObject:
   - component: {fileID: 671857734}
   - component: {fileID: 671857733}
   - component: {fileID: 671857732}
-  - component: {fileID: 671857731}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -7959,29 +7858,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &671857731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 671857729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &671857732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7994,7 +7870,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &671857733
@@ -10213,7 +10088,6 @@ GameObject:
   - component: {fileID: 821655788}
   - component: {fileID: 821655787}
   - component: {fileID: 821655786}
-  - component: {fileID: 821655785}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -10240,29 +10114,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &821655785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 821655783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &821655786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10275,7 +10126,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &821655787
@@ -11062,7 +10912,6 @@ GameObject:
   - component: {fileID: 884746230}
   - component: {fileID: 884746229}
   - component: {fileID: 884746228}
-  - component: {fileID: 884746227}
   m_Layer: 5
   m_Name: UnitInventory (1)
   m_TagString: Untagged
@@ -11089,29 +10938,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.53052, y: -117}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &884746227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 884746225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &884746228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11124,7 +10950,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &884746229
@@ -11677,7 +11502,6 @@ GameObject:
   - component: {fileID: 964553586}
   - component: {fileID: 964553585}
   - component: {fileID: 964553584}
-  - component: {fileID: 964553583}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -11704,29 +11528,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &964553583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 964553581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &964553584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11739,7 +11540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &964553585
@@ -14385,7 +14185,6 @@ GameObject:
   - component: {fileID: 1128014705}
   - component: {fileID: 1128014704}
   - component: {fileID: 1128014703}
-  - component: {fileID: 1128014702}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -14412,29 +14211,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1128014702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1128014700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1128014703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14447,7 +14223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1128014704
@@ -14812,7 +14587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1174171580
@@ -14973,7 +14747,6 @@ GameObject:
   - component: {fileID: 1201918481}
   - component: {fileID: 1201918480}
   - component: {fileID: 1201918479}
-  - component: {fileID: 1201918478}
   m_Layer: 5
   m_Name: UnitInventory (1)
   m_TagString: Untagged
@@ -15000,29 +14773,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.53052, y: -117}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1201918478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1201918476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1201918479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15035,7 +14785,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1201918480
@@ -15918,7 +15667,6 @@ GameObject:
   - component: {fileID: 1376697276}
   - component: {fileID: 1376697275}
   - component: {fileID: 1376697274}
-  - component: {fileID: 1376697273}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -15945,29 +15693,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1376697273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1376697271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1376697274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15980,7 +15705,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1376697275
@@ -16278,7 +16002,6 @@ GameObject:
   - component: {fileID: 1407213613}
   - component: {fileID: 1407213612}
   - component: {fileID: 1407213611}
-  - component: {fileID: 1407213610}
   m_Layer: 5
   m_Name: UnitInventory (1)
   m_TagString: Untagged
@@ -16305,29 +16028,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.53052, y: -117}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1407213610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1407213608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1407213611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16340,7 +16040,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1407213612
@@ -18489,7 +18188,6 @@ GameObject:
   - component: {fileID: 1597129031}
   - component: {fileID: 1597129030}
   - component: {fileID: 1597129032}
-  - component: {fileID: 1597129029}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -18516,29 +18214,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1597129029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1597129027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1597129030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18587,7 +18262,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!1 &1603038224
@@ -20659,7 +20333,6 @@ GameObject:
   - component: {fileID: 1731433358}
   - component: {fileID: 1731433357}
   - component: {fileID: 1731433356}
-  - component: {fileID: 1731433355}
   m_Layer: 5
   m_Name: UnitInventory
   m_TagString: Untagged
@@ -20686,29 +20359,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1731433355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1731433353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1731433356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20721,7 +20371,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1731433357
@@ -22984,7 +22633,6 @@ GameObject:
   - component: {fileID: 1932649576}
   - component: {fileID: 1932649575}
   - component: {fileID: 1932649574}
-  - component: {fileID: 1932649573}
   m_Layer: 5
   m_Name: UnitInventory (1)
   m_TagString: Untagged
@@ -23011,29 +22659,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.53052, y: -117}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1932649573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114966150236722240, guid: bf9688378ddbdd84e98f3f6cedb038ad,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1932649571}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &1932649574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23046,7 +22671,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &1932649575
@@ -23538,6 +23162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1bada34afd77ed49a4ecb8afa4706ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minAnchor: {x: 0.25, y: 0.5}
+  maxAnchor: {x: 0.25, y: 0.5}
 --- !u!1 &2005792204
 GameObject:
   m_ObjectHideFlags: 0
@@ -25438,7 +25064,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6cb22d72abdc940bad94263dc25898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
   isEquipmentGrid: 0
   Prefab: {fileID: 1885094596022760, guid: f3c3d2cd81ae89c42be983204293dd2b, type: 2}
 --- !u!114 &2135498148
