@@ -5,12 +5,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using WorldMap;
 using System;
+using TTT.Item;
+
 [System.Serializable]
 public class World
 {
     private World()
     {
-
+        //或许战略点一开始不为0？teamPoint = 10;
         //测试用 xys
         foodIn = (uint)foodInMax;
         //----
@@ -88,16 +90,18 @@ public class World
     private uint foodOutMax = 0;
     private float energyMax = 1000;
     private float electricityMax = 1000;
-
+    //----------物品----------↓
     public float trainInventoryMaxSize = 50;    //需要使用相关方法来确定这个属性的值，然后其他的Inventory系统会自己使用它
     public float trainInventoryCurSize = 0;
-    public List<ItemData> itemDataInTrain = new List<ItemData>();
-    public List<ItemData> itemDataInTeam = new List<ItemData>();
-
-
-    public List<int> itemIDs;
-    public List<int> itemNums;
-
+    //public List<ItemData> itemDataInTrain = new List<ItemData>();
+    //public List<ItemData> itemDataInTeam = new List<ItemData>();
+    /// <summary>
+    /// 仓库——探险队和列车都同用一个仓库
+    /// </summary>
+    public Storage storage = new Storage();
+    //public List<int> itemIDs;
+    //public List<int> itemNums;
+    //----------物品----------↑
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt = 1;
@@ -183,7 +187,11 @@ public class World
     public int numIn;
     public int numOut;
     public int personNumMax = 15;
-
+    public uint teamPoint
+    {
+        get { return teamPoint; }
+        private set { teamPoint = value; }
+    }
     public TaskController taskCon = null;
 
     /// <summary>
@@ -421,6 +429,27 @@ public class World
     /// <summary>
     /// 支付金额 同 addMoney(-cost)
     /// </summary>
+    /// <param name="num"></param>
+    /// <returns>false代表战略点不够</returns>
+    public bool addTeamPoint(int num)
+    {
+        bool result = true;
+        if ((teamPoint + num) < 0)
+        {
+            result = false;
+        }
+        else
+            teamPoint = (uint)(teamPoint + num);
+        if (resourceUI != null)
+        {
+            //resourceUI.setMoney(money);
+        }
+        return result;
+    }
+    /// <summary>
+    /// num可为负代表减少
+    /// </summary>
+    /// <param name="num"></param>
     /// <param name="cost">需要支付的金额</param>
     /// <returns></returns>
     public bool PayByMoney(int cost)

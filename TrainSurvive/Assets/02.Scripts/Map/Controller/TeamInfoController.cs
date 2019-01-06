@@ -11,7 +11,7 @@ using WorldMap.UI;
 
 using TTT.Utility;
 using TTT.UI;
-using TTT.Resource;
+using TTT.Controller;
 
 namespace WorldMap.Controller
 {
@@ -127,7 +127,7 @@ namespace WorldMap.Controller
         }
         protected override void AfterShowWindow()
         {
-            teamListView.Datas = world.GetAllPersons();
+            teamListView.Datas = WorldForMap.Instance.GetAllPersons();
             if (teamListView.Datas.Count > 0)
                 teamListView.ClickManually(0);
         }

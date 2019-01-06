@@ -7,7 +7,7 @@
 
 namespace WorldMap.UI
 {
-    public class HelloResourceItemBase : TeamPackItem
+    public class HelloResourceItemBase : AssetsItemView
     {
         protected override void InitModel()
         {

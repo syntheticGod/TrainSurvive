@@ -22,8 +22,8 @@ namespace WorldMap {
     public class MapGenerate : MonoBehaviour, IMapForTrainTemp {
 
         //大地图的宽高（x轴和z轴地块的个数）
-        private int mapWidth = 200;
-        private int mapHeight = 200;
+        private int mapWidth = 100;
+        private int mapHeight = 100;
 
         //三种特殊地形的图标
         //湖泊
@@ -47,12 +47,12 @@ namespace WorldMap {
 
         //地块大小
         [System.NonSerialized]
-        public int spawnOffsetX = 1;
+        public static int spawnOffsetX = 1;
         [System.NonSerialized]
-        public int spawnOffsetZ = 1;
+        public static int spawnOffsetZ = 1;
         //地图的起始点
         [System.NonSerialized]
-        public Vector3 orign = new Vector3();
+        public static Vector3 orign = new Vector3();
 
         //地图类
         public Map mapData;

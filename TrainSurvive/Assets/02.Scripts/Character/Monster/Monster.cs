@@ -11,6 +11,7 @@ using Assets._02.Scripts.zhxUIScripts;
 using UnityEngine;
 
 public class Monster {
+    public int id;
     /// <summary>
     /// 体力
     /// </summary>

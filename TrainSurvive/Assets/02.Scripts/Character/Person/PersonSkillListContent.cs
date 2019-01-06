@@ -7,31 +7,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using TTT.Resource;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class PersonSkillListContent : MonoBehaviour {
-
-
-	// Use this for initialization
-	void Start () {
+   
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
-	public void updatePanel(int personIndex)
+	public void updatePanel(Person p)
     {
-       
-        Person p = World.getInstance().persons[personIndex];
-        foreach(int skillId in p.GetSkillsGot())
+        clearCells();
+        foreach (int skillId in p.GetSkillsGot())
         {
             SkillInfo skill = StaticResource.GetSkillByID(skillId);
-            Debug.Log(skill.Name);
             Sprite skillSprite = skill.BigSprite;
             GameObject skillCell = Resources.Load("Prefabs/PersonList/skillcell") as GameObject;
             GameObject cellInstance = Instantiate(skillCell);
-            SpriteRenderer sp = cellInstance.GetComponent<SpriteRenderer>();
+            Image sp = cellInstance.GetComponent<Image>();
+            PersonSkillCell cell= cellInstance.GetComponent<PersonSkillCell>();
             sp.sprite = skillSprite;
+            cell.skillId = skill.ID;
             cellInstance.transform.parent = gameObject.transform;
         }
-        Debug.Log("技能数量:" + p.GetSkillsGot().Count);
+    }
+
+    public void clearCells()
+    {
+        int childCount = transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
     }
 }

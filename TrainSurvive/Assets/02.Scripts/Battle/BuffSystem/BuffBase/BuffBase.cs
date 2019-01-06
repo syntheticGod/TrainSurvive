@@ -18,13 +18,10 @@ namespace WorldBattle {
         public int floorNum;
         //最大的层数（如果可叠加，最大层数默认999，如果不可叠加，最大层数默认为1）
         public readonly int maxFloorNum;
-
         //当前buff效果绑定的actor
         protected BattleActor battleActor;
-
         //当前buff的持续时间
         public float curPassTime;
-
         //持续的时间
         public float maxDurationTime;
 

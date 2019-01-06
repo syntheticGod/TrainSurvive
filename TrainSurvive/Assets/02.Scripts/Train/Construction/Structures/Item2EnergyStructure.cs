@@ -122,7 +122,7 @@ public class Item2EnergyStructure : Structure {
             if (Gas == null) {
                 CallOnProgressChange(0, 0, value);
             } else {
-                CallOnProgressChange(0, Conversions[Gas.id].ProcessTime, value);
+                CallOnProgressChange(0, Conversions[Gas.ID].ProcessTime, value);
             }
         }
     }
@@ -193,23 +193,23 @@ public class Item2EnergyStructure : Structure {
     }
 
     private IEnumerator Run() {
-        WaitUntil wait = new WaitUntil(() => Gas != null && Gas.num >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax());
+        WaitUntil wait = new WaitUntil(() => Gas != null && Gas.Number >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax());
         while (FacilityState == State.WORKING) {
-            if (!(Gas != null && Gas.num >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax())) {
+            if (!(Gas != null && Gas.Number >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax())) {
                 Progress = 0;
                 yield return wait;
             }
-            if (Progress < Conversions[Gas.id].ProcessTime) {
+            if (Progress < Conversions[Gas.ID].ProcessTime) {
                 Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
             } else {
                 Progress = 0;
-                AutomataItem = Gas.id;
+                AutomataItem = Gas.ID;
                 if (AutomataCount > 0 && AutomataEnabled) {
                     AutomataCount--;
                     OnAutomataCountChange?.Invoke(AutomataCount);
                 }
-                World.getInstance().addEnergy(Conversions[Gas.id].ProduceEnergy * ConversionRate * ConversionRateRatio);
-                if (--Gas.num == 0) {
+                World.getInstance().addEnergy(Conversions[Gas.ID].ProduceEnergy * ConversionRate * ConversionRateRatio);
+                if (--Gas.Number == 0) {
                     Gas = null;
                 }
                 OnGasUpdate?.Invoke(_gas);

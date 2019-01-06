@@ -39,4 +39,9 @@ public class ItemRequirement : TaskRequirement
         finish_task_Handler();
         throw new NotImplementedException();
     }
+
+    public override void conditionChange(int numOrId)
+    {
+        throw new NotImplementedException();
+    }
 }

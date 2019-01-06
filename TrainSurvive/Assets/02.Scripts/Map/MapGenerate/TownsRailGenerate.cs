@@ -14,7 +14,7 @@ using System.Xml;
 using UnityEngine;
 
 namespace WorldMap {
-    public class TownsRailGenerate : MonoBehaviour {
+    public class TownsRailGenerate : GenerateBase {
         //private const float levelOfRail = -0.5F;
         //private const float levelOfTown = -0.5F;
         //城镇的图标
@@ -25,7 +25,7 @@ namespace WorldMap {
         public GameObject railTurnObject;
 
         //城镇的个数(最好是一个数的平方)
-        private int townsNum = 25;
+        private const int townsNum = 25;
 
         //城镇图标在一个地块的偏移量
         public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, -0.03f);
@@ -35,8 +35,6 @@ namespace WorldMap {
         //设置城镇最近的距离
         public int minDist = 10;
 
-        //获取总的地图属性
-        private MapGenerate mapGenerate;
         //将城镇图标放到同一GameObject下
         private GameObject townParentObject;
         //将铁轨图标放到同一GameObject下
@@ -46,10 +44,7 @@ namespace WorldMap {
         //地图类
         public Map mapData;
 
-        //开始生成
-        public void StartGenerate() {
-            //对各对象进行初始化
-            mapGenerate = GameObject.Find("MapBuild").GetComponent<MapGenerate>();
+        public override void otherInit() {
             townParentObject = new GameObject("towns");
             railParentObject = new GameObject("rails");
             townParentObject.transform.parent = mapGenerate.mapRootObject.transform;
@@ -58,20 +53,20 @@ namespace WorldMap {
             //获得地图类
             mapData = mapGenerate.mapData;
             towns = mapData.towns;
+        }
 
-            //如果是第一次载入就生成城镇
-            if (mapGenerate.isCreateMap) {
-                //生成城镇
-                BuildTowns();
-                //设置特殊城镇信息
-                SetSpecialTownInfo(mapData);
-                //生成铁轨
-                BuildRails(mapData);
-            }
+        public override void generate() {
+            //生成城镇
+            BuildTowns();
+            //设置特殊城镇信息
+            SetSpecialTownInfo(mapData);
+            //生成铁轨
+            BuildRails(mapData);
+        }
 
+        public override void paint() {
             //对城镇进行绘画
             PaintTowns();
-
             //对铁轨进行绘画
             PaintRails();
         }
@@ -139,7 +134,7 @@ namespace WorldMap {
                     Vector2Int mapPos = towns[i, j].position;
                     //对城镇图标进行绘画
                     GameObject o = Instantiate(townObject,
-                        mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * mapPos.x, mapGenerate.spawnOffsetZ * mapPos.y, 0),
+                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * mapPos.x, MapGenerate.spawnOffsetZ * mapPos.y, 0),
                         townObject.transform.rotation);
                     //将城镇图标放在同一gameObject下
                     o.transform.parent = townParentObject.transform;
@@ -441,7 +436,7 @@ namespace WorldMap {
 
             //对铁轨图标进行绘画
             GameObject o = Instantiate(railObject,
-                mapGenerate.orign + new Vector3(mapGenerate.spawnOffsetX * posx, mapGenerate.spawnOffsetZ * posz, 0),
+                MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * posx, MapGenerate.spawnOffsetZ * posz, 0),
                 railObject.transform.rotation);
             //将铁轨图标放在同一gameObject下
             o.transform.parent = railParentObject.transform;

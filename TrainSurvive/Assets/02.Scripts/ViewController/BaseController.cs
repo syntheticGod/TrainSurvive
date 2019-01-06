@@ -8,11 +8,10 @@ using UnityEngine;
 
 using TTT.Utility;
 
-namespace WorldMap.Controller
+namespace TTT.Controller
 {
     public abstract class BaseController : MonoBehaviour
     {
-        protected WorldForMap world;
         protected RectTransform rectTransform { get { return gameObject.GetComponent<RectTransform>(); } }
         public string PathOfTransform { get; set; }
         private Vector2 leftMouseDownPosition;
@@ -41,7 +40,6 @@ namespace WorldMap.Controller
         }
         protected virtual void Awake()
         {
-            world = WorldForMap.Instance;
             CreateModel();
         }
         protected virtual void Start()

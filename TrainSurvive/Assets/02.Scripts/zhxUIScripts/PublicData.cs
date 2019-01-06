@@ -23,10 +23,45 @@ namespace Assets._02.Scripts.zhxUIScripts
 {
     public static class PublicData
     {
-        public enum Rarity { Poor = 0, Common, Rare, Epic, Legendary };         //劣质、普通、优良、精巧、传奇
-        public enum ItemType { Weapon = 0, Material, SpecialItem }               //武器、材料、特殊物品
-        public enum WeaponType { Shield = 0, Sword, Spear, Dagger, Machinegun, SniperRifle, Twig, MagicBook};  //盾、剑、匕首、机枪、狙击步枪、魔杖、魔法书、长枪
-        
+        public enum Rarity { NONE = -1, Poor, Common, Rare, Epic, Legendary, NUM };         //劣质、普通、优良、精巧、传奇
+        public enum ItemType { NONE = -1, Weapon, Material, SpecialItem, NUM };               //武器、材料、特殊物品
+        public enum WeaponType
+        {
+            /// <summary>
+            /// 盾
+            /// </summary>
+            Shield = 0,
+            /// <summary>
+            /// 剑
+            /// </summary>
+            Sword,
+            /// <summary>
+            /// 长枪
+            /// </summary>
+            Spear,
+            /// <summary>
+            /// 匕首
+            /// </summary>
+            Dagger,
+            /// <summary>
+            /// 机枪
+            /// </summary>
+            Machinegun,
+            /// <summary>
+            /// 狙击步枪
+            /// </summary>
+            SniperRifle,
+            /// <summary>
+            /// 魔杖
+            /// </summary>
+            Twig,
+            /// <summary>
+            /// 魔法书
+            /// </summary>
+            MagicBook,
+            NUM
+        };
+
 
 
         public delegate void VoidCallback();
@@ -36,7 +71,7 @@ namespace Assets._02.Scripts.zhxUIScripts
 
         public static class Copy<TIn, TOut>
         {
-            
+
             private static readonly Func<TIn, TOut> cache = GetFunc();
             private static Func<TIn, TOut> GetFunc()
             {
@@ -67,7 +102,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         }                                  //复制对象
 
     }
-    
-    
-    
+
+
+
 }

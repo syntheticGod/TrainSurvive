@@ -1,5 +1,5 @@
 /*
- * 描述：静态资源
+ * 描述：静态资源，这些资源是常存于内存中的静态不能被改变的数据。
  * 作者：项叶盛
  * 创建时间：2018/11/12 21:46:39
  * 版本：v0.1
@@ -7,9 +7,11 @@
 using UnityEngine;
 using System.Xml;
 
-using TTT.Utility;
 using System.Collections.Generic;
 using System;
+using TTT.Item;
+using TTT.Utility;
+using System.Collections;
 
 namespace TTT.Resource
 {
@@ -473,31 +475,14 @@ namespace TTT.Resource
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
             XmlNode root = document.SelectSingleNode("SkillInfo");
-            XmlNodeList skillsNode = root.SelectNodes("Skill");
-            skills = new SkillInfo[skillsNode.Count];
-            for (int i = 0; i < skillsNode.Count; i++)
+            XmlNodeList skillNodes = root.SelectNodes("Skill");
+            skills = new SkillInfo[skillNodes.Count];
+            foreach(XmlNode skillNode in skillNodes)
             {
                 try
                 {
-                    int id = int.Parse(skillsNode[i].Attributes["id"].Value);
-                    string name = skillsNode[i].Attributes["name"].Value;
-                    string type = skillsNode[i].Attributes["type"].Value;
-                    string ap = skillsNode[i].Attributes["AP"].Value;
-                    string description = skillsNode[i].Attributes["description"].Value;
-                    XmlNodeList attributeRequires = skillsNode[i].SelectNodes("Precondition/Attributes/Attribute");
-                    SkillInfo.AbiReq[] abiReqs = null;
-                    //无条件获得
-                    if (attributeRequires.Count != 0)
-                    {
-                        abiReqs = new SkillInfo.AbiReq[attributeRequires.Count];
-                        for (int y = 0; y < attributeRequires.Count; y++)
-                        {
-                            abiReqs[y] = new SkillInfo.AbiReq();
-                            abiReqs[y].Abi = EAttribute.NONE + 1 + int.Parse(attributeRequires[y].Attributes["Abi"].Value);
-                            abiReqs[y].Number = int.Parse(attributeRequires[y].Attributes["Number"].Value);
-                        }
-                    }
-                    skills[id] = new SkillInfo(id, name, type, ap, description, abiReqs);
+                    SkillInfo skillInfo = new SkillInfo(skillNode);
+                    skills[skillInfo.ID] = skillInfo;
                 }
                 catch (FormatException e)
                 {
@@ -529,27 +514,67 @@ namespace TTT.Resource
             return availableSkills.ToArray();
         }
         /// <summary>
-        /// 获得符合五个属性的技能
+        /// 获得符合五个属性的，能够从学校习得的技能
         /// </summary>
-        /// <param name="attributes"></param>
+        /// <param name="attributes">五个属性</param>
         /// <returns>
         /// NOT NULL：技能数组
         /// NULL：无符合的
         /// </returns>
-        public static SkillInfo[] GetAvailableSkills(int[] attributes)
+        public static SkillInfo[] GetAvailableSkills(int[] attributes, ESkillComeFrom comeFrom)
         {
             List<SkillInfo> availableSkills = new List<SkillInfo>();
             SkillInfo[] skillInfos = Skills;
             for (int i = 0; i < skillInfos.Length; i++)
             {
-                if (skillInfos[i].IfAvailable(attributes))
+                if (skillInfos[i].ComeFrom == comeFrom && skillInfos[i].IfAvailable(attributes))
                     availableSkills.Add(skillInfos[i]);
             }
             return availableSkills.ToArray();
         }
-        //----------技能----------↑----------计算公式----------↓
-
-        //----------计算公式----------↑
+        //----------技能----------↑----------物品----------↓
+        private static Hashtable itemTable;
+        private static Hashtable ItemTable { get { if (itemTable == null) LoadItemInfoFromXml(); return itemTable; } }
+        private static void LoadItemInfoFromXml()
+        {
+            string xmlString = Resources.Load("xml/items").ToString();
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+            XmlNodeList itemNodes = document.SelectSingleNode("items").ChildNodes;
+            itemTable = new Hashtable();
+            foreach (XmlNode itemNode in itemNodes)
+            {
+                ItemInfo item = null;
+                if (itemNode.Name.Equals("weapon"))
+                    item = new WeaponInfo(itemNode);
+                else if (itemNode.Name.Equals("material"))
+                    item = new MaterialInfo(itemNode);
+                else if (itemNode.Name.Equals("special"))
+                    item = new SpecialInfo(itemNode);
+                else
+                {
+                    Debug.LogWarning("不支持的物品类型" + itemNode.Name);
+                    continue;
+                }
+                itemTable.Add(item.ID, item);
+            }
+        }
+        /// <summary>
+        /// 根据物品ID获取物品
+        /// </summary>
+        /// <typeparam name="T">ItemInfo的基类（WeaponInfo、MaterialInfo、SpecialInfo等）</typeparam>
+        /// <param name="id">物品ID</param>
+        /// <returns>
+        /// NOT NULL：如果该类型的物品存在这个ID物品
+        /// NULL：该类型的物品不存在这个ID的物品
+        /// </returns>
+        public static T GetItemInfoByID<T>(int id)
+            where T : ItemInfo
+        {
+            if (!ItemTable.ContainsKey(id)) return null;
+            return ItemTable[id] as T;
+        }
+        //----------物品----------↑
     }
     public enum ESprite
     {
@@ -628,7 +653,7 @@ namespace TTT.Resource
         PROFESSION333_BIG,
 
         PROFESSION444_BIG,
-        
+
         /// <summary>
         /// 专精小图标
         /// </summary>
@@ -682,6 +707,9 @@ namespace TTT.Resource
         STRATEGY_ICON,//战略点图标
         NUM
     }
+    /// <summary>
+    /// 人物基础属性
+    /// </summary>
     public enum EAttribute
     {
         NONE = -1,

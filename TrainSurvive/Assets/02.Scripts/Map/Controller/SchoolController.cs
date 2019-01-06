@@ -9,10 +9,10 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
-using WorldMap.UI;
+using TTT.Controller;
 using TTT.Resource;
-using System.Text;
-using TTT.UI;
+
+using WorldMap.UI;
 
 namespace WorldMap.Controller
 {
@@ -58,7 +58,7 @@ namespace WorldMap.Controller
                     heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
                     {
                         HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
-                        dialog.SetDatas(world.GetAllPersons());
+                        dialog.SetDatas(WorldForMap.Instance.GetAllPersons());
                         dialog.DialogCallBack = this;
                         dialog.ShowDialog();
                     });
@@ -121,7 +121,7 @@ namespace WorldMap.Controller
         {
             professionListView.SetData(new List<Profession>());
             List<Person> heros;
-            heros = world.GetAllPersons();
+            heros = WorldForMap.Instance.GetAllPersons();
             if (heros.Count > 0)
             {
                 ShowHero(heros[0]);

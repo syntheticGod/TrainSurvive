@@ -5,9 +5,16 @@
  * 版本：v0.1
  */
 
+using System.Xml;
 using TTT.Resource;
 using UnityEngine;
-
+public enum ESkillComeFrom
+{
+    NONE = -1,
+    NULL,//未携带技能的模板
+    SCHOOL,//学校习得
+    MONSTER//怪物的技能
+}
 public class SkillInfo
 {
     public struct AbiReq
@@ -15,9 +22,18 @@ public class SkillInfo
         public EAttribute Abi;
         public int Number;
     }
+    /// <summary>
+    /// 技能ID
+    /// </summary>
     public int ID { get; private set; }
+    /// <summary>
+    /// 技能名字
+    /// </summary>
     public string Name { get; private set; }
-    public string Type { get; private set; }
+    /// <summary>
+    /// 技能详细类型
+    /// </summary>
+    public string TypeInfo { get; private set; }
     /// <summary>
     /// 技能所需要的AP描述
     /// 示例：
@@ -25,6 +41,13 @@ public class SkillInfo
     /// 2、20/秒
     /// </summary>
     public string AP { get; private set; }
+    /// <summary>
+    /// 技能的来源
+    /// </summary>
+    public ESkillComeFrom ComeFrom { get; private set; }
+    /// <summary>
+    /// 技能描述
+    /// </summary>
     public string Description { get; private set; }
     /// <summary>
     /// 获得该技能所需的前置属性
@@ -38,14 +61,42 @@ public class SkillInfo
     /// 60 x 60 像素
     /// </summary>
     public Sprite SmallSprite { get; private set; }
-    public SkillInfo(int id, string name, string type, string ap, string description, AbiReq[] abiReqs)
+    public SkillInfo(XmlNode skillsNode)
     {
-        ID = id;
-        Name = name;
-        Type = type;
-        AP = ap;
-        Description = description;
-        AbiReqs = abiReqs;
+        ID = int.Parse(skillsNode.Attributes["id"].Value);
+        Name = skillsNode.Attributes["name"].Value;
+        TypeInfo = skillsNode.Attributes["type"].Value;
+        AP = skillsNode.Attributes["AP"].Value;
+        Description = skillsNode.Attributes["description"].Value;
+        string comeFrom = skillsNode.Attributes["ComeFrom"].Value.ToLower();
+        switch (comeFrom)
+        {
+            case "null":
+                ComeFrom = ESkillComeFrom.NULL;
+                break;
+            case "school":
+                ComeFrom = ESkillComeFrom.SCHOOL;
+                break;
+            case "monster":
+                ComeFrom = ESkillComeFrom.MONSTER;
+                break;
+            default:
+                ComeFrom = ESkillComeFrom.NONE;
+                break;
+        }
+        XmlNodeList attributeRequires = skillsNode.SelectNodes("Precondition/Attributes/Attribute");
+        AbiReqs = null;
+        //无条件获得
+        if (attributeRequires.Count != 0)
+        {
+            AbiReqs = new AbiReq[attributeRequires.Count];
+            for (int y = 0; y < attributeRequires.Count; y++)
+            {
+                AbiReqs[y] = new SkillInfo.AbiReq();
+                AbiReqs[y].Abi = EAttribute.NONE + 1 + int.Parse(attributeRequires[y].Attributes["Abi"].Value);
+                AbiReqs[y].Number = int.Parse(attributeRequires[y].Attributes["Number"].Value);
+            }
+        }
         BigSprite = StaticResource.GetSprite(ESprite.DEVELOPING_BIG);
         SmallSprite = StaticResource.GetSprite(ESprite.DEVELOPING_SMALL);
     }

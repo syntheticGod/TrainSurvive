@@ -32,6 +32,7 @@ public class MonsterInitializer
             XmlNode weaponNode = aimNode.SelectSingleNode("./weapon");
 
             Monster monster = new Monster();
+            monster.id = monsterId;
             monster.name = aimNode.Attributes["name"].Value;
             monster.vitality = int.Parse(propertyNode.Attributes["vitality"].Value);
             monster.strength = int.Parse(propertyNode.Attributes["strength"].Value);
@@ -72,22 +73,8 @@ public class MonsterInitializer
             }
 
             battleActor.playerPrefab = character;
-
-            battleActor.maxHealthPoint = (float)monster.getHpMax();
-            battleActor.maxActionPoint = (float)monster.getApMax();
-            battleActor.hpRecovery = (float)monster.getHpRec();
-            battleActor.apRecovery = (float)monster.getApRec();
-            battleActor.atkNeedTime = (float)monster.getValAts();
-            battleActor.moveSpeed = (float)monster.getValSpd();
-            battleActor.atkDamage = (float)monster.getValAtk();
-            battleActor.atkRange = (float)monster.getRange();
-            battleActor.damageRate = (float)monster.getValHit();
-            battleActor.critDamage = (float)monster.getValCrd();
-            battleActor.critRate = (float)monster.getValCrc();
-            battleActor.hitRate = (float)monster.getValHrate();
-            battleActor.dodgeRate = (float)monster.getValErate();
-
-            
+            setProperty(ref battleActor,ref monster);
+            addTaskListener(ref battleActor, ref monster);
         }
         /// <summary>
         /// 随机生成一个小怪(monster)
@@ -107,6 +94,7 @@ public class MonsterInitializer
             XmlNode weaponNode = aimNode.SelectSingleNode("./weapon");
 
             Monster monster = new Monster();
+            monster.id = targerID;
             monster.name= aimNode.Attributes["name"].Value;
             monster.vitality = int.Parse(propertyNode.Attributes["vitality"].Value);
             monster.strength = int.Parse(propertyNode.Attributes["strength"].Value);
@@ -146,21 +134,8 @@ public class MonsterInitializer
             }
 
             battleActor.playerPrefab = character;
-
-            battleActor.maxHealthPoint = (float)monster.getHpMax();
-            battleActor.maxActionPoint = (float)monster.getApMax();
-            battleActor.hpRecovery = (float)monster.getHpRec();
-            battleActor.apRecovery = (float)monster.getApRec();
-            battleActor.atkNeedTime = (float)monster.getValAts();
-            battleActor.moveSpeed = (float)monster.getValSpd();
-            battleActor.atkDamage = (float)monster.getValAtk();
-            battleActor.atkRange = (float)monster.getRange();
-            battleActor.damageRate = (float)monster.getValHit();
-            battleActor.critDamage = (float)monster.getValCrd();
-            battleActor.critRate = (float)monster.getValCrc();
-            battleActor.hitRate = (float)monster.getValHrate();
-            battleActor.dodgeRate = (float)monster.getValErate();
-
+            setProperty(ref battleActor, ref monster);
+            addTaskListener(ref battleActor, ref monster);
         }
        
         public BattleActor getBattleActor()
@@ -187,6 +162,39 @@ public class MonsterInitializer
             else
                 result = "不存在的怪物";
             return result;
+        }
+
+        private void setProperty(ref BattleActor actor,ref Monster monster)
+        {
+            actor.task_monsterId = monster.id;
+            actor.maxHealthPoint = (float)monster.getHpMax();
+            actor.maxActionPoint = (float)monster.getApMax();
+            actor.hpRecovery = (float)monster.getHpRec();
+            actor.apRecovery = (float)monster.getApRec();
+            actor.atkNeedTime = (float)monster.getValAts();
+            actor.moveSpeed = (float)monster.getValSpd();
+            actor.atkDamage = (float)monster.getValAtk();
+            actor.atkRange = (float)monster.getRange();
+            actor.damageRate = (float)monster.getValHit();
+            actor.critDamage = (float)monster.getValCrd();
+            actor.critRate = (float)monster.getValCrc();
+            actor.hitRate = (float)monster.getValHrate();
+            actor.dodgeRate = (float)monster.getValErate();
+        }
+
+        private void addTaskListener(ref BattleActor actor, ref Monster monster)
+        {
+            actor.task_monsterId = monster.id;
+            foreach(Task t in TaskController.getInstance().Task_doing.Values)
+            {
+                foreach(TaskRequirement req in t.reqList)
+                {
+                    if(req.GetType()== typeof(KillRequirement))
+                    {
+                        actor.task_kill_handler += req.conditionChange;
+                    }
+                }
+            }
         }
     }
 }

@@ -23,10 +23,8 @@ namespace WorldBattle {
             this.battleActor = actor;
             this.animator = animator;
         }
-
         //开始这个状态前的初始化
         public abstract void initState();
-
         //执行当前的状态
         public abstract void executeState();
     }

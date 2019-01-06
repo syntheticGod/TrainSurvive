@@ -21,7 +21,7 @@ namespace WorldMap.Model
         [NonSerialized]
         const int MaxGoodMaterialCnt = 3;
         [NonSerialized]
-        const int MaxGoodWeaponCnt = 2;
+        const int MaxGoodWeaponCnt = 0;
         [NonSerialized]
         const int MaxGoodSpecailCnt = 1;
         private Town()
@@ -30,22 +30,22 @@ namespace WorldMap.Model
         {
             Town ret = new Town();
             ret.NPCs = new List<NPC>(MaxNPCCnt);
-            ret.Goods = new List<Good>(MaxGoodWeaponCnt + MaxGoodMaterialCnt);
+            ret.Goods = new List<ItemData>(MaxGoodWeaponCnt + MaxGoodMaterialCnt);
             for (int i = 0; i < MaxNPCCnt; ++i)
             {
                 ret.NPCs.Add(NPC.Random());
             }
             for (int i = 0; i < MaxGoodWeaponCnt; ++i)
             {
-                ret.Goods.Add(Good.RandomWeapon());
+                ret.Goods.Add(ItemData.RandomWeapon());
             }
             for (int i = 0; i < MaxGoodMaterialCnt; ++i)
             {
-                ret.Goods.Add(Good.RandomMaterial());
+                ret.Goods.Add(ItemData.RandomMaterial());
             }
             for (int i = 0; i < MaxGoodSpecailCnt; ++i)
             {
-                ret.Goods.Add(Good.RandomSpecail());
+                ret.Goods.Add(ItemData.RandomSpecail());
             }
             ret.Name = StaticResource.RandomTownName();
             return ret;
@@ -64,7 +64,7 @@ namespace WorldMap.Model
         //学校等级
         public int LevelSchool { get; private set; }
         //商品数组
-        public List<Good> Goods { get; private set; }
+        public List<ItemData> Goods { get; private set; }
         //酒馆角色
         public List<NPC> NPCs { get; private set; }
         //商品数量
@@ -107,19 +107,20 @@ namespace WorldMap.Model
         /// TRUE：购买成功
         /// FALSE：商品不存在，或数量不足
         /// </returns>
-        public bool BuyGoods(Good goods, int number)
+        public bool BuyGoods(ItemData goods, int number)
         {
             int index = Goods.IndexOf(goods);
             if (index == -1)
             {
-                Debug.Log("商店：商品不存在：" + goods.item.name);
+                Debug.Log("商店：商品不存在：" + goods.Name);
                 return false;
             }
-            if (!goods.DecreaseNumber(number))
+            if(goods.Number < number)
             {
                 Debug.Log("商店：商品数量不足，我有：" + goods.Number + " 需求：" + number);
                 return false;
             }
+            goods.Number = -number;
             if (goods.Number == 0)
                 Goods.Remove(goods);
             return true;
@@ -128,7 +129,7 @@ namespace WorldMap.Model
         /// 向商店售卖
         /// </summary>
         /// <param name="goods"></param>
-        public void SellGoods(Good goods)
+        public void SellGoods(ItemData goods)
         {
             Goods.Add(goods);
         }

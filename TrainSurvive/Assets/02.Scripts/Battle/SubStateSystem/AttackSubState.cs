@@ -60,7 +60,10 @@ namespace WorldBattle {
             if (battleActor.enemyActors[atkTarget].isHit(battleActor.myId, battleActor.hitRate) == true) {
                 //如果此次攻击命中
                 //对敌人进行攻击操作
-                battleActor.enemyActors[atkTarget].getDamage(battleActor.myId, battleActor.atkDamage);
+                float damage = battleActor.enemyActors[atkTarget].getDamage(battleActor.myId, battleActor.atkDamage);
+
+                //增加攻击上浮数值
+                HelpGenerateInfo.generateInfo(battleActor.enemyActors[atkTarget], "" + (int)damage);
 
                 //每次攻击后增加行动值，保证不大于最大值
                 battleActor.addActionPoint(battleActor.myId, battleActor.apRecovery);
@@ -71,6 +74,11 @@ namespace WorldBattle {
                         "Attack",
                         battleActor.enemyActors[atkTarget])
                 );
+
+                //给每个人增加普攻击退
+                battleActor.enemyActors[atkTarget].changeRealPos(
+                    battleActor.enemyActors[atkTarget].pos + battleActor.getMotionDir() * 0.5f
+                    );
 
                 //给攻击目标执行被动技能
                 battleActor.releasePassiveBuff(battleActor.enemyActors[atkTarget]);

@@ -19,14 +19,17 @@ public class AutoClose : MonoBehaviour {
     private Rect[] IgnoreRects { get; set; }
 
     private void Awake() {
+    }
+    private void Start()
+    {
         IgnoreRects = new Rect[IgnoreObjects.Length];
-        for (int i = 0; i < IgnoreRects.Length; i++) {
+        for (int i = 0; i < IgnoreRects.Length; i++)
+        {
             Vector3[] corners = new Vector3[4];
             IgnoreObjects[i].GetWorldCorners(corners);
             IgnoreRects[i] = new Rect(corners[0].x, corners[0].y, corners[2].x - corners[0].x, corners[2].y - corners[0].y);
         }
     }
-
     void Update() {
         if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(0)) {
             bool flag = true;

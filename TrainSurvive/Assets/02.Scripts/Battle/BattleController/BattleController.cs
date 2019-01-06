@@ -7,6 +7,7 @@
 using Assets._02.Scripts.zhxUIScripts;
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Item;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -193,14 +194,12 @@ namespace WorldBattle {
             //获取掉落的战利品
             for (int i = 0; i < 12; i++) {
                 //获取一个随机的材料
-                Item item = Good.RandomMaterial().item;
+                ItemData assets = ItemData.RandomMaterial();
 
-                DropSpoils.setItem(dropSpoilsPanel.transform, item, i);
-
-                if (isTest == false) {
-                    //给队伍背包加随机材料(当前不处于测试状态)
-                    Team.Instance.Inventory.PushItem(Good.RandomMaterial().item);
-                }
+                DropSpoils.setItem(dropSpoilsPanel.transform, assets, i);
+                
+                 //给队伍背包加随机材料
+                 World.getInstance().storage.AddItem(assets);
             }
 
             //绑定button事件为跳转到map

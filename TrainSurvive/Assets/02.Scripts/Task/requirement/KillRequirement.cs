@@ -12,12 +12,22 @@ using WorldBattle;
 [System.Serializable]
 public class KillRequirement : TaskRequirement
 {
-    public int monsterId;
-    /// <summary>
-    /// 只读
-    /// </summary>
-    public int needKillNums;
-    public int hasKillNums;
+    public int monsterId
+    {
+        get; private set;
+    }
+    public string monsterName
+    {
+        get; private set;
+    }
+    public int needKillNums
+    {
+        get;private set;
+    }
+    public int hasKillNums
+    {
+        get; private set;
+    }
     private KillRequirement(){ }
     public KillRequirement(int monsterid, int nums)
     {
@@ -25,7 +35,7 @@ public class KillRequirement : TaskRequirement
         needKillNums = nums;
         hasKillNums = 0;
         MonsterInitializer ini = new MonsterInitializer();
-        String monsterName = ini.getMonsterName(monsterid);
+        monsterName = ini.getMonsterName(monsterid);
         condition = "击杀：" + monsterName + "  "+ hasKillNums+"/" + needKillNums;
         _description = "你还需要击杀" + monsterName + (needKillNums- hasKillNums)+"个！";//以后也可以只在npc那展示金钱数字，其他话在npc数据里补充
         finish = false;
@@ -34,9 +44,27 @@ public class KillRequirement : TaskRequirement
 
     public override void achieveGoal(int nums)
     {
-        //待补充，需要在battle里加delegate
+        _description = monsterName+"击杀完毕";
         finish = true;
         finish_task_Handler();
+        throw new NotImplementedException();
+    }
+
+    private void killMonster(int targetId)
+    {
+        if(targetId== monsterId)
+        {
+            hasKillNums++;
+            condition = "已击杀：" + monsterName + "  " + hasKillNums + "/" + needKillNums;
+            _description = "你还需要击杀" + monsterName + (needKillNums - hasKillNums) + "个！";//以后也可以只在npc那展示金钱数字，其他话在npc数据里补充
+            if (hasKillNums >= needKillNums)
+                achieveGoal(hasKillNums);
+        }
+    }
+
+    public override void conditionChange(int numOrId)
+    {
+        killMonster(numOrId);
         throw new NotImplementedException();
     }
 }
