@@ -13,8 +13,14 @@ namespace WorldBattle
 {
     public class BeatNearAI : BattleActor
 {
+
+    public BeatNearAI()
+        {
+
+        }
     protected override void AIStrategy()
     {
+
             //如果当前处于攻击状态，等这次攻击完
             if (subStateController.curActionState == ActionStateEnum.ATTACK)
             {

@@ -14,6 +14,11 @@ namespace WorldBattle
 {
     public class NoneAI : BattleActor
     {
+        public NoneAI()
+        {
+            
+        }
+
         protected override void AIStrategy()
         {
         }

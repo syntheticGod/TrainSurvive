@@ -52,6 +52,11 @@ namespace WorldBattle {
         //当前角色的技能系数加成
         public float skillPara { get; set; }
 
+
+        public BattleActor()
+        {
+            skillList = new List<Skill>();
+        }
         //移动速度（每1s移动的距离）
         public float moveSpeed {
             get {
@@ -425,8 +430,8 @@ namespace WorldBattle {
 
             //如果当前生命值变成0，无论是技能，攻击，Buff，挂掉
             if (curHealthPoint <= 0.0f) {
-                if (!isPlayer)
-                    task_kill_handler(task_monsterId);
+                if (!isPlayer)             
+                    task_kill_handler?.Invoke(task_monsterId);                
                 changeSubState(ActionStateEnum.DEAD);
             }
         }
