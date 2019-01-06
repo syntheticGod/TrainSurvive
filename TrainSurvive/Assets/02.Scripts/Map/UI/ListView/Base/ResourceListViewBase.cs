@@ -29,11 +29,11 @@ namespace WorldMap.UI
             ViewTool.SetParent(hoverPanel, this);
             hoverPanel.pivot = new Vector2(0, 1);
             ViewTool.Anchor(hoverPanel, new Vector2(0, 1), new Vector2(0, 1));
-            hoverPanel.gameObject.SetActive(false);
             //Hover Panel Content
             panelContent = new GameObject("ResourcePanel", typeof(Image), typeof(VerticalLayoutGroup)).GetComponent<RectTransform>();
             ViewTool.SetParent(panelContent, hoverPanel);
             panelContent.pivot = new Vector2(0F, 1F);
+
             VerticalLayoutGroup verticalLayoutGroup = panelContent.GetComponent<VerticalLayoutGroup>();
             verticalLayoutGroup.spacing = 10;
             ContentSizeFitter contentSizeFitter = panelContent.gameObject.AddComponent<ContentSizeFitter>();
@@ -49,6 +49,8 @@ namespace WorldMap.UI
             ViewTool.SetParent(detailText, panelContent);
             detailText.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
             detailText.alignment = TextAnchor.UpperLeft;
+
+            hoverPanel.gameObject.SetActive(false);
         }
         protected sealed override void OnItemView(ListViewItem item, ItemData data, int itemIndex)
         {
@@ -65,8 +67,7 @@ namespace WorldMap.UI
         {
             yield return new WaitForSeconds(0.5f);
             //防止出现闪烁现象
-            hoverPanel.position = Input.mousePosition + new Vector3(0.1F, -0.1F, 0F);
-            hoverPanel.DetachChildren();
+            hoverPanel.position = Input.mousePosition + new Vector3(25F, -30F, 0F);
             infoText.text = data.Name;
             detailText.text = data.Description;
             hoverPanel.gameObject.SetActive(true);
