@@ -117,6 +117,7 @@ namespace WorldBattle {
         public task_killMonster task_kill_handler;
         //任务用怪物id
         public int task_monsterId;
+
         //本次战斗中本角色的id
         public int myId { get; set; }
         //本次战斗中是否是玩家角色
@@ -157,7 +158,7 @@ namespace WorldBattle {
 
         //当前角色的朝向，是否处于前进状态
         private int isForward = 1;
-        //角色的走向（玩家正为往前走，敌人负为往前走）
+        //角色的走向（玩家正为往前走，敌人负为往后走）
         protected int forwardDir;
 
         //记录本次移动的方向（给下次pos增加值或减小值）
@@ -294,16 +295,12 @@ namespace WorldBattle {
             if (isActorStop) {
                 return;
             }
-
             //增加攻击等待时间（一直处于计时状态）
             curAtkPassTime += Time.deltaTime;
-
             //每个角色不同的AI
             AIStrategy();
-
             //判断需不需要转向，需要的话开始转向
             checkAndChangeDir();
-
             //开始执行角色行动的策略
             subStateController.executeCurState();
         }

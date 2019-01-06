@@ -27,17 +27,13 @@ namespace WorldMap {
             return map;
         }
 
-
         //大地图的宽高（rowNum为x轴地块的个数，colNum为z轴地块的个数）
         public int rowNum { get; private set; }
         public int colNum { get; private set; }
-
         //视野距离（默认为1，周围8个格子）
         public int viewDist = 1;
-
         //地图中的每个块
         public SpawnPoint[,] spowns;
-
         //地图上的城镇类
         public Town[,] towns;
 
@@ -245,13 +241,69 @@ namespace WorldMap {
             //设置当前资源已被采集
             spowns[pos.x, pos.y].SetIsGathered(true);
 
-            //将其移动到玩家能看到的地方
-            //获取对应的gameObject
-            GameObject curObject = spowns[pos.x, pos.y].getGameObject(SpawnObjectEnum.IS_GATHERED);
-            //将其位置移到上面
-            Vector3 curPos = curObject.transform.position;
-            curPos.z = MonsterGenerate.isGatheredPicOffset.z;
-            curObject.transform.position = curPos;
+            //生成对应的gameObject
+            ObjectGenerate.paintIsGather(pos);
+        }
+
+        /// <summary>
+        /// 生成特殊战斗
+        /// 根据当前位置，在地块中随机选取一个位置生成特殊战斗
+        /// </summary>
+        /// <param name="pos">当前位置</param>
+        /// <param name="specialId">特殊战斗id</param>
+        /// <returns>
+        /// TRUE：生成了一个特殊地区
+        /// FALSE：无法生成特殊区域，该地块没有任何的空位
+        /// </returns>
+        public bool generateSpecialArea(Vector2Int pos, int specialId) {
+            //获取城镇的行数和列数
+            int townRowNum = towns.GetLength(0);
+            int townColNum = towns.GetLength(1);
+
+            //获取大块横向和竖向的大小
+            int townRowSize = rowNum / townRowNum;
+            int townColSize = colNum / townColNum;
+
+            //获取该点在大块的坐标
+            Vector2Int blockIndex = new Vector2Int(pos.x / townRowSize, pos.y / townColSize);
+
+            //获取当前大块范围内可被作为特殊战斗的坐标
+            List<Vector2Int> candidatePos = new List<Vector2Int>();
+
+            //获取当前大块的范围
+            int starti = blockIndex.x * townRowSize;
+            int endi = (blockIndex.x + 1) * townRowSize;
+            int startj = blockIndex.y * townRowSize;
+            int endj = (blockIndex.y + 1) * townRowSize;
+            //遍历大块的每个元素
+            for (int i = starti; i < endi; i++) {
+                for (int j = startj; j < endj; j++) {
+                    //如果不为空，跳过
+                    if (map.spowns[i, j].specialTerrainType != SpecialTerrainEnum.NONE) {
+                        continue;
+                    }
+
+                    //将候选地块放入队列中
+                    candidatePos.Add(new Vector2Int(i, j));
+                }
+            }
+
+            //如果没有空余位置生成特殊地块（基本不可能）
+            if (candidatePos.Count == 0) {
+                return false;
+            }
+
+            //选取其中一个点作为特殊地区
+            int randIndex = Random.Range(0, candidatePos.Count);
+
+            //设置特殊区域和区域id
+            map.spowns[candidatePos[randIndex].x, candidatePos[randIndex].y].SetSpecialTerrain(SpecialTerrainEnum.SPECIAL_AREA);
+            map.spowns[candidatePos[randIndex].x, candidatePos[randIndex].y].SetMonsterId(specialId);
+
+            //生成对应的gameObject
+            ObjectGenerate.paintSpecialArea(pos);
+
+            return true;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace WorldBattle {
         //当前出战人数
         public int personNum = 5;
         //当前出战敌人人数
-        public int enemyNum = 10;
+        public int enemyNum = 1;
 
         //设置人物所占大小
         public float personWidth = 0.5f;
