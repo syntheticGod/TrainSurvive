@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5daadb8df7cf8479aa701891ae3d7e, type: 3}
   m_Name: 22
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 22
   Dependencies: 040000000f000000
   Name: "\u6279\u91CF\u751F\u4EA7"
   Description: 
