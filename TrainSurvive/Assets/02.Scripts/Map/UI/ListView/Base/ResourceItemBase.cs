@@ -12,27 +12,11 @@ using TTT.Utility;
 using TTT.UI;
 
 using TTT.Item;
+using TTT.Resource;
 
 namespace WorldMap.UI
 {
-    public class HoverImage : Image, IPointerEnterHandler, IPointerExitHandler
-    {
-        public delegate void OnHoverCallBack();
-        public OnHoverCallBack onItemEnter { set; get; }
-        public OnHoverCallBack onItemExit { set; get; }
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            onItemEnter.Invoke();
-            Debug.Log("PointerEnter");
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            onItemExit.Invoke();
-            Debug.Log("PointerExit");
-        }
-    }
-    public class ResourceItemBase : BaseItem
+    public class ResourceItemBase : BaseItem, IPointerEnterHandler, IPointerExitHandler
     {
         public delegate void OnHoverCallBack(ResourceItemBase item);
         public OnHoverCallBack onItemEnter { set; get; }
@@ -41,7 +25,7 @@ namespace WorldMap.UI
         protected static string spriteFloder = "ItemSprite/";
         protected Image backgroudImage;
         protected Image markImage;
-        protected HoverImage targetImage;
+        protected Image targetImage;
         private string targetImageFN;
         private string markImageFN;
         private string backgroudImageFN;
@@ -57,16 +41,14 @@ namespace WorldMap.UI
         {
             backgroudImage = ViewTool.CreateImage("Backgroud");
             markImage = ViewTool.CreateImage("Mark");
-            markImage.sprite = Resources.Load<Sprite>(spriteFloder + "RarityMark");
-            targetImage = new GameObject("TargetImage").AddComponent<HoverImage>();
+            markImage.sprite = StaticResource.GetSprite("ItemSprite/RarityMark");
+            targetImage = ViewTool.CreateImage("TargetImage");
         }
         protected override void InitModel()
         {
             ViewTool.SetParent(backgroudImage, this);
             ViewTool.SetParent(targetImage, this);
             ViewTool.SetParent(markImage, this);
-            targetImage.onItemEnter = delegate () { onItemEnter?.Invoke(this); };
-            targetImage.onItemExit = delegate () { onItemExit?.Invoke(this); };
         }
         protected override void PlaceModel()
         {
@@ -103,6 +85,17 @@ namespace WorldMap.UI
         {
             targetImage.sprite = item.BigSprite;
             markImage.color = markColors[(int)item.Rarity];
+        }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            onItemEnter?.Invoke(this);
+            Debug.Log("ItemBase PointerEnter");
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            onItemExit?.Invoke(this);
+            Debug.Log("ItemBase PointerExit");
         }
     }
 }
