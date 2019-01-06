@@ -142,7 +142,7 @@ namespace TTT.UI
         /// <summary>
         /// 存放数据引用，内部不会重新拷贝一份
         /// </summary>
-        private List<D> m_datas;
+        protected List<D> m_datas;
         public List<D> Datas
         {
             set
@@ -207,7 +207,7 @@ namespace TTT.UI
                 return m_startAxis;
             }
         }
-        private int m_gridConstraintCount = 1;
+        protected int m_gridConstraintCount = 1;
         /// <summary>
         /// 固定列或者固定行的数量
         /// </summary>

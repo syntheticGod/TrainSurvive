@@ -4,13 +4,17 @@ using UnityEngine;
 using WorldMap;
 using WorldMap.Model;
 using Assets._02.Scripts.zhxUIScripts;
+using TTT.UI;
+using TTT.Resource;
+using TTT.Item;
 
-public class Gather {
+public class Gather
+{
     private static int berryId = 201;
     private static int wheatId = 211;
     private static int breadId = 212;
     private static int rawMeatId = 213;
-    private static int meatId =214;
+    private static int meatId = 214;
     private static int coalId = 221;
     private static int charcoalId = 222;//木炭
     private static int woodId = 223;
@@ -20,7 +24,7 @@ public class Gather {
     private static int ironIngotId = 234;
     private static int rockId = 235;
     private Dictionary<int, int> possibilityMap = new Dictionary<int, int>();
-    private int totalWeight=0;
+    private int totalWeight = 0;
     /// <summary>
     /// 
     /// </summary>
@@ -36,7 +40,7 @@ public class Gather {
                 pushPossibility(wheatId, 60);
                 pushPossibility(rawMeatId, 20);
                 pushPossibility(woodId, 10);
-                pushPossibility(berryId, 10);               
+                pushPossibility(berryId, 10);
                 break;
             case SpawnPoint.TerrainEnum.HILL:
                 pushPossibility(wheatId, 40);
@@ -60,8 +64,8 @@ public class Gather {
                 pushPossibility(rockId, 50);
                 break;
         }
-        result=calItem();
-        return result; 
+        result = calItem();
+        return result;
     }
 
     public static void gather()
@@ -106,7 +110,7 @@ public class Gather {
                 terranGatherRate = 0.7;
                 break;
         }
-        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut)*(1+World.getInstance().getTotalProperty()*0.01);
+        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut) * (1 + World.getInstance().getTotalProperty() * 0.01);
         double randomResult = Random.Range(Mathf.Floor((float)gatherRate), Mathf.Ceil((float)gatherRate));
         int itemNums = 0;
         if (randomResult < gatherRate)
@@ -117,10 +121,11 @@ public class Gather {
         Gather g = new Gather();
         int itemId = g.itemsFromGatherAtTerrain(teamPlace.terrainType);
         World.getInstance().storage.AddItem(itemId, itemNums);
+        FlowInfo.ShowItem("采集信息", itemId, itemNums);
     }
-    
 
-    private void pushPossibility(int itemId,int weight)
+
+    private void pushPossibility(int itemId, int weight)
     {
         possibilityMap.Add(itemId, weight);
         totalWeight += weight;
@@ -131,7 +136,7 @@ public class Gather {
     /// <returns></returns>
     private int calItem()
     {
-        int resultWeight=Random.Range(0,totalWeight);
+        int resultWeight = Random.Range(0, totalWeight);
         int tempWeight = 0;
         int resultItemId = -1;
         foreach (KeyValuePair<int, int> pair in possibilityMap)

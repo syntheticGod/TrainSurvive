@@ -66,9 +66,9 @@ namespace WorldMap.UI
                 markImage.color = markColors[level];
         }
         /// <summary>
-        /// 通过item设置图片
+        /// 通过物品的ID设置 图标 稀有度
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">物品ID</param>
         public void SetItemID(int id)
         {
             ItemID = id;
