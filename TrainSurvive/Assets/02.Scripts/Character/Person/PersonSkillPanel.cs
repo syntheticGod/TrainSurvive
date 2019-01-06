@@ -33,10 +33,28 @@ public class PersonSkillPanel : MonoBehaviour {
         Person p = World.getInstance().persons[person_index];
         skillListContent.updatePanel(p);
         update_skillDescription();
-        carryskill1.GetComponent<PersonSkillCell>().skillId = -1;
-        carryskill1.GetComponent<Image>().sprite = null;
-        carryskill2.GetComponent<PersonSkillCell>().skillId = -1;
-        carryskill2.GetComponent<Image>().sprite = null;
+        int skillId_1 = p.getSkillCarryed(1);
+        int skillId_2 = p.getSkillCarryed(2);
+        if (skillId_1 == -1)
+        {
+            carryskill1.GetComponent<PersonSkillCell>().skillId = -1;
+            carryskill1.GetComponent<Image>().sprite = null;
+        }
+        else
+        {
+            carryskill1.GetComponent<PersonSkillCell>().skillId = skillId_1;
+            carryskill1.GetComponent<Image>().sprite = StaticResource.GetSkillByID(skillId_1).SmallSprite;
+        }
+        if (skillId_2 == -1)
+        {
+            carryskill2.GetComponent<PersonSkillCell>().skillId = -1;
+            carryskill2.GetComponent<Image>().sprite = null;
+        }
+        else
+        {
+            carryskill2.GetComponent<PersonSkillCell>().skillId = skillId_2;
+            carryskill2.GetComponent<Image>().sprite = StaticResource.GetSkillByID(skillId_2).SmallSprite;
+        }
     }
 
     public void selectSkill(int skillId)
