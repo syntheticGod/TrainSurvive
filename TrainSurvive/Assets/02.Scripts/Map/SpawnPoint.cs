@@ -129,30 +129,22 @@ namespace WorldMap {
         //---------------------------------------------------------------------------
         //当前地块的气候
         public ClimateEnum climateType { get; private set; }
-
         //当前地块属于四种地形
         public TerrainEnum terrainType { get; private set; }
-
         //当前地块是不是特殊地块
         public SpecialTerrainEnum specialTerrainType { get; private set; }
-
         //当前地块的可见状态
         public SpawnViewStateEnum viewState { get; private set; }
-
         //记录当前地块上所有的GameObject
         public List<GameObject> spawnObjects { get; private set; }
-
         //如果城镇，记录该城镇所在区域大块的位置
         //如果是铁轨记录的是即将到达的城镇
         public Vector2Int townPos { get; private set; }
-
         //如果是铁轨，将记录起始城镇所在区域大块的位置
         public Vector2Int startTownPos { get; private set; }
-
         //如果是怪物地块，记录怪物的难度
         //如果是特殊区域，记录区域id
         public int monsterId { get; private set; }
-
         //当前地块是否被采集
         public bool isGathered { get; private set; }
 
