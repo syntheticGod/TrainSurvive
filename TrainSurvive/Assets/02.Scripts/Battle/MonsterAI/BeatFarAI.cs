@@ -9,9 +9,15 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace WorldBattle
 { //一直攻击最远玩家的AI，怪物AI里selectedAtkTarget字段无效
+    
     public class BeatFarAI : BattleActor
     {
         private bool targetFound = false;
+
+        public BeatFarAI()
+        {
+
+        }
         protected override void AIStrategy()
         {
             //如果当前处于攻击状态，等这次攻击完/或者找到了目标正在移动

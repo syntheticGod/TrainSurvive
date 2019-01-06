@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: 22
   m_EditorClassIdentifier: 
   ID: 22
-  Dependencies: 0e000000040000000f000000
+  Dependencies: 040000000f000000
   Name: "\u6279\u91CF\u751F\u4EA7"
   Description: 
   TotalWorks: 6

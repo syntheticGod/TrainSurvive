@@ -32,6 +32,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue:
     - ItemID: 201
       EnergyRate: 1
@@ -80,6 +81,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0.8
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
@@ -88,14 +90,16 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _isElect
-    TypeName: System.Boolean
+  - Name: _energyType
+    TypeName: Item2EnergyStructure+EnergyType
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0
+    System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   InitializerObject: {fileID: 11500000, guid: d551b20958ef80641a8d70da3fb0bc08, type: 3}
