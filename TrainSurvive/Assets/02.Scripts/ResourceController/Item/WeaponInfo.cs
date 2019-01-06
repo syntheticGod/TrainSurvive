@@ -6,6 +6,7 @@
  */
 using Assets._02.Scripts.zhxUIScripts;
 using System.Xml;
+using TTT.Resource;
 
 namespace TTT.Item
 {

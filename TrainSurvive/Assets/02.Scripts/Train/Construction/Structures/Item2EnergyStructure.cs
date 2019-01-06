@@ -219,7 +219,7 @@ public class Item2EnergyStructure : Structure {
     }
 
     private IEnumerator AutoFill() {
-        WaitUntil wait = new WaitUntil(() => AutomataEnabled && AutomataCount != 0 && Gas == null && PublicMethod.CanConsumeItems(new ItemData[] { new ItemData(AutomataItem, 1) }));
+        WaitUntil wait = new WaitUntil(() => AutomataEnabled && AutomataCount != 0 && Gas == null && PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(AutomataItem, 1) }));
         while (FacilityState == State.WORKING) {
             yield return wait;
             _gas = new ItemData(AutomataItem, 1);

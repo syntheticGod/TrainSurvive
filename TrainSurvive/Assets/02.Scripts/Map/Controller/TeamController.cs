@@ -208,46 +208,46 @@ namespace WorldMap.Controller
         }
         private void FaceTowardsBottom()
         {
-            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
-            ESprite type = ESprite.PERSON1_B;
             for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
-                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                if (i == 1)
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 3);
+                else
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/persons", 3 * i);
                 teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
-                type += delta;
             }
         }
         private void FaceTowardsTop()
         {
-            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
-            ESprite type = ESprite.PERSON1_T;
             for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
-                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                if (i == 1)
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 9);
+                else
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/persons", 3 * i + 2);
                 teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
-                type += delta;
             }
         }
         private void FaceTowardsLeft()
         {
-            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
-            ESprite type = ESprite.PERSON1_L;
             for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
-                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                if (i == 1)
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 6);
+                else
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/persons", 3 * i + 1);
                 teamPersons[i].transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
-                type += delta;
             }
         }
         private void FaceTowardsRight()
         {
-            int delta = ESprite.PERSON1_T - ESprite.PERSON1_B + 1;
-            ESprite type = ESprite.PERSON1_L;
             for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
             {
-                teamPersons[i].sprite = StaticResource.GetSprite(type);
+                if (i == 1)
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 6);
+                else
+                    teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/persons", 3 * i + 1);
                 teamPersons[i].transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);
-                type += delta;
             }
         }
         private bool ActiveBTs(bool active)

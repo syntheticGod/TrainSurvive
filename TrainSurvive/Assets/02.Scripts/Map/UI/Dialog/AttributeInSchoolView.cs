@@ -78,7 +78,7 @@ namespace WorldMap.UI
                     ViewTool.Anchor(item, new Vector2(0, currentFloat - delta), new Vector2(1, currentFloat));
 
                     moneyIcon[i] = ViewTool.CreateImage("MoneyIcon", item);
-                    moneyIcon[i].sprite = StaticResource.GetSprite(ESprite.MONEY_ICON);
+                    moneyIcon[i].sprite = StaticResource.GetSprite("ItemSprite/Money");
                     ViewTool.Anchor(moneyIcon[i], new Vector2(0.0f, 0.0f), new Vector2(0.25f, 0.5f));
                     moneyText[i] = ViewTool.CreateText("MoneyNumber", "", item);
                     ViewTool.Anchor(moneyText[i], new Vector2(0.25f, 0.0f), new Vector2(0.75f, 0.5f));
@@ -143,7 +143,7 @@ namespace WorldMap.UI
                     ViewTool.Anchor(item, new Vector2(0, currentFloat - delta), new Vector2(1, currentFloat));
 
                     strategyIcon[i] = ViewTool.CreateImage("MoneyIcon", item);
-                    strategyIcon[i].sprite = StaticResource.GetSprite(ESprite.STRATEGY_ICON);
+                    strategyIcon[i].sprite = StaticResource.GetSprite("ItemSprite/Money");
                     ViewTool.Anchor(strategyIcon[i], new Vector2(0f, 0f), new Vector2(0.25f, 0.5f));
                     strategyText[i] = ViewTool.CreateText("MoneyNumber", "", item);
                     ViewTool.Anchor(strategyText[i], new Vector2(0.25f, 0f), new Vector2(0.75f, 0.5f));

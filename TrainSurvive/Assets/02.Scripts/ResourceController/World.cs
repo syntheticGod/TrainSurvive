@@ -91,8 +91,8 @@ public class World
     private float energyMax = 1000;
     private float electricityMax = 1000;
     //----------物品----------↓
-    public float trainInventoryMaxSize = 50;    //需要使用相关方法来确定这个属性的值，然后其他的Inventory系统会自己使用它
-    public float trainInventoryCurSize = 0;
+    //public float trainInventoryMaxSize = 50;    //需要使用相关方法来确定这个属性的值，然后其他的Inventory系统会自己使用它
+    //public float trainInventoryCurSize = 0;
     //public List<ItemData> itemDataInTrain = new List<ItemData>();
     //public List<ItemData> itemDataInTeam = new List<ItemData>();
     /// <summary>

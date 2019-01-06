@@ -12,6 +12,7 @@ using System;
 using TTT.Item;
 using TTT.Utility;
 using System.Collections;
+using Assets._02.Scripts.zhxUIScripts;
 
 namespace TTT.Resource
 {
@@ -318,147 +319,37 @@ namespace TTT.Resource
                 return NPC_NAME_WOMAN[MathTool.RandomInt(NPC_NAME_WOMAN.Length)];
         }
         //----------名字----------↑----------Sprite----------↓
-        private static Sprite[] spriteStore = new Sprite[(int)ESprite.NUM];
-        private static string[] spriteFileName = {
-            "Commen/developing_icon_01_big","Commen/developing_icon_01_small",
-            "Sprite/map/person/person1_bottom_0", "Sprite/map/person/person1_left_0", "Sprite/map/person/person1_top_0",
-            "Sprite/map/person/person2_bottom", "Sprite/map/person/person2_left", "Sprite/map/person/person2_top",
-            "Sprite/map/person/person3_bottom", "Sprite/map/person/person3_left", "Sprite/map/person/person3_top",
-            "Sprite/map/person/person4_bottom", "Sprite/map/person/person4_left", "Sprite/map/person/person4_top",
-            "Sprite/map/person/person5_bottom", "Sprite/map/person/person5_left", "Sprite/map/person/person5_top",
-
-            "Sprite/map/Train",
-
-            "ProfessionIcon/profession0_icon_big",
-            "ProfessionIcon/profession1_icon_big",
-            "ProfessionIcon/profession2_icon_big",
-            "ProfessionIcon/profession3_icon_big",
-            "ProfessionIcon/profession4_icon_big",
-            //第二专精
-            "ProfessionIcon/profession00_icon_big",
-            "ProfessionIcon/profession01_icon_big",
-            "ProfessionIcon/profession02_icon_big",
-            "ProfessionIcon/profession03_icon_big",
-            "ProfessionIcon/profession04_icon_big",
-
-            "ProfessionIcon/profession11_icon_big",
-            "ProfessionIcon/profession12_icon_big",
-            "ProfessionIcon/profession13_icon_big",
-            "ProfessionIcon/profession14_icon_big",
-
-            "ProfessionIcon/profession22_icon_big",
-            "ProfessionIcon/profession23_icon_big",
-            "ProfessionIcon/profession24_icon_big",
-
-            "ProfessionIcon/profession33_icon_big",
-            "ProfessionIcon/profession34_icon_big",
-
-            "ProfessionIcon/profession44_icon_big",
-            //第三专精
-            "ProfessionIcon/profession000_icon_big",
-            "ProfessionIcon/profession012_icon_big",
-            "ProfessionIcon/profession013_icon_big",
-            "ProfessionIcon/profession014_icon_big",
-            "ProfessionIcon/profession023_icon_big",
-            "ProfessionIcon/profession024_icon_big",
-            "ProfessionIcon/profession034_icon_big",
-
-            "ProfessionIcon/profession111_icon_big",
-            "ProfessionIcon/profession123_icon_big",
-            "ProfessionIcon/profession124_icon_big",
-            "ProfessionIcon/profession134_icon_big",
-
-            "ProfessionIcon/profession222_icon_big",
-            "ProfessionIcon/profession234_icon_big",
-
-            "ProfessionIcon/profession333_icon_big",
-
-            "ProfessionIcon/profession444_icon_big",
-
-            "ProfessionIcon/profession0_icon_small",
-            "ProfessionIcon/profession1_icon_small",
-            "ProfessionIcon/profession2_icon_small",
-            "ProfessionIcon/profession3_icon_small",
-            "ProfessionIcon/profession4_icon_small",
-
-            "ProfessionIcon/profession00_icon_small",
-            "ProfessionIcon/profession01_icon_small",
-            "ProfessionIcon/profession02_icon_small",
-            "ProfessionIcon/profession03_icon_small",
-            "ProfessionIcon/profession04_icon_small",
-
-            "ProfessionIcon/profession11_icon_small",
-            "ProfessionIcon/profession12_icon_small",
-            "ProfessionIcon/profession13_icon_small",
-            "ProfessionIcon/profession14_icon_small",
-
-            "ProfessionIcon/profession22_icon_small",
-            "ProfessionIcon/profession23_icon_small",
-            "ProfessionIcon/profession24_icon_small",
-
-            "ProfessionIcon/profession33_icon_small",
-            "ProfessionIcon/profession34_icon_small",
-
-            "ProfessionIcon/profession44_icon_small",
-
-            "ProfessionIcon/profession000_icon_small",
-            "ProfessionIcon/profession012_icon_small",
-            "ProfessionIcon/profession013_icon_small",
-            "ProfessionIcon/profession014_icon_small",
-            "ProfessionIcon/profession023_icon_small",
-            "ProfessionIcon/profession024_icon_small",
-            "ProfessionIcon/profession034_icon_small",
-
-            "ProfessionIcon/profession111_icon_small",
-            "ProfessionIcon/profession123_icon_small",
-            "ProfessionIcon/profession124_icon_small",
-            "ProfessionIcon/profession134_icon_small",
-
-            "ProfessionIcon/profession222_icon_small",
-            "ProfessionIcon/profession234_icon_small",
-
-             "ProfessionIcon/profession333_icon_small",
-
-             "ProfessionIcon/profession444_icon_small",
-
-             "ItemSprite/Money",
-             "ItemSprite/Money"//战略点图标，暂时使用金钱
-        };
-        public static Sprite GetSprite(ESprite eSprite)
+        static Hashtable spriteTable;
+        static Hashtable SpriteTable { get { if (spriteTable == null) { spriteTable = new Hashtable(); } return spriteTable; } }
+        public static Sprite GetSprite(string path)
         {
-            if (spriteStore[(int)eSprite] == null)
+            Sprite sprite;
+            if (!SpriteTable.ContainsKey(path))
             {
-                if (MathTool.IfBetweenBoth((int)ESprite.PERSON1_B, (int)ESprite.PERSON1_T, (int)eSprite))
-                {
-                    Sprite[] sprites = Resources.LoadAll<Sprite>("Sprite/map/person/person1");
-                    spriteStore[(int)ESprite.PERSON1_B] = sprites[3];
-                    spriteStore[(int)ESprite.PERSON1_L] = sprites[6];
-                    spriteStore[(int)ESprite.PERSON1_T] = sprites[9];
-                }
-                else if (MathTool.IfBetweenBoth((int)ESprite.PERSON2_B, (int)ESprite.PERSON5_T, (int)eSprite))
-                {
-                    Sprite[] sprites = Resources.LoadAll<Sprite>("Sprite/map/person/persons");
-                    int index = 0;
-                    for (ESprite i = ESprite.PERSON2_B; i < ESprite.PERSON5_T; i++)
-                    {
-                        spriteStore[(int)i] = sprites[index++];
-                    }
-                }
-                else
-                {
-                    spriteStore[(int)eSprite] = Resources.Load<Sprite>(spriteFileName[(int)eSprite]);
-                }
-                if (spriteStore[(int)eSprite] == null)
-                {
-                    Debug.LogWarning("Sprite资源不存在" + eSprite.ToString());
-                    if (spriteStore[(int)ESprite.DEVELOPING_BIG] == null)
-                        spriteStore[(int)ESprite.DEVELOPING_BIG] = Resources.Load<Sprite>(spriteFileName[(int)ESprite.DEVELOPING_BIG]);
-                    if (spriteStore[(int)ESprite.DEVELOPING_SMALL] == null)
-                        spriteStore[(int)ESprite.DEVELOPING_SMALL] = Resources.Load<Sprite>(spriteFileName[(int)ESprite.DEVELOPING_SMALL]);
-                    return spriteStore[(int)ESprite.DEVELOPING_BIG];
-                }
+                sprite = Resources.Load<Sprite>(path);
+                if (sprite == null)
+                    sprite = GetSprite("Commen/developing_icon_01_big");
+                SpriteTable.Add(path, sprite);
             }
-            return spriteStore[(int)eSprite];
+            else
+            {
+                sprite = SpriteTable[path] as Sprite;
+            }
+            return sprite;
+        }
+        public static Sprite GetSprite(string path, int index)
+        {
+            Sprite[] sprite;
+            if (!SpriteTable.ContainsKey(path))
+            {
+                sprite = Resources.LoadAll<Sprite>(path);
+                SpriteTable.Add(path, sprite);
+            }
+            else
+            {
+                sprite = SpriteTable[path] as Sprite[];
+            }
+            return sprite[index];
         }
         //----------Sprite----------↑ ----------技能----------↓
         /// <summary>
@@ -477,7 +368,7 @@ namespace TTT.Resource
             XmlNode root = document.SelectSingleNode("SkillInfo");
             XmlNodeList skillNodes = root.SelectNodes("Skill");
             skills = new SkillInfo[skillNodes.Count];
-            foreach(XmlNode skillNode in skillNodes)
+            foreach (XmlNode skillNode in skillNodes)
             {
                 try
                 {
@@ -575,137 +466,6 @@ namespace TTT.Resource
             return ItemTable[id] as T;
         }
         //----------物品----------↑
-    }
-    public enum ESprite
-    {
-        NONE = -1,
-        DEVELOPING_BIG,
-        DEVELOPING_SMALL,
-        /// <summary>
-        /// 人物在大地图中的图标
-        /// </summary>
-        PERSON1_B,
-        PERSON1_L,
-        PERSON1_T,
-        PERSON2_B,
-        PERSON2_L,
-        PERSON2_T,
-        PERSON3_B,
-        PERSON3_L,
-        PERSON3_T,
-        PERSON4_B,
-        PERSON4_L,
-        PERSON4_T,
-        PERSON5_B,
-        PERSON5_L,
-        PERSON5_T,
-
-        /// <summary>
-        /// 列车在大地图中的图标
-        /// </summary>
-        TRAIN,
-
-        /// <summary>
-        /// 专精大图标
-        /// </summary>
-        PROFESSION0_BIG,
-        PROFESSION1_BIG,
-        PROFESSION2_BIG,
-        PROFESSION3_BIG,
-        PROFESSION4_BIG,
-
-        PROFESSION00_BIG,
-        PROFESSION01_BIG,
-        PROFESSION02_BIG,
-        PROFESSION03_BIG,
-        PROFESSION04_BIG,
-
-        PROFESSION11_BIG,
-        PROFESSION12_BIG,
-        PROFESSION13_BIG,
-        PROFESSION14_BIG,
-
-        PROFESSION22_BIG,
-        PROFESSION23_BIG,
-        PROFESSION24_BIG,
-
-        PROFESSION33_BIG,
-        PROFESSION34_BIG,
-
-        PROFESSION44_BIG,
-
-        PROFESSION000_BIG,
-        PROFESSION012_BIG,
-        PROFESSION013_BIG,
-        PROFESSION014_BIG,
-        PROFESSION023_BIG,
-        PROFESSION024_BIG,
-        PROFESSION034_BIG,
-
-        PROFESSION111_BIG,
-        PROFESSION123_BIG,
-        PROFESSION124_BIG,
-        PROFESSION134_BIG,
-
-        PROFESSION222_BIG,
-        PROFESSION234_BIG,
-
-        PROFESSION333_BIG,
-
-        PROFESSION444_BIG,
-
-        /// <summary>
-        /// 专精小图标
-        /// </summary>
-        PROFESSION0_SMALL,
-        PROFESSION1_SMALL,
-        PROFESSION2_SMALL,
-        PROFESSION3_SMALL,
-        PROFESSION4_SMALL,
-
-        PROFESSION00_SMALL,
-        PROFESSION01_SMALL,
-        PROFESSION02_SMALL,
-        PROFESSION03_SMALL,
-        PROFESSION04_SMALL,
-
-        PROFESSION11_SMALL,
-        PROFESSION12_SMALL,
-        PROFESSION13_SMALL,
-        PROFESSION14_SMALL,
-
-        PROFESSION22_SMALL,
-        PROFESSION23_SMALL,
-        PROFESSION24_SMALL,
-
-        PROFESSION33_SMALL,
-        PROFESSION34_SMALL,
-
-        PROFESSION44_SMALL,
-
-        PROFESSION000_SMALL,
-        PROFESSION012_SMALL,
-        PROFESSION013_SMALL,
-        PROFESSION014_SMALL,
-        PROFESSION023_SMALL,
-        PROFESSION024_SMALL,
-        PROFESSION034_SMALL,
-
-        PROFESSION111_SMALL,
-        PROFESSION123_SMALL,
-        PROFESSION124_SMALL,
-        PROFESSION134_SMALL,
-
-        PROFESSION222_SMALL,
-        PROFESSION234_SMALL,
-
-        PROFESSION333_SMALL,
-
-        PROFESSION444_SMALL,
-
-        MONEY_ICON,//金钱图标
-        STRATEGY_ICON,//战略点图标
-        NUM
     }
     /// <summary>
     /// 人物基础属性

@@ -29,11 +29,11 @@ public class Person
     /// <summary>
     /// 人物的小头像 60*60像素
     /// </summary>
-    public Sprite IconSmall { get { return StaticResource.GetSprite(ESprite.DEVELOPING_SMALL); } }
+    public Sprite IconSmall { get { return StaticResource.GetSprite("Commen/developing_icon_01_small"); } }
     /// <summary>
     /// 人物的大头像 120*120像素
     /// </summary>
-    public Sprite IconBig { get { return StaticResource.GetSprite(ESprite.DEVELOPING_BIG); } }
+    public Sprite IconBig { get { return StaticResource.GetSprite("Commen/developing_icon_01_big"); } }
     public string SimpleInfo
     {
         get

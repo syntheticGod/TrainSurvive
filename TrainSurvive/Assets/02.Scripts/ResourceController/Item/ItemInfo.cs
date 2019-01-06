@@ -54,11 +54,11 @@ namespace TTT.Item
         /// <summary>
         /// 120 x 120 像素
         /// </summary>
-        public Sprite BigSprite { get; }
+        public Sprite BigSprite { get; protected set; }
         /// <summary>
         /// 60 x 60 像素
         /// </summary>
-        public Sprite SmallSprite { get; }
+        public Sprite SmallSprite { get; protected set; }
         /// <summary>
         /// 物品信息只能从XML文件中读取，一旦读取就不能被修改。
         /// </summary>
@@ -74,8 +74,8 @@ namespace TTT.Item
             SellRatio = float.Parse(node.Attributes["sellRatio"].Value);
             Size = float.Parse(node.Attributes["size"].Value);
             MaxPileNum = int.Parse(node.Attributes["maxPileNum"].Value);
-            BigSprite = StaticResource.GetSprite(ESprite.DEVELOPING_BIG);
-            SmallSprite = StaticResource.GetSprite(ESprite.DEVELOPING_SMALL);
+            BigSprite = StaticResource.GetSprite("ItemSprite/Item_" + ID + "_big");
+            SmallSprite = StaticResource.GetSprite("ItemSprite/Item_" + ID + "_small");
         }
     }
 

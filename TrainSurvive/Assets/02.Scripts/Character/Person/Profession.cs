@@ -66,8 +66,8 @@ public class Profession
         State = state;
         Name = name;
         ID = id;
-        IconSmall = StaticResource.GetSprite(ESprite.PROFESSION0_BIG + id);
-        IconBig = StaticResource.GetSprite(ESprite.PROFESSION0_SMALL + id);
+        IconSmall = StaticResource.GetSprite("ProfessionIcon/profession"+id+"_icon_small");
+        IconBig = StaticResource.GetSprite("ProfessionIcon/profession" + id + "_icon_big");
         Info = info;
         if (MathTool.IfBetweenBoth(0, 4, id))
             Level = EProfessionLevel.LEVEL1;

@@ -116,10 +116,7 @@ public class Gather {
         Team team = Team.Instance;
         Gather g = new Gather();
         int itemId = g.itemsFromGatherAtTerrain(teamPlace.terrainType);
-        Item[] items= PublicMethod.GenerateItem(itemId, itemNums);
-        for(int i=0;i< items.Length; i++)
-            team.Inventory.PushItem(items[i]);
-      
+        World.getInstance().storage.AddItem(itemId, itemNums);
     }
     
 

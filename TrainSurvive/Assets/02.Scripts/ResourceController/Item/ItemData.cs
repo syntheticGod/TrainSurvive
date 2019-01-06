@@ -119,17 +119,47 @@ public class ItemData
     static int[] materialIDPool = new int[] { 201, 211, 212, 213, 214, 221, 222, 223, 231, 232, 233, 234 };
     static int[] weaponIDPool = new int[] { 0 };
     static int[] specailIDPool = new int[] { 700 };
+    /// <summary>
+    /// 随机生成材料，数量也随机生成范围是[1,5]
+    /// </summary>
+    /// <returns></returns>
     public static ItemData RandomMaterial()
     {
         return new ItemData(materialIDPool[MathTool.RandomInt(materialIDPool.Length)], MathTool.RandomRange(1, 5));
     }
+    /// <summary>
+    /// 随机生成指定数量的材料
+    /// </summary>
+    /// <param name="number">数量</param>
+    /// <returns></returns>
+    public static ItemData RandomMaterial(int number)
+    {
+        return new ItemData(materialIDPool[MathTool.RandomInt(materialIDPool.Length)], number);
+    }
+    /// <summary>
+    /// 随机生成武器，数量为1
+    /// </summary>
+    /// <returns></returns>
     public static ItemData RandomWeapon()
     {
         return new ItemData(weaponIDPool[MathTool.RandomInt(weaponIDPool.Length)], 1);
     }
+    /// <summary>
+    /// 随机生成特殊物品，数量为1
+    /// </summary>
+    /// <returns></returns>
     public static ItemData RandomSpecail()
     {
         return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], 1);
+    }
+    /// <summary>
+    /// 随机生成指定数量的特殊物品
+    /// </summary>
+    /// <param name="number">数量</param>
+    /// <returns></returns>
+    public static ItemData RandomSpecail(int number)
+    {
+        return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], number);
     }
 }
 

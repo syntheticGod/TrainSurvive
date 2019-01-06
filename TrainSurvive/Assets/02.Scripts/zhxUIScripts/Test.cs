@@ -35,17 +35,7 @@ public class Test : MonoBehaviour {
                                                  new ItemData(212,5),   //           ID为222的物品消耗5个
                                                  new ItemData(213,6),   //  ..........................
                                                  new ItemData(214,1)};  //  ..........................
-        if (PublicMethod.AppendItemsInBackEnd(appendList))
-        {
-            Debug.Log("后台成功添加物品");
-            //成功进行后台添加，实现对应功能
-        }
-        else
-        {
-            //添加失败
-            Debug.Log("容器容量不够添加");
-        }
-
+        PublicMethod.AppendItemsInBackEnd(appendList);
     }
 
     private void Awake()
