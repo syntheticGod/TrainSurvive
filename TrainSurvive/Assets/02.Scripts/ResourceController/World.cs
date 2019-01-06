@@ -79,14 +79,14 @@ public class World
     public const int mapHeight = 300;
     //public const int trainWidth = 10;
     //public const int trainHeight = 5;
-    private uint foodIn = 800;
+    private float foodIn = 800;
     private uint foodOut = 0;
     public uint foodConsumed_eachPerson = 20;
     private float energy = 0;
     private uint money = 0;
     private uint strategy = 0;
     private float electricity = 0;
-    private uint foodInMax = 10000;
+    private float foodInMax = 10000;
     private uint foodOutMax = 0;
     private float energyMax = 1000;
     private float electricityMax = 1000;
@@ -214,7 +214,7 @@ public class World
     {
         return energy;
     }
-    public uint getFoodIn()
+    public float getFoodIn()
     {
         return foodIn;
     }
@@ -234,7 +234,7 @@ public class World
     {
         return foodOutMax;
     }
-    public uint getFoodInMax()
+    public float getFoodInMax()
     {
         return foodInMax;
     }
@@ -248,7 +248,7 @@ public class World
     }
     /// <param name="food"></param>
     /// <returns>返回false代表资源超过最大值</returns>
-    public bool setFoodIn(uint food)
+    public bool setFoodIn(float food)
     {
         bool result = true;
         if (food > foodInMax)
@@ -260,7 +260,7 @@ public class World
             foodIn = food;
         if (resourceUI != null)
         {
-            resourceUI.setFoodIn(foodIn, foodInMax);
+            resourceUI.setFoodIn((uint)foodIn, (uint)foodInMax);
         }
         return result;
     }
@@ -296,12 +296,12 @@ public class World
         }
         return result;
     }
-    public void setFoodInMax(uint num)
+    public void setFoodInMax(float num)
     {
         foodInMax = num;
         if (resourceUI != null)
         {
-            resourceUI.setFoodIn(foodIn, foodInMax);
+            resourceUI.setFoodIn((uint)foodIn, (uint)foodInMax);
         }
     }
     public void setFoodOutMax(uint num)
@@ -333,7 +333,7 @@ public class World
     /// </summary>
     /// <param name="num"></param>
     /// <returns>0代表资源过少，2代表资源过多，1正常</returns>
-    public int addFoodIn(int num)
+    public int addFoodIn(float num)
     {
         int result = 1;
         if ((foodIn + num) < 0)
@@ -350,7 +350,7 @@ public class World
             foodIn = (uint)(foodIn + num);
         if (resourceUI != null)
         {
-            resourceUI.setFoodIn(foodIn, foodInMax);
+            resourceUI.setFoodIn((uint)foodIn, (uint)foodInMax);
         }
         return result;
     }

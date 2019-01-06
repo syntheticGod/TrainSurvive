@@ -29,12 +29,12 @@ public class ResouceBaseUI : MonoBehaviour {
         world.resourceUI = this;
     }
 	
-	public void setFoodIn(uint currentNum,uint maxNum)
+	public void setFoodIn(float currentNum,float maxNum)
     {
         foodInSlider.minValue = 0;
         foodInSlider.maxValue = maxNum;
         foodInSlider.value = currentNum;
-        foodInText.text = currentNum + "/" + maxNum;
+        foodInText.text = (int)currentNum + "/" + (int)maxNum;
     }
     public void setFoodOut(uint currentNum, uint maxNum)
     {

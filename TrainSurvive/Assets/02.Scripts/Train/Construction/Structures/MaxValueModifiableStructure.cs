@@ -15,22 +15,22 @@ public class MaxValueModifiableStructure : Structure {
     protected MaxValueModifiableStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
         _addElectMax = (float)info.GetValue("_addElectMax", typeof(float));
         _addEnergyMax = (float)info.GetValue("_addEnergyMax", typeof(float));
-        _addInventoryMax = (float)info.GetValue("_addInventoryMax", typeof(float));
+        _addFoodMax = (float)info.GetValue("_addFoodMax", typeof(float));
         _addMemberMax = info.GetInt32("_addMemberMax");
         _addElectMaxRatio = (float)info.GetValue("_addElectMaxRatio", typeof(float));
         _addEnergyMaxRatio = (float)info.GetValue("_addEnergyMaxRatio", typeof(float));
-        _addInventoryMaxRatio = (float)info.GetValue("_addInventoryMaxRatio", typeof(float));
+        _addFoodMaxRatio = (float)info.GetValue("_addFoodMaxRatio", typeof(float));
     }
 
     public override void GetObjectData(SerializationInfo info, StreamingContext context) {
         base.GetObjectData(info, context);
         info.AddValue("_addElectMax", _addElectMax);
         info.AddValue("_addEnergyMax", _addEnergyMax);
-        info.AddValue("_addInventoryMax", _addInventoryMax);
         info.AddValue("_addMemberMax", _addMemberMax);
+        info.AddValue("_addFoodMax", _addFoodMax);
         info.AddValue("_addElectMaxRatio", _addElectMaxRatio);
         info.AddValue("_addEnergyMaxRatio", _addEnergyMaxRatio);
-        info.AddValue("_addInventoryMaxRatio", _addInventoryMaxRatio);
+        info.AddValue("_addFoodMaxRatio", _addFoodMaxRatio);
     }
 
     /// <summary>
@@ -58,11 +58,11 @@ public class MaxValueModifiableStructure : Structure {
         }
     }
     /// <summary>
-    /// 增加仓库上限
+    /// 增加食物上限
     /// </summary>
-    public float AddInventoryMax {
+    public float AddFoodMax {
         get {
-            return _addInventoryMax;
+            return _addFoodMax;
         }
     }
 
@@ -93,38 +93,38 @@ public class MaxValueModifiableStructure : Structure {
         }
     }
     /// <summary>
-    /// 增加仓库上限比例
+    /// 增加食物上限比例
     /// </summary>
-    public float AddInventoryMaxRatio {
+    public float AddFoodMaxRatio {
         get {
-            return _addInventoryMaxRatio;
+            return _addFoodMaxRatio;
         }
         set {
-            if (value == _addInventoryMaxRatio) return;
-            // TODO World.getInstance().max(World.getInstance().getElectricityMax() + AddElectMax * (value - _addElectMaxRatio));
-            _addInventoryMaxRatio = value;
+            if (value == _addFoodMaxRatio) return;
+            World.getInstance().setFoodInMax(World.getInstance().getFoodInMax() + AddFoodMax * (value - _addFoodMaxRatio));
+            _addFoodMaxRatio = value;
         }
     }
-    
+
     [StructurePublicField(Tooltip = "增加电能上限")]
     private float _addElectMax;
     [StructurePublicField(Tooltip = "增加动能上限")]
     private float _addEnergyMax;
-    [StructurePublicField(Tooltip = "增加仓库上限")]
-    private float _addInventoryMax;
     [StructurePublicField(Tooltip = "增加队伍上限")]
     private int _addMemberMax;
+    [StructurePublicField(Tooltip = "增加食物上限")]
+    private float _addFoodMax;
 
     private float _addElectMaxRatio;
     private float _addEnergyMaxRatio;
-    private float _addInventoryMaxRatio;
+    private float _addFoodMaxRatio;
 
     protected override void OnStart() {
         base.OnStart();
         if (!HasTriggered) {
             AddElectMaxRatio = 1;
             AddEnergyMaxRatio = 1;
-            AddInventoryMaxRatio = 1;
+            AddFoodMaxRatio = 1;
             World.getInstance().personNumMax += AddMemberMax;
         }
     }
@@ -133,7 +133,7 @@ public class MaxValueModifiableStructure : Structure {
         base.OnRemoving();
         AddElectMaxRatio = 0;
         AddEnergyMaxRatio = 0;
-        AddInventoryMaxRatio = 0;
+        AddFoodMaxRatio = 0;
         World.getInstance().personNumMax -= AddMemberMax;
     }
 }

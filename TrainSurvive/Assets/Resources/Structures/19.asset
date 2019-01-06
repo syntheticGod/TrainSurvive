@@ -20,12 +20,10 @@ MonoBehaviour:
   Name: "\u7164\u6CB9\u706F"
   Description: "\u9700\u6446\u653E\u5728\u684C\u5B50\u4E0A\u7684\u7164\u6CB9\u706F"
   WorkAll: 2
-  BuildCosts:
-  - id: 211
-    num: 1
+  BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 2
-  RequiredTech: 33
+  RequiredTech: 17
   Initializer: Structure
   InitializeValues: []
   InitializerObject: {fileID: 11500000, guid: b6632dcc460747b4291bc15ed01af0b3, type: 3}

@@ -9,21 +9,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
-  m_Name: 1
+  m_Name: 51
   m_EditorClassIdentifier: 
-  ID: 1
+  ID: 51
   LayerOrientation: {x: 0, y: -1}
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
     m_Bits: 256
-  Name: "\u9505\u7089"
-  Description: "\u53EF\u4EE5\u71C3\u70E7\u5404\u79CD\u53EF\u71C3\u7269\uFF0C\u5C06\u5B83\u4EEC\u8F6C\u5316\u4E3A\u52A8\u80FD"
+  Name: "\u98DF\u6750\u52A0\u5DE5\u5BA4"
+  Description: 
   WorkAll: 0.01
   BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 0
-  RequiredTech: 8
+  RequiredTech: 1
   Initializer: Item2EnergyStructure
   InitializeValues:
   - Name: _conversions
@@ -32,6 +32,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue:
     - ItemID: 201
       EnergyRate: 1
@@ -53,24 +54,8 @@ MonoBehaviour:
       EnergyRate: 1.5
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
-    - ItemID: 221
-      EnergyRate: 3
-      ProcessTimeRatio: 0.2
-      ProduceEnergyRatio: 10
-    - ItemID: 222
-      EnergyRate: 3
-      ProcessTimeRatio: 0.2
-      ProduceEnergyRatio: 10
     - ItemID: 223
-      EnergyRate: 0.8
-      ProcessTimeRatio: 0.4
-      ProduceEnergyRatio: 10
-    - ItemID: 224
-      EnergyRate: 0.8
-      ProcessTimeRatio: 0.4
-      ProduceEnergyRatio: 10
-    - ItemID: 225
-      EnergyRate: 0.4
+      EnergyRate: 0.2
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     Item2ItemStructure_ConversionArrayValue: []
@@ -78,8 +63,9 @@ MonoBehaviour:
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0.8
+    System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
@@ -88,14 +74,16 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _isElect
-    TypeName: System.Boolean
+  - Name: _energyType
+    TypeName: Item2EnergyStructure+EnergyType
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0
+    System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 2
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   InitializerObject: {fileID: 11500000, guid: d551b20958ef80641a8d70da3fb0bc08, type: 3}

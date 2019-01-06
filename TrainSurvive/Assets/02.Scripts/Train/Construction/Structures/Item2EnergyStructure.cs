@@ -14,6 +14,10 @@ using UnityEngine;
 [Serializable]
 public class Item2EnergyStructure : Structure {
 
+    public enum EnergyType {
+        ENERGY, ELECT, FOOD
+    }
+
     [Serializable]
     public struct Conversion {
         public int ItemID;
@@ -39,7 +43,7 @@ public class Item2EnergyStructure : Structure {
         _conversions = (Conversion[])info.GetValue("_conversions", typeof(Conversion[]));
         _conversionRate = (float)info.GetValue("_conversionRate", typeof(float));
         _processSpeed = (float)info.GetValue("_processSpeed", typeof(float));
-        _isElect = info.GetBoolean("_isElect");
+        _energyType = (EnergyType)info.GetValue("_energyType", typeof(EnergyType));
         Progress = (float)info.GetValue("Progress", typeof(float));
         Gas = (ItemData)info.GetValue("Gas", typeof(ItemData));
         ConversionRateRatio = (float)info.GetValue("ConversionRateRatio", typeof(float));
@@ -61,7 +65,7 @@ public class Item2EnergyStructure : Structure {
         info.AddValue("_conversions", _conversions);
         info.AddValue("_conversionRate", _conversionRate);
         info.AddValue("_processSpeed", _processSpeed);
-        info.AddValue("_isElect", _isElect);
+        info.AddValue("_energyType", _energyType);
     }
 
     /// <summary>
@@ -95,11 +99,11 @@ public class Item2EnergyStructure : Structure {
         }
     }
     /// <summary>
-    /// 能源类型，是电能吗？
+    /// 能源类型
     /// </summary>
-    public bool IsElect {
+    public EnergyType GeneratedEnergyType {
         get {
-            return _isElect;
+            return _energyType;
         }
     }
     /// <summary>
@@ -165,8 +169,8 @@ public class Item2EnergyStructure : Structure {
     private float _conversionRate;
     [StructurePublicField(Tooltip = "处理速度")]
     private float _processSpeed;
-    [StructurePublicField(Tooltip = "能源类型，是电能吗？")]
-    private bool _isElect;
+    [StructurePublicField(Tooltip = "能源类型")]
+    private EnergyType _energyType;
 
     private Dictionary<int, Conversion> _conversionsDic;
     private float _progress;
@@ -208,7 +212,18 @@ public class Item2EnergyStructure : Structure {
                     AutomataCount--;
                     OnAutomataCountChange?.Invoke(AutomataCount);
                 }
-                World.getInstance().addEnergy(Conversions[Gas.ID].ProduceEnergy * ConversionRate * ConversionRateRatio);
+                float generatedAmount = Conversions[Gas.ID].ProduceEnergy * ConversionRate * ConversionRateRatio;
+                switch (GeneratedEnergyType) {
+                    case EnergyType.ENERGY:
+                        World.getInstance().addEnergy(generatedAmount);
+                        break;
+                    case EnergyType.ELECT:
+                        World.getInstance().addElectricity(generatedAmount);
+                        break;
+                    case EnergyType.FOOD:
+                        World.getInstance().addFoodIn(generatedAmount);
+                        break;
+                }
                 if (--Gas.Number == 0) {
                     Gas = null;
                 }

@@ -9,23 +9,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
-  m_Name: 35
+  m_Name: 48
   m_EditorClassIdentifier: 
-  ID: 35
+  ID: 48
   LayerOrientation: {x: 0, y: -1}
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
     m_Bits: 256
-  Name: "\u4E2D\u7EA7\u91D1\u5DE5\u53F0"
-  Description: "\u7ECF\u81EA\u52A8\u5316\u6539\u9020\u540E\u7684\u91D1\u5DE5\u53F0\uFF0C\u52A0\u5DE5\u901F\u7387\u5F97\u5230\u4E86\u63D0\u5347"
-  WorkAll: 18
-  BuildCosts:
-  - id: 211
-    num: 1
+  Name: "\u5316\u5DE5\u53F0"
+  Description: 
+  WorkAll: 24
+  BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 3
-  RequiredTech: 25
+  RequiredTech: 19
   Initializer: Item2ItemStructure
   InitializeValues:
   - Name: _conversions
@@ -35,22 +33,12 @@ MonoBehaviour:
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
-    Item2ItemStructure_ConversionArrayValue:
-    - FromItemID: 232
-      FromItemNum: 1
-      ToItemID: 238
-      ToItemNum: 5
-      ProcessTime: 10
-    - FromItemID: 234
-      FromItemNum: 1
-      ToItemID: 239
-      ToItemNum: 5
-      ProcessTime: 10
+    Item2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 1.5
+    System_SingleValue: 1
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
@@ -58,7 +46,7 @@ MonoBehaviour:
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0
+    System_SingleValue: 0.5
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
@@ -66,7 +54,7 @@ MonoBehaviour:
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0.3
+    System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
