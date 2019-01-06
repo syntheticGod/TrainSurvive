@@ -17,15 +17,13 @@ MonoBehaviour:
   RequiredLayers:
     serializedVersion: 2
     m_Bits: 256
-  Name: "\u77F3\u5236\u7194\u7089"
+  Name: "\u7194\u7089"
   Description: 
   WorkAll: 15
-  BuildCosts:
-  - id: 211
-    num: 1
+  BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 3
-  RequiredTech: 20
+  RequiredTech: 0
   Initializer: Item2ItemStructure
   InitializeValues:
   - Name: _conversions
@@ -34,6 +32,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue:
     - FromItemID: 223
@@ -56,12 +55,18 @@ MonoBehaviour:
       ToItemID: 237
       ToItemNum: 1
       ProcessTime: 60
+    - FromItemID: 234
+      FromItemNum: 2
+      ToItemID: 240
+      ToItemNum: 1
+      ProcessTime: 120
   - Name: _processSpeed
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
     System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _costElect
@@ -70,6 +75,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _costEnergy
@@ -78,6 +84,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0.3
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   InitializerObject: {fileID: 11500000, guid: f128628d3b381af49b2f54dd079877f9, type: 3}

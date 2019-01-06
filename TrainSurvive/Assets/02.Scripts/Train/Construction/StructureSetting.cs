@@ -23,6 +23,7 @@ public class StructureSetting : ScriptableObject {
         public bool System_BooleanValue;
         public float System_SingleValue;
         public string System_StringValue;
+        public Item2EnergyStructure.EnergyType Item2EnergyStructure_EnergyTypeValue;
         public Item2EnergyStructure.Conversion[] Item2EnergyStructure_ConversionArrayValue;
         public Item2ItemStructure.Conversion[] Item2ItemStructure_ConversionArrayValue;
 

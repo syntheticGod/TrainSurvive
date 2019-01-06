@@ -20,9 +20,7 @@ MonoBehaviour:
   Name: "\u5E8A"
   Description: "\u666E\u901A\u7684\u6728\u5E8A\uFF0C\u4F7F\u5217\u8F66\u53EF\u4EE5\u591A\u5BB9\u7EB3\u4E00\u4F4D\u89D2\u8272"
   WorkAll: 6
-  BuildCosts:
-  - id: 211
-    num: 1
+  BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 2
   RequiredTech: 16
@@ -44,16 +42,16 @@ MonoBehaviour:
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _addInventoryMax
-    TypeName: System.Single
-    System_Int32Value: 0
+  - Name: _addMemberMax
+    TypeName: System.Int32
+    System_Int32Value: 1
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _addMemberMax
-    TypeName: System.Int32
+  - Name: _addFoodMax
+    TypeName: System.Single
     System_Int32Value: 1
     System_BooleanValue: 0
     System_SingleValue: 0

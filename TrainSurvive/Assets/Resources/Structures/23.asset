@@ -9,34 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95f33b8309e789744ad7f4f96a356165, type: 3}
-  m_Name: 8
+  m_Name: 23
   m_EditorClassIdentifier: 
-  ID: 8
+  ID: 23
   LayerOrientation: {x: 0, y: -1}
   Layer: 9
   RequiredLayers:
     serializedVersion: 2
     m_Bits: 256
-  Name: "\u4E2D\u7EA7\u7814\u7A76\u53F0"
+  Name: "\u51B7\u85CF\u5BA4"
   Description: 
-  WorkAll: 18
-  BuildCosts:
-  - id: 211
-    num: 1
+  WorkAll: 12
+  BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
-  Class: 1
-  RequiredTech: 2
-  Initializer: ResearchableStructure
+  Class: 3
+  RequiredTech: 6
+  Initializer: MaxValueModifiableStructure
   InitializeValues:
-  - Name: _speed
-    TypeName: System.Single
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 1.2
-    System_StringValue: 
-    Item2EnergyStructure_ConversionArrayValue: []
-    Item2ItemStructure_ConversionArrayValue: []
-  - Name: _costElect
+  - Name: _addElectMax
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
@@ -44,12 +34,28 @@ MonoBehaviour:
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _costEnergy
+  - Name: _addEnergyMax
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0.6
+    System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  InitializerObject: {fileID: 11500000, guid: 0716d49999e125d47bc762133350df01, type: 3}
+  - Name: _addMemberMax
+    TypeName: System.Int32
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  - Name: _addFoodMax
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 2000
+    System_StringValue: 
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 1ee0e5d92a614eb4f9244eef2af3e8e2, type: 3}

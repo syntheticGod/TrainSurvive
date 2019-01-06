@@ -20,12 +20,10 @@ MonoBehaviour:
   Name: "\u52A8\u80FD\u6838\u5FC3"
   Description: "\u5B58\u50A8\u52A8\u80FD\u7684\u80FD\u6E90\u6838\u5FC3\uFF0C\u63D0\u4F9B2000\u52A8\u80FD\u5B58\u50A8\u4E0A\u9650"
   WorkAll: 0.01
-  BuildCosts:
-  - id: 211
-    num: 1
+  BuildCosts: []
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 0
-  RequiredTech: 1
+  RequiredTech: 8
   Initializer: MaxValueModifiableStructure
   InitializeValues:
   - Name: _addElectMax
@@ -44,16 +42,16 @@ MonoBehaviour:
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _addInventoryMax
-    TypeName: System.Single
+  - Name: _addMemberMax
+    TypeName: System.Int32
     System_Int32Value: 0
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
-  - Name: _addMemberMax
-    TypeName: System.Int32
+  - Name: _addFoodMax
+    TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
     System_SingleValue: 0

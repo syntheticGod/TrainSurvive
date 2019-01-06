@@ -9,16 +9,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e5daadb8df7cf8479aa701891ae3d7e, type: 3}
-  m_Name: 25
+  m_Name: 5
   m_EditorClassIdentifier: 
-  ID: 25
-  Dependencies: 0d00000018000000
-  Name: "\u91D1\u5DE5\u5B66II"
+  ID: 5
+  Dependencies: 04000000
+  Name: "\u79D1\u5B66\u539F\u7406V"
   Description: 
   TotalWorks: 6
   OnCompleted:
     Class: 
-    AcceptTypes: []
+    AcceptTypes:
+    - Tech
     MethodCandidateNames: []
     CandidateSelection: 0
     ClassObject: {fileID: 0}

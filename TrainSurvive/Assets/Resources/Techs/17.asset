@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: 17
   m_EditorClassIdentifier: 
   ID: 17
-  Dependencies: 0d00000010000000
-  Name: "\u6728\u5DE5\u5B66II"
+  Dependencies: 1000000003000000
+  Name: "\u9AD8\u7EA7\u5BB6\u5177"
   Description: 
   TotalWorks: 6
   OnCompleted:
