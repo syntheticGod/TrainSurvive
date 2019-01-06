@@ -165,7 +165,7 @@ public class Structure : ISerializable {
     /// </summary>
     /// <returns></returns>
     public bool IsCostsAvailable() {
-        return PublicMethod.CanConsumeItems(ConstructionManager.StructureSettings[ID].BuildCosts);
+        return PublicMethod.IfHaveEnoughItems(ConstructionManager.StructureSettings[ID].BuildCosts);
     }
 
     public Structure(int id) {

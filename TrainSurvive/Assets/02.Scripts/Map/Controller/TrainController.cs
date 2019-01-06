@@ -52,7 +52,7 @@ namespace WorldMap.Controller
             ActiveBTs(!WorldForMap.Instance.IfTeamOuting);
             trainActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
             //列车图标
-            GOTool.CreateSpriteRenderer("Train", transform).sprite = StaticResource.GetSprite(ESprite.TRAIN);
+            GOTool.CreateSpriteRenderer("Train", transform).sprite = StaticResource.GetSprite("Sprite/map/Train");
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
         protected override void OnEnable()

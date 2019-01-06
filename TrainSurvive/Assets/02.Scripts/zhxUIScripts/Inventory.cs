@@ -62,10 +62,10 @@ namespace Assets._02.Scripts.zhxUIScripts
         //  构造  ---------------------------------
         public Inventory(float maxsize = 0, InventoryCtrl _controler = null)
         {
-            if (maxsize == 0)
-                _max_size = maxsize;
-            else
-                _max_size = World.getInstance().trainInventoryMaxSize;
+            //if (maxsize == 0)
+            //    _max_size = maxsize;
+            //else
+            //    _max_size = World.getInstance().trainInventoryMaxSize;
             currSize = 0f;
             _items = new List<Item>();
             controller = _controler;

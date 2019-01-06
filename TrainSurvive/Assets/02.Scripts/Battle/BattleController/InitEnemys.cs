@@ -34,16 +34,21 @@ namespace WorldBattle {
                 //当前玩家操作的角色
                 BattleActor battleActor = new EnemyAI();
 
-                if (battleController.isTest == false) {
-                    MonsterInitializer mi = new MonsterInitializer();
-                    mi.initializeMonster(ref curPlayer, 2);
-                    battleActor = mi.getBattleActor();
-                } else {
-                    //测试用自己的
-                    battleActor = curPlayer.AddComponent<EnemyAI>();
-                    battleActor.playerPrefab = curPlayer;
-                    InitPlayers.initPersonPara(ref battleActor, 1.0f);
-                }              
+                //if (battleController.isTest == false) {
+                //    MonsterInitializer mi = new MonsterInitializer();
+                //    mi.initializeMonster(ref curPlayer, 2);
+                //    battleActor = mi.getBattleActor();
+                //} else {
+                //    //测试用自己的
+                //    battleActor = curPlayer.AddComponent<EnemyAI>();
+                //    battleActor.playerPrefab = curPlayer;
+                //    InitPlayers.initPersonPara(ref battleActor, 1.0f);
+                //}              
+
+                //怪物AI目前有问题
+                battleActor = curPlayer.AddComponent<EnemyAI>();
+                battleActor.playerPrefab = curPlayer;
+                InitPlayers.initPersonPara(ref battleActor, 1.0f);
 
                 //初始化人物的位置
                 battleActor.pos = battleController.battleMapLen;

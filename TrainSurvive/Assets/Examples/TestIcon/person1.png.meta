@@ -2,13 +2,13 @@ fileFormatVersion: 2
 guid: 4287c0f6c39212f40baaefce6091e4ba
 TextureImporter:
   fileIDToRecycleName:
-    21300000: person1_left_0
+    21300000: person1_left
     21300002: person1_left_1
     21300004: person1_left_2
-    21300006: person1_top_0
+    21300006: person1_top
     21300008: person1_top_1
     21300010: person1_top_2
-    21300012: person1_bottom_0
+    21300012: person1_bottom
     21300014: person1_bottom_1
     21300016: person1_10
     21300018: person1_11
@@ -96,7 +96,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: person1_left_0
+      name: person1_left
       rect:
         serializedVersion: 2
         x: 1
@@ -156,7 +156,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: person1_top_0
+      name: person1_top
       rect:
         serializedVersion: 2
         x: 2
@@ -216,7 +216,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: person1_bottom_0
+      name: person1_bottom
       rect:
         serializedVersion: 2
         x: 2

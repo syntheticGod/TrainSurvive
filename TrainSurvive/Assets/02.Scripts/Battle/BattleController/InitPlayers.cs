@@ -186,9 +186,13 @@ namespace WorldBattle {
             person.maxHealthPoint = Random.Range(150.0f, 200.0f) * para;
             person.maxActionPoint = Random.Range(50.0f, 100.0f) * para;
             person.hpRecovery = 5;
-            person.apRecovery = 100;
+            if (BattleController.getInstance().isTest == true) {
+                person.apRecovery = 100;
+            } else {
+                person.apRecovery = 5;
+            }
             person.atkNeedTime = 1 / (Random.Range(0.5f, 1.5f) * para);
-            person.moveSpeed = Random.Range(0.5f, 1.5f);
+            person.moveSpeed = Random.Range(0.5f, 2.0f);
             person.atkDamage = Random.Range(5f, 10f) * para;
             person.atkRange = Random.Range(1f, 5f) * para;
             person.damageRate = 1.0f;

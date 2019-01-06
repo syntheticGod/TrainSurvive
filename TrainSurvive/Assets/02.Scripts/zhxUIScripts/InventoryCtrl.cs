@@ -22,7 +22,7 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     {
         coreInventory = new Inventory(300, this);              //测试临时MaxSize
         itemGridInst = new List<GameObject>();
-        coreInventory.currSize = World.getInstance().trainInventoryCurSize;
+        //coreInventory.currSize = World.getInstance().trainInventoryCurSize;
         //jiazai item
         //for (int i = 0; i < World.getInstance().itemDataInTrain.Count; ++i)
         //{

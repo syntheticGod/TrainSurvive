@@ -97,8 +97,8 @@ public class SkillInfo
                 AbiReqs[y].Number = int.Parse(attributeRequires[y].Attributes["Number"].Value);
             }
         }
-        BigSprite = StaticResource.GetSprite(ESprite.DEVELOPING_BIG);
-        SmallSprite = StaticResource.GetSprite(ESprite.DEVELOPING_SMALL);
+        BigSprite = StaticResource.GetSprite("Commen/developing_icon_01_big");
+        SmallSprite = StaticResource.GetSprite("Commen/developing_icon_01_small");
     }
     /// <summary>
     /// 判断该技能是否达到传入的属性的要求

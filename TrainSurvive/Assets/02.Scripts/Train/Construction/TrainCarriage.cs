@@ -155,7 +155,7 @@ public class TrainCarriage : ISerializable {
     /// </summary>
     /// <returns></returns>
     public bool IsCostsAvailable() {
-        return PublicMethod.CanConsumeItems(ConstructionManager.CarriageSettings[ID].BuildCosts);
+        return PublicMethod.IfHaveEnoughItems(ConstructionManager.CarriageSettings[ID].BuildCosts);
     }
 
     protected void CallOnStateChange() {

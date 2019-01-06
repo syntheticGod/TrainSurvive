@@ -24,11 +24,11 @@ namespace Assets._02.Scripts.zhxUIScripts
     {
         public static string GenerateRdString(int length)                   //生成某个长度的随机字符串
         {
-            string result = "";   
-            for(int i=0; i<length; ++i)
+            string result = "";
+            for (int i = 0; i < length; ++i)
             {
-                result += ((char)Random.Range(65,81)).ToString();
-                
+                result += ((char)Random.Range(65, 81)).ToString();
+
             }
             return result;
         }
@@ -49,13 +49,13 @@ namespace Assets._02.Scripts.zhxUIScripts
             List<Item> items = new List<Item>();
             Item temp = new Material(id);
             int fullCountNum = num / temp.maxPileNum;
-            for(int i=0; i<fullCountNum; ++i)
+            for (int i = 0; i < fullCountNum; ++i)
             {
                 temp = new Material(id);
                 temp.currPileNum = temp.maxPileNum;
                 items.Add(temp);
             }
-            if(num % temp.maxPileNum == 0)
+            if (num % temp.maxPileNum == 0)
             {
                 return items;
             }
@@ -65,7 +65,7 @@ namespace Assets._02.Scripts.zhxUIScripts
             return items;
         }
 
-        private static List<Item> GenerateSpecial(int id,int num)
+        private static List<Item> GenerateSpecial(int id, int num)
         {
             List<Item> items = new List<Item>();
             Item temp = new SpecialItem(id);
@@ -89,13 +89,13 @@ namespace Assets._02.Scripts.zhxUIScripts
         public static Item[] GenerateItem(int id, int num = 1)                  //当传入num大于堆叠数量时，会将多个实例装入数组返回
         {
             List<Item> items = new List<Item>();
-            if(id >= 0 && id <= 199)
+            if (id >= 0 && id <= 199)
                 items.Add(GenerateWeapon(id));
-            else if(id >= 200 && id <= 699)
+            else if (id >= 200 && id <= 699)
             {
                 items = GenerateMaterial(id, num);
             }
-            else if(id >= 700 && id <= 999)
+            else if (id >= 700 && id <= 999)
             {
                 items = GenerateSpecial(id, num);
             }
@@ -120,143 +120,85 @@ namespace Assets._02.Scripts.zhxUIScripts
             //return items.ToArray();
             return items.ToArray();
         }
-
-        private static bool CanConsumeItem(ItemData itemData)
+        /// <summary>
+        /// 判断仓库中指定ID的物体的数量是否大于number。
+        /// </summary>
+        /// <param name="itemID">物体ID</param>
+        /// <param name="number">数量</param>
+        /// <returns></returns>
+        private static bool CanConsumeItem(int itemID, int number)
         {
-            //int totalNum = 0;
-            //List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
-            //for (int i=0; i< itemDataInTrain.Count; ++i)
-            //{   //算出目标物品在仓库内共有几个
-            //    if(itemDataInTrain[i].ID == itemData.ID)
-            //    {
-            //        totalNum += itemDataInTrain[i].Number;
-            //    }
-            //}
-            //if(totalNum >= itemData.Number)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            return false;
-            //}
+            return World.getInstance().storage.GetNumberByID(itemID) >= number;
         }
-
-        private static void ConsumeItem(ItemData itemData)
+        /// <summary>
+        /// 移出仓库中指定ID的物品
+        /// </summary>
+        /// <param name="itemID">物品ID</param>
+        /// <param name="number">数量</param>
+        /// <returns>
+        /// TRUE：删除成功
+        /// FALSE：仓库物品不足够，取消删除
+        /// </returns>
+        private static bool ConsumeItem(int itemID, int number)
         {
-            //List<ItemData> itemDataInTrain = World.getInstance().itemDataInTrain;
-            //List<int> removeIndex = new List<int>();
-            //int alreadyConsumeNum = 0;
-            //for(int i=itemDataInTrain.Count-1; i>=0; --i)
-            //{
-            //    if(itemDataInTrain[i].ID == itemData.ID)
-            //    {
-            //        if(itemData.Number - alreadyConsumeNum <= itemDataInTrain[i].Number)
-            //        {
-            //            itemDataInTrain[i].Number -= (itemData.Number - alreadyConsumeNum);
-            //            if(itemDataInTrain[i].Number == 0)
-            //            {
-            //                removeIndex.Add(i);
-            //            }
-            //            break;
-            //        }
-            //        else
-            //        {
-            //            removeIndex.Add(i);
-            //            alreadyConsumeNum += itemDataInTrain[i].Number;
-            //        }
-            //    }
-            //}
-            //foreach (int index in removeIndex)
-            //{
-            //    itemDataInTrain.RemoveAt(index);
-            //}
+            return World.getInstance().storage.RemoveItem(itemID, number);
         }
-
+        /// <summary>
+        /// 从仓库中一起移除物品列表中所有的物品
+        /// </summary>
+        /// <param name="consumeList">物品列表</param>
+        /// <returns>
+        /// TRUE：删除成功
+        /// FALSE：其中一个物品不够充足，取消全部删除
+        /// </returns>
         public static bool ConsumeItems(ItemData[] consumeList)    //测试成功
-        { 
-            if (!CanConsumeItems(consumeList)) {              //不能和消耗函数结合一起进行判断，因为一旦消耗掉前面的部分，后部分若不够则无法撤回
+        {
+            if (!IfHaveEnoughItems(consumeList))
                 return false;
-            }
-            float consumeSize = 0f;
-            for(int i=0; i< consumeList.Length; ++i)
-            {
-                ConsumeItem(consumeList[i]);
-                consumeSize += consumeList[i].Size * consumeList[i].Number;
-            }
-            World.getInstance().trainInventoryCurSize -= consumeSize;
+            foreach(ItemData item in consumeList)
+                ConsumeItem(item.ID, item.Number);
             return true;
         }
-
-        public static bool CanConsumeItems(ItemData[] consumeList)    //测试成功
+        /// <summary>
+        /// 判断仓库中是否有充足的物品
+        /// </summary>
+        /// <param name="consumeList">物品列表</param>
+        /// <returns>
+        /// TRUE：有足够的物品
+        /// FALSE：没有足够的物品
+        /// </returns>
+        public static bool IfHaveEnoughItems(ItemData[] consumeList)    //测试成功
         {
             for (int i = 0; i < consumeList.Length; ++i)
             {
-                if (!CanConsumeItem(consumeList[i])) {
+                if (!CanConsumeItem(consumeList[i].ID, consumeList[i].Number))
+                {
                     return false;
                 }
             }
             return true;
         }
-
-        private static void appendAItem(ItemData item)
+        /// <summary>
+        /// 往仓库中添加指定物品
+        /// </summary>
+        /// <param name="item">物品</param>
+        public static void AppendAItem(ItemData item)
         {
-            List<int> indexes = new List<int>();
-            int max = World.getInstance().storage.Count;
-            for (int i=0; i<max; ++i)
-            {
-                //if (World.getInstance().itemDataInTrain[i].id == item.ID)
-                //    indexes.Add(i);
-            }
-         
-            for (int i = 0; i<indexes.Count; ++i)
-            {
-                //int index = indexes[i];
-                //Item aimItem = World.getInstance().itemDataInTrain[index].item;
-                
-                //if (aimItem.maxPileNum - aimItem.currPileNum >= item.Number)
-                //{
-                //    World.getInstance().itemDataInTrain[index].num += item.Number;
-                //    return;
-                //}
-                //else
-                //{
-                //    World.getInstance().itemDataInTrain[index].num = aimItem.maxPileNum;
-                //    item.Number -= aimItem.maxPileNum - aimItem.currPileNum;
-                //}
-            }
-            //World.getInstance().itemDataInTrain.Add(item);  
+            World.getInstance().storage.AddItem(item);
         }
-
-        public static bool AppendItemsInBackEnd(ItemData[] appendList)
+        /// <summary>
+        /// 往仓库中添加指定物品
+        /// 无限仓库
+        /// </summary>
+        /// <param name="appendList">物品列表</param>
+        /// <returns>
+        /// </returns>
+        public static void AppendItemsInBackEnd(ItemData[] appendList)
         {
-            float appendSize = 0f;
-            foreach(ItemData itemData in appendList)
+            foreach (ItemData itemData in appendList)
             {
-                Item[] tempItem = GenerateItem(itemData.ID, itemData.Number);
-                for(int i=0; i<tempItem.Length; ++i)
-                {
-                    appendSize += tempItem[i].size;
-                }
+                World.getInstance().storage.AddItem(itemData);
             }
-            if(appendSize > World.getInstance().trainInventoryMaxSize - World.getInstance().trainInventoryCurSize)
-            {
-                return false;
-            }
-            else
-            {
-                foreach (ItemData itemData in appendList)
-                {
-                    Item[] tempItem = GenerateItem(itemData.ID, itemData.Number);
-                    for (int i = 0; i < tempItem.Length; ++i)
-                    {
-                        World.getInstance().trainInventoryCurSize += tempItem[i].size * tempItem[i].currPileNum;
-                        appendAItem(itemData);
-                    }
-                }
-            }
-            
-            return true;
         }
     }
 }
