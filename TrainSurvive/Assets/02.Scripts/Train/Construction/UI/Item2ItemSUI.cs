@@ -23,8 +23,8 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void Awake() {
-        Raw.ChargeIn = (item) => Structure.Conversions.ContainsKey(item.id);
-        Output.ChargeIn = (item) => false;
+        Raw.ChargeIn = (int itemID, int number) => Structure.Conversions.ContainsKey(itemID);
+        Output.ChargeIn = null;
     }
 
     private void OnEnable() {
@@ -57,17 +57,16 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void OnAcquireRaw(ref ItemData old) {
-        Item item = Raw.GetItem();
-        if (item == null) { // item空
+        if (Raw.IfBeDragedOut) { // item空
             old = null;
         } else {
             if (old == null) { // item不空，old空
-                old = new ItemData(item.id, item.currPileNum);
+                old = new ItemData(Raw.ItemID, Raw.Number);
             } else {
-                if (old.ID == item.id) {  // item不空，old不空，item与old的id相同
-                    old.Number = item.currPileNum;
+                if (old.ID == Raw.ItemID) {  // item不空，old不空，item与old的id相同
+                    old.Number = Raw.Number;
                 } else {  // item不空，old不空，item与old的id不同
-                    old = new ItemData(item.id, item.currPileNum);
+                    old = new ItemData(Raw.ItemID, Raw.Number);
                 }
             }
         }
@@ -77,23 +76,22 @@ public class Item2ItemSUI : FacilityUI {
         if (newItem == null) {
             Raw.Clear();
         } else {
-            Raw.GetItem().currPileNum = newItem.Number;
+            Raw.SetItemData(newItem);
         }
     }
 
     private void OnAcquireOutput(ref ItemData old) {
-        Item item = Output.GetItem();
-        if (item == null) { // item空
+        if (Output.IfEmpty()) { // item空
             old = null;
         }
     }
 
     private void OnOutputUpdate(ItemData newItem) {
-        if (Output.GetItem() == null) { // item不空，old空
+        if (Output.IfEmpty()) { // item不空，old空
             Output.GeneratorItem(newItem.ID, newItem.Number);
         } else {
-            if (Output.GetItem().id == newItem.ID) {  // item不空，old不空，item与old的id相同
-                Output.GetItem().currPileNum = newItem.Number;
+            if (Output.ItemID == newItem.ID) {  // item不空，old不空，item与old的id相同
+                Output.SetNumber(newItem.Number);
             } else {  // item不空，old不空，item与old的id不同
                 Output.Clear();
                 Output.GeneratorItem(newItem.ID, newItem.Number);

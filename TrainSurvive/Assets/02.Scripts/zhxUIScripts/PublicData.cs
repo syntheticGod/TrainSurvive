@@ -67,7 +67,16 @@ namespace Assets._02.Scripts.zhxUIScripts
         public delegate void VoidCallback();
         public delegate void ItemDiscard();
         public delegate void ItemGain();
-        public delegate bool Charge(Item item);
+        /// <summary>
+        /// 物品单元格拖拽功能 中 判断是否接受该物品的代理函数
+        /// </summary>
+        /// <param name="itemID">物品ID</param>
+        /// <param name="number">数量</param>
+        /// <returns>
+        /// TRUE：不允许
+        /// FALSE：允许
+        /// </returns>
+        public delegate bool Charge(int itemID, int number);
 
         public static class Copy<TIn, TOut>
         {

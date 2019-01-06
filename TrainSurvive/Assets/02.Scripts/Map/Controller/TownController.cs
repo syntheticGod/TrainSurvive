@@ -108,9 +108,10 @@ namespace WorldMap.Controller
                     break;
                 case BUTTON_ID.TOWN_SHOP:
                     Debug.Log("进入商店");
-                    ShopController shopController = ControllerManager.GetWindow<ShopController>("ShopController");
-                    shopController.SetTown(currentTown);
-                    shopController.Show(this);
+                    //ShopController shopController = ControllerManager.GetWindow<ShopController>("ShopController");
+                    //shopController.SetTown(currentTown);
+                    //shopController.Show(this);
+                    InfoDialog.Show("维护中...");
                     break;
                 case BUTTON_ID.TOWN_SPECIAL_BUILDING:
                     InfoDialog.Show("待开发");

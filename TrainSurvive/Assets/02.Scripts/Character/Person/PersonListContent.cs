@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using TTT.Resource;
+using TTT.Item;
 
 public class PersonListContent : MonoBehaviour {
     public UnitInventoryCtrl EquipmentCtrl;
@@ -17,7 +19,7 @@ public class PersonListContent : MonoBehaviour {
     // Use this for initialization
     void Start () {
         reloadData();
-        EquipmentCtrl.ChargeIn = (item) => item.itemType == Assets._02.Scripts.zhxUIScripts.PublicData.ItemType.Weapon;
+        EquipmentCtrl.ChargeIn = (int itemID, int number) => StaticResource.GetItemInfoByID<WeaponInfo>(itemID) != null;
     }
 	
 

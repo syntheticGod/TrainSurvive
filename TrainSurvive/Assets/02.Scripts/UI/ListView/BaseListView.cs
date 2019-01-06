@@ -353,6 +353,14 @@ namespace TTT.UI
             Refresh();
             return true;
         }
+        public bool RemoveDataAt(int index)
+        {
+            if (index >= Datas.Count || index < 0)
+                return false;
+            Datas.RemoveAt(index);
+            Refresh();
+            return true;
+        }
         /// <summary>
         /// 除去所有的数据
         /// </summary>

@@ -29,6 +29,8 @@ namespace TTT.Controller
         private string[] topLeftBtnsName = { "Close" };
         private string[] topLeftBtnsContent = { "关 闭" };
         private Button[] topLeftBtns;
+        public Vector2 minAnchor = defaultMinAnchor;
+        public Vector2 maxAnchor = defaultMaxAnchor;
         //数据
         private List<ItemData> items;
         protected override void CreateModel()
@@ -45,7 +47,9 @@ namespace TTT.Controller
 
             enableBackgroudImage = false;
             enableTitileBar = false;
-            WinSizeMaxOffset = new Vector2(sizeOfRightBottom.x, sizeOfTopLeft.y);            
+            WinSizeMaxOffset = new Vector2(sizeOfRightBottom.x, sizeOfTopLeft.y);
+            defaultMinAnchor = minAnchor;
+            defaultMaxAnchor = maxAnchor;
             base.CreateModel();
 
             //Backgroud Image

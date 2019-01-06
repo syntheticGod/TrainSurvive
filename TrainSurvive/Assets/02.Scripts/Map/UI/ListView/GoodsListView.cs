@@ -26,7 +26,7 @@ namespace WorldMap.UI
             buyClickEvent.callBackGoodsAction = callBackGoodsAction;
             view.SetActionBtnContent(ActionBtnString);
             view.BindActionBtnEvent(buyClickEvent);
-            view.SetItemInfo(data.Item);
+            view.SetItemID(data.ID);
             view.SetNumber(data.Number);
             view.SetPrice(data.SellPrice);
             return view;

@@ -11,6 +11,7 @@ using System.Collections;
 using TTT.Utility;
 using TTT.UI;
 using TTT.Item;
+using UnityEngine.EventSystems;
 
 namespace WorldMap.UI
 {
@@ -55,14 +56,20 @@ namespace WorldMap.UI
         protected sealed override void OnItemView(ListViewItem item, ItemData data, int itemIndex)
         {
             ResourceItemBase view = GetResourceItemBase(item, data);
-            view.onItemEnter = delegate (ResourceItemBase i) {
+            view.Index = itemIndex;
+            view.onItemEnter = delegate (ResourceItemBase i)
+            {
                 ItemData temp = data;
                 StartCoroutine(ShowPanel(temp));
             };
-            view.onItemExit = CallbackItemExit;
+            view.onItemExit = delegate (ResourceItemBase i)
+            {
+                StopAllCoroutines();
+                hoverPanel.gameObject.SetActive(false);
+            };
         }
         protected abstract ResourceItemBase GetResourceItemBase(ListViewItem item, ItemData data);
-        
+
         IEnumerator ShowPanel(ItemData data)
         {
             yield return new WaitForSeconds(0.5f);
@@ -71,11 +78,6 @@ namespace WorldMap.UI
             infoText.text = data.Name;
             detailText.text = data.Description;
             hoverPanel.gameObject.SetActive(true);
-        }
-        public void CallbackItemExit(ResourceItemBase item)
-        {
-            StopAllCoroutines();
-            hoverPanel.gameObject.SetActive(false);
         }
     }
 }

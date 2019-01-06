@@ -13,22 +13,22 @@ using TTT.UI;
 
 using TTT.Item;
 using TTT.Resource;
+using Assets._02.Scripts.zhxUIScripts;
 
 namespace WorldMap.UI
 {
     public class ResourceItemBase : BaseItem, IPointerEnterHandler, IPointerExitHandler
     {
-        public delegate void OnHoverCallBack(ResourceItemBase item);
-        public OnHoverCallBack onItemEnter { set; get; }
-        public OnHoverCallBack onItemExit { set; get; }
+        public delegate void OnItemHoverCallBack(ResourceItemBase item);
+        public OnItemHoverCallBack onItemEnter { set; get; }
+        public OnItemHoverCallBack onItemExit { set; get; }
 
-        protected static string spriteFloder = "ItemSprite/";
         protected Image backgroudImage;
         protected Image markImage;
         protected Image targetImage;
-        private string targetImageFN;
-        private string markImageFN;
-        private string backgroudImageFN;
+
+        public int Index { get; set; }
+        public int ItemID { get; protected set; } = -1;
         protected static Color[] markColors = new Color[]
         {
             new Color(1, 1, 1),
@@ -66,36 +66,36 @@ namespace WorldMap.UI
                 markImage.color = markColors[level];
         }
         /// <summary>
-        /// 设置物品的图片，图片需要存在ItemSprite目录下
-        /// </summary>
-        /// <param name="name">图片文件名，不需要后缀</param>
-        public void SetTargetByName(string name)
-        {
-            if (name.Equals(targetImageFN))
-                return;
-            targetImageFN = name;
-            Sprite sprite = Resources.Load<Sprite>(spriteFloder + name);
-            targetImage.sprite = sprite;
-        }
-        /// <summary>
         /// 通过item设置图片
         /// </summary>
-        /// <param name="item"></param>
-        public void SetItemInfo(ItemInfo item)
+        /// <param name="id"></param>
+        public void SetItemID(int id)
         {
+            ItemID = id;
+            ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
             targetImage.sprite = item.BigSprite;
             markImage.color = markColors[(int)item.Rarity];
+        }
+        public virtual void Clear()
+        {
+            markImage.color = markColors[(int)PublicData.Rarity.Poor];
+            targetImage.sprite = null;
+            Index = -1;
+            ItemID = -1;
+        }
+        public bool IfEmpty()
+        {
+            return ItemID == -1;
         }
         public void OnPointerEnter(PointerEventData eventData)
         {
             onItemEnter?.Invoke(this);
-            Debug.Log("ItemBase PointerEnter");
+            //Debug.Log("ItemBase PointerEnter");
         }
-
         public void OnPointerExit(PointerEventData eventData)
         {
             onItemExit?.Invoke(this);
-            Debug.Log("ItemBase PointerExit");
+            //Debug.Log("ItemBase PointerExit");
         }
     }
 }

@@ -462,7 +462,11 @@ namespace TTT.Resource
         public static T GetItemInfoByID<T>(int id)
             where T : ItemInfo
         {
-            if (!ItemTable.ContainsKey(id)) return null;
+            if (!ItemTable.ContainsKey(id))
+            {
+                Debug.LogError("获得了一个不存在的物品ID" + id);
+                return null;
+            }
             return ItemTable[id] as T;
         }
         //----------物品----------↑

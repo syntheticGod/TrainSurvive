@@ -12,9 +12,6 @@ namespace WorldMap.UI
         protected override void InitModel()
         {
             base.InitModel();
-            SetMarkLevel(4);
-            SetTargetByName("Weapon_img");
-            SetNumber(100);
         }
     }
 }
