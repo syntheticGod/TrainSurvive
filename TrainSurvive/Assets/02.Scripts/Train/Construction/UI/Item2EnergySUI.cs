@@ -75,7 +75,7 @@ public class Item2EnergySUI : FacilityUI
 
     private void OnAcquireGas(ref ItemData old)
     {
-        if (Gas.IfBeDragedOut)
+        if (Gas.IfBeDragedOut || Gas.IfEmpty())
         { // item被拖出
             old = null;
         }

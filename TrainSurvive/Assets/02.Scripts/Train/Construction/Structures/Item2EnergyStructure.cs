@@ -136,9 +136,6 @@ public class Item2EnergyStructure : Structure {
     public ItemData Gas {
         get {
             OnAcquireGas?.Invoke(ref _gas);
-            if (_gas != null && _gas.ID == -1) {
-                _gas = null;
-            }
             return _gas;
         }
         set {

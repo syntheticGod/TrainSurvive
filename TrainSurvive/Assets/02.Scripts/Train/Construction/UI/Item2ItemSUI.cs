@@ -57,7 +57,7 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void OnAcquireRaw(ref ItemData old) {
-        if (Raw.IfBeDragedOut) { // item空
+        if (Raw.IfBeDragedOut || Raw.IfEmpty()) { // item空
             old = null;
         } else {
             if (old == null) { // item不空，old空
