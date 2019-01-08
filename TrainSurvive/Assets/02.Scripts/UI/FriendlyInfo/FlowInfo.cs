@@ -13,21 +13,7 @@ using TTT.Resource;
 
 namespace TTT.UI
 {
-    public class FlowInfoData
-    {
-        public FlowInfoData(int itemID, string title, string detail, string time)
-        {
-            ItemID = itemID;
-            Title = title;
-            Detail = detail;
-            Time = time;
-        }
-        public int ItemID { get; set; }
-        public string Title { get; set; }
-        public string Detail { get; set; }
-        public string Time { get; set; }
-    }
-    public class FlowInfo : BaseListView<FlowInfoData>
+    public class FlowInfo : BaseListView<FlowBaseData>
     {
         protected override void Awake()
         {
@@ -36,23 +22,23 @@ namespace TTT.UI
             m_scrollType = ScrollType.Vertical;
             m_gridConstraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedColumnCount;
             m_gridConstraintCount = 1;
-            m_datas = new List<FlowInfoData>();
+            m_datas = new List<FlowBaseData>();
+            m_ifRecycle = false;
             base.Awake();
             RectTransform rect = GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0, 0.1111f);
             rect.anchorMax = new Vector2(0.1875f, 0.6667f);
         }
-        protected override void OnItemView(ListViewItem item, FlowInfoData data, int itemIndex)
+        protected override void OnItemView(ListViewItem item, FlowBaseData data, int itemIndex)
         {
-            FlowInfoItem view = ViewTool.ForceGetComponentInChildren<FlowInfoItem>(item, "FlowInfoItem");
-            view.SetData(data);
+            data.CreateView(item);
         }
-        public override void AddItem(FlowInfoData data)
+        public override void AddItem(FlowBaseData data)
         {
             base.AddItem(data);
             StartCoroutine(Timer(data, 2f + Datas.Count * 0.2f));
         }
-        IEnumerator Timer(FlowInfoData data, float time)
+        IEnumerator Timer(FlowBaseData data, float time)
         {
             yield return new WaitForSeconds(time);
             Datas.Remove(data);
@@ -64,7 +50,13 @@ namespace TTT.UI
             string time = "";
             ItemInfo itemInfo = StaticResource.GetItemInfoByID<ItemInfo>(itemID);
             string detail = "获得" + number + "个稀有度为" + itemInfo.Rarity + "的" + itemInfo.Name + "。";
-            flowInfo.AddItem(new FlowInfoData(itemID, title, detail, time));
+            flowInfo.AddItem(new FlowItemData(itemID, title, detail, time));
+        }
+        public static void ShowInfo(string title, string detail)
+        {
+            FlowInfo flowInfo = ViewTool.ForceGetComponentInChildren<FlowInfo>(GameObject.Find("Canvas"), "FlowInfo");
+            string time = "";
+            flowInfo.AddItem(new FlowBaseData(title, detail, time));
         }
     }
 }

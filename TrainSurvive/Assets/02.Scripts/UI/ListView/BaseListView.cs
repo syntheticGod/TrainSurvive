@@ -44,7 +44,6 @@ namespace TTT.UI
         public ItemClick onItemClick { set; get; }
         public PersistenItemClick onPersistentItemClick { set; get; }
         public ItemFilter onItemFilter { set; get; }
-
         private RectTransform content;
         private RectTransform viewport;
         /// <summary>
@@ -96,6 +95,7 @@ namespace TTT.UI
             get { return m_ifSelectable; }
         }
         private bool m_ifSelectable = true;
+        protected bool m_ifRecycle = true;
         /// <summary>
         /// 选择的索引
         /// </summary>
@@ -176,7 +176,6 @@ namespace TTT.UI
                 }
             }
         }
-
         public GridLayoutGroup.Axis m_startAxis = GridLayoutGroup.Axis.Vertical;
         /// <summary>
         /// Horizontal：先水平填充，填充满一行后，再填充下一行
@@ -377,9 +376,16 @@ namespace TTT.UI
             for (int i = m_persistentCount; i < items.Count; ++i)
             {
                 ListViewItem item = items[i];
-                item.Recycle();
-                item.gameObject.SetActive(false);
-                recycal.Add(item);
+                if (m_ifRecycle)
+                {
+                    item.Recycle();
+                    item.gameObject.SetActive(false);
+                    recycal.Add(item);
+                }
+                else
+                {
+                    Destroy(item.gameObject);
+                }
             }
             items.RemoveRange(m_persistentCount, items.Count - m_persistentCount);
         }

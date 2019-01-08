@@ -68,7 +68,7 @@ public class Gather
         return result;
     }
 
-    public static void gather()
+    public static int gather()
     {
         World world = World.getInstance();
         Map mp = Map.GetInstance();
@@ -125,6 +125,7 @@ public class Gather
             World.getInstance().storage.AddItem(itemId, itemNums);
             FlowInfo.ShowItem("采集信息", itemId, itemNums);
         }
+        return itemNums;
     }
 
 

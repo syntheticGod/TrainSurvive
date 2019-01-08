@@ -12,6 +12,7 @@ using TTT.Utility;
 using TTT.Resource;
 using WorldMap.UI;
 using System;
+using TTT.UI;
 
 namespace WorldMap
 {
@@ -171,9 +172,12 @@ namespace WorldMap
             if (world.outVit < 20)
                 return false;
             world.addOutVit(-20);
+            int number = 0;
             //马上采集五次
             for (int i = 0; i < 5; i++)
-                Gather.gather();
+                number += Gather.gather();
+            if (number == 0)
+                FlowInfo.ShowInfo("采集信息", "很遗憾一个东西都没采集到");
             return true;
         }
         public void StopGather()

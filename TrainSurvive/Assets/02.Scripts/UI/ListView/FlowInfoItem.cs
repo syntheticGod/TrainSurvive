@@ -12,46 +12,49 @@ using WorldMap.UI;
 
 namespace TTT.UI
 {
-    public class FlowInfoItem : BaseItem
+    public class FlowItemData : FlowBaseData
     {
-        private Text titleView;
-        private Text detailView;
-        private Text timeView;
+        public FlowItemData(int itemID, string title, string detail, string time)
+            : base(title, detail, time)
+        {
+            ItemID = itemID;
+        }
+        public int ItemID { get; set; }
+        public override FlowBaseItem CreateView(Component parent)
+        {
+            FlowInfoItem view = ViewTool.ForceGetComponentInChildren<FlowInfoItem>(parent, "FlowBaseItem");
+            view.SetData(this);
+            return view;
+        }
+    }
+    public class FlowInfoItem : FlowBaseItem
+    {
         private ResourceItemBase itemView;
         protected override void CreateModel()
         {
-            titleView = ViewTool.CreateText("Title");
-            detailView = ViewTool.CreateText("Detail");
-            timeView = ViewTool.CreateText("Time");
+            base.CreateModel();
             itemView = ViewTool.ForceGetComponentInChildren<ResourceItemBase>(this, "ItemImage");
+            ViewTool.SetParent(itemView, this);
         }
 
         protected override void InitModel()
         {
-            titleView.alignment = TextAnchor.MiddleLeft;
-            titleView.fontSize = 15;
-            detailView.alignment = TextAnchor.UpperLeft;
-            detailView.fontSize = 20;
-            timeView.alignment = TextAnchor.MiddleLeft;
-            timeView.fontSize = 14;
+            base.InitModel();
         }
 
         protected override void PlaceModel()
         {
-            ViewTool.SetParent(titleView, this);
-            ViewTool.SetParent(detailView, this);
-            ViewTool.SetParent(timeView, this);
             ViewTool.Anchor(titleView, new Vector2(0.3333f, 0.75f), Vector2.one);
             ViewTool.Anchor(detailView, new Vector2(0.3333f, 0.25f), new Vector2(1f, 0.75f));
             ViewTool.Anchor(timeView, new Vector2(0.3333f, 0f), new Vector2(1, 0.25f));
             ViewTool.Anchor(itemView, new Vector2(0.0278f, 0.0834f), new Vector2(0.3056f, 0.9167f));
         }
-        public void SetData(FlowInfoData data)
+        public override void SetData(FlowBaseData data)
         {
-            titleView.text = data.Title;
-            detailView.text = data.Detail;
-            timeView.text = data.Time;
-            itemView.SetItemID(data.ItemID);
+            base.SetData(data);
+            FlowItemData infoData = data as FlowItemData;
+            if (infoData != null)
+                itemView.SetItemID(infoData.ItemID);
         }
     }
 }
