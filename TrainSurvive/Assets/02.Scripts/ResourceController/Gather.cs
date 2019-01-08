@@ -117,11 +117,14 @@ public class Gather
             itemNums = (int)Mathf.Floor((float)gatherRate);
         else
             itemNums = (int)Mathf.Ceil((float)gatherRate);
-        Team team = Team.Instance;
-        Gather g = new Gather();
-        int itemId = g.itemsFromGatherAtTerrain(teamPlace.terrainType);
-        World.getInstance().storage.AddItem(itemId, itemNums);
-        FlowInfo.ShowItem("采集信息", itemId, itemNums);
+        if(itemNums != 0)
+        {
+            Team team = Team.Instance;
+            Gather g = new Gather();
+            int itemId = g.itemsFromGatherAtTerrain(teamPlace.terrainType);
+            World.getInstance().storage.AddItem(itemId, itemNums);
+            FlowInfo.ShowItem("采集信息", itemId, itemNums);
+        }
     }
 
 
