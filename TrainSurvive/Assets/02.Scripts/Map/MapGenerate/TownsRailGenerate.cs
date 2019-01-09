@@ -28,9 +28,9 @@ namespace WorldMap {
         private const int townsNum = 25;
 
         //城镇图标在一个地块的偏移量
-        public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, -0.03f);
+        //public Vector3 townOffsetVec3 = new Vector3(0.0f, 0.0f, -0.03f);
         //铁轨图标在一个地块的偏移量
-        public Vector3 railOffsetVec3 = new Vector3(0.0f, 0.0f, -0.02f);
+        //public Vector3 railOffsetVec3 = new Vector3(0.0f, 0.0f, -0.02f);
 
         //设置城镇最近的距离
         public int minDist = 10;
@@ -139,7 +139,9 @@ namespace WorldMap {
                     //将城镇图标放在同一gameObject下
                     o.transform.parent = townParentObject.transform;
                     //设置城镇的偏移
-                    o.transform.position = o.transform.position + townOffsetVec3;
+                    //o.transform.position = o.transform.position + townOffsetVec3;
+                    //图层变更：
+                    o.GetComponent<SpriteRenderer>().sortingOrder = 3;
 
                     //设置城镇的gameObject
                     mapData.spowns[mapPos.x, mapPos.y].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TOWN, o);
@@ -441,7 +443,9 @@ namespace WorldMap {
             //将铁轨图标放在同一gameObject下
             o.transform.parent = railParentObject.transform;
             //设置铁轨的偏移
-            o.transform.position = o.transform.position + railOffsetVec3;
+            //o.transform.position = o.transform.position + railOffsetVec3;
+            //图层显示
+            o.GetComponent<SpriteRenderer>().sortingOrder = 2;
             //对铁轨进行旋转
             o.transform.rotation = Quaternion.Euler(o.transform.eulerAngles + rotate);
 
