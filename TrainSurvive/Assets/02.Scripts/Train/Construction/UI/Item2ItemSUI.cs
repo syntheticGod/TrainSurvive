@@ -12,96 +12,73 @@ using UnityEngine.UI;
 
 public class Item2ItemSUI : FacilityUI {
 
-    public UnitInventoryCtrl Output;
-    public UnitInventoryCtrl Raw;
-    public Slider Slider;
+    [Tooltip("配方Prefab")]
+    public FormulaUI_1_1 FormulaPrefab;
+    [Tooltip("列表Content")]
+    public RectTransform ScrollContent;
 
     private new Item2ItemStructure Structure {
         get {
             return base.Structure as Item2ItemStructure;
         }
     }
-
+    
     private void Awake() {
-        Raw.ChargeIn = (int itemID, int number) => Structure.Conversions.ContainsKey(itemID);
-        Output.ChargeIn = null;
+        foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
+            FormulaUI_1_1 formulaUI = Instantiate(FormulaPrefab, ScrollContent).GetComponent<FormulaUI_1_1>();
+            formulaUI.RawItem = new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum);
+            formulaUI.OutputItem = new ItemData(formula.Conversion.ToItemID, formula.Conversion.ToItemNum);
+            formulaUI.OnPriorityChanged += (priority) => {
+                int newIndex = formula.Priority + priority;
+                if (newIndex < 0 || newIndex >= Structure.Conversions.Count) {
+                    return;
+                }
+                Item2ItemStructure.Formula origin = Structure.Conversions[newIndex];
+                Structure.Conversions[newIndex] = formula;
+                Structure.Conversions[formula.Priority] = origin;
+                ScrollContent.GetChild(newIndex).transform.SetSiblingIndex(formula.Priority);
+                formulaUI.transform.SetSiblingIndex(newIndex);
+                origin.Priority = formula.Priority;
+                formula.Priority = newIndex;
+            };
+        }
     }
 
     private void OnEnable() {
         UpdateUI();
-        Structure.OnAcquireRaw = OnAcquireRaw;
-        Structure.OnRawUpdate = OnRawUpdate;
-        Structure.OnAcquireOutput = OnAcquireOutput;
-        Structure.OnOutputUpdate = OnOutputUpdate;
-        Structure.OnProgressChange += OnProgressChange;
 
-        UIManager.Instance?.ToggleInventoryPanel(true);
+        foreach(Item2ItemStructure.Formula formula in Structure.Conversions) {
+            formula.OnAcquireCount += Formula_OnAcquireCount;
+            formula.OnCountChanged += Formula_OnCountChanged;
+            formula.OnProgressChanged += Formula_OnProgressChanged;
+        }
     }
 
     private void OnDisable() {
-        Structure.OnAcquireRaw = null;
-        Structure.OnRawUpdate = null;
-        Structure.OnAcquireOutput = null;
-        Structure.OnOutputUpdate = null;
-        Structure.OnProgressChange -= OnProgressChange;
+        foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
+            formula.OnAcquireCount -= Formula_OnAcquireCount;
+            formula.OnCountChanged -= Formula_OnCountChanged;
+            formula.OnProgressChanged -= Formula_OnProgressChanged;
+            formula.Count = ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_1>().ProduceCount;
+        }
+    }
+
+    private void Formula_OnProgressChanged(int priority, float max, float value) {
+        ScrollContent.GetChild(priority).GetComponent<FormulaUI_1_1>().ChangeProgress(0, max, value);
+    }
+
+    private void Formula_OnCountChanged(int priority, int count) {
+        ScrollContent.GetChild(priority).GetComponent<FormulaUI_1_1>().ProduceCount = count;
+    }
+
+    private int Formula_OnAcquireCount(int priority) {
+        return ScrollContent.GetChild(priority).GetComponent<FormulaUI_1_1>().ProduceCount;
     }
 
     private void UpdateUI() {
-        Raw.Clear();
-        if (Structure.Raw != null)
-            Raw.GeneratorItem(Structure.Raw.ID, Structure.Raw.Number);
-        Output.Clear();
-        if (Structure.Output != null)
-            Output.GeneratorItem(Structure.Output.ID, Structure.Output.Number);
-        Slider.value = Structure.Progress;
-    }
-
-    private void OnAcquireRaw(ref ItemData old) {
-        if (Raw.IfBeDragedOut || Raw.IfEmpty()) { // item空
-            old = null;
-        } else {
-            if (old == null) { // item不空，old空
-                old = new ItemData(Raw.ItemID, Raw.Number);
-            } else {
-                if (old.ID == Raw.ItemID) {  // item不空，old不空，item与old的id相同
-                    old.Number = Raw.Number;
-                } else {  // item不空，old不空，item与old的id不同
-                    old = new ItemData(Raw.ItemID, Raw.Number);
-                }
-            }
+        foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
+            ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_1>().ProduceCount = formula.Count;
+            ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_1>().ChangeProgress(0, formula.Conversion.ProcessTime, formula.Progress);
         }
-    }
-
-    private void OnRawUpdate(ItemData newItem) {
-        if (newItem == null) {
-            Raw.Clear();
-        } else {
-            Raw.SetItemData(newItem);
-        }
-    }
-
-    private void OnAcquireOutput(ref ItemData old) {
-        if (Output.IfEmpty()) { // item空
-            old = null;
-        }
-    }
-
-    private void OnOutputUpdate(ItemData newItem) {
-        if (Output.IfEmpty()) { // item不空，old空
-            Output.GeneratorItem(newItem.ID, newItem.Number);
-        } else {
-            if (Output.ItemID == newItem.ID) {  // item不空，old不空，item与old的id相同
-                Output.SetNumber(newItem.Number);
-            } else {  // item不空，old不空，item与old的id不同
-                Output.Clear();
-                Output.GeneratorItem(newItem.ID, newItem.Number);
-            }
-        }
-    }
-
-    private void OnProgressChange(float min, float max, float value) {
-        Slider.minValue = min;
-        Slider.maxValue = max;
-        Slider.value = value;
     }
 }

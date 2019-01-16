@@ -19,6 +19,7 @@ public class UnitInventoryCtrl : AssetsItemView, IDropHandler, IDropMessageRecei
     //public GameObject grid;        //包含的物品格实例
     //private ItemGridCtrl gridCtrl;
     public bool isEquipmentGrid = false;
+    public bool allowedDragOut = true; // 允许拖出
     /// <summary>
     /// 准入判断函数
     /// </summary>
@@ -36,7 +37,7 @@ public class UnitInventoryCtrl : AssetsItemView, IDropHandler, IDropMessageRecei
     }
     public override void OnBeginDrag(PointerEventData eventData)
     {
-        if (!IfEmpty())
+        if (!IfEmpty() && allowedDragOut)
         {
             base.OnBeginDrag(eventData);
             IfBeDragedOut = true;

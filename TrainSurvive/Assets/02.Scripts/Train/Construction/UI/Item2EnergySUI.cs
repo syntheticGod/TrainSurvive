@@ -35,11 +35,11 @@ public class Item2EnergySUI : FacilityUI
             }
             return false;
         };
-        AutomataUI.OnChangeState = (state, value) =>
-        {
-            Structure.AutomataCount = value;
-            Structure.AutomataEnabled = state;
-        };
+        //AutomataUI.OnChangeState = (state, value) =>
+        //{
+        //    Structure.AutomataCount = value;
+        //    Structure.AutomataEnabled = state;
+        //};
     }
 
     private void OnEnable()
@@ -70,7 +70,7 @@ public class Item2EnergySUI : FacilityUI
         Slider.value = Structure.Progress;
         AutomataUI.gameObject.SetActive(World.getInstance().automata);
         AutomataUI.Value = Structure.AutomataCount;
-        AutomataUI.Enabled = Structure.AutomataEnabled;
+        //AutomataUI.Enabled = Structure.AutomataEnabled;
     }
 
     private void OnAcquireGas(ref ItemData old)
