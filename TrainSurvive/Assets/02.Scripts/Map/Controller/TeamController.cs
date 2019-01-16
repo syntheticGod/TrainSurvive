@@ -19,7 +19,8 @@ namespace WorldMap.Controller
     {
         //探险队icon最多显示个数
         public const int MAX_NUM_OF_TEAM_INVIEW = 5;
-        private int levelOfTeam = -2;
+        //private int levelOfTeam = -2;
+        private int levelOfTeam = 0;
         //视图
         private RectTransform teamModeBTs;
         private SpriteRenderer[] teamPersons;
@@ -90,6 +91,7 @@ namespace WorldMap.Controller
             if (team.Run(ref current))
             {
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
+                GetComponentInChildren<SpriteRenderer>().sortingOrder = 12;
             }
             //FOR TEST：检测背包重量测试
             if (!Mathf.Approximately(lastSize, team.Inventory.GetWeight()))

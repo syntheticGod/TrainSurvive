@@ -20,7 +20,8 @@ namespace WorldMap.Controller
 {
     public class TrainController : BaseController, Observer
     {
-        private const int levelOfTrain = -1;
+        //private const int levelOfTrain = -1;
+        private const int levelOfTrain = 0;
         //列车状态映射显示信息
         private static string[] trainActionBtnStrs = { "开车", "开车", "停车中...", "停车" };
         private const int ECHO_FROM_TRAIN = 1;
@@ -70,6 +71,7 @@ namespace WorldMap.Controller
             Debug.Log("TrainController Start");
             base.Start();
             transform.position = StaticResource.MapPosToWorldPos(Train.Instance.PosTrain, levelOfTrain);
+            GetComponentInChildren<SpriteRenderer>().sortingOrder = 10;
         }
         protected override void Update()
         {

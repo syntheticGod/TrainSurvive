@@ -28,11 +28,13 @@ namespace WorldMap {
         //是否采集的父类
         public static Transform isGatheredParent;
 
-        //怪物图片偏移位置
-        public static Vector3 monsterPicOffset = new Vector3(0, 0, -1.0f);
+        //怪物图片偏移位置(改为图层显示)
+        //public static Vector3 monsterPicOffset = new Vector3(0, 0, -1.0f);
+        public static Vector3 monsterPicOffset = new Vector3(0, 0, 0);
 
-        //资源已被采集图标的位置
-        public static Vector3 isGatheredPicOffset = new Vector3(0.0f, -0.05f, -0.03f);
+        //资源已被采集图标的位置(改为图层显示)
+        //public static Vector3 isGatheredPicOffset = new Vector3(0.0f, -0.05f, -0.03f);
+        public static Vector3 isGatheredPicOffset = new Vector3(0.0f, -0.05f, 0);
 
         public override void otherInit() {
             //获取prefab

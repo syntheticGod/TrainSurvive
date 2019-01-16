@@ -23,6 +23,7 @@ namespace WorldMap {
                                     Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.monsterParent;
+            o.GetComponent<SpriteRenderer>().sortingOrder = 7;
 
             //设置特殊区域对象
             Map.GetInstance().spowns[pos.x, pos.y].SetSpawnObject(SpawnObjectEnum.SPECIAL_AREA, o);
@@ -39,7 +40,7 @@ namespace WorldMap {
                                     Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.isGatheredParent;
-
+            o.GetComponent<SpriteRenderer>().sortingOrder = 5;
             //设置是否采集对象
             Map.GetInstance().spowns[pos.x, pos.y].SetSpawnObject(SpawnObjectEnum.IS_GATHERED, o);
         }
@@ -56,6 +57,7 @@ namespace WorldMap {
                                 Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.monsterParent;
+            o.GetComponent<SpriteRenderer>().sortingOrder = 6;
 
             //设置怪物等级对象
             map.spowns[pos.x, pos.y].SetSpawnObject(SpawnObjectEnum.MONSTER_LEVEL, o);

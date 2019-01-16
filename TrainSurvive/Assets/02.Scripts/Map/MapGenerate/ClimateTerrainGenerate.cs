@@ -57,8 +57,9 @@ namespace WorldMap {
         public GameObject forestObject;
         //将地形存放到同一object下
         private GameObject[] terrainObject;
-        //地形在气候上方多大位置
-        public Vector3 terrainPos = new Vector3(0, 0, -0.01f);
+        //地形在气候上方多大位置（改为图层显示）
+        //public Vector3 terrainPos = new Vector3(0, 0, -0.01f)；
+        public Vector3 terrainPos = new Vector3(0, 0, 0f);
 
         //将气候存放到同一object下
         private GameObject[] climateObject;
@@ -205,6 +206,7 @@ namespace WorldMap {
                         MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * i, MapGenerate.spawnOffsetZ * j, 0) + terrainPos,
                         Quaternion.identity);
                     //o.transform.Rotate(90, 0, 0);
+                    o.GetComponent<SpriteRenderer>().sortingOrder = 1;
                     o.transform.parent = terrainParentObject.transform;
 
                     //绑定气候的gameObject
