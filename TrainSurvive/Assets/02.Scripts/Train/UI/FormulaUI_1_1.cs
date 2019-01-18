@@ -10,13 +10,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using WorldMap.UI;
 
 public class FormulaUI_1_1 : MonoBehaviour {
 
     [SerializeField]
-    private UnitInventoryCtrl Output;
+    private AssetsItemView Output;
     [SerializeField]
-    private UnitInventoryCtrl Raw;
+    private AssetsItemView Raw;
     [SerializeField]
     private Slider Slider;
     [SerializeField]
@@ -62,8 +63,6 @@ public class FormulaUI_1_1 : MonoBehaviour {
     private void Awake() {
         Up.onClick.AddListener(() => OnPriorityChanged?.Invoke(-1));
         Down.onClick.AddListener(() => OnPriorityChanged?.Invoke(1));
-        Raw.ChargeIn = (id, num) => false;
-        Output.ChargeIn = (id, num) => false;
     }
     
     public void ChangeProgress(float min, float max, float value) {

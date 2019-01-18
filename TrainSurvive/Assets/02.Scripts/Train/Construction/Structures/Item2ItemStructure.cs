@@ -4,6 +4,7 @@
  * 创建时间：2018/12/14 11:23:18
  * 版本：v0.1
  */
+using Assets._02.Scripts.zhxUIScripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ public class Item2ItemStructure : EnergyCostableStructure {
 
         private float _progress;
         private int _count;
-
+        
         public Formula(Conversion conversion, int priority) {
             Conversion = conversion;
             Priority = priority;
@@ -81,6 +82,7 @@ public class Item2ItemStructure : EnergyCostableStructure {
         _conversionsList = (List<Formula>)info.GetValue("_conversionsList", typeof(List<Formula>));
         ConversionRateRatio = (float)info.GetValue("ConversionRateRatio", typeof(float));
         ProcessSpeedRatio = (float)info.GetValue("ProcessSpeedRatio", typeof(float));
+        Concurrency = info.GetInt32("Concurrency");
 
         foreach (Formula formula in _conversionsList) {
             formula.OnProgressChanged += Formula_OnProgressChanged;
@@ -91,6 +93,7 @@ public class Item2ItemStructure : EnergyCostableStructure {
         base.GetObjectData(info, context);
         info.AddValue("ConversionRateRatio", ConversionRateRatio);
         info.AddValue("ProcessSpeedRatio", ProcessSpeedRatio);
+        info.AddValue("Concurrency", Concurrency);
         info.AddValue("_conversions", _conversions);
         info.AddValue("_processSpeed", _processSpeed);
         info.AddValue("_conversionsList", Conversions);
@@ -126,7 +129,11 @@ public class Item2ItemStructure : EnergyCostableStructure {
     /// 处理速度比例
     /// </summary>
     public float ProcessSpeedRatio { get; set; } = 1;
-    
+    /// <summary>
+    /// 并发数
+    /// </summary>
+    public int Concurrency { get; set; } = 1;
+
     private Coroutine RunningCoroutine { get; set; }
 
     [StructurePublicField(Tooltip = "转化列表")]
@@ -137,8 +144,8 @@ public class Item2ItemStructure : EnergyCostableStructure {
     private List<Formula> _conversionsList;
 
     protected override void OnStart() {
-        base.OnStart();// TODO
-        //RunningCoroutine = TimeController.getInstance().StartCoroutine(Run());
+        base.OnStart();
+        RunningCoroutine = TimeController.getInstance().StartCoroutine(Run());
     }
 
     protected override void OnRemoving() {
@@ -161,36 +168,48 @@ public class Item2ItemStructure : EnergyCostableStructure {
         }
     }
 
-    //private IEnumerator Run() {
-    //    WaitUntil wait = new WaitUntil(() => Raw != null && Raw.Number >= Conversions[Raw.ID].FromItemNum && (Output == null || (Output.ID == Conversions[Raw.ID].ToItemID && Output.MaxPileNum - Output.Number >= (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio))));
-    //    WaitWhile waitCosts = new WaitWhile(() => IsRunningOut);
-    //    while (FacilityState == State.WORKING) {
-    //        if (!(Raw != null && Raw.Number >= 1 && (Output == null || (Output.ID == Conversions[Raw.ID].ToItemID && Output.MaxPileNum - Output.Number >= (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio))))) {
-    //            Progress = 0;
-    //            IsCosting = false;
-    //            yield return wait;
-    //            IsCosting = true;
-    //        }
-    //        yield return waitCosts;
-    //        if (Progress < Conversions[Raw.ID].ProcessTime) {
-    //            Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
-    //        } else {
-    //            Progress = 0;
-    //            if (Output == null) {
-    //                Output = new ItemData(Conversions[Raw.ID].ToItemID, (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio));
-    //            } else {
-    //                Output.Number += (int)(Conversions[Raw.ID].ToItemNum * ConversionRateRatio);
-    //            }
-    //            int newNum = Raw.Number - Conversions[Raw.ID].FromItemNum;
-    //            if (newNum <= 0) {
-    //                Raw = null;
-    //            } else {
-    //                Raw.Number = newNum;
-    //            }
-    //            OnOutputUpdate?.Invoke(_output);
-    //            OnRawUpdate?.Invoke(_raw);
-    //        }
-    //        yield return 1;
-    //    }
-    //}
+    private IEnumerator Run() {
+        WaitUntil wait = new WaitUntil(WaitForAvailable);
+        WaitWhile waitCosts = new WaitWhile(() => IsRunningOut);
+        while (FacilityState == State.WORKING) {
+            if (!WaitForAvailable()) {
+                IsCosting = false;
+                yield return wait;
+                IsCosting = true;
+            }
+            yield return waitCosts;
+            int currentConcurrency = 0;
+            foreach (Formula formula in Conversions) {
+                if (formula.Count > 0 || formula.Count == -1) {
+                    if (PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum) })) {
+                        currentConcurrency++;
+                        if (currentConcurrency <= Concurrency) {
+                            if (formula.Progress < formula.Conversion.ProcessTime) {
+                                formula.Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
+                            } else {
+                                formula.Progress = 0;
+                                PublicMethod.ConsumeItems(new ItemData[] { new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum) });
+                                PublicMethod.AppendItemsInBackEnd(new ItemData[] { new ItemData(formula.Conversion.ToItemID, formula.Conversion.ToItemNum) });
+                                formula.Count--;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+            yield return 1;
+        }
+    }
+
+    private bool WaitForAvailable() {
+        foreach (Formula formula in Conversions) {
+            if (formula.Count > 0 || formula.Count == -1) {
+                if (PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum) })) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
