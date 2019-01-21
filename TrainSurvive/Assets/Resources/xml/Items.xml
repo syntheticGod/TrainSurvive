@@ -34,24 +34,73 @@ description：物品描述
   材料特有属性：
   暂无
   -->
-  <material id="200" rarity="3" price="3000" sellRatio="0.3" size="0.7"   maxPileNum="5"      name="隔壁老王遗落的裤头们" description="传说中的隔壁老王匆忙离去后忘记带走的絮状织物" spritepath="ItemSprite/Material_img" />
-  <material id="201" rarity="0" price="10" sellRatio="0.3" size="0.1"   maxPileNum="20"    name="浆果" description="放心吧，它没毒" spritepath="ItemSprite/Material_img" />
-  <material id="211" rarity="1" price="20" sellRatio="0.3" size="0.1"   maxPileNum="20"    name="小麦" description="人类与动物产生区别的第一种食品" spritepath="ItemSprite/Material_img" />
-  <material id="212" rarity="1" price="20" sellRatio="0.3" size="0.25" maxPileNum="10"    name="面包"  description="总算是个人吃的东西了" spritepath="ItemSprite/Material_img" />
-  <material id="213" rarity="1" price="20" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="生肉" description="生吃？不，咋是体面人"  spritepath="ItemSprite/Material_img" />
-  <material id="214" rarity="1" price="20" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="熟肉" description="至少管饱不是"  spritepath="ItemSprite/Material_img" />
-  <material id="221" rarity="1" price="20" sellRatio="0.3" size="0.2"   maxPileNum="20"    name="煤炭" description="基础动力源"     spritepath="ItemSprite/Material_img" />
-  <material id="222" rarity="0" price="10" sellRatio="0.3" size="0.15" maxPileNum="20"    name="木炭" description="发生了什么让你连木材都不放过？" spritepath="ItemSprite/Material_img" />
-  <material id="223" rarity="0" price="20" sellRatio="0.3" size="2"     maxPileNum="5"      name="原木" description="看啥，这就是原木啊" spritepath="ItemSprite/Material_img" />
-  <material id="231" rarity="2" price="300" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="铜矿" description="电子类基础资源" spritepath="ItemSprite/Material_img" />
-  <material id="232" rarity="2" price="300" sellRatio="0.3" size="1"     maxPileNum="5"      name="铜锭" description="铜矿精炼而成"    spritepath="ItemSprite/Material_img" />
-  <material id="233" rarity="2" price="300" sellRatio="0.3" size="0.5"   maxPileNum="10"    name="铁矿" description="我不想写描述了" spritepath="ItemSprite/Material_img" />
-  <material id="234" rarity="2" price="300" sellRatio="0.3" size="1"     maxPileNum="5"      name="铁锭" description="铁矿精炼而成" spritepath="ItemSprite/Material_img" />
-  <material id="235" rarity="2" price="300" sellRatio="0.3" size="1"     maxPileNum="5"      name="岩石" description="岩石"             spritepath="ItemSprite/Material_img" />
+  <material id="201" name="浆果" rarity="2" facFood="1" facEnergy="1" facPrice="1" price="10" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="202" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="203" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="204" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="205" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="206" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="207" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="208" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="209" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="210" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="211" name="小麦" rarity="2" facFood="0.6" facEnergy="0.6" facPrice="0.6" price="6" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="212" name="面包" rarity="3" facFood="2.5" facEnergy="2.5" facPrice="2" price="20" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="213" name="生肉" rarity="2" facFood="1.2" facEnergy="1.2" facPrice="1.2" price="12" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="214" name="熟肉" rarity="3" facFood="1.5" facEnergy="1.5" facPrice="1.4" price="14" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="215" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="216" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="217" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="218" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="219" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="220" name="NULL" rarity="1" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="221" name="煤炭" rarity="2" facFood="0" facEnergy="3" facPrice="2" price="20" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="222" name="木炭" rarity="2" facFood="0" facEnergy="3" facPrice="2" price="20" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="223" name="原木" rarity="2" facFood="0.2" facEnergy="0.8" facPrice="0.6" price="6" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="224" name="木材" rarity="3" facFood="0" facEnergy="0.8" facPrice="0.7" price="7" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="225" name="木板" rarity="4" facFood="0" facEnergy="0.4" facPrice="0.4" price="4" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="226" name="燃油" rarity="2" facFood="0" facEnergy="5" facPrice="3" price="30" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="227" name="汽油" rarity="3" facFood="0" facEnergy="5" facPrice="6" price="60" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="228" name="煤油" rarity="3" facFood="0" facEnergy="5" facPrice="3" price="30" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="229" name="柴油" rarity="3" facFood="0" facEnergy="5" facPrice="6" price="60" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="230" name="渣油" rarity="3" facFood="0" facEnergy="5" facPrice="2" price="20" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="231" name="铜矿" rarity="2" facFood="0" facEnergy="0" facPrice="1" price="10" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="232" name="铜锭" rarity="3" facFood="0" facEnergy="0" facPrice="15" price="150" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="233" name="铁矿" rarity="2" facFood="0" facEnergy="0" facPrice="2.5" price="25" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="234" name="铁锭" rarity="3" facFood="0" facEnergy="0" facPrice="35" price="350" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="235" name="岩石" rarity="2" facFood="0" facEnergy="0" facPrice="0.6" price="6" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="236" name="石材" rarity="3" facFood="0" facEnergy="0" facPrice="0.7" price="7" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="237" name="石砖" rarity="4" facFood="0" facEnergy="0" facPrice="0.8" price="8" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="238" name="铜线" rarity="4" facFood="0" facEnergy="0" facPrice="3.3" price="33" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="239" name="零件" rarity="4" facFood="0" facEnergy="0" facPrice="7.7" price="77" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
+  <material id="240" name="钢锭" rarity="4" facFood="0" facEnergy="0" facPrice="80" price="800" sellRatio="1" size="1" maxPileNum="64" description="待补充"/>
   
   <!-- 
   特殊物品特有属性：
   暂无
   -->
-  <special id="700" rarity="2" price="300" sellRatio="0.3" size="0" maxPileNum="1" name="隔壁老王之魂" description="老王的怨念所化成的结晶体" spritepath="ItemSprite/Other_img" />
+  <special id="700" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="701" name="水之徽章" rarity="5" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="702" name="火之徽章" rarity="5" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="703" name="风之徽章" rarity="5" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="704" name="雷之徽章" rarity="5" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="705" name="巨神鹰银血" rarity="4" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="706" name="圣药" rarity="4" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="707" name="巨神鹰金血" rarity="4" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="708" name="半成品父神之怒" rarity="4" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="709" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="710" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="711" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="712" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="713" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="714" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="715" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="716" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="717" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="718" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="719" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="720" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="721" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="722" name="巴顿的眼珠" rarity="3" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
+  <special id="723" name="NULL" rarity="0" facFood="0" facEnergy="0" facPrice="0" price="0" sellRatio="1" size="1" description="待完善"/>
 </items>
