@@ -7,9 +7,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections.Generic;
-
-using TTT.UI;
+using TTT.UI.ListView;
 using TTT.Utility;
 using TTT.Controller;
 

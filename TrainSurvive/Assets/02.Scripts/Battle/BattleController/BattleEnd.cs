@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using TTT.Item;
 using TTT.Utility;
 using UnityEngine;
-using WorldMap.UI;
+using TTT.UI;
 
 namespace WorldBattle {
 

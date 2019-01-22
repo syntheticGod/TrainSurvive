@@ -7,19 +7,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using WorldMap.Model;
-
 using TTT.Utility;
 using TTT.UI;
+using TTT.UI.ListView;
 
 namespace WorldMap.UI
 {
-    public class GoodsListView : ResourceListViewBase
+    public class GoodsListView : ResourceListView
     {
         public delegate void CallBackGoodsBuy(ItemData good);
         public CallBackGoodsBuy callBackGoodsAction;
         public string ActionBtnString { set; get; } = "购买";
-        protected override ResourceItemBase GetResourceItemBase(ListViewItem item, ItemData data)
+        protected override ResourceItemBase GetView(ListViewItem item, ItemData data, int index)
         { 
             GoodsItem view = CompTool.ForceGetComponent<GoodsItem>(item);
             ActionClickEvent buyClickEvent = new ActionClickEvent(data);

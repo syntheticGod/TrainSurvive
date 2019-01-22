@@ -6,7 +6,7 @@
  */
 using UnityEngine.UI;
 using TTT.Utility;
-using TTT.UI;
+using TTT.UI.ListView;
 
 namespace WorldMap.UI
 {

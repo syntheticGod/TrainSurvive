@@ -5,10 +5,9 @@
  * 版本：v0.1
  */
 using UnityEngine;
-using System.Collections;
-
-using TTT.UI;
 using UnityEngine.UI;
+using TTT.UI;
+using TTT.UI.ListView;
 using TTT.Utility;
 
 namespace WorldMap.UI

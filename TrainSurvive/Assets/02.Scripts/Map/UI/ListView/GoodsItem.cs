@@ -6,10 +6,9 @@
  */
 using UnityEngine;
 using UnityEngine.UI;
+
+using TTT.UI;
 using TTT.Utility;
-using UnityEngine.EventSystems;
-using System.Collections;
-using WorldMap.Model;
 
 namespace WorldMap.UI
 {

@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 using TTT.Utility;
 
-namespace TTT.UI
+namespace TTT.UI.ListView
 {
     public enum ScrollType
     {

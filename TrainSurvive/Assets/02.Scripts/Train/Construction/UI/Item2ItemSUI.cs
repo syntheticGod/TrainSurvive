@@ -23,8 +23,8 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void Awake() {
-        Raw.ChargeIn = (int itemID, int number) => Structure.Conversions.ContainsKey(itemID);
-        Output.ChargeIn = null;
+        Raw.OnChargeIn = (int itemID, int number) => Structure.Conversions.ContainsKey(itemID);
+        Output.OnChargeIn = null;
     }
 
     private void OnEnable() {
@@ -57,7 +57,7 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void OnAcquireRaw(ref ItemData old) {
-        if (Raw.IfBeDragedOut || Raw.IfEmpty()) { // item空
+        if (Raw.IfEmpty()) { // item空
             old = null;
         } else {
             if (old == null) { // item不空，old空

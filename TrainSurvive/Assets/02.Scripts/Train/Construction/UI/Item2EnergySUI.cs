@@ -26,7 +26,7 @@ public class Item2EnergySUI : FacilityUI
 
     private void Awake()
     {
-        Gas.ChargeIn = delegate (int itemID, int number)
+        Gas.OnChargeIn = delegate (int itemID, int number)
         {
             if (!Structure.Conversions.ContainsKey(itemID))
             {
@@ -75,7 +75,7 @@ public class Item2EnergySUI : FacilityUI
 
     private void OnAcquireGas(ref ItemData old)
     {
-        if (Gas.IfBeDragedOut || Gas.IfEmpty())
+        if (Gas.IfEmpty())
         { // item被拖出
             old = null;
         }

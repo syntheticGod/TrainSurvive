@@ -9,9 +9,9 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
-using TTT.UI;
-using TTT.Controller
-    ;
+using TTT.UI.ListView;
+using TTT.Controller;
+
 using WorldMap.Model;
 using WorldMap.UI;
 

@@ -1,5 +1,7 @@
 /*
- * 描述：物品的ListView
+ * 描述：物品列表
+            相对ResourceListView添加如下功能：
+            1、允许别的物体拖入
  * 作者：项叶盛
  * 创建时间：2018/12/5 3:50:00
  * 版本：v0.1
@@ -8,38 +10,39 @@
 using WorldMap.Model;
 
 using TTT.UI;
+using TTT.UI.ListView;
 using TTT.Utility;
 using UnityEngine.EventSystems;
 using UnityEngine;
 
 namespace WorldMap.UI
 {
-    public class AssetsListView : ResourceListViewBase, IDropHandler, IDropMessageReceiver
+    public class DragableResourceLV : ResourceListView, IDropHandler, IDropMessageReceiver
     {
         protected override void Awake()
         {
             base.Awake();
         }
-        protected override ResourceItemBase GetResourceItemBase(ListViewItem item, ItemData data)
+        protected override ResourceItemBase GetView(ListViewItem item, ItemData data, int index)
         {
-            AssetsItemView view = ViewTool.ForceGetComponentInChildren<AssetsItemView>(item, "AssetsItem");
-            view.DropMsgReceriver = this;
+            DragableAssetsItemView view = ViewTool.ForceGetComponentInChildren<DragableAssetsItemView>(item, "AssetsItem");
+            view.DropMsgReceiver = this;
+            view.Index = index;
             view.SetItemData(data);
             return view;
         }
         public void OnDrop(PointerEventData eventData)
         {
-            AssetsItemView item = eventData.pointerDrag.GetComponent<AssetsItemView>();
+            DragableAssetsItemView item = eventData.pointerDrag.GetComponent<DragableAssetsItemView>();
             if (item == null || item.IfEmpty())
                 return;
             Debug.Log("ListView OnDrop ItemID:" + item.ItemID + " Number:" + item.Number);
             ItemData itemData = new ItemData(item.ItemID, item.Number);
             AddItem(itemData);
             World.getInstance().storage.AddItem(itemData);
-            item.DropSucess();
-            item.DropMsgReceriver?.DragOutCallBack(item);
+            item.CallBackDropSucess();
         }
-        public void DragOutCallBack(AssetsItemView item)
+        public void CallBackDragOut(DragableAssetsItemView item)
         {
             Debug.Log("ListView DragOutCallBack");
             ItemData dragOutItem = Datas[item.Index];

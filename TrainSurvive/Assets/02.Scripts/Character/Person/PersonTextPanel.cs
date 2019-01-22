@@ -38,7 +38,7 @@ public class PersonTextPanel : MonoBehaviour
     void Start()
     {
         clearPanel();
-        WeaponGridCtrl.ChargeIn += canEuqip;
+        WeaponGridCtrl.OnChargeIn += canEuqip;
     }
 
     public void clearPanel()

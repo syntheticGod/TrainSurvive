@@ -4,9 +4,7 @@
  * 创建时间：2018/12/6 15:36:53
  * 版本：v0.1
  */
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using TTT.UI.ListView;
 
 namespace TTT.UI
 {
