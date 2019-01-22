@@ -44,11 +44,11 @@ public class ItemData
     /// <summary>
     /// 初始价格
     /// </summary>
-    public int OriginPrice { get { return Item.Price; } }
+    public int OriginPrice { get { return Item.GetOriginPrice(); } }
     /// <summary>
     /// 售卖价格
     /// </summary>
-    public int SellPrice { get { return Mathf.RoundToInt(Item.Price * Item.SellRatio); } }
+    public int SellPrice { get { return Item.GetSellPrice(); } }
     /// <summary>
     /// 物品占用空间体积
     /// </summary>

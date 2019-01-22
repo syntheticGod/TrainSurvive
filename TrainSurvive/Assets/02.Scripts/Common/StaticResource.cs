@@ -13,6 +13,7 @@ using TTT.Item;
 using TTT.Utility;
 using System.Collections;
 using Assets._02.Scripts.zhxUIScripts;
+using Story.Scripts;
 
 namespace TTT.Resource
 {
@@ -428,7 +429,7 @@ namespace TTT.Resource
         private static Hashtable ItemTable { get { if (itemTable == null) LoadItemInfoFromXml(); return itemTable; } }
         private static void LoadItemInfoFromXml()
         {
-            string xmlString = Resources.Load("xml/items").ToString();
+            string xmlString = Resources.Load("xml/Items").ToString();
             XmlDocument document = new XmlDocument();
             document.LoadXml(xmlString);
             XmlNodeList itemNodes = document.SelectSingleNode("items").ChildNodes;
@@ -470,7 +471,16 @@ namespace TTT.Resource
             return ItemTable[id] as T;
         }
         //----------物品----------↑----------对话----------↓
-        
+        private static Scripts chatScripts;
+        public static Scripts ChatScripts { get { if (chatScripts == null) { loadChatScriptsFromXml(); } return chatScripts; } }
+        private static void loadChatScriptsFromXml()
+        {
+            string xmlString = Resources.Load("xml/Chat").ToString();
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+            XmlNodeList contents = document.SelectSingleNode("chat").ChildNodes;
+            chatScripts = new Scripts(contents);
+        }
         //----------对话----------↑
     }
     /// <summary>

@@ -6,38 +6,72 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace WorldBattle {
-    public class InitEnemys : MonoBehaviour {
+namespace WorldBattle
+{
+    public class InitEnemys : MonoBehaviour
+    {
         /// <summary>
         /// 初始化敌人
         /// 创建GameObject
         /// 创建AI
         /// 绑定panel
         /// </summary>
-        public static void initEnemys() {
+        public static void initEnemys()
+        {
             //获取battleController
             BattleController battleController = BattleController.getInstance();
 
+            //根据玩家出战人数n，随机产生敌人数量
+            { 
+                int countOfFighter = World.getInstance().CountOfFighter;
+                int randomInt = MathTool.RandomInt(100);
+                if (randomInt < 20)
+                {//20% 人数+1
+                    battleController.enemyNum = countOfFighter + 1;
+                }
+                else if (randomInt < 70)
+                {//50% 人数
+                    battleController.enemyNum = countOfFighter;
+                }
+                else
+                {//30% 人数-1，至少为1
+                    if (countOfFighter != 1)
+                        battleController.enemyNum = countOfFighter - 1;
+                    else
+                        battleController.enemyNum = 1;
+                }
+            }
+            //获取探险队所在地块的怪物难度系数
+            int monsterLevel;
+            {
+                Vector2Int teamPosition = new Vector2Int(World.getInstance().posTeamX, World.getInstance().posTeamY);
+                monsterLevel = WorldMap.Map.GetInstance().GetMonsterLevel(teamPosition);
+                if (monsterLevel <= 0)
+                    Debug.LogError("当前区块不是怪物区块 坐标：(" + teamPosition.x + "," + teamPosition.y + ")");
+                Debug.Log("进入难度级别为" + monsterLevel + "的地块。");
+            }
             //初始化敌人
             battleController.enemyActors = new List<BattleActor>();
             battleController.enemyPanels = new List<GameObject>();
-            for (int i = 0; i < battleController.enemyNum; i++) {
+            for (int i = 0; i < battleController.enemyNum; i++)
+            {
                 //生成敌人
                 GameObject curPlayer = Instantiate(battleController.player,
                     battleController.orign,
                     Quaternion.identity);
                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
-
-
-               
+                
                 BattleActor battleActor;
                 if (battleController.isTest == false)
                 {
+                    //获取当前地块的怪物级别
                     MonsterInitializer mi = new MonsterInitializer();
-                    mi.initializeMonster(ref curPlayer, 2);
+                    //根据怪物的级别生成随机ID的怪物
+                    mi.randomMonster(ref curPlayer, monsterLevel);
                     battleActor = mi.getBattleActor();
                 }
                 else

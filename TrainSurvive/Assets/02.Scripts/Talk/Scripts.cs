@@ -4,20 +4,17 @@
  * 创建时间：2019/1/21 15:34:52
  * 版本：v0.7
  */
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Net.Mail;
+using System.Xml;
+using System.Collections.Generic;
+
 using Story.Communication;
 using Story.MyTools;
 
 namespace Story.Scripts{
 
     public class Scripts{
-        public static Scripts instance = new Scripts();
-
-        Dictionary<string,List<string>> texts;
-
+        private Dictionary<string,List<string>> texts;
         private List<List<List<scriptType>>> templates;
 
         public enum scriptType
@@ -31,10 +28,16 @@ namespace Story.Scripts{
 
         }
 
-        private Scripts(){
-            string textFile = File.ReadAllText(@"./Talk/Scripts/chat.json");
-            //texts = JObject.Parse(textFile).ToObject<Dictionary<string,List<string>>>();
-          
+        public Scripts(XmlNodeList contents)
+        {
+            foreach(XmlNode node in contents)
+            {
+                XmlNodeList sentencesNode = node.ChildNodes;
+                List<string> sentences = new List<string>();
+                foreach(XmlNode sentenceNode in sentencesNode)
+                    sentences.Add(sentenceNode.InnerText);
+                texts.Add(node.Name, sentences);
+            }
                 
             //对应的脚本类型
             templates = new List<List<List<scriptType>>>{

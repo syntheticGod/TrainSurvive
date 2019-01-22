@@ -14,6 +14,10 @@ namespace TTT.Item
     {
 
         /// <summary>
+        /// 初始价格
+        /// </summary>
+        public int Price { get; }
+        /// <summary>
         /// 武器类型
         /// </summary>
         public PublicData.WeaponType WeaponType { get; }
@@ -61,6 +65,7 @@ namespace TTT.Item
             : base(node)
         {
             Type = PublicData.ItemType.Weapon;
+            Price = int.Parse(node.Attributes["price"].Value);
             WeaponType = (PublicData.WeaponType)int.Parse(node.Attributes["type"].Value);
             Range       = float.Parse(node.Attributes["range"].Value);
             FacAttack  = float.Parse(node.Attributes["atk"].Value);
@@ -72,6 +77,16 @@ namespace TTT.Item
             ModCritCarray   = float.Parse(node.Attributes["crc"].Value);
             ModCritDamage   = float.Parse(node.Attributes["crd"].Value);
             BeatBackDistance = float.Parse(node.Attributes["bbdist"].Value);
+        }
+
+        public override int GetOriginPrice()
+        {
+            return Price;
+        }
+
+        public override int GetSellPrice()
+        {
+            return UnityEngine.Mathf.RoundToInt(Price * SellRatio);
         }
     }
 }

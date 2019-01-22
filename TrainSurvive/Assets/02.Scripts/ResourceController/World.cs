@@ -172,6 +172,19 @@ public class World
     {
         persons.Add(person);
     }
+    public int CountOfFighter
+    {
+        get
+        {
+            int count = 0;
+            foreach (Person person in persons)
+            {
+                if (person.ifReadyForFighting)
+                    count++;
+            }
+            return count;
+        }
+    }
     public int[] personTeamIDArray;
 
 

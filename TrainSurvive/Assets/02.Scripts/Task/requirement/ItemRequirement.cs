@@ -9,6 +9,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets._02.Scripts.zhxUIScripts;
+using TTT.Resource;
+using TTT.Item;
+
 [System.Serializable]
 public class ItemRequirement : TaskRequirement
 {
@@ -18,7 +21,7 @@ public class ItemRequirement : TaskRequirement
     {
         _itemId = itemId;
         _needNums = needNums;
-        string itemName = PublicMethod.GenerateItem(_itemId)[0].name;
+        string itemName = StaticResource.GetItemInfoByID<ItemInfo>(_itemId).Name;
         condition = "需要物品：" + itemName + "*"+needNums; ;
         _description = "我需要" + itemName + needNums+"个，你带来了吗？";//以后也可以只在npc那只用这里的数据，其他话在npc数据里补充
         finish = false;
@@ -34,7 +37,8 @@ public class ItemRequirement : TaskRequirement
     {
         //待补充
 
-        condition="已交付："+ PublicMethod.GenerateItem(_itemId)[0].name+ "*" + _needNums;
+        string itemName = StaticResource.GetItemInfoByID<ItemInfo>(_itemId).Name;
+        condition ="已交付："+ itemName + "*" + _needNums;
         finish = true;
         finish_task_Handler();
         throw new NotImplementedException();

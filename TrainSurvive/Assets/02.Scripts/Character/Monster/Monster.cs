@@ -32,7 +32,7 @@ public class Monster {
     /// 智力
     /// </summary>
     public int intelligence = 0;
-
+    public int rank = 1;
     public bool hasWeapon = false;
     public int weaponId = 0;
 
@@ -63,16 +63,16 @@ public class Monster {
     public double getHpMax()
     {
         double hpMax = 100 * (1 + 0.05 * vitality);
-        return Math.Round(hpMax, numsLeft);
+        return Math.Round(hpMax, numsLeft) * rank;
     }
     public double getApMax()
     {
         double apMax = 100 * (1 + 0.05 * intelligence);
-        return Math.Round(apMax, numsLeft);
+        return Math.Round(apMax, numsLeft) * rank;
     }
     public double getHpRec()
     {
-        return Math.Round(5.000, numsLeft);
+        return Math.Round(5.000, numsLeft) * rank;
     }
     public double getApRec()
     {
@@ -81,7 +81,7 @@ public class Monster {
         {
             apRec = apRec * weapon.facArec;
         }
-        return Math.Round(apRec, numsLeft);
+        return Math.Round(apRec, numsLeft) * rank;
     }
     public double getValAtk()
     {
@@ -90,7 +90,7 @@ public class Monster {
         {
             atk = atk * weapon.facAtk;
         }
-        return Math.Round(atk, numsLeft);
+        return Math.Round(atk, numsLeft) * rank;
     }
     public double getValAts()
     {
@@ -99,7 +99,7 @@ public class Monster {
         {
             ats = ats * weapon.facAts;
         }
-        return Math.Round(ats, numsLeft);
+        return Math.Round(ats, numsLeft) * rank;
     }
     public double getValSpd()
     {
@@ -108,7 +108,7 @@ public class Monster {
         {
             spd = spd * weapon.facSpd;
         }
-        return Math.Round(spd, numsLeft);
+        return Math.Round(spd, numsLeft) * rank;
     }
     public double getValCrc()
     {
@@ -117,7 +117,7 @@ public class Monster {
         {
             crc = crc + weapon.modCrc;
         }
-        return Math.Round(crc, numsLeft);
+        return Math.Round(crc, numsLeft) * rank;
     }
     public double getValCrd()
     {
@@ -126,17 +126,26 @@ public class Monster {
         {
             crd = crd + weapon.modCrd;
         }
-        return Math.Round(crd, numsLeft);
+        return Math.Round(crd, numsLeft) * rank;
     }
     public double getValHrate()
     {
         double num = 1 * (1 + 0.025 * technique);
-        return Math.Round(num, numsLeft);
+        return Math.Round(num, numsLeft) * rank;
     }
     public double getValErate()
     {
         double num = 0.02 * agile;
-        return Math.Round(num, numsLeft);
+        return Math.Round(num, numsLeft) * rank;
+    }
+    public double getValHit()
+    {
+        double num = 1;
+        if (hasWeapon)
+        {
+            num = weapon.modHit;
+        }
+        return Math.Round(num, numsLeft) * rank;
     }
     public double getRange()
     {
@@ -146,15 +155,6 @@ public class Monster {
             num = weapon.range;
         }
         num = num * (1 + 0.03 * technique);
-        return Math.Round(num, numsLeft);
-    }
-    public double getValHit()
-    {
-        double num = 1;
-        if (hasWeapon)
-        {
-            num = weapon.modHit;
-        }
         return Math.Round(num, numsLeft);
     }
     /*
