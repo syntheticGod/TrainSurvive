@@ -59,6 +59,10 @@ namespace Assets._02.Scripts.zhxUIScripts
             /// 魔法书
             /// </summary>
             MagicBook,
+            /// <summary>
+            /// 饰品
+            /// </summary>
+            Decoration,
             NUM
         };
 
