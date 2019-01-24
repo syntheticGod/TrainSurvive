@@ -173,8 +173,9 @@ namespace WorldMap
                 return false;
             world.addOutVit(-20);
             int number = 0;
-            //马上采集五次
-            for (int i = 0; i < 5; i++)
+            //采集次数
+            int cntGather = 1;
+            for (int i = 0; i < cntGather; i++)
                 number += Gather.gather();
             if (number == 0)
                 FlowInfo.ShowInfo("采集信息", "很遗憾一个东西都没采集到");
