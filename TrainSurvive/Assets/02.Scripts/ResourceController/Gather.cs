@@ -10,19 +10,19 @@ using TTT.Item;
 
 public class Gather
 {
-    private static int berryId = 201;
-    private static int wheatId = 211;
-    private static int breadId = 212;
-    private static int rawMeatId = 213;
-    private static int meatId = 214;
-    private static int coalId = 221;
-    private static int charcoalId = 222;//木炭
-    private static int woodId = 223;
-    private static int copperOreId = 231;
-    private static int copperIngotId = 232;
-    private static int ironOreId = 233;
-    private static int ironIngotId = 234;
-    private static int rockId = 235;
+    private static int berryId = 230;
+    private static int wheatId = 231;
+    private static int breadId = 232;
+    private static int rawMeatId = 233;
+    private static int meatId = 234;
+    private static int coalId = 235;
+    private static int charcoalId = 236;//木炭
+    private static int woodId = 237;
+    private static int copperOreId = 246;
+    private static int copperIngotId = 247;
+    private static int ironOreId = 248;
+    private static int ironIngotId = 249;
+    private static int rockId = 243;
     private Dictionary<int, int> possibilityMap = new Dictionary<int, int>();
     private int totalWeight = 0;
     /// <summary>
@@ -37,10 +37,13 @@ public class Gather
         switch (terranType)
         {
             case SpawnPoint.TerrainEnum.PLAIN:
-                pushPossibility(wheatId, 60);
+                pushPossibility(wheatId, 40);
                 pushPossibility(rawMeatId, 20);
                 pushPossibility(woodId, 10);
                 pushPossibility(berryId, 10);
+                pushPossibility(240, 10);
+                pushPossibility(201, 10);
+                pushPossibility(243, 10);
                 break;
             case SpawnPoint.TerrainEnum.HILL:
                 pushPossibility(wheatId, 40);
@@ -110,7 +113,8 @@ public class Gather
                 terranGatherRate = 0.7;
                 break;
         }
-        double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut) * (1 + World.getInstance().getTotalProperty() * 0.01);
+        //double gatherRate = climateGatherRate * terranGatherRate * (1 + 0.3 * world.numOut) * (1 + World.getInstance().getTotalProperty() * 0.01);
+        double gatherRate = 1 * climateGatherRate * terranGatherRate * World.getInstance().getTotalProperty() / 30;
         double randomResult = Random.Range(Mathf.Floor((float)gatherRate), Mathf.Ceil((float)gatherRate));
         int itemNums = 0;
         if (randomResult < gatherRate)
