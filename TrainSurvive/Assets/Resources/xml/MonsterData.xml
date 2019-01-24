@@ -1,14 +1,177 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <monsterlist>
   <monster id="0" name="木桩">
-    <property vitality="20" strength="0" agile="0" technique="0" intelligence="0" />
+    <property basicRange="0" vitality="20" strength="0" agile="0" technique="0" intelligence="0" model="3" size="1" rank="0" exp="0"/>
   </monster>
   <monster id="1" name="狼">
-    <property vitality="5" strength="5" agile="5" technique="5" intelligence="5" />
-    <AI type="BeatFarAI"/>
+    <property basicRange="1" vitality="5" strength="5" agile="5" technique="5" intelligence="5" model="2" size="1" rank="0" exp="0"/>
   </monster>
   <monster id="2" name="熊">
-    <property vitality="5" strength="5" agile="5" technique="5" intelligence="5" />
-    <AI type="BeatNearAI"/>
+    <property basicRange="2" vitality="5" strength="5" agile="5" technique="5" intelligence="5" model="2" size="1" rank="0" exp="0"/>
+  </monster>
+  <monster id="3" name="野猪">
+    <property basicRange="1" vitality="0" strength="30" agile="0" technique="0" intelligence="0" model="2" size="1" rank="1" exp="20"/>
+    <AI type="1"/>
+  </monster>
+  <monster id="4" name="厚皮野猪">
+    <property basicRange="1" vitality="25" strength="20" agile="0" technique="0" intelligence="0" model="2" size="1" rank="1" exp="20"/>
+    <skillList>
+      <skill id="4"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="5" name="尖刺野猪">
+    <property basicRange="6" vitality="0" strength="20" agile="20" technique="0" intelligence="0" model="2" size="1" rank="1" exp="20"/>
+    <AI type="4"/>
+  </monster>
+  <monster id="6" name="野狼">
+    <property basicRange="1" vitality="10" strength="0" agile="15" technique="10" intelligence="0" model="2" size="1" rank="1" exp="20"/>
+    <AI type="1"/>
+  </monster>
+  <monster id="7" name="头狼">
+    <property basicRange="1.5" vitality="20" strength="10" agile="20" technique="20" intelligence="0" model="2" size="1.2" rank="2" exp="60"/>
+    <skillList>
+      <skill id="33"/>
+    </skillList>
+    <AI type="2"/>
+  </monster>
+  <monster id="8" name="狼王">
+    <property basicRange="2" vitality="30" strength="20" agile="30" technique="30" intelligence="20" model="2" size="1.5" rank="3" exp="150"/>
+    <skillList>
+      <skill id="22"/>
+      <skill id="34"/>
+    </skillList>
+    <AI type="3"/>
+  </monster>
+  <monster id="9" name="野熊">
+    <property basicRange="1" vitality="30" strength="50" agile="-10" technique="-15" intelligence="-15" model="2" size="1" rank="1" exp="20"/>
+    <AI type="3"/>
+  </monster>
+  <monster id="10" name="幼熊">
+    <property basicRange="0.5" vitality="10" strength="20" agile="40" technique="0" intelligence="0" model="2" size="0.5" rank="2" exp="25"/>
+    <AI type="2"/>
+  </monster>
+  <monster id="11" name="熊王">
+    <property basicRange="2" vitality="100" strength="50" agile="-10" technique="0" intelligence="0" model="2" size="1.5" rank="3" exp="150"/>
+    <skillList>
+      <skill id="7"/>
+      <skill id="29"/>
+    </skillList>
+    <AI type="3"/>
+  </monster>
+  <monster id="12" name="骷髅士兵">
+    <property basicRange="1" vitality="10" strength="10" agile="10" technique="10" intelligence="0" model="1" size="1" rank="1" exp="20"/>
+    <skillList>
+      <skill id="32"/>
+    </skillList>
+    <AI type="2"/>
+  </monster>
+  <monster id="13" name="骷髅弓手">
+    <property basicRange="5" vitality="0" strength="20" agile="20" technique="0" intelligence="0" model="1" size="1" rank="1" exp="20"/>
+    <skillList>
+      <skill id="18"/>
+    </skillList>
+    <AI type="4"/>
+  </monster>
+  <monster id="14" name="骷髅法师">
+    <property basicRange="6" vitality="0" strength="0" agile="0" technique="10" intelligence="50" model="1" size="1" rank="2" exp="50"/>
+    <skillList>
+      <skill id="21"/>
+      <skill id="23"/>
+      <skill id="27"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="15" name="巨型骷髅">
+    <property basicRange="2" vitality="50" strength="20" agile="0" technique="0" intelligence="0" model="1" size="1" rank="2" exp="50"/>
+    <skillList>
+      <skill id="4"/>
+      <skill id="31"/>
+    </skillList>
+    <AI type="3"/>
+  </monster>
+  <monster id="16" name="死灵法师">
+    <property basicRange="8" vitality="100" strength="0" agile="0" technique="0" intelligence="50" model="1" size="2" rank="4" exp="340"/>
+    <skillList>
+      <skill id="30"/>
+      <skill id="35"/>
+      <skill id="22"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="17" name="死灵三头犬">
+    <property basicRange="3" vitality="50" strength="50" agile="50" technique="0" intelligence="0" model="2" size="2" rank="4" exp="340"/>
+    <skillList>
+      <skill id="6"/>
+      <skill id="18"/>
+      <skill id="29"/>
+    </skillList>
+    <AI type="2"/>
+  </monster>
+  <monster id="18" name="巨神鹰">
+    <property basicRange="1" vitality="20" strength="20" agile="20" technique="20" intelligence="20" model="4" size="1.5" rank="4" exp="255"/>
+    <AI type="1"/>
+  </monster>
+  <monster id="19" name="雌巨神鹰">
+    <property basicRange="2" vitality="30" strength="30" agile="30" technique="30" intelligence="30" model="2" size="2" rank="4" exp="340"/>
+    <AI type="2"/>
+  </monster>
+  <monster id="20" name="雄巨神鹰">
+    <property basicRange="3" vitality="40" strength="40" agile="40" technique="40" intelligence="40" model="2" size="2.5" rank="4" exp="425"/>
+    <skillList>
+      <skill id="11"/>
+    </skillList>
+    <AI type="3"/>
+  </monster>
+  <monster id="21" name="鹰">
+    <property basicRange="1.5" vitality="5" strength="5" agile="20" technique="40" intelligence="0" model="4" size="1" rank="2" exp="50"/>
+    <AI type="1"/>
+  </monster>
+  <monster id="22" name="鹰王">
+    <property basicRange="2" vitality="20" strength="20" agile="50" technique="50" intelligence="0" model="4" size="2" rank="3" exp="200"/>
+    <skillList>
+      <skill id="22"/>
+      <skill id="32"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="23" name="天下无双">
+    <property basicRange="1" vitality="1000" strength="1000" agile="-10" technique="0" intelligence="0" model="2" size="2.5" rank="4" exp="425"/>
+    <AI type="1"/>
+  </monster>
+  <monster id="24" name="攻城狮">
+    <property basicRange="1" vitality="50" strength="30" agile="30" technique="30" intelligence="0" model="2" size="2.5" rank="4" exp="425"/>
+    <AI type="2"/>
+  </monster>
+  <monster id="25" name="冰霜之弗雷兹">
+    <property basicRange="5" vitality="70" strength="0" agile="0" technique="0" intelligence="50" model="1" size="1.5" rank="4" exp="255"/>
+    <skillList>
+      <skill id="20"/>
+      <skill id="25"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="26" name="雷霆之阿尔戈">
+    <property basicRange="7" vitality="20" strength="0" agile="0" technique="20" intelligence="50" model="1" size="1.5" rank="4" exp="255"/>
+    <skillList>
+      <skill id="23"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="27" name="雷霆之施泰罗">
+    <property basicRange="6" vitality="25" strength="0" agile="0" technique="25" intelligence="60" model="1" size="1.5" rank="4" exp="255"/>
+    <skillList>
+      <skill id="28"/>
+    </skillList>
+    <AI type="1"/>
+  </monster>
+  <monster id="28" name="雷霆之勃朗特">
+    <property basicRange="5" vitality="30" strength="0" agile="0" technique="30" intelligence="70" model="1" size="2" rank="4" exp="340"/>
+    <skillList>
+      <skill id="23"/>
+      <skill id="28"/>
+      <skill id="30"/>
+    </skillList>
+    <AI type="1"/>
   </monster>
 </monsterlist>

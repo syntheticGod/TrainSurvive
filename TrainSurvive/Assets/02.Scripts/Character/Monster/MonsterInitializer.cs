@@ -17,7 +17,7 @@ namespace WorldBattle
     {
         //小怪（非BOSS）的首末id，用于控制读取xml的范围，比如随机获取特定种类的小怪（比如野兽类在0~10）
         private static int monsterIdMin = 0;
-        private static int monsterIdMax = 2;
+        private static int monsterIdMax = 28;
         private BattleActor battleActor = null;
         /// <summary>
         /// 生成一个指定ID和指定等级的怪物
@@ -35,7 +35,6 @@ namespace WorldBattle
             XmlNode aimNode = root.SelectSingleNode(XPath);
             XmlNode propertyNode = aimNode.SelectSingleNode("./property");
             XmlNode aiNode = aimNode.SelectSingleNode("./AI");
-            XmlNode weaponNode = aimNode.SelectSingleNode("./weapon");
 
             Monster monster = new Monster();
             monster.id = monsterId;
@@ -47,12 +46,7 @@ namespace WorldBattle
             monster.technique = int.Parse(propertyNode.Attributes["technique"].Value);
             monster.intelligence = int.Parse(propertyNode.Attributes["intelligence"].Value);
 
-            if (weaponNode != null)
-            {
-                monster.hasWeapon = true;
-                monster.weaponId = int.Parse(weaponNode.Value);
-                //要补上武器信息的更新
-            }
+
 
 
             if (aiNode == null)
@@ -80,7 +74,7 @@ namespace WorldBattle
             }
 
             battleActor.playerPrefab = character;
-            setProperty(ref battleActor, ref monster);
+            MonsterAdapter.setMonsterBattleActor(ref battleActor, ref monster);      
             addTaskListener(ref battleActor, ref monster);
         }
         /// <summary>
@@ -133,23 +127,7 @@ namespace WorldBattle
             return result;
         }
 
-        private void setProperty(ref BattleActor actor, ref Monster monster)
-        {
-            actor.task_monsterId = monster.id;
-            actor.maxHealthPoint = (float)monster.getHpMax();
-            actor.maxActionPoint = (float)monster.getApMax();
-            actor.hpRecovery = (float)monster.getHpRec();
-            actor.apRecovery = (float)monster.getApRec();
-            actor.atkNeedTime = (float)monster.getValAts();
-            actor.moveSpeed = (float)monster.getValSpd();
-            actor.atkDamage = (float)monster.getValAtk();
-            actor.atkRange = (float)monster.getRange();
-            actor.damageRate = (float)monster.getValHit();
-            actor.critDamage = (float)monster.getValCrd();
-            actor.critRate = (float)monster.getValCrc();
-            actor.hitRate = (float)monster.getValHrate();
-            actor.dodgeRate = (float)monster.getValErate();
-        }
+ 
 
         private void addTaskListener(ref BattleActor actor, ref Monster monster)
         {
