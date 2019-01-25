@@ -12,8 +12,7 @@ using WorldBattle;
 public class MonsterAdapter {
 
     public static void setMonsterBattleActor(ref BattleActor actor, ref Monster monster)
-    {
-        actor.name_str = monster.name;
+    {       
         
         actor.task_monsterId = monster.id;
         actor.maxHealthPoint = (float)monster.getHpMax();
@@ -30,7 +29,10 @@ public class MonsterAdapter {
         actor.hitRate = (float)monster.getValHrate();
         actor.dodgeRate = (float)monster.getValErate();
 
+        actor.name_str = monster.name;
         actor.exp = monster.exp;
         actor.size = monster.size;
+        actor.rank = monster.rank;
+        actor.model = monster.model;
     }
 }

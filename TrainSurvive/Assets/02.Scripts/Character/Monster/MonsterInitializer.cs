@@ -15,17 +15,41 @@ namespace WorldBattle
 {
     public class MonsterInitializer
     {
+        //0基，存放等级0~4的怪物id
+        private List<int>[] rank_idList=new List<int>[5];
+        private MonsterInitializer()
+        {
+            for (int i = 0; i < 5; i++)
+                rank_idList[i] = new List<int>();
+            string xmlString = Resources.Load("xml/MonsterData").ToString();
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xmlString);
+            XmlNode root = document.SelectSingleNode("monsterlist");
+            XmlNodeList monsterList = root.ChildNodes;
+            foreach (XmlElement mosterElement in monsterList)
+            {
+                XmlNode pro= mosterElement.SelectSingleNode("property");
+                int rank = int.Parse(pro.Attributes["rank"].Value);
+                rank_idList[rank].Add(int.Parse(mosterElement.Attributes["id"].Value));
+            }
+        }
+        private static MonsterInitializer instance;
+        public static MonsterInitializer getInstance()
+        {
+            if (instance == null)
+                instance = new MonsterInitializer();
+            return instance;
+        }
         //小怪（非BOSS）的首末id，用于控制读取xml的范围，比如随机获取特定种类的小怪（比如野兽类在0~10）
         private static int monsterIdMin = 0;
         private static int monsterIdMax = 28;
         private BattleActor battleActor = null;
         /// <summary>
-        /// 生成一个指定ID和指定等级的怪物
+        /// 生成一个指定ID的怪物
         /// </summary>
         /// <param name="character"></param>
         /// <param name="monsterId">怪物ID</param>
-        /// <param name="rank">怪物等级</param>
-        public void initializeMonster(ref GameObject character, int monsterId, int rank)
+        public void initializeMonster(ref GameObject character, int monsterId)
         {
             string xmlString = Resources.Load("xml/MonsterData").ToString();
             string XPath = string.Format("./monster[@id='{0:D}']", monsterId);
@@ -35,19 +59,20 @@ namespace WorldBattle
             XmlNode aimNode = root.SelectSingleNode(XPath);
             XmlNode propertyNode = aimNode.SelectSingleNode("./property");
             XmlNode aiNode = aimNode.SelectSingleNode("./AI");
+            XmlNode skillListNode = aimNode.SelectSingleNode("./skillList");
 
             Monster monster = new Monster();
             monster.id = monsterId;
-            monster.rank = rank;
             monster.name = aimNode.Attributes["name"].Value;
             monster.vitality = int.Parse(propertyNode.Attributes["vitality"].Value);
             monster.strength = int.Parse(propertyNode.Attributes["strength"].Value);
             monster.agile = int.Parse(propertyNode.Attributes["agile"].Value);
             monster.technique = int.Parse(propertyNode.Attributes["technique"].Value);
             monster.intelligence = int.Parse(propertyNode.Attributes["intelligence"].Value);
-
-
-
+            monster.model = int.Parse(propertyNode.Attributes["model"].Value);
+            monster.rank = int.Parse(propertyNode.Attributes["rank"].Value);
+            monster.size = int.Parse(propertyNode.Attributes["size"].Value);
+            monster.exp = int.Parse(propertyNode.Attributes["exp"].Value);
 
             if (aiNode == null)
             {
@@ -70,9 +95,17 @@ namespace WorldBattle
                         character.AddComponent<NoneAI>();
                         battleActor = character.GetComponent<NoneAI>();
                         break;
+                        //继续扩充
                 }
             }
 
+            if (skillListNode != null)
+            {
+                foreach (XmlElement skillElement in skillListNode.ChildNodes)
+                {
+                    battleActor.addSkill(int.Parse(skillElement.Attributes["id"].Value));                    
+                }
+            }
             battleActor.playerPrefab = character;
             MonsterAdapter.setMonsterBattleActor(ref battleActor, ref monster);      
             addTaskListener(ref battleActor, ref monster);
@@ -96,9 +129,9 @@ namespace WorldBattle
                 case 2: if (randomInt < 40) rank = 1; else if (randomInt < 90) rank = 2; else rank = 3; break;
                 case 3: if (randomInt < 20) rank = 1; else if (randomInt < 50) rank = 2; else rank = 3; break;
                 default: Debug.LogError("不支持该怪物等级，默认地将等级设为1"); break;
-            }
-            int targetID = Random.Range(monsterIdMin, monsterIdMax + 1);
-            initializeMonster(ref character, targetID, rank);
+            }          
+            int index_random = Random.Range(0, rank_idList[rank].Count);
+            initializeMonster(ref character, rank_idList[rank][index_random]);
             Debug.Log("随机生成一个难度级别为" + level + "，等级为" + rank + "，ID为" + randomInt + "的怪物");
         }
         public BattleActor getBattleActor()

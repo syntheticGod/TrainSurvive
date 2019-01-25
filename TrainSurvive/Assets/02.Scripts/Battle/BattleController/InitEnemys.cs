@@ -69,7 +69,7 @@ namespace WorldBattle
                 if (battleController.isTest == false)
                 {
                     //获取当前地块的怪物级别
-                    MonsterInitializer mi = new MonsterInitializer();
+                    MonsterInitializer mi = MonsterInitializer.getInstance();
                     //根据怪物的级别生成随机ID的怪物
                     mi.randomMonster(ref curPlayer, monsterLevel);
                     battleActor = mi.getBattleActor();

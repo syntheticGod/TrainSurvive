@@ -38,7 +38,7 @@ public class Monster {
     public float basicRange=1;
     public float size = 1;
     public float exp = 0;
-
+    public int model = 1;
     /// <summary>
     /// 小数属性保留的位数
     /// </summary>

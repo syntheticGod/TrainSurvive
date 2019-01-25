@@ -12,7 +12,6 @@ using UnityEngine.UI;
 namespace WorldBattle {
 
     public abstract class BattleActor : MonoBehaviour {
-        public string name_str;
 
         //角色五大基本属性（跟技能相关）
         //体力
@@ -55,6 +54,9 @@ namespace WorldBattle {
         //击败获得经验
         public float exp;
         public float size;
+        public string name_str;
+        public int rank;
+        public int model;//使用模型
         public BattleActor()
         {
             skillList = new List<Skill>();

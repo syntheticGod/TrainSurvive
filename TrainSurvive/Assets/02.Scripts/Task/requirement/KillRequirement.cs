@@ -34,7 +34,7 @@ public class KillRequirement : TaskRequirement
         monsterId = monsterid;
         needKillNums = nums;
         hasKillNums = 0;
-        MonsterInitializer ini = new MonsterInitializer();
+        MonsterInitializer ini = MonsterInitializer.getInstance();
         monsterName = ini.getMonsterName(monsterid);
         condition = "击杀：" + monsterName + "  "+ hasKillNums+"/" + needKillNums;
         _description = "你还需要击杀" + monsterName + (needKillNums- hasKillNums)+"个！";//以后也可以只在npc那展示金钱数字，其他话在npc数据里补充
