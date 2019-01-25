@@ -1,8 +1,8 @@
 /*
- * 描述：物品转物品建筑类型
+ * 描述：
  * 作者：刘旭涛
- * 创建时间：2018/12/14 11:23:18
- * 版本：v0.1
+ * 创建时间：2019/1/25 14:39:20
+ * 版本：v0.7
  */
 using Assets._02.Scripts.zhxUIScripts;
 using System;
@@ -11,22 +11,20 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
-[Serializable]
-public class Item2ItemStructure : EnergyCostableStructure {
+public class Seed2ItemStructure : EnergyCostableStructure {
 
     [Serializable]
-    public struct Conversion: IConversion {
-        public int FromItemID;
-        public int FromItemNum;
+    public struct Conversion : IConversion {
+        public string FromSeedName;
         public int ToItemID;
         public int ToItemNum;
         public float ProcessTime;
         public float GetProcessTime { get { return ProcessTime; } }
     }
-    
-    public Item2ItemStructure(int id) : base(id) { }
 
-    protected Item2ItemStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
+    public Seed2ItemStructure(int id) : base(id) { }
+
+    protected Seed2ItemStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
         _conversions = (Conversion[])info.GetValue("_conversions", typeof(Conversion[]));
         _processSpeed = (float)info.GetValue("_processSpeed", typeof(float));
         _conversionsList = (List<Formula<Conversion>>)info.GetValue("_conversionsList", typeof(List<Formula<Conversion>>));
@@ -99,7 +97,7 @@ public class Item2ItemStructure : EnergyCostableStructure {
         actions.AddFirst(new ButtonAction("操作", (facility) => UIManager.Instance?.ShowFaclityUI("sui_" + facility.Structure.ID, facility.Structure)));
         return actions;
     }
-    
+
     private IEnumerator Run() {
         WaitUntil wait = new WaitUntil(WaitForAvailable);
         WaitWhile waitCosts = new WaitWhile(() => IsRunningOut);
@@ -116,20 +114,17 @@ public class Item2ItemStructure : EnergyCostableStructure {
             int currentConcurrency = 0;
             foreach (Formula<Conversion> formula in Conversions) {
                 if (formula.Count > 0 || formula.Count == -1) {
-                    if (PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum) })) {
-                        currentConcurrency++;
-                        if (currentConcurrency <= Concurrency) {
-                            if (formula.Progress < formula.Conversion.ProcessTime) {
-                                formula.Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
-                            } else {
-                                formula.Progress = 0;
-                                PublicMethod.ConsumeItems(new ItemData[] { new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum) });
-                                PublicMethod.AppendItemsInBackEnd(new ItemData[] { new ItemData(formula.Conversion.ToItemID, formula.Conversion.ToItemNum) });
-                                formula.Count--;
-                            }
+                    currentConcurrency++;
+                    if (currentConcurrency <= Concurrency) {
+                        if (formula.Progress < formula.Conversion.ProcessTime) {
+                            formula.Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
                         } else {
-                            break;
+                            formula.Progress = 0;
+                            PublicMethod.AppendItemsInBackEnd(new ItemData[] { new ItemData(formula.Conversion.ToItemID, formula.Conversion.ToItemNum) });
+                            formula.Count--;
                         }
+                    } else {
+                        break;
                     }
                 }
             }
@@ -140,9 +135,7 @@ public class Item2ItemStructure : EnergyCostableStructure {
     private bool WaitForAvailable() {
         foreach (Formula<Conversion> formula in Conversions) {
             if (formula.Count > 0 || formula.Count == -1) {
-                if (PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum) })) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;

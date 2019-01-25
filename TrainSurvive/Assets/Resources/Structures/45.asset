@@ -24,6 +24,70 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: ce793c809cbd6de44a31dbe001abb4ed, type: 3}
   Class: 4
   RequiredTech: 18
-  Initializer: Structure
-  InitializeValues: []
-  InitializerObject: {fileID: 11500000, guid: b6632dcc460747b4291bc15ed01af0b3, type: 3}
+  Initializer: Seed2ItemStructure
+  InitializeValues:
+  - Name: _conversions
+    TypeName: Seed2ItemStructure+Conversion[]
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue:
+    - FromSeedName: "\u6D46\u679C\u82D7"
+      ToItemID: 230
+      ToItemNum: 20
+      ProcessTime: 360
+    - FromSeedName: "\u6811\u82D7"
+      ToItemID: 237
+      ToItemNum: 15
+      ProcessTime: 360
+    - FromSeedName: "\u77F3\u82D7"
+      ToItemID: 243
+      ToItemNum: 15
+      ProcessTime: 360
+    - FromSeedName: "\u94DC\u77FF\u82D7"
+      ToItemID: 246
+      ToItemNum: 10
+      ProcessTime: 360
+    - FromSeedName: "\u94C1\u77FF\u82D7"
+      ToItemID: 248
+      ToItemNum: 10
+      ProcessTime: 360
+    - FromSeedName: "\u7164\u70AD\u82D7"
+      ToItemID: 235
+      ToItemNum: 10
+      ProcessTime: 360
+  - Name: _processSpeed
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 1
+    System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _costElect
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _costEnergy
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
+    Item2EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: ee28d2c5cb8079f44a2a45d8ec92728f, type: 3}

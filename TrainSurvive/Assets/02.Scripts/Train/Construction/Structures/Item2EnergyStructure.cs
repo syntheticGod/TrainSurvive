@@ -19,7 +19,7 @@ public class Item2EnergyStructure : Structure {
     }
 
     [Serializable]
-    public struct Conversion {
+    public struct Conversion: IConversion {
         public int ItemID;
         public float EnergyRate;
         public float ProcessTimeRatio;
@@ -35,6 +35,12 @@ public class Item2EnergyStructure : Structure {
                 return ProduceEnergyRatio * EnergyRate;
             }
         }
+
+        public float GetProcessTime {
+            get {
+                return ProcessTime;
+            }
+        }
     }
 
     public Item2EnergyStructure(int id) : base(id) { }
@@ -44,42 +50,36 @@ public class Item2EnergyStructure : Structure {
         _conversionRate = (float)info.GetValue("_conversionRate", typeof(float));
         _processSpeed = (float)info.GetValue("_processSpeed", typeof(float));
         _energyType = (EnergyType)info.GetValue("_energyType", typeof(EnergyType));
-        Progress = (float)info.GetValue("Progress", typeof(float));
-        Gas = (ItemData)info.GetValue("Gas", typeof(ItemData));
+        _conversionsList = (List<Formula<Conversion>>)info.GetValue("_conversionsList", typeof(List<Formula<Conversion>>));
         ConversionRateRatio = (float)info.GetValue("ConversionRateRatio", typeof(float));
         ProcessSpeedRatio = (float)info.GetValue("ProcessSpeedRatio", typeof(float));
-        AutomataEnabled = info.GetBoolean("AutomataEnabled");
-        AutomataCount = info.GetInt32("AutomataCount");
-        AutomataItem = info.GetInt32("AutomataItem");
+        Concurrency = info.GetInt32("Concurrency");
     }
 
     public override void GetObjectData(SerializationInfo info, StreamingContext context) {
         base.GetObjectData(info, context);
-        info.AddValue("Progress", Progress);
-        info.AddValue("Gas", Gas);
         info.AddValue("ConversionRateRatio", ConversionRateRatio);
         info.AddValue("ProcessSpeedRatio", ProcessSpeedRatio);
-        info.AddValue("AutomataEnabled", AutomataEnabled);
-        info.AddValue("AutomataCount", AutomataCount);
-        info.AddValue("AutomataItem", AutomataItem);
+        info.AddValue("Concurrency", Concurrency);
         info.AddValue("_conversions", _conversions);
         info.AddValue("_conversionRate", _conversionRate);
         info.AddValue("_processSpeed", _processSpeed);
         info.AddValue("_energyType", _energyType);
+        info.AddValue("_conversionsList", Conversions);
     }
 
     /// <summary>
-    /// 转化列表
+    /// 配方列表
     /// </summary>
-    public Dictionary<int, Conversion> Conversions {
+    public List<Formula<Conversion>> Conversions {
         get {
-            if (_conversionsDic == null) {
-                _conversionsDic = new Dictionary<int, Conversion>();
-                foreach(Conversion conversion in _conversions) {
-                    _conversionsDic.Add(conversion.ItemID, conversion);
+            if (_conversionsList == null) {
+                _conversionsList = new List<Formula<Conversion>>();
+                foreach (Conversion conversion in _conversions) {
+                    _conversionsList.Add(new Formula<Conversion>(conversion, _conversionsList.Count));
                 }
             }
-            return _conversionsDic;
+            return _conversionsList;
         }
     }
     /// <summary>
@@ -115,53 +115,11 @@ public class Item2EnergyStructure : Structure {
     /// </summary>
     public float ProcessSpeedRatio { get; set; } = 1;
     /// <summary>
-    /// 处理进度
+    /// 并发数
     /// </summary>
-    public float Progress {
-        get {
-            return _progress;
-        }
-        private set {
-            _progress = value;
-            if (Gas == null) {
-                CallOnProgressChange(0, 0, value);
-            } else {
-                CallOnProgressChange(0, Conversions[Gas.ID].ProcessTime, value);
-            }
-        }
-    }
-    /// <summary>
-    /// 材料
-    /// </summary>
-    public ItemData Gas {
-        get {
-            OnAcquireGas?.Invoke(ref _gas);
-            return _gas;
-        }
-        set {
-            _gas = value;
-        }
-    }
-    /// <summary>
-    /// 自动化是否启动
-    /// </summary>
-    public bool AutomataEnabled { get; set; }
-    /// <summary>
-    /// 自动化次数
-    /// </summary>
-    public int AutomataCount { get; set; }
-    /// <summary>
-    /// 自动化配方
-    /// </summary>
-    public int AutomataItem { get; set; }
-
-
-    public Action<ItemData> OnGasUpdate;
-    public RefAction<ItemData> OnAcquireGas;
-    public Action<int> OnAutomataCountChange;
-
+    public int Concurrency { get; set; } = 1;
+    
     private Coroutine RunningCoroutine { get; set; }
-    private Coroutine AutoFillCoroutine { get; set; }
 
     [StructurePublicField(Tooltip = "转化列表")]
     private Conversion[] _conversions;
@@ -172,22 +130,17 @@ public class Item2EnergyStructure : Structure {
     [StructurePublicField(Tooltip = "能源类型")]
     private EnergyType _energyType;
 
-    private Dictionary<int, Conversion> _conversionsDic;
-    private float _progress;
-    private ItemData _gas;
+    private List<Formula<Conversion>> _conversionsList;
 
     protected override void OnStart() {
         base.OnStart();
         RunningCoroutine = TimeController.getInstance().StartCoroutine(Run());
-        AutoFillCoroutine = TimeController.getInstance().StartCoroutine(AutoFill());
     }
 
     protected override void OnRemoving() {
         base.OnRemoving();
         if (RunningCoroutine != null)
             TimeController.getInstance().StopCoroutine(RunningCoroutine);
-        if (AutoFillCoroutine != null)
-            TimeController.getInstance().StopCoroutine(AutoFillCoroutine);
     }
 
     public override LinkedList<ButtonAction> GetButtonActions() {
@@ -195,51 +148,74 @@ public class Item2EnergyStructure : Structure {
         actions.AddFirst(new ButtonAction("操作", (facility) => UIManager.Instance?.ShowFaclityUI("sui_" + facility.Structure.ID, facility.Structure)));
         return actions;
     }
-
+    
     private IEnumerator Run() {
-        WaitUntil wait = new WaitUntil(() => Gas != null && Gas.Number >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax());
+        WaitUntil wait = new WaitUntil(WaitForAvailable);
         while (FacilityState == State.WORKING) {
-            if (!(Gas != null && Gas.Number >= 1 && World.getInstance().getEnergy() < World.getInstance().getEnergyMax())) {
-                Progress = 0;
+            if (!WaitForAvailable()) {
+                foreach (Formula<Conversion> formula in Conversions) {
+                    formula.Progress = 0;
+                }
                 yield return wait;
             }
-            if (Progress < Conversions[Gas.ID].ProcessTime) {
-                Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
-            } else {
-                Progress = 0;
-                AutomataItem = Gas.ID;
-                if (AutomataCount > 0 && AutomataEnabled) {
-                    AutomataCount--;
-                    OnAutomataCountChange?.Invoke(AutomataCount);
+            int currentConcurrency = 0;
+            foreach (Formula<Conversion> formula in Conversions) {
+                if (formula.Count > 0 || formula.Count == -1) {
+                    if (PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(formula.Conversion.ItemID, 1) })) {
+                        currentConcurrency++;
+                        if (currentConcurrency <= Concurrency) {
+                            if (formula.Progress < formula.Conversion.ProcessTime) {
+                                formula.Progress += Time.deltaTime * ProcessSpeed * ProcessSpeedRatio;
+                            } else {
+                                formula.Progress = 0;
+                                PublicMethod.ConsumeItems(new ItemData[] { new ItemData(formula.Conversion.ItemID, 1) });
+                                float generatedAmount = formula.Conversion.ProduceEnergy * ConversionRate * ConversionRateRatio;
+                                switch (GeneratedEnergyType) {
+                                    case EnergyType.ENERGY:
+                                        World.getInstance().addEnergy(generatedAmount);
+                                        break;
+                                    case EnergyType.ELECT:
+                                        World.getInstance().addElectricity(generatedAmount);
+                                        break;
+                                    case EnergyType.FOOD:
+                                        World.getInstance().addFoodIn(generatedAmount);
+                                        break;
+                                }
+                                formula.Count--;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
                 }
-                float generatedAmount = Conversions[Gas.ID].ProduceEnergy * ConversionRate * ConversionRateRatio;
-                switch (GeneratedEnergyType) {
-                    case EnergyType.ENERGY:
-                        World.getInstance().addEnergy(generatedAmount);
-                        break;
-                    case EnergyType.ELECT:
-                        World.getInstance().addElectricity(generatedAmount);
-                        break;
-                    case EnergyType.FOOD:
-                        World.getInstance().addFoodIn(generatedAmount);
-                        break;
-                }
-                if (--Gas.Number == 0) {
-                    Gas = null;
-                }
-                OnGasUpdate?.Invoke(_gas);
             }
             yield return 1;
         }
     }
 
-    private IEnumerator AutoFill() {
-        WaitUntil wait = new WaitUntil(() => AutomataEnabled && AutomataCount != 0 && Gas == null && PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(AutomataItem, 1) }));
-        while (FacilityState == State.WORKING) {
-            yield return wait;
-            _gas = new ItemData(AutomataItem, 1);
-            PublicMethod.ConsumeItems(new ItemData[] { _gas });
-            OnGasUpdate?.Invoke(_gas);
+    private bool WaitForAvailable() {
+        bool energyFull = false;
+        switch (GeneratedEnergyType) {
+            case EnergyType.ENERGY:
+                energyFull = World.getInstance().getEnergy() >= World.getInstance().getEnergyMax();
+                break;
+            case EnergyType.ELECT:
+                energyFull = World.getInstance().getElectricity() >= World.getInstance().getElectricityMax();
+                break;
+            case EnergyType.FOOD:
+                energyFull = World.getInstance().getFoodIn() >= World.getInstance().getFoodInMax();
+                break;
         }
+        if (energyFull) {
+            return false;
+        }
+        foreach (Formula<Conversion> formula in Conversions) {
+            if (formula.Count > 0 || formula.Count == -1) {
+                if (PublicMethod.IfHaveEnoughItems(new ItemData[] { new ItemData(formula.Conversion.ItemID, 1) })) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

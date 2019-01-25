@@ -26,6 +26,7 @@ public class StructureSetting : ScriptableObject {
         public Item2EnergyStructure.EnergyType Item2EnergyStructure_EnergyTypeValue;
         public Item2EnergyStructure.Conversion[] Item2EnergyStructure_ConversionArrayValue;
         public Item2ItemStructure.Conversion[] Item2ItemStructure_ConversionArrayValue;
+        public Seed2ItemStructure.Conversion[] Seed2ItemStructure_ConversionArrayValue;
 
         public object GetValue() {
             foreach (FieldInfo info in GetType().GetRuntimeFields()) {

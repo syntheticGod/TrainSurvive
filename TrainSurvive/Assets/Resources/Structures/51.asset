@@ -34,31 +34,28 @@ MonoBehaviour:
     System_StringValue: 
     Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue:
-    - ItemID: 201
+    - ItemID: 230
       EnergyRate: 1
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
-    - ItemID: 211
+    - ItemID: 231
       EnergyRate: 0.6
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
-    - ItemID: 212
-      EnergyRate: 2.5
+    - ItemID: 232
+      EnergyRate: 3
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
-    - ItemID: 213
-      EnergyRate: 1.2
-      ProcessTimeRatio: 0.4
-      ProduceEnergyRatio: 10
-    - ItemID: 214
+    - ItemID: 233
       EnergyRate: 1.5
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
-    - ItemID: 223
-      EnergyRate: 0.2
+    - ItemID: 234
+      EnergyRate: 3
       ProcessTimeRatio: 0.4
       ProduceEnergyRatio: 10
     Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
   - Name: _conversionRate
     TypeName: System.Single
     System_Int32Value: 0
@@ -68,6 +65,7 @@ MonoBehaviour:
     Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
     TypeName: System.Single
     System_Int32Value: 0
@@ -77,6 +75,7 @@ MonoBehaviour:
     Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
   - Name: _energyType
     TypeName: Item2EnergyStructure+EnergyType
     System_Int32Value: 0
@@ -86,4 +85,5 @@ MonoBehaviour:
     Item2EnergyStructure_EnergyTypeValue: 2
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
   InitializerObject: {fileID: 11500000, guid: d551b20958ef80641a8d70da3fb0bc08, type: 3}

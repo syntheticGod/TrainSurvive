@@ -32,16 +32,17 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue:
-    - FromItemID: 232
+    - FromItemID: 249
       FromItemNum: 1
-      ToItemID: 238
+      ToItemID: 249
       ToItemNum: 5
       ProcessTime: 10
-    - FromItemID: 234
+    - FromItemID: 247
       FromItemNum: 1
-      ToItemID: 239
+      ToItemID: 247
       ToItemNum: 5
       ProcessTime: 10
   - Name: _processSpeed
@@ -50,6 +51,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 1
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _costElect
@@ -58,6 +60,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   - Name: _costEnergy
@@ -66,6 +69,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0.2
     System_StringValue: 
+    Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
   InitializerObject: {fileID: 11500000, guid: f128628d3b381af49b2f54dd079877f9, type: 3}

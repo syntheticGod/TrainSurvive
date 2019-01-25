@@ -125,7 +125,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomMaterial()
     {
-        return new ItemData(materialIDPool[MathTool.RandomInt(materialIDPool.Length)], MathTool.RandomRange(1, 5));
+        return new ItemData(MathTool.RandomRange(201, 254), MathTool.RandomRange(1, 5));
     }
     /// <summary>
     /// 随机生成指定数量的材料
