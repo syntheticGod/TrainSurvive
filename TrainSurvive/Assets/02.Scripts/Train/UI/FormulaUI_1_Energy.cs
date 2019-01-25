@@ -1,7 +1,7 @@
 /*
- * 描述：1个物品加工1个物品的合成配方条目
+ * 描述：
  * 作者：刘旭涛
- * 创建时间：2019/1/16 15:07:48
+ * 创建时间：2019/1/25 12:00:12
  * 版本：v0.7
  */
 using System;
@@ -9,14 +9,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TTT.UI;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
-using WorldMap.UI;
 
-public class FormulaUI_1_1 : MonoBehaviour {
-
+public class FormulaUI_1_Energy : MonoBehaviour {
+    
     [SerializeField]
-    private AssetsItemView Output;
+    private Image OutputImage;
+    [SerializeField]
+    private Text OutputNum;
     [SerializeField]
     private AssetsItemView Raw;
     [SerializeField]
@@ -29,6 +29,8 @@ public class FormulaUI_1_1 : MonoBehaviour {
     private AutomataUI AutomataUI;
     [SerializeField]
     private Text TimeText;
+    [SerializeField]
+    private Sprite[] EnergyImage;
 
     public ItemData RawItem {
         get {
@@ -40,14 +42,13 @@ public class FormulaUI_1_1 : MonoBehaviour {
             Raw.SetItemData(value.ID, value.Number);
         }
     }
-    public ItemData OutputItem {
+    public Item2EnergyStructure.EnergyType OutputType {
         get {
-            return _outputItem;
+            return _outputType;
         }
         set {
-            _outputItem = value;
-            Output.Clear();
-            Output.SetItemData(value.ID, value.Number);
+            _outputType = value;
+            OutputImage.sprite = EnergyImage[(int)value];
         }
     }
     public int Time {
@@ -59,6 +60,15 @@ public class FormulaUI_1_1 : MonoBehaviour {
             TimeText.text = "" + value;
         }
     }
+    public int OutputCount {
+        get {
+            return _outputCount;
+        }
+        set {
+            _outputCount = value;
+            OutputNum.text = "" + value;
+        }
+    }
     public int ProduceCount {
         get {
             return AutomataUI.Value;
@@ -67,17 +77,18 @@ public class FormulaUI_1_1 : MonoBehaviour {
             AutomataUI.Value = value;
         }
     }
-    
+
     public event Action<int> OnPriorityChanged;
 
-    private ItemData _rawItem, _outputItem;
-    private int _time;
+    private ItemData _rawItem;
+    private Item2EnergyStructure.EnergyType _outputType;
+    private int _outputCount, _time;
 
     private void Awake() {
         Up.onClick.AddListener(() => OnPriorityChanged?.Invoke(-1));
         Down.onClick.AddListener(() => OnPriorityChanged?.Invoke(1));
     }
-    
+
     public void ChangeProgress(float min, float max, float value) {
         Slider.minValue = min;
         Slider.maxValue = max;
