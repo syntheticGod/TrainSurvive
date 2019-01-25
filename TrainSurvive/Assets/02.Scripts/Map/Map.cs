@@ -121,6 +121,20 @@ namespace WorldMap {
                 spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.MONSTER;
         }
         /// <summary>
+        /// 获取指定位置怪物级别
+        /// </summary>
+        /// <param name="position">地图坐标，不是世界坐标</param>
+        /// <returns>
+        /// 1、2、3：怪物的三个级别
+        /// -1：该区块不是怪物区块
+        /// </returns>
+        public int GetMonsterLevel(Vector2Int position)
+        {
+            if (!IfMonsterArea(position))
+                return -1;
+            return spowns[position.x, position.y].monsterId;
+        }
+        /// <summary>
         /// 判断地块是否可以采集
         /// </summary>
         /// <param name="position"></param>

@@ -11,10 +11,25 @@ namespace TTT.Item
 {
     public class SpecialInfo : ItemInfo
     {
+        /// <summary>
+        /// 初始价格
+        /// </summary>
+        public int Price { get; }
         public SpecialInfo(XmlNode node)
             : base(node)
         {
+            Price = int.Parse(node.Attributes["price"].Value);
             Type = PublicData.ItemType.SpecialItem;
+        }
+
+        public override int GetOriginPrice()
+        {
+            return Price;
+        }
+
+        public override int GetSellPrice()
+        {
+            return UnityEngine.Mathf.RoundToInt(Price * SellRatio);
         }
     }
 }

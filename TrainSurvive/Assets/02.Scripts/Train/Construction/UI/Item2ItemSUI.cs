@@ -22,7 +22,7 @@ public class Item2ItemSUI : FacilityUI {
             return base.Structure as Item2ItemStructure;
         }
     }
-    
+
     private void Awake() {
         foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
             FormulaUI_1_1 formulaUI = Instantiate(FormulaPrefab, ScrollContent).GetComponent<FormulaUI_1_1>();

@@ -6,10 +6,12 @@
  */
 using UnityEngine;
 using System.Collections;
-using TTT.Utility;
 using System.Collections.Generic;
+
 using TTT.Item;
+using TTT.Utility;
 using TTT.Resource;
+using TTT.UI.ListView;
 
 namespace TTT.UI
 {

@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace TTT.Item
 {
-    public class ItemInfo
+    public abstract class ItemInfo
     {
         /// <summary>
         /// 物品唯一ID
@@ -36,10 +36,6 @@ namespace TTT.Item
         /// </summary>
         public PublicData.Rarity Rarity { get; }
         /// <summary>
-        /// 初始价格
-        /// </summary>
-        public int Price { get; }
-        /// <summary>
         /// 售卖价格比例（price*sellRatio）取值范围是[0,1]之间的浮点
         /// </summary>
         public float SellRatio { get; }
@@ -59,6 +55,8 @@ namespace TTT.Item
         /// 60 x 60 像素
         /// </summary>
         public Sprite SmallSprite { get; protected set; }
+        public abstract int GetOriginPrice();
+        public abstract int GetSellPrice();
         /// <summary>
         /// 物品信息只能从XML文件中读取，一旦读取就不能被修改。
         /// </summary>
@@ -70,7 +68,6 @@ namespace TTT.Item
             Name = node.Attributes["name"].Value;
             Description = node.Attributes["description"].Value;
             Rarity = (PublicData.Rarity)int.Parse(node.Attributes["rarity"].Value);
-            Price = int.Parse(node.Attributes["price"].Value);
             SellRatio = float.Parse(node.Attributes["sellRatio"].Value);
             Size = float.Parse(node.Attributes["size"].Value);
             MaxPileNum = int.Parse(node.Attributes["maxPileNum"].Value);

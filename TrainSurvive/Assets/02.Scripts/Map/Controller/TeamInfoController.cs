@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using WorldMap.UI;
 
 using TTT.Utility;
-using TTT.UI;
+using TTT.UI.ListView;
 using TTT.Controller;
 
 namespace WorldMap.Controller

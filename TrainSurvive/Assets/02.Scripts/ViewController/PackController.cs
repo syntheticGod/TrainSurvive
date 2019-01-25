@@ -9,9 +9,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
-using TTT.UI;
+using TTT.UI.ListView;
 using WorldMap.UI;
-using WorldMap.Model;
 using Assets._02.Scripts.zhxUIScripts;
 
 namespace TTT.Controller
@@ -19,7 +18,7 @@ namespace TTT.Controller
     public class PackController : WindowsController
     {
         //视图
-        private AssetsListView packLV;
+        private DragableResourceLV packLV;
         private string[] rightUpBtnsName = { "AllItem", "Equipments", "Materials", "Specials" };
         private string[] rightUpBtnsContent = { "全部", "装备", "材料", "特殊" };
         private Button[] rightTopBtns;
@@ -56,7 +55,7 @@ namespace TTT.Controller
             Image bg = ViewTool.ForceGetComponentInChildren<Image>(gameObject, "Backgroud");
             ViewTool.FullFillRectTransform(bg, new Vector2(0, 0), -sizeOfRightBottom);
             //PackListView
-            packLV = ViewTool.ForceGetComponentInChildren<AssetsListView>(gameObject, "PackListViewLayout", false);
+            packLV = ViewTool.ForceGetComponentInChildren<DragableResourceLV>(gameObject, "PackListViewLayout", false);
             packLV.SetBackgroudColor(containerColor);
             packLV.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
             packLV.GridConstraintCount = 8;

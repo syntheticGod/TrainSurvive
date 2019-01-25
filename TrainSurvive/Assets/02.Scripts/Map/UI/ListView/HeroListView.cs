@@ -1,12 +1,12 @@
 /*
- * 描述：
+ * 描述：英雄头像列表
  * 作者：项叶盛
  * 创建时间：2018/12/5 3:26:42
  * 版本：v0.1
  */
 using UnityEngine.UI;
 using TTT.Utility;
-using TTT.UI;
+using TTT.UI.ListView;
 
 namespace WorldMap.UI
 {

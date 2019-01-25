@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<chat>
+  <!--自言自语类型-->
+  <selfChat>
+    <sentence>你们错过我这么强的人真的太可惜了</sentence>
+    <sentence>我真是太强了</sentence>
+    <sentence>我最近发现了一个大宝贝</sentence>
+  </selfChat>
+  <!--同意类型-->
+  <agree>
+    <sentence>你说的太对了</sentence>
+    <sentence>你说出了我想说的</sentence>
+    <sentence>就是这样的</sentence>
+    <sentence>对，没错</sentence>
+    <sentence>是啊是啊</sentence>
+  </agree>
+  <!--嘲讽类型-->
+  <satire>
+    <sentence>你怎么回事，小老弟？</sentence>
+    <sentence>呵呵，就你？</sentence>
+  </satire>
+  <!--反击类型-->
+  <counter>
+    <sentence>来啊，打架啊</sentence>
+    <sentence>垃圾</sentence>
+    <sentence>反弹</sentence>
+    <sentence>等到没人的时候，我一定把你狠狠揍一顿</sentence>
+  </counter>
+  <!--侮辱类型-->
+  <insult>
+    <sentence>傻叼</sentence>
+    <sentence>你这个猪猡</sentence>
+  </insult>
+  <!--循环类型-->
+  <routine>
+    <sentence>无事极好</sentence>
+    <sentence>能在这个世界里活下去，我就满足了</sentence>
+    <sentence>又是平静的一天</sentence>
+    <sentence>真怀念以前的生活啊</sentence>
+    <sentence>好想来杯啤酒</sentence>
+    <sentence>今天天气挺不错</sentence>
+  </routine>
+</chat>

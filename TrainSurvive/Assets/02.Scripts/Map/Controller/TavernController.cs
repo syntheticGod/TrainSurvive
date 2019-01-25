@@ -9,11 +9,12 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using TTT.Utility;
-using TTT.UI;
-using TTT.Controller
-    ;
+using TTT.UI.ListView;
+using TTT.Controller;
+
 using WorldMap.Model;
 using WorldMap.UI;
+using Story.Communication;
 
 namespace WorldMap.Controller
 {
@@ -29,9 +30,30 @@ namespace WorldMap.Controller
         private NullListView nullListView;
         private Button[] chatBtns;
         private Model.Town currentTown;
+        private ChatRoom chatRoom;
+        private List<KeyValuePair<int, string>> chatSentences;
+        private List<ChatSentence>[] sentences;
+        private List<NPC> npcs;
+        List<int> nullData;
         public void SetTown(Model.Town town)
         {
             currentTown = town;
+            npcs = town.NPCs;
+            chatRoom = new ChatRoom(town.NPCs);
+            chatSentences = chatRoom.chat();
+            sentences = new List<ChatSentence>[town.NPCCnt + 1];
+            for (int i = 0; i < sentences.Length; i++)
+                sentences[i] = new List<ChatSentence>();
+            foreach (KeyValuePair<int, string> sentence in chatSentences)
+            {
+                NPC npc = town.FindNPCByID(sentence.Key);
+                if (npc == null)
+                {
+                    Debug.LogError("在城市" + town.Name + "中找不到指定NPC：" + sentence.Key);
+                    continue;
+                }
+                sentences[0].Add(new ChatSentence(npc, sentence.Value));
+            }
         }
         protected override void CreateModel()
         {
@@ -76,27 +98,10 @@ namespace WorldMap.Controller
             nullListView = new GameObject("NullListView").AddComponent<NullListView>();
             ViewTool.SetParent(nullListView, this);
             ViewTool.Anchor(nullListView, new Vector2(0.875F, 0.2F), new Vector2(0.958F, 0.8F));
-            
+
         }
-        List<Person> heros;
-        List<NPCChat> chats;
-        List<int> nullData;
         protected override bool PrepareDataBeforeShowWindow()
         {
-            heros = new List<Person>();
-            for (int i = 0; i < currentTown.NPCs.Count; i++)
-            {
-                heros.Add(currentTown.NPCs[i].PersonInfo);
-            }
-            //FOR TEST测试
-            chats = new List<NPCChat>();
-            for (int i = 0; i < currentTown.NPCs.Count; i++)
-            {
-                NPCChat chat = new NPCChat();
-                chat.Name = currentTown.NPCs[i].Name;
-                chat.Content = "我的力量为" + currentTown.NPCs[i].Strength;
-                chats.Add(chat);
-            }
             nullData = new List<int>();
             for (int i = 0; i < 3; i++)
             {
@@ -107,19 +112,20 @@ namespace WorldMap.Controller
         }
         protected override void AfterShowWindow()
         {
-            tavernNPCListView.Datas = heros;
+            tavernNPCListView.Datas = npcs;
             tavernNPCListView.ClickManually(0);
-            townChatListView.Datas = chats;
+            townChatListView.Datas = sentences[0];
             nullListView.Datas = nullData;
         }
-        public void OnItemClick(ListViewItem item, Person person)
+        public void OnItemClick(ListViewItem item, NPC npc)
         {
-            selectedIndex = heros.IndexOf(person);
+            selectedIndex = npcs.IndexOf(npc);
             for (int i = 0; i < chatBtns.Length; i++)
             {
                 chatBtns[i].GetComponentInChildren<Text>().text = personalChatBtnsStrs[i];
             }
             Debug.Log("点击了" + currentTown.NPCs[selectedIndex].Name);
+            townChatListView.Datas = sentences[selectedIndex + 1];
         }
         public void OnPersistentClick(ListViewItem item, int index)
         {
@@ -128,19 +134,20 @@ namespace WorldMap.Controller
                 chatBtns[i].GetComponentInChildren<Text>().text = chatBtnsStrs[i];
             }
             selectedIndex = UNSELECTED;
+            //显示大厅聊天记录
+            townChatListView.Datas = sentences[0];
         }
         public void OnClick(BUTTON_ID id)
         {
             switch (id)
             {
                 case BUTTON_ID.TAVERN_BUTTON1:
-                    NPCChat chat = new NPCChat();
+                    ChatSentence chat;
                     if (selectedIndex != UNSELECTED)
                     {
                         //私聊：最近过的怎么样
                         NPC npc = currentTown.NPCs[selectedIndex];
-                        chat.Name = npc.Name;
-                        chat.Content = "挺好的";
+                        chat = new ChatSentence(npc, "挺好的");
                     }
                     else
                     {
@@ -148,25 +155,23 @@ namespace WorldMap.Controller
                         List<NPC> npcs = currentTown.NPCs;
                         if (npcs.Count == 0)
                         {
-                            chat.Name = "回响";
-                            chat.Content = chatBtnsStrs[id- BUTTON_ID.TAVERN_NONE-1];
+                            chat = new ChatSentence("回响", chatBtnsStrs[id - BUTTON_ID.TAVERN_NONE - 1]);
                         }
                         else
                         {
                             int randomIndex = MathTool.RandomInt(npcs.Count);
                             NPC randomNPC = npcs[randomIndex];
-                            chat.Name = randomNPC.Name;
-                            chat.Content = "你好";
+                            chat = new ChatSentence(randomNPC, "你好");
                         }
                     }
                     townChatListView.AddItem(chat);
                     break;
                 case BUTTON_ID.TAVERN_BUTTON2:
-                    if(selectedIndex != UNSELECTED)
+                    if (selectedIndex != UNSELECTED)
                     {
                         //私聊选项2：请加入我
                         Debug.Log("玩家：招募指令");
-                        if(WorldForMap.Instance.PersonCount() >= WorldForMap.Instance.MaxPersonCount())
+                        if (WorldForMap.Instance.PersonCount() >= WorldForMap.Instance.MaxPersonCount())
                         {
                             InfoDialog.Show("人物已满，无法招募更多的人");
                             return;
@@ -181,7 +186,7 @@ namespace WorldMap.Controller
                             Team.Instance.CallBackRecruit(currentNPC.PersonInfo);
                         else
                             Train.Instance.CallBackRecruit(currentNPC.PersonInfo);
-                        tavernNPCListView.RemoveData(currentNPC.PersonInfo);
+                        tavernNPCListView.RemoveData(currentNPC);
                         tavernNPCListView.ClickManually(0);
                         break;
                     }

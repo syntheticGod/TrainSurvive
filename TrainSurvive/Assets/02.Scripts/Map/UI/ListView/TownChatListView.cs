@@ -6,14 +6,17 @@
  */
 using UnityEngine;
 using UnityEngine.UI;
+
 using TTT.Utility;
 using TTT.UI;
+using TTT.UI.ListView;
+using WorldMap.Model;
 
 namespace WorldMap.UI
 {
-    public class TownChatListView : BaseListView<NPCChat>
+    public class TownChatListView : BaseListView<ChatSentence>
     {
-        protected override void OnItemView(ListViewItem item, NPCChat data, int itemIndex)
+        protected override void OnItemView(ListViewItem item, ChatSentence data, int itemIndex)
         {
             TownChatItem view = CompTool.ForceGetComponent<TownChatItem>(item);
             view.SetProfile(data.Name);

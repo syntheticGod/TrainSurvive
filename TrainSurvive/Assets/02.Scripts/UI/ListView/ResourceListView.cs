@@ -1,5 +1,7 @@
 /*
- * 描述：
+ * 描述：物品列表
+            功能：
+            1、鼠标移到物品网格上时，显示物品面板信息
  * 作者：项叶盛
  * 创建时间：2018/12/8 22:04:08
  * 版本：v0.1
@@ -9,13 +11,12 @@ using UnityEngine.UI;
 using System.Collections;
 
 using TTT.Utility;
-using TTT.UI;
 using TTT.Item;
-using UnityEngine.EventSystems;
+using TTT.Resource;
 
-namespace WorldMap.UI
+namespace TTT.UI.ListView
 {
-    public abstract class ResourceListViewBase : BaseListView<ItemData>
+    public abstract class ResourceListView : BaseListView<ItemData>
     {
         private RectTransform hoverPanel;
         private RectTransform panelContent;
@@ -55,22 +56,25 @@ namespace WorldMap.UI
         }
         protected sealed override void OnItemView(ListViewItem item, ItemData data, int itemIndex)
         {
-            ResourceItemBase view = GetResourceItemBase(item, data);
-            view.Index = itemIndex;
-            view.onItemEnter = delegate (ResourceItemBase i)
+            ResourceItemBase view = GetView(item, data, itemIndex);
+            view.OnItemEnter = delegate (ResourceItemBase i)
             {
                 ItemData temp = data;
                 StartCoroutine(ShowPanel(temp));
             };
-            view.onItemExit = delegate (ResourceItemBase i)
+            view.OnItemExit = delegate (ResourceItemBase i)
             {
                 StopAllCoroutines();
                 hoverPanel.gameObject.SetActive(false);
             };
         }
-        protected abstract ResourceItemBase GetResourceItemBase(ListViewItem item, ItemData data);
-
-        IEnumerator ShowPanel(ItemData data)
+        protected virtual ResourceItemBase GetView(ListViewItem item, ItemData data, int index)
+        {
+            AssetsItemView view = ViewTool.ForceGetComponentInChildren<AssetsItemView>(item, "AssetsItem");
+            view.SetItemData(data);
+            return view;
+        }
+        private IEnumerator ShowPanel(ItemData data)
         {
             yield return new WaitForSeconds(0.5f);
             //防止出现闪烁现象
