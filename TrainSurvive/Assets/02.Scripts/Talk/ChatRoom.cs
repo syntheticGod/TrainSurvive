@@ -14,6 +14,7 @@ using Story.MyTools;
 using Story.Scripts;
 
 using TTT.Resource;
+using WorldMap.Model;
 
 namespace Story.Communication
 {
@@ -21,8 +22,8 @@ namespace Story.Communication
     public class ChatRoom
     {
 
-        List<Person> persons;
-        public ChatRoom(ref List<Person> members)
+        List<NPC> persons;
+        public ChatRoom(List<NPC> members)
         {
             persons = members;
         }

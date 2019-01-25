@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 using Story.Communication;
 using Story.MyTools;
+using UnityEngine;
 
 namespace Story.Scripts{
 
@@ -30,12 +31,16 @@ namespace Story.Scripts{
 
         public Scripts(XmlNodeList contents)
         {
-            foreach(XmlNode node in contents)
+            texts = new Dictionary<string, List<string>>();
+            foreach (XmlNode node in contents)
             {
+                if (node.NodeType == XmlNodeType.Comment)
+                    continue;
                 XmlNodeList sentencesNode = node.ChildNodes;
                 List<string> sentences = new List<string>();
                 foreach(XmlNode sentenceNode in sentencesNode)
                     sentences.Add(sentenceNode.InnerText);
+                Debug.Log("name:" + node.Name);
                 texts.Add(node.Name, sentences);
             }
                 
@@ -118,7 +123,7 @@ namespace Story.Scripts{
                 KeyValuePair<int,string> pair = new KeyValuePair<int, string>(stage.Value[i],reference + texts[types[i]+""][Tools.random(textLen)]);
                 result.Add(pair);
             }
-            result.Add(new KeyValuePair<int, string>(-1,"----------------------------"));
+            //result.Add(new KeyValuePair<int, string>(-1,"----------------------------"));
 
             return result;
         }
