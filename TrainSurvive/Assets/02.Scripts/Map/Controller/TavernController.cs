@@ -52,7 +52,31 @@ namespace WorldMap.Controller
                     Debug.LogError("在城市" + town.Name + "中找不到指定NPC：" + sentence.Key);
                     continue;
                 }
-                sentences[0].Add(new ChatSentence(npc, sentence.Value));
+                string content = sentence.Value;
+                //替换@+id 为 @+NPC名字
+                int atIndex = content.IndexOf('@');
+                if (atIndex != -1)
+                {
+                    string at = content;
+                    //去掉@前面的字符串
+                    at = at.Remove(0, atIndex);
+                    int endIndex = 1;
+                    while (endIndex < at.Length && at[endIndex] >= '0' && at[endIndex] <= '9')
+                        endIndex++;
+                    at = at.Remove(endIndex, at.Length - endIndex);
+                    string id = at.Remove(0, 1);
+                    try
+                    {
+                        NPC target = town.FindNPCByID(int.Parse(id));
+                        if(target != null)
+                            content = content.Replace(at, "@"+target.Name+" ");
+                    }
+                    catch (System.FormatException e)
+                    {
+                        Debug.LogError(id+"  "+e.ToString());
+                    }
+                }
+                sentences[0].Add(new ChatSentence(npc, content));
             }
         }
         protected override void CreateModel()

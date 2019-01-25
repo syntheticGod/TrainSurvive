@@ -96,6 +96,7 @@ namespace WorldMap.Model
             foreach(NPC npc in NPCs)
                 if (npc.ID == id)
                     return npc;
+            Debug.LogError("当前城镇" + Name + " 不存在指定NPC：" + id);
             return null;
         }
         /// <summary>
