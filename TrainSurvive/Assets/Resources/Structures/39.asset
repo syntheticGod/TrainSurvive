@@ -35,31 +35,31 @@ MonoBehaviour:
     Item2EnergyStructure_EnergyTypeValue: 0
     Item2EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue:
-    - FromItemID: 223
-      FromItemNum: 3
-      ToItemID: 222
-      ToItemNum: 1
-      ProcessTime: 10
-    - FromItemID: 231
+    - FromItemID: 246
       FromItemNum: 10
-      ToItemID: 232
+      ToItemID: 247
       ToItemNum: 1
       ProcessTime: 60
-    - FromItemID: 233
+    - FromItemID: 248
       FromItemNum: 10
-      ToItemID: 234
+      ToItemID: 249
       ToItemNum: 1
       ProcessTime: 60
-    - FromItemID: 236
+    - FromItemID: 244
       FromItemNum: 1
-      ToItemID: 237
+      ToItemID: 244
       ToItemNum: 1
       ProcessTime: 60
-    - FromItemID: 234
+    - FromItemID: 249
       FromItemNum: 2
-      ToItemID: 240
+      ToItemID: 250
       ToItemNum: 1
       ProcessTime: 120
+    - FromItemID: 237
+      FromItemNum: 3
+      ToItemID: 236
+      ToItemNum: 1
+      ProcessTime: 10
   - Name: _processSpeed
     TypeName: System.Single
     System_Int32Value: 0

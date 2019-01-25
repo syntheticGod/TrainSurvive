@@ -24,16 +24,17 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void Awake() {
-        foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
+        foreach (Formula<Item2ItemStructure.Conversion> formula in Structure.Conversions) {
             FormulaUI_1_1 formulaUI = Instantiate(FormulaPrefab, ScrollContent).GetComponent<FormulaUI_1_1>();
             formulaUI.RawItem = new ItemData(formula.Conversion.FromItemID, formula.Conversion.FromItemNum);
             formulaUI.OutputItem = new ItemData(formula.Conversion.ToItemID, formula.Conversion.ToItemNum);
+            formulaUI.Time = (int)(formula.Conversion.ProcessTime * 10 / (Structure.ProcessSpeed * Structure.ProcessSpeedRatio));
             formulaUI.OnPriorityChanged += (priority) => {
                 int newIndex = formula.Priority + priority;
                 if (newIndex < 0 || newIndex >= Structure.Conversions.Count) {
                     return;
                 }
-                Item2ItemStructure.Formula origin = Structure.Conversions[newIndex];
+                Formula<Item2ItemStructure.Conversion> origin = Structure.Conversions[newIndex];
                 Structure.Conversions[newIndex] = formula;
                 Structure.Conversions[formula.Priority] = origin;
                 ScrollContent.GetChild(newIndex).transform.SetSiblingIndex(formula.Priority);
@@ -47,7 +48,7 @@ public class Item2ItemSUI : FacilityUI {
     private void OnEnable() {
         UpdateUI();
 
-        foreach(Item2ItemStructure.Formula formula in Structure.Conversions) {
+        foreach(Formula<Item2ItemStructure.Conversion> formula in Structure.Conversions) {
             formula.OnAcquireCount += Formula_OnAcquireCount;
             formula.OnCountChanged += Formula_OnCountChanged;
             formula.OnProgressChanged += Formula_OnProgressChanged;
@@ -55,7 +56,7 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void OnDisable() {
-        foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
+        foreach (Formula<Item2ItemStructure.Conversion> formula in Structure.Conversions) {
             formula.OnAcquireCount -= Formula_OnAcquireCount;
             formula.OnCountChanged -= Formula_OnCountChanged;
             formula.OnProgressChanged -= Formula_OnProgressChanged;
@@ -76,7 +77,7 @@ public class Item2ItemSUI : FacilityUI {
     }
 
     private void UpdateUI() {
-        foreach (Item2ItemStructure.Formula formula in Structure.Conversions) {
+        foreach (Formula<Item2ItemStructure.Conversion> formula in Structure.Conversions) {
             ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_1>().ProduceCount = formula.Count;
             ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_1>().ChangeProgress(0, formula.Conversion.ProcessTime, formula.Progress);
         }

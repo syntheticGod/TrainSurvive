@@ -6,116 +6,80 @@
  */
 using Assets._02.Scripts.zhxUIScripts;
 using TTT.Utility;
+using UnityEngine;
 using UnityEngine.UI;
 using WorldMap.UI;
 
-public class Item2EnergySUI : FacilityUI
-{
+public class Item2EnergySUI : FacilityUI {
+    [Tooltip("配方Prefab")]
+    public FormulaUI_1_Energy FormulaPrefab;
+    [Tooltip("列表Content")]
+    public RectTransform ScrollContent;
 
-    public UnitInventoryCtrl Gas;
-    public Slider Slider;
-    public AutomataUI AutomataUI;
-
-    private new Item2EnergyStructure Structure
-    {
-        get
-        {
+    private new Item2EnergyStructure Structure {
+        get {
             return base.Structure as Item2EnergyStructure;
         }
     }
 
-    private void Awake()
-    {
-        Gas.OnChargeIn = delegate (int itemID, int number)
-        {
-            if (!Structure.Conversions.ContainsKey(itemID))
-            {
-                InfoDialog.Show("该材料不允许燃烧");
-                return true;
-            }
-            return false;
-        };
-        //AutomataUI.OnChangeState = (state, value) =>
-        //{
-        //    Structure.AutomataCount = value;
-        //    Structure.AutomataEnabled = state;
-        //};
+    private void Awake() {
+        foreach (Formula<Item2EnergyStructure.Conversion> formula in Structure.Conversions) {
+            FormulaUI_1_Energy formulaUI = Instantiate(FormulaPrefab, ScrollContent).GetComponent<FormulaUI_1_Energy>();
+            formulaUI.RawItem = new ItemData(formula.Conversion.ItemID, 1);
+            formulaUI.OutputType = Structure.GeneratedEnergyType;
+            formulaUI.OutputCount = (int)(formula.Conversion.ProduceEnergy * Structure.ConversionRate * Structure.ConversionRateRatio);
+            formulaUI.Time = (int)(formula.Conversion.ProcessTime * 10 / (Structure.ProcessSpeed * Structure.ProcessSpeedRatio));
+            formulaUI.OnPriorityChanged += (priority) => {
+                int newIndex = formula.Priority + priority;
+                if (newIndex < 0 || newIndex >= Structure.Conversions.Count) {
+                    return;
+                }
+                Formula<Item2EnergyStructure.Conversion> origin = Structure.Conversions[newIndex];
+                Structure.Conversions[newIndex] = formula;
+                Structure.Conversions[formula.Priority] = origin;
+                ScrollContent.GetChild(newIndex).transform.SetSiblingIndex(formula.Priority);
+                formulaUI.transform.SetSiblingIndex(newIndex);
+                origin.Priority = formula.Priority;
+                formula.Priority = newIndex;
+            };
+        }
     }
 
-    private void OnEnable()
-    {
+    private void OnEnable() {
         UpdateUI();
-        Structure.OnAcquireGas = OnAcquireGas;
-        Structure.OnGasUpdate = OnGasUpdate;
-        Structure.OnProgressChange += OnProgressChange;
-        Structure.OnAutomataCountChange = OnAutomataCountChange;
 
-        UIManager.Instance?.ToggleInventoryPanel(true);
-    }
-
-    private void OnDisable()
-    {
-        Structure.OnAcquireGas = null;
-        Structure.OnGasUpdate = null;
-        Structure.OnProgressChange -= OnProgressChange;
-        Structure.OnAutomataCountChange = null;
-    }
-
-    private void UpdateUI()
-    {
-        //UnitInventoryCtrl 不一定在该脚本之前被初始化
-        //Gas.Clear();
-        if (Structure.Gas != null)
-            Gas.GeneratorItem(Structure.Gas.ID, Structure.Gas.Number);
-        Slider.value = Structure.Progress;
-        AutomataUI.gameObject.SetActive(World.getInstance().automata);
-        AutomataUI.Value = Structure.AutomataCount;
-        //AutomataUI.Enabled = Structure.AutomataEnabled;
-    }
-
-    private void OnAcquireGas(ref ItemData old)
-    {
-        if (Gas.IfEmpty())
-        { // item被拖出
-            old = null;
-        }
-        else
-        {
-            if (old == null)
-            { // item不空，old空
-                old = new ItemData(Gas.ItemID, Gas.Number);
-            }
-            else
-            {
-                if (old.ID == Gas.ItemID)
-                {  // item不空，old不空，item与old的id相同
-                    old.Number = Gas.Number;
-                }
-                else
-                {  // item不空，old不空，item与old的id不同
-                    old = new ItemData(Gas.ItemID, Gas.Number);
-                }
-            }
+        foreach (Formula<Item2EnergyStructure.Conversion> formula in Structure.Conversions) {
+            formula.OnAcquireCount += Formula_OnAcquireCount;
+            formula.OnCountChanged += Formula_OnCountChanged;
+            formula.OnProgressChanged += Formula_OnProgressChanged;
         }
     }
 
-    private void OnGasUpdate(ItemData newItem)
-    {
-        if (newItem == null)
-            Gas.Clear();
-        else
-            Gas.GeneratorItem(newItem.ID, newItem.Number);
+    private void OnDisable() {
+        foreach (Formula<Item2EnergyStructure.Conversion> formula in Structure.Conversions) {
+            formula.OnAcquireCount -= Formula_OnAcquireCount;
+            formula.OnCountChanged -= Formula_OnCountChanged;
+            formula.OnProgressChanged -= Formula_OnProgressChanged;
+            formula.Count = ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_Energy>().ProduceCount;
+        }
     }
 
-    private void OnProgressChange(float min, float max, float value)
-    {
-        Slider.minValue = min;
-        Slider.maxValue = max;
-        Slider.value = value;
+    private void Formula_OnProgressChanged(int priority, float max, float value) {
+        ScrollContent.GetChild(priority).GetComponent<FormulaUI_1_Energy>().ChangeProgress(0, max, value);
     }
 
-    private void OnAutomataCountChange(int count)
-    {
-        AutomataUI.Value = count;
+    private void Formula_OnCountChanged(int priority, int count) {
+        ScrollContent.GetChild(priority).GetComponent<FormulaUI_1_Energy>().ProduceCount = count;
+    }
+
+    private int Formula_OnAcquireCount(int priority) {
+        return ScrollContent.GetChild(priority).GetComponent<FormulaUI_1_Energy>().ProduceCount;
+    }
+
+    private void UpdateUI() {
+        foreach (Formula<Item2EnergyStructure.Conversion> formula in Structure.Conversions) {
+            ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_Energy>().ProduceCount = formula.Count;
+            ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_Energy>().ChangeProgress(0, formula.Conversion.ProcessTime, formula.Progress);
+        }
     }
 }
