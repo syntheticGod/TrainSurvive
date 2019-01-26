@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<dialogues>
+  <dialogues id="0" >
+    <sentence speakerType="npc" speakerLabel="0" content="你好，年轻人。"/>
+    <sentence speakerType="player" speakerLabel="0" content="我想帮忙。"/>
+    <sentence speakerType="npc" speakerLabel="0" content="你想帮忙？。"/>
+    <sentence speakerType="npc" speakerLabel="0" content="嗯…现在是关键时期，我不会允许任何身份不明的人来捣乱。"/>
+    <sentence speakerType="npc" speakerLabel="0" content="如果你实在想加入的话，就去水火风雷四大神殿，取得相应的凭证，向我证明你的立场和能力!"/>
+    <sentence speakerType="player" speakerLabel="0" content="四大神殿？"/>
+    <sentence speakerType="npc" speakerLabel="0" content="如你所见，我们现在所在的地方是位于世界中心的光神殿。在世界的东、南、西、北，也分别坐落着其他四座神殿。"/>
+    <sentence speakerType="player" speakerLabel="0" content="我懂了，马上启程。"/>
+  </dialogues>
+</dialogues>

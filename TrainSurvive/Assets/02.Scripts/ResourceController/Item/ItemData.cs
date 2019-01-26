@@ -26,6 +26,10 @@ public class ItemData
     /// </summary>
     public int Number { get; set; }
     /// <summary>
+    /// 物品稀有度
+    /// </summary>
+    public PublicData.Rarity Rarity { get {return Item.Rarity; } }
+    /// <summary>
     /// 物品名字
     /// </summary>
     public string Name { get { return Item.Name; } }
@@ -37,10 +41,6 @@ public class ItemData
     /// 物品类别
     /// </summary>
     public PublicData.ItemType Type { get { return Item.Type; } }
-    /// <summary>
-    /// 物品稀有度
-    /// </summary>
-    public PublicData.Rarity Rarity { get { return Item.Rarity; } }
     /// <summary>
     /// 初始价格
     /// </summary>
@@ -68,13 +68,18 @@ public class ItemData
     /// <summary>
     /// 获取Item信息
     /// </summary>
-    public ItemInfo Item { get { return StaticResource.GetItemInfoByID<ItemInfo>(ID); } }
+    protected ItemInfo Item { get { return StaticResource.GetItemInfoByID<ItemInfo>(ID); } }
+    /// <summary>
+    /// ID一样，数量一样，稀有度一样
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     public override bool Equals(object obj)
     {
         if (obj == null) return false;
         ItemData assets = obj as ItemData;
         if (assets == null) return false;
-        return Equals(assets);
+        return ID == assets.ID && Number == assets.Number;
     }
     public override int GetHashCode()
     {
@@ -83,34 +88,45 @@ public class ItemData
         hashCode = hashCode * -1521134295 + Number.GetHashCode();
         return hashCode;
     }
-    public bool Equals(ItemData other)
-    {
-        return ID == other.ID && Number == other.Number;
-    }
+    /// <summary>
+    /// 排序顺序依次为ID、数量、稀有度
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     public int CompareTo(ItemData other)
     {
         if (ID != other.ID)
         {
-            return Number.CompareTo(other.Number);
+            if (Number != other.Number)
+                return Number.CompareTo(other.Number);
+            else
+                return Rarity.CompareTo(other.Rarity);
         }
         return ID.CompareTo(other.ID);
     }
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         info.AddValue("ItemID", ID, typeof(int));
         info.AddValue("Number", Number, typeof(int));
+        info.AddValue("Rarity", Rarity, typeof(int));
     }
     public ItemData(SerializationInfo info, StreamingContext context)
     {
         ID = info.GetInt32("ItemID");
         Number = info.GetInt32("Number");
     }
+    /// <summary>
+    /// 不需要保存稀有度的物品
+    /// 稀有度为配置文件中的标识的稀有度
+    /// </summary>
+    /// <param name="itemID">物品ID</param>
+    /// <param name="number">数量</param>
     public ItemData(int itemID, int number)
     {
         ID = itemID;
         Number = number;
     }
-    public ItemData Clone()
+    public virtual ItemData Clone()
     {
         return new ItemData(ID, Number);
     }

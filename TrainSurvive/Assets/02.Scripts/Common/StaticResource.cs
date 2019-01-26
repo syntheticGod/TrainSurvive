@@ -439,6 +439,10 @@ namespace TTT.Resource
                 ItemInfo item = null;
                 if (itemNode.Name.Equals("weapon"))
                     item = new WeaponInfo(itemNode);
+                else if (itemNode.Name.Equals("component"))
+                    item = new ComponentInfo(itemNode);
+                else if (itemNode.Name.Equals("decorations"))
+                    item = new DecorationsInfo(itemNode);
                 else if (itemNode.Name.Equals("material"))
                     item = new MaterialInfo(itemNode);
                 else if (itemNode.Name.Equals("special"))

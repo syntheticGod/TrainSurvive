@@ -12,19 +12,38 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
     public static class PublicData
     {
-        public enum Rarity { NONE = -1, Poor, Common, Rare, Epic, Legendary, NUM };         //劣质、普通、优良、精巧、传奇
-        public enum ItemType { NONE = -1, Weapon, Material, SpecialItem, NUM };               //武器、材料、特殊物品
+        public enum Rarity { NONE = -1, Random, Poor, Common, Rare, Epic, Legendary, NUM };         //劣质、普通、优良、精巧、传奇
+        public enum ItemType
+        {
+            NONE = -1,
+            /// <summary>
+            /// 武器
+            /// </summary>
+            Weapon,
+            /// <summary>
+            /// 组件
+            /// </summary>
+            Component,
+            /// <summary>
+            /// 饰品
+            /// </summary>
+            Decorations,
+            /// <summary>
+            /// 材料
+            /// </summary>
+            Material,
+            /// <summary>
+            /// 特殊物品
+            /// </summary>
+            SpecialItem,
+            NUM
+        };
         public enum WeaponType
         {
             /// <summary>

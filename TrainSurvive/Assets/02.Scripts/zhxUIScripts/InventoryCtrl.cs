@@ -124,17 +124,17 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     }
 
     //  仅测试用代码  ---------------------------------------------------------
-    public void AddWeapon()
-    {
-        Item tempItem = PublicMethod.GenerateItem(Random.Range(0,2),1)[0];
-        ItemData temp = new ItemData(Random.Range(0, 2), 1);
-        if (!gameObject.activeSelf)
-        {
-            //World.getInstance().AddItem(temp);
-        }
-        else
-            coreInventory.PushItem(tempItem);
-    }
+    //public void AddWeapon()
+    //{
+    //    Item tempItem = PublicMethod.GenerateItem(Random.Range(0,2),1)[0];
+    //    ItemData temp = new ItemData(Random.Range(0, 2), 1);
+    //    if (!gameObject.activeSelf)
+    //    {
+    //        //World.getInstance().AddItem(temp);
+    //    }
+    //    else
+    //        coreInventory.PushItem(tempItem);
+    //}
 
     //public void AddConsumable()
     //{
@@ -142,17 +142,17 @@ public class InventoryCtrl : MonoBehaviour, IDropHandler {
     //    coreInventory.PushItem(temp);
     //}
 
-    public void AddMaterial()
-    {
-        PublicMethod.AppendItemsInBackEnd(new ItemData[] { new ItemData(Random.Range(211, 215), 3) });
-    }
+    //public void AddMaterial()
+    //{
+    //    PublicMethod.AppendItemsInBackEnd(new ItemData[] { new ItemData(Random.Range(211, 215), 3) });
+    //}
 
-    public void AddSpecialItem()
-    {
-        Item[] temp = PublicMethod.GenerateItem(700, 3);
-        for (int i = 0; i < temp.Length; ++i)
-            coreInventory.PushItem(temp[i]);
-    }
+    //public void AddSpecialItem()
+    //{
+    //    Item[] temp = PublicMethod.GenerateItem(700, 3);
+    //    for (int i = 0; i < temp.Length; ++i)
+    //        coreInventory.PushItem(temp[i]);
+    //}
 
     public void DataSynchronization()
     {

@@ -34,7 +34,7 @@ namespace TTT.Item
         /// <summary>
         /// 物品稀有度
         /// </summary>
-        public PublicData.Rarity Rarity { get; }
+        public PublicData.Rarity Rarity { get; protected set; }
         /// <summary>
         /// 售卖价格比例（price*sellRatio）取值范围是[0,1]之间的浮点
         /// </summary>

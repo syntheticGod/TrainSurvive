@@ -12,10 +12,62 @@ size：重量或体积（一个容量指标）//现在统一为1
 maxPileNum：最大堆叠数 //现在统一为材料64，其他都是1
 -->
 <items>
-  <!-- 
+  <!--
+  武器
   武器****必须****拥有的额外属性：
   price：价格
-  type：武器类别 0盾、1剑、2长枪、3匕首、4机枪、5狙击步枪、6魔杖、7魔法书、8饰品
+  type：武器类别 0盾、1剑、2长枪、3匕首、4机枪、5狙击步枪、6魔杖、7魔法书
+  -->
+  <weapon id="0" name="大盾" description="盾" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="0"/>
+  <weapon id="1" name="匕首" description="匕首" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="3"/>
+  <weapon id="2" name="剑" description="剑" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="1"/>
+  <weapon id="3" name="长枪" description="长枪" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="2"/>
+  <weapon id="4" name="机枪" description="机枪" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="4" />
+  <weapon id="5" name="突击步枪" description="突击步枪" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="4"/>
+  <weapon id="6" name="狙击步枪" description="狙击步枪" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="4"/>
+  <weapon id="7" name="法杖" description="法杖" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="6"/>
+  <weapon id="8" name="魔法书" description="魔法书" rarity="3" sellRatio="1" size="1" maxPileNum="1"
+          price="1000" type="7"/>
+  <!--
+  组件（合成武器的组件）
+  组件****必须****拥有的额外属性：
+  price：价格
+  position：部位 {0：冷兵器1 | 1：冷兵器2}
+  range：射程
+  bbdist：击退距离（Beat Back Distance）
+  facAtk：攻击系数（Factor of Attack）
+  facAts：攻速系数（Factor of Attack Speed）
+  facSpd：移速系数（Factor of Movement Speed）
+  modCrc：暴击修正（Modified Crit Carrey）
+  facHit：受伤系数（Factor of Hit）
+  facSDmg：技伤系数（Factor of Skill Damage）
+  -->
+  <component id="11" name="短柄" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="0" range="0.2" bbdist="0" facAtk="1" facAts="1" facSpd="1.2" modCrc="0.5" facHit="1.2" facSDmg="1"/>
+  <component id="12" name="中柄" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="0" range="0.4" bbdist="0.1" facAtk="1" facAts="1.2" facSpd="1" modCrc="0" facHit="1" facSDmg="1"/>
+  <component id="13" name="长柄" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="0" range="1.7" bbdist="0.2" facAtk="1.4" facAts="1" facSpd="0.8" modCrc="0" facHit="0.8" facSDmg="1"/>
+
+  <component id="21" name="短刃" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="1" range="0.4" bbdist="0" facAtk="0.6" facAts="1.4" facSpd="1.2" modCrc="0" facHit="1.2" facSDmg="1"/>
+  <component id="22" name="剑刃" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="1" range="0.6" bbdist="0" facAtk="1" facAts="1.1" facSpd="1" modCrc="0" facHit="1" facSDmg="1"/>
+  <component id="23" name="矛头" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="1" range="0.3" bbdist="0.2" facAtk="2" facAts="0.7" facSpd="0.8" modCrc="0" facHit="0.8" facSDmg="1"/>
+  <component id="24" name="宝石" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+                      position="1" range="5" bbdist="0" facAtk="0.1" facAts="0.5" facSpd="1" modCrc="0" facHit="1" facSDmg="4"/>
+  <!-- 
+  饰品****必须****拥有的额外属性：
+  price：价格
   range：武器射程/饰品射程系数
   atk：攻击系数（Attack）
   ats：攻速系数（Attack Speed）
@@ -25,47 +77,78 @@ maxPileNum：最大堆叠数 //现在统一为材料64，其他都是1
   sdmg：技能伤害系数（Skill Damage）
   crc：暴击修正（Crit Carrey）
   crd：暴伤修正（Crit Damage）
-  bbdist：武器击退距离/饰品击退距离加成（+绝对值）
+  bbdist：（Beat Back Distance）武器击退距离/饰品击退距离加成（+绝对值）
   hpMax：hp上限系数
   apMax：ap上限系数
   hRate：命中修正
   eRate：闪避修正
   
-  <weapon id="000" rarity="4" price="4000" sellRatio="0.3" size="13" maxPileNum="1" type="1" range="1" atk="56" ats="1.2" spd="1" hit="1" arec="1.5" sdmg="1"  crc="0.15" crd="1.5" bbdist="1" name="隔壁老王的示范剑" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
-  <weapon id="001" rarity="1" price="1000" sellRatio="0.3" size="6"   maxPileNum="1" type="1" range="1" atk="13" ats="1"   spd="1" hit="1"  arec="0.2" sdmg="1" crc="0"      crd="0"   bbdist="1" name="破败的铁剑"          description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" /> 
+  <decorations id="000" rarity="4" price="4000" sellRatio="0.3" size="13" maxPileNum="1" type="1" range="1" atk="56" ats="1.2" spd="1" hit="1" arec="1.5" sdmg="1"  crc="0.15" crd="1.5" bbdist="1" name="隔壁老王的示范剑" description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" />
+  <decorations id="001" rarity="1" price="1000" sellRatio="0.3" size="6"   maxPileNum="1" type="1" range="1" atk="13" ats="1"   spd="1" hit="1"  arec="0.2" sdmg="1" crc="0"      crd="0"   bbdist="1" name="破败的铁剑"          description="传说中的隔壁老王在光临贵府后留下的宝剑" spritepath="ItemSprite/Weapon_img" /> 
   -->
   <!--饰品-->
-  <weapon id="100" name="缺省值" description="饰品属性缺省值" rarity="3" price="1000" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="101" name="水晶吊坠" description="hp上限x150%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1.5" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="102" name="赤炎戒" description="攻击力x130%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1.3" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="103" name="花神手环" description="攻击速度x120%，移动速度x115%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1.2" spd="1.15" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="104" name="雷电护身符" description="暴击率+15%，命中率+20%，闪避率+20%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0.15" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0.2" eRate="0.2"/>
-  <weapon id="105" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="106" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="107" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="108" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="109" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="110" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="111" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="112" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="113" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="114" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="115" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="116" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="117" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="118" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="119" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="120" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="121" name="神秘徽章" description="ap上限x1000%。神秘老人李的珍藏，据说这是一枚来自某个东方神秘国度的校徽。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="10" hRate="0" eRate="0"/>
-  <weapon id="122" name="酒鬼骰子" description="暴击率+20%。在哪儿都能见到的骰子。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0.2" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="123" name="神射手套组" description="命中率+40%。这就是那个独眼家伙没有超能力却能够百发百中的秘诀。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0.4" eRate="0"/>
-  <weapon id="124" name="明尊心诀" description="闪避率+40%。传闻来自西方国度，散发着魔力与异香。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0.4"/>
-  <weapon id="125" name="白色羊毛" description="受伤比例x80%。你见过由羊毛组成的世界吗？" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1" hit="0.8" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="126" name="8倍瞄准镜" description="射程*200%。如果在开局时拿到它——那你就无敌了。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="2" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="127" name="风速鞋" description="移速*120%。众所周知，越快越乐。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="1" ats="1" spd="1.2" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="128" name="家乡的雪球" description="射程x120%，攻击力x120%。没见过雪吧，南方人。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1.2" atk="1.2" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="129" name="断箭" description="射程*80%，攻击力x150%。它伤害了一名无辜的冒险家。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="0.8" atk="1.5" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
-  <weapon id="130" name="残破书籍" description="攻击力x200%，ap恢复x50%。你受了老流浪汉的蛊惑，重金购买了此书，却读不懂其中的内容。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1" type="8" range="1" atk="2" ats="1" spd="1" hit="1" arec="0.5" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="100" name="缺省值" description="饰品属性缺省值" rarity="3" price="1000" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="101" name="水晶吊坠" description="hp上限x150%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1.5" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="102" name="赤炎戒" description="攻击力x130%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1.3" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="103" name="花神手环" description="攻击速度x120%，移动速度x115%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1.2" spd="1.15" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="104" name="雷电护身符" description="暴击率+15%，命中率+20%，闪避率+20%。待补充" rarity="5" price="3000" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0.15" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0.2" eRate="0.2"/>
+  <decorations id="105" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="106" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="107" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="108" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="109" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="110" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="111" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="112" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="113" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="114" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="115" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="116" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="117" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="118" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="119" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="120" name="NULL" description="。" rarity="3" price="300" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="121" name="神秘徽章" description="ap上限x1000%。神秘老人李的珍藏，据说这是一枚来自某个东方神秘国度的校徽。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="10" hRate="0" eRate="0"/>
+  <decorations id="122" name="酒鬼骰子" description="暴击率+20%。在哪儿都能见到的骰子。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0.2" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="123" name="神射手套组" description="命中率+40%。这就是那个独眼家伙没有超能力却能够百发百中的秘诀。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0.4" eRate="0"/>
+  <decorations id="124" name="明尊心诀" description="闪避率+40%。传闻来自西方国度，散发着魔力与异香。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0.4"/>
+  <decorations id="125" name="白色羊毛" description="受伤比例x80%。你见过由羊毛组成的世界吗？" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1" hit="0.8" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="126" name="8倍瞄准镜" description="射程*200%。如果在开局时拿到它——那你就无敌了。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="2" atk="1" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="127" name="风速鞋" description="移速*120%。众所周知，越快越乐。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="1" ats="1" spd="1.2" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="128" name="家乡的雪球" description="射程x120%，攻击力x120%。没见过雪吧，南方人。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1.2" atk="1.2" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="129" name="断箭" description="射程*80%，攻击力x150%。它伤害了一名无辜的冒险家。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="0.8" atk="1.5" ats="1" spd="1" hit="1" arec="1" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
+  <decorations id="130" name="残破书籍" description="攻击力x200%，ap恢复x50%。你受了老流浪汉的蛊惑，重金购买了此书，却读不懂其中的内容。" rarity="4" price="1200" sellRatio="1" size="1" maxPileNum="1"
+               range="1" atk="2" ats="1" spd="1" hit="1" arec="0.5" sdmg="1" crc="0" crd="0" bbdist="0" hpMax="1" apMax="1" hRate="0" eRate="0"/>
 
 
   <!-- 
