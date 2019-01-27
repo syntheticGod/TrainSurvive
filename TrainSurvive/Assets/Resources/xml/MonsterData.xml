@@ -5,9 +5,11 @@
   </monster>
   <monster id="1" name="狼">
     <property basicRange="1" vitality="5" strength="5" agile="5" technique="5" intelligence="5" model="2" size="1" rank="0" exp="0"/>
+    <AI type="BeatNearAI"/>
   </monster>
   <monster id="2" name="熊">
     <property basicRange="2" vitality="5" strength="5" agile="5" technique="5" intelligence="5" model="2" size="1" rank="0" exp="0"/>
+    <AI type="BeatFarAI"/>
   </monster>
   <monster id="3" name="野猪">
     <property basicRange="1" vitality="0" strength="30" agile="0" technique="0" intelligence="0" model="2" size="1" rank="1" exp="20"/>

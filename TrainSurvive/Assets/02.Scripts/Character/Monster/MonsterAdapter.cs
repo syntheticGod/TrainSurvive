@@ -19,7 +19,7 @@ public class MonsterAdapter {
         actor.maxActionPoint = (float)monster.getApMax();
         actor.hpRecovery = (float)monster.getHpRec();
         actor.apRecovery = (float)monster.getApRec();
-        actor.atkNeedTime = (float)monster.getValAts();
+        actor.atkNeedTime = 1 / (float)monster.getValAts();
         actor.moveSpeed = (float)monster.getValSpd();
         actor.atkDamage = (float)monster.getValAtk();
         actor.atkRange = (float)monster.getRange();

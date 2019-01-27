@@ -83,6 +83,22 @@ namespace WorldBattle
             {
                 switch (aiNode.Attributes["type"].Value)
                 {
+                    case "1":
+                        character.AddComponent<type1AI>();
+                        battleActor = character.GetComponent<type1AI>();
+                        break;
+                    case "2":
+                        character.AddComponent<type2AI>();
+                        battleActor = character.GetComponent<type2AI>();
+                        break;
+                    case "3":
+                        character.AddComponent<type3AI>();
+                        battleActor = character.GetComponent<type3AI>();
+                        break;
+                    case "4":
+                        character.AddComponent<type4AI>();
+                        battleActor = character.GetComponent<type4AI>();
+                        break;
                     case "BeatNearAI":
                         character.AddComponent<BeatNearAI>();
                         battleActor = character.GetComponent<BeatNearAI>();
@@ -95,7 +111,6 @@ namespace WorldBattle
                         character.AddComponent<NoneAI>();
                         battleActor = character.GetComponent<NoneAI>();
                         break;
-                        //继续扩充
                 }
             }
 
