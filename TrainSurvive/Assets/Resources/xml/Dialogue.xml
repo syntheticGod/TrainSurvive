@@ -1,13 +1,305 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <dialogues>
-  <dialogues id="0" >
-    <sentence speakerType="npc" speakerLabel="0" content="你好，年轻人。"/>
-    <sentence speakerType="player" speakerLabel="0" content="我想帮忙。"/>
-    <sentence speakerType="npc" speakerLabel="0" content="你想帮忙？。"/>
-    <sentence speakerType="npc" speakerLabel="0" content="嗯…现在是关键时期，我不会允许任何身份不明的人来捣乱。"/>
-    <sentence speakerType="npc" speakerLabel="0" content="如果你实在想加入的话，就去水火风雷四大神殿，取得相应的凭证，向我证明你的立场和能力!"/>
-    <sentence speakerType="player" speakerLabel="0" content="四大神殿？"/>
-    <sentence speakerType="npc" speakerLabel="0" content="如你所见，我们现在所在的地方是位于世界中心的光神殿。在世界的东、南、西、北，也分别坐落着其他四座神殿。"/>
-    <sentence speakerType="player" speakerLabel="0" content="我懂了，马上启程。"/>
+  <!--
+  对话需要包含的属性：
+  id：对话的ID
+  -->
+  <!--
+  句子需要包含的属性：
+  speakerType：讲话人的类型 { npc | player }
+  type：句子类型：0 普通句子 1选择句
+  content：普通句子的内容
+  ok：选择句的确定选项
+  cancel：选择句的取消选项
+  battleId：特殊战斗ID
+  -->
+  <!--NPC：梅林-->
+  <dialogues npcId="0" precondition="doing task 0">
+    <sentence speakerType="npc" type="0" content="你好，年轻人。"/>
+    <sentence speakerType="player" type="0" content="我想帮忙。"/>
+    <sentence speakerType="npc" type="0" content="你想帮忙？。"/>
+    <sentence speakerType="npc" type="0" content="嗯…现在是关键时期，我不会允许任何身份不明的人来捣乱。"/>
+    <sentence speakerType="npc" type="0" content="如果你实在想加入的话，就去水火风雷四大神殿，取得相应的凭证，向我证明你的立场和能力!"/>
+    <sentence speakerType="player" type="0" content="四大神殿？"/>
+    <sentence speakerType="npc" type="0" content="如你所见，我们现在所在的地方是位于世界中心的光神殿。在世界的东、南、西、北，也分别坐落着其他四座神殿。"/>
+    <sentence speakerType="player" type="0" content="我懂了，马上启程。"/>
+  </dialogues>
+  <dialogues npcId="0" precondition="doing task 1">
+    <sentence speakerType="npc" type="0"  content="你集齐四个徽章了吗？"/>
+    <sentence speakerType="player" type="1" ok="请看。" cancel="还没有。"/>
+    <sentence speakerType="npc" type="0" content="你果然没有让我失望。"/>
+    <sentence speakerType="player" content="请问接下来我需要做什么？"/>
+    <sentence speakerType="npc" content="待开发"/>
+    <sentence speakerType="player" content="待开发"/>
+  </dialogues>
+<!--NPC：弗里茨-->
+  <dialogues npcId="2" precondition="doing task 2">
+    <sentence speakerType="npc" type="0" content="有事吗？"/>
+    <sentence speakerType="player" type="0" content="你好，我想......"/>
+    <sentence speakerType="npc" type="0" content="（打断了你的话语）没什么事的话请不要来打扰我。"/>
+    <sentence speakerType="player" type="0" content="我是......"/>
+    <sentence speakerType="npc" type="0" content="（再次打断）我说了不要来打扰我！你到底是谁？我可不记得阿诺斯城中有你这张面孔。"/>
+    <sentence speakerType="player" type="0" content="（急切地）我想帮忙！……"/>
+    <sentence speakerType="npc" type="0" content="原来是这样，是梅林派你来......"/>
+    <sentence speakerType="player" type="0" content="你怎么了？"/>
+    <sentence speakerType="npc" type="0" content="你想了解发生了什么?嗯...算了，告诉你也无妨。"/>
+    <sentence speakerType="npc" type="0" content="看到神殿中心的那座石像了吗，那是我的妻子，阿狄丽娜。"/>
+    <sentence speakerType="player" type="0" content="怎么会这样？"/>
+    <sentence speakerType="npc" type="0" content="那天我们正准备去调查黑暗森林里的异变，遇见了从未见过的怪物——一只蛇发女妖。"/>
+    <sentence speakerType="npc" type="0" content="它的目标是我们的城镇，为了保护城镇，我和阿狄丽娜拼尽了全力。"/>
+    <sentence speakerType="npc" type="0" content="如你所见，那怪物虽然被我杀死了，但..."/>
+    <sentence speakerType="npc" type="0" content="我知道我需要承担起继续守护城镇的职责，但我必须时刻都在此抵抗蛇发女妖的石化诅咒，否则阿狄丽娜将会..."/>
+    <sentence speakerType="player" type="0" content="我理解你。"/>
+    <sentence speakerType="npc" type="0" content="作为大魔导师，我真是失职。可是，我真的没办法放弃..."/>
+    <sentence speakerType="player" type="0" content="我可以做些什么吗？"/>
+    <sentence speakerType="npc" type="0" content="我最近听到一些传闻，黑暗森林中可能藏有一些传说中的圣药，如果能拿到的话，一定可以解除这石化诅咒。"/>
+    <sentence speakerType="player" type="0" content="或许我可以试一试。"/>
+    <sentence speakerType="npc" type="0" content="你？你的能力或许还不够。让我考虑一会儿吧，过段时间你再回来找我。"/>
+    <sentence speakerType="player" type="0" content="再见。"/>
+  </dialogues>
+  <dialogues npcId="2" precondition="doing task 3">
+    <sentence speakerType="npc" type="0" content="你怎么这么快就回来了？"/>
+    <sentence speakerType="player" type="0" content="我觉得我能够胜任这次任务。"/>
+    <sentence speakerType="npc" type="0" content="光有勇气可不够，你需要证明你的能力。黑暗森林充满了危险，就连我也未必能够打败那里的全部怪物。"/>
+    <sentence speakerType="player" type="0" content="尽管考验我。"/>
+    <sentence speakerType="npc" type="0" content="行吧，你来与我对战一场，如果你赢了，你就可以去。"/>
+    <sentence speakerType="player" type="0" content="？？？"/>
+    <sentence speakerType="npc" type="0" content="放心，我不会使出全力的。当你准备好了，再回来找我。"/>
+    <sentence speakerType="player" type="0" content="再见。"/>
+  </dialogues>
+  <dialogues npcId="2" precondition="doing task 4">
+    <sentence speakerType="npc" type="0" content="你准备好了吗？"/>
+    <sentence speakerType="player" type="1" ok="来吧。" cancel="还没有。"/>
+  </dialogues>
+  <dialogues npcId="2" precondition="finish task 4">
+    <sentence speakerType="npc" type="0" content="你确实很厉害，是我小看你了。"/>
+    <sentence speakerType="player" type="0" content="谢谢。"/>
+    <sentence speakerType="npc" type="0" content="黑暗森林就在阿诺斯城周围，圣药就拜托你了。"/>
+    <sentence speakerType="player" type="0" content="我马上回来。"/>
+  </dialogues>
+  <dialogues npcId="2" precondition="doing task 5">
+    <sentence speakerType="npc" type="0" content="找到圣药了吗？"/>
+    <sentence speakerType="player" type="1" ok="是它吗？" cancel="还没有。" 
+              action ="offer item 706:1"/>
+    <sentence speakerType="npc" type="0" content="就是这个！你没有受伤吧？"/>
+    <sentence speakerType="player" type="0" content="我…我们在遗迹里遇到了十分危险的死灵法师，还好我们的队伍足够强大，打败了它。"/>
+    <sentence speakerType="npc" type="0" content="你真是没有辜负我的期望，有了这瓶圣药，我就有机会解除阿狄丽娜的石化诅咒了！"/>
+    <sentence speakerType="player" type="0" content="太好了。"/>
+    <sentence speakerType="npc" type="0" content="十分感谢，你确实有着拯救世界的潜能，这是水之徽章，请收下它。另外，这是阿狄丽娜的项链，它蕴含着水之魔力，希望它能够帮得上你。"
+              action ="get item 101:1;get item 701:1"/>
+    <sentence speakerType="player" type="0" content="我会好好保管它们的。"/>
+    <sentence speakerType="npc" type="0" content="谢谢你。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogues>
+  <!--NPC：阿狄丽娜-->
+  <dialogues npcId="3" precondition="null">
+    <sentence speakerType="npc" type="0" content="一座石像，隐隐散发着水之魔力。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogues>
+  <!--NPC：弗雷姆-->
+  <dialogues npcId="4" precondition="doing task 6">
+    <sentence speakerType="npc" type="0" content="咳咳，你找我有什么事?"/>
+    <sentence speakerType="player" type="0" content="我想要火之徽章。"/>
+    <sentence speakerType="npc" type="0" content="火之徽章？只有有能力战胜我的人才有资格拿到它。"/>
+    <sentence speakerType="player" type="0" content="那就来吧，我要挑战你。"/>
+    <sentence speakerType="npc" type="0" content="什么?你现在就想挑战我?咳咳...这可不行啊，我的身体遭受了诅咒，现在我可没法迎接你的挑战。"/>
+    <sentence speakerType="player" type="0" content="抱歉，我可以为你做点什么？"/>
+    <sentence speakerType="npc" type="0" content="我的诅咒有办法能够被解除，不过..."/>
+    <sentence speakerType="npc" type="0" content="（此时，加索城外传来一阵巨大的咆哮声）"/>
+    <sentence speakerType="player" type="0" content="那是怪物的声音吗？"/>
+    <sentence speakerType="npc" type="0" content="它又来了...我已经没有力量再对抗它了..."/>
+    <sentence speakerType="player" type="0" content="它？"/>
+    <sentence speakerType="npc" type="0" content="那攻城的狮王！正因为它频繁地骚扰，即使我知道解除诅咒的办法，但为了守护加索城，我实在没有额外的精力了。"/>
+    <sentence speakerType="player" type="0" content="我去帮你打败它。"/>
+    <sentence speakerType="npc" type="0" content="你说你有能力战胜它？好吧...看来也没有别的办法了。"/>
+    <sentence speakerType="player" type="0" content="请相信我吧。"/>
+    <sentence speakerType="npc" type="0" content="请你再三考虑，等你准备好了，再过来告诉我，我让守卫带你出城。"/>
+    <sentence speakerType="player" type="0" content="马上回来。"/>
+  </dialogues>
+  <dialogues npcId="4" precondition="doing task 7">
+    <sentence speakerType="npc" type="0" content="你准备好了吗?"/>
+    <sentence speakerType="player" type="1" ok="我们出发吧。" cancel="还没有"
+              action="start battle 3"/>
+  </dialogues>
+  <dialogues npcId="4" precondition="finish task 7">
+    <sentence speakerType="npc" type="0" content="不错啊年轻人，刚刚我看你战斗的身影十分矫健啊，仿佛看到了当年的我。" />
+    <sentence speakerType="player" type="0" content="继续回到刚才的话题吧。" />
+    <sentence speakerType="npc" type="0" content="在那次与黑魔法师的战斗中，我一时大意，受到了暗魔法诅咒。" />
+    <sentence speakerType="npc" type="0" content="黑魔法师的魔力极强，一般的药水根本无法解除他的诅咒。" />
+    <sentence speakerType="npc" type="0" content="古书记载,离我们的城镇不远处,栖息着一对巨神鹰。由于长期受到火神殿的影响,它们的血富含火之魔力,可以治愈我的身体。咳咳..." />
+    <sentence speakerType="player" type="0" content="我去帮你取回来！" />
+    <sentence speakerType="npc" type="0" content="拜托你了。" />
+    <sentence speakerType="player" type="0" content="再见。" />
+  </dialogues>
+  <dialogues npcId="4" precondition="doing task 8">
+    <sentence speakerType="npc" type="0" content="你带回来了吗？" />
+    <sentence speakerType="player" type="1" ok="你看看，是这个吗。" cancel="还没有。"
+              action="offer item 705:1"/>
+    <sentence speakerType="npc" type="0" content="（仔细查看）" />
+    <sentence speakerType="npc" type="0" content="从外表上看得出这瓶血中隐含着魔力，你确定是从巨神鹰身上取回来的吗？" />
+    <sentence speakerType="player" type="0" content="确定。" />
+    <sentence speakerType="npc" type="0" content="那就是它了（一饮而尽）" />
+    <sentence speakerType="player" type="0" content="怎么样？" />
+    <sentence speakerType="npc" type="0" content="不对..." />
+    <sentence speakerType="player" type="0" content="？！你怎么了" />
+    <sentence speakerType="npc" type="0" content="（脸色惨白）我的魔力正在渐渐流失！这瓶血中含着水之魔力！！" />
+    <sentence speakerType="player" type="0" content="怎么会这样！" />
+    <sentence speakerType="npc" type="0" content="我由于精通火系魔法，我的身体早已承受不了如此强烈的水之魔力。咳咳..." />
+    <sentence speakerType="player" type="0" content="对不起，我没有想到会这样。" />
+    <sentence speakerType="npc" type="0" content="咳咳...不要过于自责。古书记载偶尔会有偏差，但不应该出现如此大的错误……" />
+    <sentence speakerType="player" type="0" content="书上说有附近栖息着一对巨神鹰，我刚刚打败的是雌巨神鹰，也就是说应该还有一只雄性的巨神鹰..." />
+    <sentence speakerType="npc" type="0" content="（两眼放光）对！我们要找的火之魔力一定就在那只雄巨神鹰的身上！" />
+    <sentence speakerType="player" type="0" content="我懂了，马上出发！"
+              action="loss item 705;generate battle 5 at (0,2)"/>
+  </dialogues>
+  <dialogues npcId="4" precondition="doing task 9">
+    <sentence speakerType="npc" type="0" content="怎么样了？" />
+    <sentence speakerType="player" type="1" ok="这次应该没错了！" cancel="请再给我一些时间。"
+              action="offer item 707"/>
+    <sentence speakerType="npc" type="0" content="（小心翼翼地喝下）" />
+    <sentence speakerType="player" type="0" content="感觉怎么样？" />
+    <sentence speakerType="npc" type="0" content="太神奇了！我感觉充满了活力！万分感谢。" />
+    <sentence speakerType="player" type="0" content="那就来吧。" />
+    <sentence speakerType="npc" type="0" content="什么？" />
+    <sentence speakerType="player" type="0" content="现在我可以挑战你了吗？" />
+    <sentence speakerType="npc" type="0" content="哈哈！你的能力已经达到了我心目中的标准。拿去吧，我的恩人。另外，这是我的戒指，请你一并收下它。" />
+    <sentence speakerType="player" type="0" content="请多保重。" 
+              action="get item 102:1;get item 702:1"/>
+  </dialogues>
+  <dialogues npcId="4" precondition="finish task 9">
+    <sentence speakerType="npc" type="0" content="加油，年轻人。" />
+    <sentence speakerType="player" type="0" content="再见。" />
+  </dialogues>
+  <!--人物：温蒂-->
+  <dialogues npcId="5" precondition="doing task 10">
+    <sentence speakerType="npc" type="0" content="你好啊，年轻人。" />
+    <sentence speakerType="player" type="0" content="我想要风之徽章。" />
+    <sentence speakerType="npc" type="0" content="很抱歉，我们风神殿最近很忙，如果是为了徽章，请下次再来吧。" />
+    <sentence speakerType="player" type="0" content="离开。" />
+  </dialogues>
+  <dialogues npcId="5" precondition="doing task 11">
+    <sentence speakerType="npc" type="0" content="请不要打扰我。"/>
+    <sentence speakerType="player" type="0" content="对不起，但是，风之徽章对我真的很重要！……"/>
+    <sentence speakerType="npc" type="0" content="原来如此，是梅林让你来的呀。"/>
+    <sentence speakerType="player" type="0" content="我不是有意想打扰您的。"/>
+    <sentence speakerType="npc" type="0" content="风神殿正忙着准备丰收仪式，如果你可以帮得上忙的话，风之徽章可以给你。"/>
+    <sentence speakerType="player" type="0" content="丰收仪式，那是什么？"/>
+    <sentence speakerType="npc" type="0" content="丰收仪式是晶安城的习俗。晶安城是著名的花城，传说当年的美神便诞生于晶安湖边，风神惊叹于她的美丽，为其送上了最为诚挚的祝福。"/>
+    <sentence speakerType="player" type="0" content="风神的祝福，那一定十分珍贵。"/>
+    <sentence speakerType="npc" type="0" content="是的，在那以后，晶安城的谷物年年丰收，鲜花开遍了城中的每一个角落。"/>
+    <sentence speakerType="npc" type="0" content="为了答谢风神的祝福，晶安城每四年都会举办一次选美比赛，胜出者将获得花神称号，并由风神殿为其送上祝福。城中的人们把它称为丰收仪式，象征着丰收与幸福。"/>
+    <sentence speakerType="npc" type="0" content="但今年的丰收仪式，进行得不太顺利..."/>
+    <sentence speakerType="player" type="0" content="怎么了？"/>
+    <sentence speakerType="npc" type="0" content="自从灾变发生以后，人们每天都生活在水深火热之中，没有人有精力来参加选美比赛了..."/>
+    <sentence speakerType="player" type="0" content="我能帮上什么忙吗？"/>
+    <sentence speakerType="npc" type="0" content="哪怕最后只有一个人来参加选美仪式也好...如果你带来具有成为下一任花神的资质的人，我将亲自为她送上祝福。"/>
+    <sentence speakerType="player" type="0" content="有哪些要求呢？"/>
+    <sentence speakerType="npc" type="0" content="要想成为晶安城的花神，自然是需要有足够的能力驾驭自然之风，而且必须为一名女性。当你准备好了，再回来风神殿吧。"/>
+    <sentence speakerType="player" type="0" content="再见。"/>
+  </dialogues>
+  <dialogues npcId="5" precondition="doing task 12">
+    <sentence speakerType="npc" type="0" content="你带来未来的美神了吗？(队伍中有智力>=25,敏捷>=15的女性)"/>
+    <sentence speakerType="player" type="1" ok="她怎么样？" cancel="还没有。"/>
+    <sentence speakerType="npc" type="0" content="我看看...对！这就是我在寻找的人！"/>
+    <sentence speakerType="npc" type="0" content="她..她...她简直太美了！"/>
+    <sentence speakerType="npc" type="0" content="（施展神秘的风之魔法）请接受我的祝福..."/>
+    <sentence speakerType="npc" type="0" content="以后，就请你带着她和风神殿的祝福，去打败黑魔法师、拯救这片大陆吧！"/>
+    <sentence speakerType="player" type="0" content="谢谢你。"
+              action="get item 103:1;get item 703:1"/>
+  </dialogues>
+  <dialogues npcId="5" precondition="finish task 12">
+    <sentence speakerType="npc" type="0" content="花神还好吗？"/>
+    <sentence speakerType="player" type="0" content="很好。"/>
+  </dialogues>
+  <!--勃朗特-->
+  <dialogues npcId="6" precondition="doing task 14">
+    <sentence speakerType="npc" type="0" content="你来雷神殿有什么事吗？"/>
+    <sentence speakerType="player" type="0" content="我想要雷之徽章。"/>
+    <sentence speakerType="npc" type="0" content="哈哈哈！我们三兄弟守护雷神殿这么多年，你还是第一个想要来挑战雷之徽章的。"/>
+    <sentence speakerType="player" type="0" content="为什么雷系大魔导师有三个人？"/>
+    <sentence speakerType="npc" type="0" content="我们三个是亲兄弟，从来不离开彼此。我们之中的每个人实力都很强大，于是便一起做了雷系大魔导师。"/>
+    <sentence speakerType="player" type="0" content="等等...你们三个一起上...没有人可以打得过吧。"/>
+    <sentence speakerType="npc" type="0" content="什么？！！你把我们当成了什么人？我们并不是那种以多欺少的小人。"/>
+    <sentence speakerType="player" type="0" content="你的意思是？"/>
+    <sentence speakerType="npc" type="0" content="车轮战。先从挑战阿尔戈开始，然后是施泰罗，最后再是我。"/>
+    <sentence speakerType="player" type="0" content="（小声）车轮战也是以多欺少吧..."/>
+    <sentence speakerType="npc" type="0" content="你说什么？"/>
+    <sentence speakerType="player" type="0" content="没什么，我去准备一下。"/>
+  </dialogues>
+  <dialogues npcId="6" precondition="doing task 15">
+    <sentence speakerType="npc" type="0" content="如果你准备好了，就去挑战我的三弟阿尔戈。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogues>
+  <dialogues npcId="6" precondition="doing task 16">
+    <sentence speakerType="npc" type="0" content="如果你准备好了，就去挑战我的二弟施泰罗。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogues>
+  <dialogues npcId="6" precondition="doing task 17">
+    <sentence speakerType="npc" type="0" content="你准备好了吗？"/>
+    <sentence speakerType="player" type="1" ok="来吧。" cancel="还没有。"/>
+  </dialogues>
+  <dialogues npcId="6" precondition="finish task 17">
+    <sentence speakerType="npc" type="0" content="你很厉害，雷之徽章可以给你，但在那之前，可以帮我们一个忙吗？"/>
+    <sentence speakerType="player" type="0" content="请说。"/>
+    <sentence speakerType="npc" type="0" content="古书中记载了使用雷电进行铸造的方法，上次我们三兄弟在雷霆山尝试铸造雷系神器——父神之怒，正进行到一半，却..."/>
+    <sentence speakerType="player" type="0" content="发生了什么？"/>
+    <sentence speakerType="npc" type="0" content="不知道从哪扑出来一只死灵三头犬，袭击了我们，夺去了那半成品父神之怒。"/>
+    <sentence speakerType="player" type="0" content="我明白了，我帮你们去打败它，夺回神器。"/>
+    <sentence speakerType="npc" type="0" content="拜托你了。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogues>
+  <dialogues npcId="6" precondition="doing task 18">
+    <sentence speakerType="npc" type="0" content="怎么样了？"/>
+    <sentence speakerType="player" type="1" ok="是这个吗？" cancel="请再给我一些时间。"
+              action="offer item 708:1"/>
+    <sentence speakerType="npc" type="0" content="对，没错，真是太感谢你了！请你稍等一会儿！"/>
+    <sentence speakerType="player" type="0" content="什么？"/>
+    <sentence speakerType="npc" type="0" content="（三兄弟开始重新锻造父神之怒）"/>
+    <sentence speakerType="player" type="0" content="（等待）"/>
+    <sentence speakerType="npc" type="0" content="（三兄弟锻造中）"/>
+    <sentence speakerType="player" type="0" content="（等待）"/>
+    <sentence speakerType="npc" type="0" content="（三兄弟锻造中）"/>
+    <sentence speakerType="player" type="0" content="（等待）"/>
+    <sentence speakerType="npc" type="0" content="好了，请收下它！"/>
+    <sentence speakerType="player" type="0" content="你要把它给我吗？这可是你们好不容易锻造出来的。"/>
+    <sentence speakerType="npc" type="0" content="雷霆山被邪气侵染了，我们没有办法再去完成父神之怒了。"/>
+    <sentence speakerType="player" type="0" content="所以？"/>
+    <sentence speakerType="npc" type="0" content="我们早已商量好，如果你能成功将其拿回，我们就把它重新打造成一枚雷电护身符，赠与你。"/>
+    <sentence speakerType="player" type="0" content="谢谢，那我就收下了。"/>
+    <sentence speakerType="npc" type="0" content="对了！还有雷之徽章也一起给你，祝你好运。"/>
+    <sentence speakerType="player" type="0" content="再见。"
+              action="get item 104:1;get item 704:1"/>
+  </dialogues>
+  <dialogues npcId="6" precondition="finish task 18">
+    <sentence speakerType="npc" type="0" content="祝你好运。"/>
+    <sentence speakerType="player" type="0" content="再见。"/>
+  </dialogues>
+  <!--施泰罗-->
+  <dialogues npcId="7" precondition="doing task 16">
+    <sentence speakerType="npc" type="0" content="你准备好了吗？"/>
+    <sentence speakerType="player" type="1" ok="来吧。" cancel="还没有。"
+              action="start battle 11"/>
+  </dialogues>
+  <dialogues npcId="7" precondition="finish task 16">
+    <sentence speakerType="npc" type="0" content="你很厉害，如果你准备好了，就接着挑战勃朗特吧。"/>
+    <sentence speakerType="player" type="0" content="好的。"/>
+  </dialogues>
+  <dialogues npcId="7" precondition="other" type="forever">
+    <sentence speakerType="npc" type="0" content="如果有什么事的话，请找我的大哥勃朗特。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogues>
+  <!--阿尔戈-->
+  <dialogues npcId="8" precondition="doing task 15 ">
+    <sentence speakerType="npc" type="0" content="你准备好了吗？"/>
+    <sentence speakerType="player" type="1" ok="来吧。" cancel="还没有。"
+              action="start battle 10"/>
+  </dialogues>
+  <dialogues npcId="8" precondition="finish task 15 ">
+    <sentence speakerType="npc" type="0" content="你很厉害，如果你准备好了，就接着挑战施泰罗吧。"/>
+    <sentence speakerType="player" type="0" content="好的。"/>
+  </dialogues>
+  <dialogues npcId="8" precondition="other" type="forever">
+    <sentence speakerType="npc" type="0" content="如果有什么事的话，请找我的大哥勃朗特。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
   </dialogues>
 </dialogues>

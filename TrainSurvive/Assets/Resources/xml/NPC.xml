@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+  <!--
+  npc需要包含的属性：
+  id：对话的ID
+  gender：性别 { 0女 | 1男 }
+  vitality：体力
+  strength：力量
+  agile：敏捷
+  technique：技巧
+  intelligence：智力
+  profession1：专精1 { vitality | strength | agile | technique | intelligence | null }
+  profession2：专精2 { vitality | strength | agile | technique | intelligence | null }
+  profession3：专精3 { vitality | strength | agile | technique | intelligence | null }
+  weaponID：自带武器ID；-1表示为空
+  decorationsID：自带饰品ID；-1表示为空
+  birthplace：特定归属 {城镇ID | 区块坐标 | 空 }  
+                  1~6均是特指的单个特殊城市（见城镇表），0是随机分配到其他普通城市，
+                 （x,y)表示他会出现在特定(x,y)区块的普通城镇中，如（0,4）对应地图东南角落的普通城
+                  -表示不分配。 
+  description：人物描述或背景
+  -->
+  <npc id ="0" name="梅林" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="2"
+       description="-"/>
+  <npc id ="1" name="黑魔法师" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="-"
+       description="-"/>
+  <npc id ="2" name="弗里茨" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="3"
+       description="-"/>
+  <npc id ="3" name="阿狄丽娜" gender="0"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="3"
+       description="-"/>
+  <npc id ="4" name="弗雷姆" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="4"
+       description="-"/>
+  <npc id ="5" name="温蒂" gender="0"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="5"
+       description="-"/>
+  <npc id ="6" name="勃朗特" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="6"
+       description="-"/>
+  <npc id ="7" name="施泰罗" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="6"
+       description="-"/>
+  <npc id ="8" name="阿尔戈" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="100"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="6"
+       description="-"/>
+
+
+  <npc id ="20" name="苹果" gender="0"
+       vitality="5" strength="5" agile="5" tehnique="5" intelligence="5"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="1"
+       description="你儿时的玩伴，愿意无条件追随你。"/>
+  <npc id ="21" name="哑女" gender="0"
+       vitality="-5" strength="0" agile="0" tehnique="0" intelligence="30"
+       profession1="intelligence" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="0"
+       description="她没有言语能力，但从眼神中流露出对你的欣赏。"/>
+  <npc id ="22" name="金胖子" gender="1"
+       vitality="35" strength="10" agile="-10" tehnique="-10" intelligence="0"
+       profession1="vitality" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="0"
+       description="看起来很胖，但实际上体脂率只有10%。"/>
+  <npc id ="23" name="神秘老人李" gender="1"
+       vitality="50" strength="50" agile="50" tehnique="50" intelligence="200"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="(0,4)"
+       description="-"/>
+  <npc id ="24" name="老酒鬼" gender="1"
+       vitality="-10" strength="-5" agile="10" tehnique="20" intelligence="20"
+       profession1="technique" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="122" birthplace="0"
+       description="常年酗酒使他虚弱不堪。他自以为很聪明，但还是把自己作为筹码输给了你——或许这才是真正的聪明。"/>
+  <npc id ="25" name="独眼巴顿" gender="1"
+       vitality="15" strength="10" agile="0" tehnique="20" intelligence="0"
+       profession1="technique" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="123" birthplace="0"
+       description="他曾被人们称为鹰眼，直到被鹰王夺去了一只眼睛。"/>
+  <npc id ="26" name="史蒂夫队长" gender="1"
+       vitality="15" strength="25" agile="0" tehnique="0" intelligence="-5"
+       profession1="strength" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="0"
+       description="退伍的特种兵，给钱就跟你走。"/>
+  <npc id ="27" name="怒风" gender="0"
+       vitality="-10" strength="15" agile="30" tehnique="0" intelligence="-10"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="0"
+       description="她自称要跟你去猎杀恶魔，可你心里清楚——这不过是个女疯子。"/>
+  <npc id ="28" name="小曦" gender="0"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="0"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="0"
+       description="-"/>
+  <npc id ="29" name="日曦" gender="0"
+       vitality="0" strength="0" agile="15" tehnique="15" intelligence="0"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="-"
+       description="小曦的一半人格，易怒而高傲。"/>
+  <npc id ="30" name="月曦" gender="0"
+       vitality="0" strength="0" agile="15" tehnique="0" intelligence="15"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="-"
+       description="小曦的另一半人格，温柔而善良。"/>
+  <npc id ="31" name="镇长" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="0"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="1"
+       description="-"/>
+  <npc id ="32" name="流浪汉" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="0"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="0"
+       description="-"/>
+  <npc id ="33" name="一个雪人" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="0"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="1"
+       description="-"/>
+  <npc id ="34" name="老校长" gender="1"
+       vitality="0" strength="0" agile="0" tehnique="0" intelligence="0"
+       profession1="null" profession2="null" profession3="null"
+       weaponID="-1" decorationsID="-1" birthplace="1"
+       description="-"/>
+</npcs>
