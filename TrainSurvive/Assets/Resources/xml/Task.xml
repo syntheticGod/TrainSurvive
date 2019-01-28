@@ -1,25 +1,172 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tasklist>
-  <task id="1" name="测试任务1——交东西" npcId="1" islocked="false">
-   <requimentList>
-    <requiment type="giveMoney" num="1000" />   
-    <requiment type="giveItem" itemId="233" num="3" />
-   </requimentList>
+  <task id="0" name="访问光神殿" condition="2" description="找到圣都，访问光神殿的梅林。">
    <unlockList>
-    <unlock taskId="2" /> 
-    <unlock taskId="3" /> 
+     <unlock taskId="1" /> 
+     <unlock taskId="2" /> 
+     <unlock taskId="6" />
+     <unlock taskId="10" />
+     <unlock taskId="14" />  
    </unlockList>
   </task>
 
-  <task id="2" name="测试任务2——打怪" npcId="1" islocked="true">
+  <task id="1" name="四座神殿" condition="0" description="拜访四个神殿的大魔导师们来收集徽章，以此取得梅林的认可。">
    <requimentList>
-    <requiment type="kill" monsterId="0" num="1" />
+    <requiment type="hasItem" itemId="701" num="1" />
+    <requiment type="hasItem" itemId="702" num="1" />
+    <requiment type="hasItem" itemId="703" num="1" />
+    <requiment type="hasItem" itemId="704" num="1" />
    </requimentList>
   </task>
 
-  <task id="3" name="测试任务3——打怪" npcId="1" islocked="true">
-   <requimentList>
-    <requiment type="kill" monsterId="1" num="1" />
-   </requimentList>
+  <task id="2" name="水之徽章" condition="0" description="访问北方的阿诺斯城的水神殿，从水系大魔导师手里取得水之徽章。">
+    <unlockList>
+      <unlock taskId="3" />
+    </unlockList>
+  </task>
+
+  <task id="3" name="石化诅咒" condition="0" description="弗雷兹不想被打扰，让你离开。">
+    <unlockList>
+      <unlock taskId="4" />
+    </unlockList>
+  </task>
+
+  <task id="4" name="证明实力" condition="0" description="挑战弗雷兹，向他证明你的实力。">
+    <influenceList>
+      <battle id="9" />
+    </influenceList>
+    <requimentList>
+      <requiment type="kill" monsterId="25" num="1" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="5" />
+    </unlockList>
+  </task>
+
+  <task id="5" name="黑暗森林" condition="0" description="前往黑暗森林寻找圣药，并带回给弗里茨。">
+    <requimentList>
+      <requiment type="giveItem" itemId="706" num="1" />
+    </requimentList>
+    <rewardList>
+      <reward type="item" id ="101" num="1" />
+      <reward type="item" id ="701" num="1" />
+    </rewardList>
+  </task>
+
+  <task id="6" name="火之徽章" condition="0" description="访问南方的加索城的火神殿，从火系大魔导师手里取得火之徽章。">
+    <unlockList>
+      <unlock taskId="7" />
+    </unlockList>
+  </task>
+
+  <task id="7" name="狮王之吼" condition="0" description="交谈之间，怪物突然来袭，帮助加索城抵御这次攻击！">
+    <influenceList>
+      <battle id="3" />
+    </influenceList>
+    <requimentList>
+      <requiment type="kill" monsterId="24" num="1" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="8" />
+    </unlockList>
+  </task>
+
+  <task id="8" name="神鹰之血" condition="0" description="取得巨神鹰的血，巨神鹰栖息在加索城附近。">
+    <influenceList>
+      <battle id="4" />
+    </influenceList>
+    <requimentList>
+      <requiment type="giveItem" itemId="705" num="1" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="9" />
+    </unlockList>
+  </task>
+
+  <task id="9" name="双宿双飞" condition="0" description="找到并击败雄巨神鹰，取得它的血。">
+    <requimentList>
+      <requiment type="giveItem" itemId="707" num="1" />
+    </requimentList>
+    <rewardList>
+      <reward type="item" id ="102" num="1" />
+      <reward type="item" id ="702" num="1" />
+    </rewardList>
+  </task>
+
+  <task id="10" name="风之徽章" condition="0" description="访问东方的晶安城的风神殿，从风系大魔导师手里取得风之徽章。">
+    <unlockList>
+      <unlock taskId="11" />
+    </unlockList>
+  </task>
+
+  <task id="11" name="闭门不见" condition="0" description="温蒂似乎很忙，不想见你。">
+    <unlockList>
+      <unlock taskId="12" />
+    </unlockList>
+  </task>
+
+  <task id="12" name="晶安花开" condition="0" description="要想成为晶安城的花神，需要有足够的能力驾驭自然之风（提示：高智力敏捷的女性）">
+    <requimentList>
+      <requiment type="special" id="1" />
+    </requimentList>
+    <rewardList>
+      <reward type="item" id ="103" num="1" />
+      <reward type="item" id ="703" num="1" />
+    </rewardList>
+  </task>
+
+  <task id="14" name="雷之徽章" condition="0" description="访问西方的西西里城的雷神殿，从雷系大魔导师手里取得雷之徽章">
+    <unlockList>
+      <unlock taskId="15" />
+    </unlockList>
+  </task>
+
+  <task id="15" name="车轮战I" condition="0" description="挑战并击败阿尔戈。">
+    <influenceList>
+      <battle id="10" />
+    </influenceList>
+    <requimentList>
+      <requiment type="kill" monsterId="26" num="1" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="16" />
+    </unlockList>
+  </task>
+
+  <task id="16" name="车轮战II" condition="0" description="挑战并击败施泰罗。">
+    <influenceList>
+      <battle id="11" />
+    </influenceList>
+    <requimentList>
+      <requiment type="kill" monsterId="27" num="1" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="17" />
+    </unlockList>
+  </task>
+
+  <task id="17" name="车轮战III" condition="0" description="挑战并击败勃朗特。">
+    <influenceList>
+      <battle id="12" />
+    </influenceList>
+    <requimentList>
+      <requiment type="kill" monsterId="28" num="1" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="18" />
+    </unlockList>
+  </task>
+
+  <task id="18" name="父神之怒" condition="0" description="找到并击败死灵三头犬，带回未完成的父神之怒。">
+    <influenceList>
+      <battle id="8" />
+    </influenceList>
+    <requimentList>
+      <requiment type="giveItem" itemId="708" num="1" />
+    </requimentList>
+    <rewardList>
+      <reward type="item" id ="104" num="1" />
+      <reward type="item" id ="704" num="1" />
+    </rewardList>
   </task>
 </tasklist>

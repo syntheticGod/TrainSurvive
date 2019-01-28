@@ -13,27 +13,20 @@ using UnityEngine;
 
 [System.Serializable]
 public class TaskController  {
+    public const int taskMaxIndex = 30;//支持的任务个数容量
     public enum TASKCONDITION
     {
-        LOCKED=1,
+        LOCKED=0,
         CAN_DO,
-        Doing
+        DOING,
+        CAN_FINISH,
+        FINISH
     }
 
     private static TaskController instance = null;
-    /// <summary>
-    /// 未解锁的任务
-    /// </summary>
-    public SerializableDictionary<int, Task> Task_locked = new SerializableDictionary<int, Task>();
-    /// <summary>
-    /// 已解锁但未接取的任务
-    /// </summary>
-    public SerializableDictionary<int, Task> Task_canDo = new SerializableDictionary<int, Task>();
-    /// <summary>
-    /// 已接取的任务
-    /// </summary>
-    public SerializableDictionary<int, Task> Task_doing = new SerializableDictionary<int, Task>();
-    public SerializableDictionary<int, Task> Task_finish = new SerializableDictionary<int, Task>();
+
+    public Task[] TaskList = new Task[taskMaxIndex];
+
     private TaskController()
     {
 
@@ -57,7 +50,20 @@ public class TaskController  {
                     Task task = new Task();
                     task.id= int.Parse(taskElement.Attributes["id"].Value);
                     task.name = taskElement.Attributes["name"].Value;
-                    task.npcId = int.Parse(taskElement.Attributes["npcId"].Value);
+                    task.description = taskElement.Attributes["description"].Value;
+                    task.condition = (TASKCONDITION)int.Parse(taskElement.Attributes["condition"].Value);
+                    //特殊战斗生成
+                    XmlNode influenceNode = taskElement.SelectSingleNode("influenceList");
+                    if (influenceNode != null)
+                    {
+                        XmlNodeList influenceList = influenceNode.ChildNodes;
+                        foreach (XmlElement influence in influenceList)
+                        {
+                            int battleId = int.Parse(influence.Attributes["id"].Value);
+                            //待补充，生成特殊战斗
+                        }
+                    }
+
                     XmlNode requirementNode= taskElement.SelectSingleNode("requimentList");
                     //初始化任务条件
                     if (requirementNode != null)
@@ -70,18 +76,21 @@ public class TaskController  {
                             {
                                 case "giveMoney":
                                     MoneyRequirement r1 = new MoneyRequirement(int.Parse(requirement.Attributes["num"].Value));
-                                    r1.finish_task_Handler = task.finish_task;
                                     task.reqList.Add(r1);
                                     break;
                                 case "giveItem":
                                     ItemRequirement r2 = new ItemRequirement(int.Parse(requirement.Attributes["itemId"].Value), int.Parse(requirement.Attributes["num"].Value));
-                                    r2.finish_task_Handler = task.finish_task;
                                     task.reqList.Add(r2);
                                     break;
                                 case "kill":
                                     KillRequirement r3 = new KillRequirement(int.Parse(requirement.Attributes["monsterId"].Value), int.Parse(requirement.Attributes["num"].Value));
-                                    r3.finish_task_Handler = task.finish_task;
                                     task.reqList.Add(r3);
+                                    break;
+                                case "hasItem":
+                                    HasItemRequirement r4 = new HasItemRequirement(int.Parse(requirement.Attributes["itemId"].Value), int.Parse(requirement.Attributes["num"].Value));
+                                    task.reqList.Add(r4);
+                                    break;
+                                case "special":
                                     break;
                             }
                         }
@@ -97,14 +106,26 @@ public class TaskController  {
                             task.LatterTaskIDList.Add(int.Parse(node.Attributes["taskId"].Value));
                         }
                     }
-                    if (taskElement.Attributes["islocked"].Value == "true")
-                        con.Task_locked.Add(task.id,task);
-                    else
+
+                    XmlNode rewardNode = taskElement.SelectSingleNode("rewardList");
+                    if (rewardNode != null)
                     {
-                        con.Task_canDo.Add(task.id, task);
-                        World.getInstance().FindNPCByID(task.npcId).taskId_canDo.Add(task.id);
+                        XmlNodeList rewardList = rewardNode.ChildNodes;
+                        foreach (XmlElement node in rewardList)
+                        {
+                            switch (node.Attributes["type"].Value)
+                            {
+                                case "item":
+                                    task.rewardList.Add(new System.ValueTuple<int, int>(int.Parse(node.Attributes["id"].Value), int.Parse(node.Attributes["num"].Value)));
+                                    break;
+                                case "money":
+                                    task.rewardMoney = int.Parse(node.Attributes["num"].Value);
+                                    break;
+                            }
+                        }
                     }
-                        
+
+                    con.TaskList[task.id] = task;
                 }
                 World.getInstance().taskCon = con;
             }
@@ -115,24 +136,12 @@ public class TaskController  {
    /// <summary>
    /// 获取对应任务,不存在返回null
    /// </summary>
-   /// <param name="taskId"></param>
-   /// <param name="taskCondition"></param>
+   /// <param name="taskId">任务id</param>
    /// <returns></returns>
-    public Task getTask(int taskId, TASKCONDITION taskCondition)
+    public Task getTask(int taskId)
     {
-        Task task = null;
-        switch (taskCondition)
-        {
-            case TASKCONDITION.LOCKED:
-                task = Task_locked[taskId];
-                break;
-            case TASKCONDITION.Doing:
-                task = Task_doing[taskId];
-                break;
-            case TASKCONDITION.CAN_DO:
-                task = Task_canDo[taskId];
-                break;
-        }
-        return task;
+        return TaskList[taskId];
     }
+
+    
 }

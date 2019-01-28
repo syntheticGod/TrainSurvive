@@ -15,8 +15,6 @@ namespace WorldMap.Model
     [Serializable]
     public class NPC
     {
-        public List<int> taskId_canDo { get; } = new List<int>();
-        public List<int> taskId_doing { get; } = new List<int>();
         public Person PersonInfo { private set; get; }
         public string Name { get { return PersonInfo.name; } }
         public int Strength { get { return PersonInfo.strength; } }
@@ -41,43 +39,8 @@ namespace WorldMap.Model
                     "\n技巧：" + PersonInfo.technique + 
                     " 智力：" + PersonInfo.intelligence;
             }
-        }
-        //调用taskController的getTask获取任务
+        }      
 
-
-        /// <summary>
-        /// 接取某个任务后调用
-        /// </summary>
-        /// <param name="taskId"></param>
-        private void receiveTask(int taskId)
-        {
-            taskId_canDo.Remove(taskId);
-            taskId_doing.Add(taskId);
-            TaskController con = TaskController.getInstance();
-            Task task = con.getTask(taskId, TaskController.TASKCONDITION.CAN_DO);
-            con.Task_canDo.Remove(taskId);
-            con.Task_doing.Add(taskId,task);
-        }
-
-
-        /// <summary>
-        /// 完成某个任务后调用
-        /// </summary>
-        /// <param name="taskId"></param>
-        private void finishTask(int taskId)
-        {
-            taskId_doing.Remove(taskId);
-            TaskController con = TaskController.getInstance();
-            Task task = con.getTask(taskId, TaskController.TASKCONDITION.Doing);
-            foreach(int latterTaskId in task.LatterTaskIDList)
-            {
-                Task latter_task = con.getTask(latterTaskId, TaskController.TASKCONDITION.LOCKED);
-                con.Task_locked.Remove(latterTaskId);
-                con.Task_canDo.Add(latterTaskId,latter_task);
-            }       
-            con.Task_doing.Remove(taskId);
-            con.Task_finish.Add(taskId, task);
-        } 
 
     }
 }

@@ -180,16 +180,23 @@ namespace WorldBattle
         private void addTaskListener(ref BattleActor actor, ref Monster monster)
         {
             actor.task_monsterId = monster.id;
-            foreach (Task t in TaskController.getInstance().Task_doing.Values)
+            for(int i=0;i< TaskController.taskMaxIndex; i++)
             {
-                foreach (TaskRequirement req in t.reqList)
+                Task t = TaskController.getInstance().TaskList[i];
+                if ( t!= null)
                 {
-                    if (req.GetType() == typeof(KillRequirement))
-                    {
-                        actor.task_kill_handler += req.conditionChange;
-                    }
+                        foreach (TaskRequirement req in t.reqList)
+                        {
+                            if (req.GetType() == typeof(KillRequirement))
+                            {
+                                actor.task_kill_handler += req.conditionChange;
+                            }
+                        }
                 }
+                else
+                    continue;
             }
+           
         }
     }
 }

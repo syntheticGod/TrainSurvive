@@ -13,41 +13,27 @@ public abstract class TaskRequirement  {
     /// <summary>
     /// 当前任务条件执行情况，用于任务面板展示（简短）
     /// </summary>
-    public string conditionStr
+    public string condition
     {
-        get
-        {
-            return condition;
-        }
+        get; protected set;
     }
-    protected string condition;
     /// <summary>
     /// 对于该任务条件的描述，用于NPC对话展示（具体）
     /// </summary>
     public string description
     {
-        get
-        {
-            return _description;
-        }
+        get; protected set;
     }
-    protected string _description;
     public bool isfinish
     {
-        get
-        {
-            return isfinish;
-        }
+        get; protected set;
     }
-    protected bool finish;
-    public delegate void finishTask();
-    public finishTask finish_task_Handler;
-
 
     /// <summary>
-    /// 完成该条件的时候调用，需对派生类具体实现，在满足任务对应要求时设置finish未true，例子见killRequiment
+    /// 尝试完成该条件，需对派生类具体实现，若条件完成返回true
     /// </summary>
-    public abstract void achieveGoal(int nums);
+    /// <returns></returns>
+    public abstract bool achieveGoal();
     /// <summary>
     /// 任务情况发生改变的适合调用，目前仅killreq会具体实现
     /// </summary>

@@ -1,29 +1,28 @@
 /*
  * 描述：
  * 作者：NONE
- * 创建时间：2018/12/22 21:45:20
- * 版本：v0.1
+ * 创建时间：2019/1/28 16:30:26
+ * 版本：v0.7
  */
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets._02.Scripts.zhxUIScripts;
 using TTT.Resource;
 using TTT.Item;
 
 [System.Serializable]
-public class ItemRequirement : TaskRequirement
+public class HasItemRequirement : TaskRequirement
 {
-    private ItemRequirement() { }
+    private HasItemRequirement() { }
 
-    public ItemRequirement(int itemId,int needNums)
+    public HasItemRequirement(int itemId, int needNums)
     {
         _itemId = itemId;
         _needNums = needNums;
         string itemName = StaticResource.GetItemInfoByID<ItemInfo>(_itemId).Name;
-        condition = "需要物品：" + itemName + "*"+needNums; ;
-        description = "我需要" + itemName + needNums+"个，你带来了吗？";//以后也可以只在npc那只用这里的数据，其他话在npc数据里补充
+        condition = "需要物品：" + itemName + "*" + needNums; ;
+        description = "你有" + needNums + "个"  +itemName+ "吗？";//以后也可以只在npc那只用这里的数据，其他话在npc数据里补充
         isfinish = false;
     }
 
@@ -40,10 +39,10 @@ public class ItemRequirement : TaskRequirement
 
         string itemName = StaticResource.GetItemInfoByID<ItemInfo>(_itemId).Name;
         Storage bag = World.getInstance().storage;
-        isfinish=bag.RemoveItem(_itemId, _needNums);
+        isfinish = bag.GetNumberByID(_itemId)>= _needNums;
         if (isfinish)
         {
-            condition = "已交付：" + itemName + "*" + _needNums;
+            condition = "已持有：" + itemName + "*" + _needNums;
         }
         return isfinish;
         throw new NotImplementedException();

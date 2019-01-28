@@ -20,18 +20,22 @@ public class MoneyRequirement:TaskRequirement  {
     {
         needMoney = moneyNums;
         condition = "需付清金钱："+ needMoney;
-        _description = "我需要" + needMoney + "元，你带来了吗？";//以后也可以只在npc那展示金钱数字，其他话在npc数据里补充
-        finish = false;
+        description = "我需要" + needMoney + "元，你带来了吗？";//以后也可以只在npc那展示金钱数字，其他话在npc数据里补充
+        isfinish = false;
     }
 
-    public override void achieveGoal(int nums)
-    {
-        //待补充（展示在界面上什么的）
 
-        
-            finish = true;
+    public override bool achieveGoal()
+    {
+        if (isfinish)
+            return true;
+
+        isfinish = World.getInstance().addMoney(-needMoney);
+        if (isfinish)
+        {
             condition = "已付清：" + needMoney;
-            finish_task_Handler();
+        }        
+        return isfinish;
         throw new NotImplementedException();
     }
 
