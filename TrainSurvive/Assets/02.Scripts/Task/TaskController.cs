@@ -91,6 +91,8 @@ public class TaskController  {
                                     task.reqList.Add(r4);
                                     break;
                                 case "special":
+                                    SpecialRequirement_1 r5 = new SpecialRequirement_1();
+                                    task.reqList.Add(r5);
                                     break;
                             }
                         }
