@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using WorldMap.Model;
 
 namespace WorldMap {
     public enum ETownType
@@ -26,13 +27,6 @@ namespace WorldMap {
     public class Town {
         //城镇在地图的坐标
         public Vector2Int position { get; private set; }
-
-        //当前城镇的类型id
-        public ETownType typeId;
-        //当前城镇名
-        public string name;
-        //当前城镇描述
-        public string description;
 
         //与这个城镇相连的城镇（以此点作为起点的相连城镇）
         public List<Town> connectTowns { get; private set; }

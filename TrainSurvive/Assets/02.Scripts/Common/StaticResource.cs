@@ -485,7 +485,8 @@ namespace TTT.Resource
             XmlNodeList contents = document.SelectSingleNode("chat").ChildNodes;
             chatScripts = new Scripts(contents);
         }
-        //----------对话----------↑
+        //----------对话----------↑----------城镇信息----------↓
+
     }
     /// <summary>
     /// 人物基础属性

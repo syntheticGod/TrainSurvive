@@ -21,7 +21,7 @@ namespace WorldMap.Controller
         private string[] btnStrs = { "退出" };
         private GoodsListView goodsInShopLV;
         private GoodsListView goodsInPackLV;
-        private Model.Town currentTown;
+        private Model.TownData currentTown;
         protected override void CreateModel()
         {
             m_titleString = "商店";
@@ -69,7 +69,7 @@ namespace WorldMap.Controller
         {
             goodsInShopLV.Datas = World.getInstance().storage.CloneStorage();
         }
-        public void SetTown(Model.Town town)
+        public void SetTown(Model.TownData town)
         {
             currentTown = town;
         }

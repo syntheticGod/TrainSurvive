@@ -6,6 +6,7 @@ using UnityEngine;
 using WorldMap;
 using System;
 using TTT.Item;
+using WorldMap.Model;
 
 [System.Serializable]
 public class World
@@ -144,25 +145,7 @@ public class World
     //public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
     //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
 
-
-    public WorldMap.Model.Town[] towns;
-    /// <summary>
-    /// 遍历所有城镇，寻找指定ID的NPC
-    /// </summary>
-    /// <param name="id">NPC的ID</param>
-    /// <returns>
-    /// NULL：找不到
-    /// NOT NULL：指定ID的NPC
-    /// </returns>
-    public WorldMap.Model.NPC FindNPCByID(int id)
-    {
-        foreach (WorldMap.Model.Town town in towns)
-        {
-            WorldMap.Model.NPC npc = town.FindNPCByID(id);
-            if (npc != null) return npc;
-        }
-        return null;
-    }
+    public TownDataSet Towns = new TownDataSet();
     public List<Person> persons = new List<Person>();
     public Person GetPerson(int index)
     {

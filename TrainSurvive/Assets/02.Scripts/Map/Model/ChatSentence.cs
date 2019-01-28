@@ -8,7 +8,7 @@ namespace WorldMap.Model
 {
     public class ChatSentence
     {
-        public ChatSentence(NPC speaker, string content)
+        public ChatSentence(NpcData speaker, string content)
         {
             Name = speaker.Name;
             Content = content;

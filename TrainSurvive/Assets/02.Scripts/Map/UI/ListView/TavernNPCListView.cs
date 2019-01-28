@@ -13,14 +13,14 @@ using WorldMap.Model;
 
 namespace WorldMap.UI
 {
-    public class TavernNPCListView : BaseListView<NPC>
+    public class TavernNPCListView : BaseListView<NpcData>
     {
         private static string[] persistentStrs = new string[] { "大厅" };
         protected override int GetPersistentCount()
         {
             return persistentStrs.Length;
         }
-        protected override void OnItemView(ListViewItem item, NPC data, int itemIndex)
+        protected override void OnItemView(ListViewItem item, NpcData data, int itemIndex)
         {
             ViewTool.ForceGetComponentInChildren<PersonBaseItem>(item, "NPC").GetComponentInChildren<Text>().text = data.Name;
             item.Tag = data;

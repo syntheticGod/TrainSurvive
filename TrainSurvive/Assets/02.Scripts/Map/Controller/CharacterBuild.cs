@@ -78,12 +78,12 @@ namespace WorldMap
             if (mapGenerate.isCreateMap)
             {
                 world.TrainSetMapPos(initIndexForTrain);
-                world.RandomTownsInfo(Map.GetInstance().towns);
+                //初始化城镇数据
+                World.getInstance().Towns.Init(Map.GetInstance().towns);
                 //初始化档案时随机生成3个人物
                 world.RandomPersonInTrain(3);
-                world.SaveGame();
+                World.getInstance().save();
             }
-            world.PrepareData();
         }
     }
 }

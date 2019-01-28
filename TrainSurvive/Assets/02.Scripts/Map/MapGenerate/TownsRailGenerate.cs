@@ -11,7 +11,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using TTT.Xml;
 using UnityEngine;
+using WorldMap.Model;
 
 namespace WorldMap {
     public class TownsRailGenerate : GenerateBase {
@@ -58,8 +60,6 @@ namespace WorldMap {
         public override void generate() {
             //生成城镇
             BuildTowns();
-            //设置特殊城镇信息
-            SetSpecialTownInfo(mapData);
             //生成铁轨
             BuildRails(mapData);
         }
@@ -188,48 +188,7 @@ namespace WorldMap {
                 }
             }
         }
-
-        /// <summary>
-        /// 在25个区块中放置如下6个特殊城镇（对应类型ID1~6）与其他19个普通城镇（类型ID=0）
-        /// </summary>
-        public static void SetSpecialTownInfo(Map map) {
-            //获取行数和列数
-            int townRowNum = map.towns.GetLength(0);
-            int townColNum = map.towns.GetLength(1);
-
-            //设置城镇的类型id
-            for (int i = 0; i < townRowNum; i++) {
-                for (int j = 0; j < townColNum; j++) {
-                    //设置类型为普通类型
-                    map.towns[i, j].typeId = ETownType.COMMON;
-                    //设置城镇名字
-                    map.towns[i, j].name = "城" + i + "-" + j;
-                }
-            }
-
-            //获取Buff库的xml文件
-            string xmlString = Resources.Load("xml/TownInfo").ToString();
-
-            //解析xml
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xmlString);
-
-            //查找<Towns>
-            XmlNode rootNode = xmlDoc.SelectSingleNode("Towns");
-            //遍历所有子节点
-            foreach (XmlNode curBuffNode in rootNode.ChildNodes) {
-                //获取城镇的位置
-                int posx = int.Parse(curBuffNode.Attributes["posx"].Value);
-                int posy = int.Parse(curBuffNode.Attributes["posy"].Value);
-                //获取城镇的类型id
-                map.towns[posx, posy].typeId = ETownType.COMMON + int.Parse(curBuffNode.Attributes["typeId"].Value);
-                //获取城镇名
-                map.towns[posx, posy].name = curBuffNode.Attributes["name"].Value;
-                //获取城镇描述
-                map.towns[posx, posy].description = curBuffNode.Attributes["description"].Value;
-            }
-        }
-
+        
         /** 将城镇连接起来
          * 铁轨的生成算法是，先使x轴相等，再使y轴相等
          * 根据铁轨的路径和转折点绘画出当前铁轨

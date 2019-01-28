@@ -77,19 +77,6 @@ namespace WorldMap {
             //测试，设置人物出生地点为第一个城镇
             CharacterBuild characterBuild = GameObject.Find("CharacterBuild").GetComponent<CharacterBuild>();
             characterBuild.Init(mapData.towns[0, 0].position);
-
-            //获取行数和列数
-            int townRowNum = mapData.towns.GetLength(0);
-            int townColNum = mapData.towns.GetLength(1);
-
-            //设置城镇的类型id
-            for (int i = 0; i < townRowNum; i++) {
-                for (int j = 0; j < townColNum; j++) {
-                    Debug.Log("城镇信息：城镇坐标" + i + " " + j
-                        + " 城镇类型" + mapData.towns[i, j].typeId
-                        + " 城镇名" + mapData.towns[i, j].name);
-                }
-            }
         }
 
         //创建地图

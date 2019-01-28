@@ -141,8 +141,8 @@ namespace WorldMap.Controller
                 case BUTTON_ID.TRAIN_ENTRY_AREA:
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
-                    Model.Town town;
-                    if (WorldForMap.Instance.FindTown(train.MapPosTrain, out town))
+                    TownData town;
+                    if (World.getInstance().Towns.Find(train.MapPosTrain, out town))
                     {
                         //进入城镇后不能操作列车
                         Train.Instance.IsMovable = false;
@@ -152,7 +152,7 @@ namespace WorldMap.Controller
                     }
                     else
                     {
-                        InfoDialog.Show("该区域不可进入，目前只能进城镇。");
+                        InfoDialog.Show("该区域不可进入。");
                     }
                     break;
                 case BUTTON_ID.TRAIN_TEAM_ACTION:

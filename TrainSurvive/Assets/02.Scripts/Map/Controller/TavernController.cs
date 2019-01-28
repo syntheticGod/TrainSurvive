@@ -29,24 +29,25 @@ namespace WorldMap.Controller
         private TownChatListView townChatListView;
         private NullListView nullListView;
         private Button[] chatBtns;
-        private Model.Town currentTown;
+        private Model.TownData currentTown;
         private ChatRoom chatRoom;
         private List<KeyValuePair<int, string>> chatSentences;
         private List<ChatSentence>[] sentences;
-        private List<NPC> npcs;
+        private List<NpcData> npcs;
         List<int> nullData;
-        public void SetTown(Model.Town town)
+        public void SetTown(Model.TownData town)
         {
             currentTown = town;
-            npcs = town.NPCs;
-            chatRoom = new ChatRoom(town.NPCs);
+            //npcs = town.NPCs;
+            npcs = null;
+            //chatRoom = new ChatRoom(town.NPCs);
             chatSentences = chatRoom.chat();
-            sentences = new List<ChatSentence>[town.NPCCnt + 1];
+            //sentences = new List<ChatSentence>[town.NPCCnt + 1];
             for (int i = 0; i < sentences.Length; i++)
                 sentences[i] = new List<ChatSentence>();
             foreach (KeyValuePair<int, string> sentence in chatSentences)
             {
-                NPC npc = town.FindNPCByID(sentence.Key);
+                NpcData npc = town.FindNPCByID(sentence.Key);
                 if (npc == null)
                 {
                     Debug.LogError("在城市" + town.Name + "中找不到指定NPC：" + sentence.Key);
@@ -67,7 +68,7 @@ namespace WorldMap.Controller
                     string id = at.Remove(0, 1);
                     try
                     {
-                        NPC target = town.FindNPCByID(int.Parse(id));
+                        NpcData target = town.FindNPCByID(int.Parse(id));
                         if(target != null)
                             content = content.Replace(at, "@"+target.Name+" ");
                     }
@@ -131,7 +132,7 @@ namespace WorldMap.Controller
             {
                 nullData.Add(i);
             }
-            Debug.Log("酒馆：我这里有" + currentTown.NPCCnt + "人");
+            //Debug.Log("酒馆：我这里有" + currentTown.NPCCnt + "人");
             return true;
         }
         protected override void AfterShowWindow()
@@ -141,14 +142,14 @@ namespace WorldMap.Controller
             townChatListView.Datas = sentences[0];
             nullListView.Datas = nullData;
         }
-        public void OnItemClick(ListViewItem item, NPC npc)
+        public void OnItemClick(ListViewItem item, NpcData npc)
         {
             selectedIndex = npcs.IndexOf(npc);
             for (int i = 0; i < chatBtns.Length; i++)
             {
                 chatBtns[i].GetComponentInChildren<Text>().text = personalChatBtnsStrs[i];
             }
-            Debug.Log("点击了" + currentTown.NPCs[selectedIndex].Name);
+            //Debug.Log("点击了" + currentTown.NPCs[selectedIndex].Name);
             townChatListView.Datas = sentences[selectedIndex + 1];
         }
         public void OnPersistentClick(ListViewItem item, int index)
@@ -170,13 +171,15 @@ namespace WorldMap.Controller
                     if (selectedIndex != UNSELECTED)
                     {
                         //私聊：最近过的怎么样
-                        NPC npc = currentTown.NPCs[selectedIndex];
+                        //NpcData npc = currentTown.NPCs[selectedIndex];
+                        NpcData npc = null;
                         chat = new ChatSentence(npc, "挺好的");
                     }
                     else
                     {
                         //公聊选项1：大家好
-                        List<NPC> npcs = currentTown.NPCs;
+                        //List<NpcData> npcs = currentTown.NPCs;
+                        List<NpcData> npcs = null;
                         if (npcs.Count == 0)
                         {
                             chat = new ChatSentence("回响", chatBtnsStrs[id - BUTTON_ID.TAVERN_NONE - 1]);
@@ -184,7 +187,7 @@ namespace WorldMap.Controller
                         else
                         {
                             int randomIndex = MathTool.RandomInt(npcs.Count);
-                            NPC randomNPC = npcs[randomIndex];
+                            NpcData randomNPC = npcs[randomIndex];
                             chat = new ChatSentence(randomNPC, "你好");
                         }
                     }
@@ -200,7 +203,8 @@ namespace WorldMap.Controller
                             InfoDialog.Show("人物已满，无法招募更多的人");
                             return;
                         }
-                        NPC currentNPC = currentTown.NPCs[selectedIndex];
+                        //NpcData currentNPC = currentTown.NPCs[selectedIndex];
+                        NpcData currentNPC = null;
                         if (!currentTown.RecruitNPC(currentNPC))
                         {
                             Debug.LogError("系统：招募NPC失败");

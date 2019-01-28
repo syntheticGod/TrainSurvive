@@ -1,15 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Towns>
-  <Town name = "城1-初" typeId ="1" posx="0" posy="0" description="出生地"/>
-  
-  <Town name = "城2-光" typeId ="2" posx="2" posy="2" description="光神殿"/>
-  
-  <Town name = "城3-水" typeId ="3" posx="2" posy="4" description="水神殿"/>
-  
-  <Town name = "城4-火" typeId ="4" posx="2" posy="0" description="火神殿"/>
-  
-  <Town name = "城5-风" typeId ="5" posx="4" posy="2" description="风神殿"/>
-  
-  <Town name = "城6-雷" typeId ="6" posx="0" posy="2" description="雷神殿"/> 
+  <Town id="1"  name = "鲁特" typeId ="1" posx="0" posy="0" tavernName="酒馆" description="出生地"/>
 
+  <Town id="2" name = "圣都" typeId ="2" posx="2" posy="2" tavernName="光神殿" description="光之城镇"/>
+
+  <Town id="3" name = "阿诺斯" typeId ="3" posx="2" posy="4" tavernName="水神殿" description="水之城镇"/>
+
+  <Town id="4" name = "加索" typeId ="4" posx="2" posy="0" tavernName="火神殿" description="火之城镇"/>
+
+  <Town id="5" name = "晶安" typeId ="5" posx="4" posy="2" tavernName="风神殿" description="风之城镇"/>
+
+  <Town id="6" name = "西西里" typeId ="6" posx="0" posy="2" tavernName="雷神殿" description="雷之城镇"/>
+  <!--随机城市名字库-->
+  <Names>
+    <Name content="香格里拉"/>
+    <Name content="枫丹白露"/>
+    <Name content="翡冷翠"/>
+    <Name content="米兰"/>
+    <Name content="墨尔本"/>
+    <Name content="普罗旺斯"/>
+    <Name content="爱丁堡"/>
+
+    <Name content="哥本哈根"/>
+    <Name content="耶路撒冷"/>
+    <Name content="柏林"/>
+    <Name content="布达佩斯"/>
+    <Name content="都灵"/>
+    <Name content="伯尔尼"/>
+    <Name content="阿姆斯特布"/>
+    <Name content="布里斯班"/>
+    <Name content="赫尔辛基"/>
+    <Name content="凤凰城"/>
+  </Names>
 </Towns>

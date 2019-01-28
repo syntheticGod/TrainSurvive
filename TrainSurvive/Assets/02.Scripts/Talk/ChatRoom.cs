@@ -22,8 +22,8 @@ namespace Story.Communication
     public class ChatRoom
     {
 
-        List<NPC> persons;
-        public ChatRoom(List<NPC> members)
+        List<NpcData> persons;
+        public ChatRoom(List<NpcData> members)
         {
             persons = members;
         }

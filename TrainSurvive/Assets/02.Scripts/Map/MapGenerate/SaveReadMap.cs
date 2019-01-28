@@ -246,8 +246,6 @@ namespace WorldMap {
                     TownsRailGenerate.SetTownProperty(map, new Vector2Int(lineCnt, col), map.towns[lineCnt, col].position);
                 }
             }
-            //读取城镇信息
-            TownsRailGenerate.SetSpecialTownInfo(map);
             //城镇之间连接铁轨
             TownsRailGenerate.BuildRails(map);
         }

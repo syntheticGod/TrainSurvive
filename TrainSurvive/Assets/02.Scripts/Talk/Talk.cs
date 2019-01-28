@@ -31,7 +31,7 @@ namespace Story.Communication{
             world,
         }
 
-        public List<string> ask(ref NPC npc, TalkOpt opt){
+        public List<string> ask(ref NpcData npc, TalkOpt opt){
             
             List<string> result = new List<string>();
 
@@ -100,7 +100,7 @@ namespace Story.Communication{
         /// </summary>
         /// <param name="person"></param>
         /// <returns></returns>
-        private string getSelfInfo(ref NPC npc){
+        private string getSelfInfo(ref NpcData npc){
             int personId = npc.ID;
             if(!selfMap.ContainsKey(personId)){
                 int[] initArr = {0,0,0,0,0}; 
@@ -117,7 +117,7 @@ namespace Story.Communication{
         }
 
         //todo 完善语料库，更改叙述方式
-        private string getSelfInfoWords(int rdSelf, ref NPC npc)
+        private string getSelfInfoWords(int rdSelf, ref NpcData npc)
         {
             string result = "";
             switch(rdSelf){

@@ -20,7 +20,7 @@ namespace WorldMap.Controller
         private const int ECHO_CODE_TEAM = 2;
         private static string[] btnsStrs = { "酒馆", "学校", "商店", "" };
         private TavernController tavernController;
-        private Model.Town currentTown;
+        private Model.TownData currentTown;
         private Text townInfoText;
         private Button[] btns;
         protected override void CreateModel()
@@ -52,7 +52,7 @@ namespace WorldMap.Controller
                 ViewTool.SetParent(btns[i], btnsRect);
             }
         }
-        public void SetTown(Model.Town town)
+        public void SetTown(Model.TownData town)
         {
             currentTown = town;
         }
@@ -67,13 +67,13 @@ namespace WorldMap.Controller
         public void RefreshView()
         {
             SetTitle(currentTown.Name);
-            townInfoText.text = currentTown.Info;
+            townInfoText.text = currentTown.ToString();
             float delta;
             int showCount;
             if (currentTown.TownType != ETownType.COMMON)
             {
                 showCount = btnsStrs.Length;
-                ViewTool.SetBtnContent(btns[btnsStrs.Length - 1], currentTown.SpecialBuilding);
+                ViewTool.SetBtnContent(btns[btnsStrs.Length - 1], currentTown.Info.TavernName);
                 delta = 1.0f / btnsStrs.Length;
             }
             else
