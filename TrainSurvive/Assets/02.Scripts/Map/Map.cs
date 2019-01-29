@@ -76,7 +76,12 @@ namespace WorldMap {
             }
             return true;
         }
-
+        public Vector2Int CalArea(Vector2Int position)
+        {
+            int x = (position.x * towns.GetLength(0)) / colNum;
+            int y = (position.y * towns.GetLength(1)) / rowNum;
+            return new Vector2Int(x, y);
+        }
         /// <summary>
         /// 判断点是否在地图内部
         /// </summary>
