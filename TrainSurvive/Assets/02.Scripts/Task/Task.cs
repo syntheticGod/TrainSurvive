@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using TTT.Item;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using WorldBattle;
 
 [System.Serializable]
 public class Task  {
@@ -36,7 +37,7 @@ public class Task  {
     /// 奖励金钱，目前例子里暂时都为0
     /// </summary>
     public int rewardMoney=0;
-    private SpecialBattle task_battle =null;
+    public SpecialBattle task_battle =null;
     /// <summary>
     /// 尝试接取任务，只有当任务处于可接取状态调用才有效，调用后状态变为进行中，有时接取任务意味着地图上会生成特殊战斗
     /// </summary>
@@ -47,7 +48,8 @@ public class Task  {
         if (condition != TaskController.TASKCONDITION.CAN_DO)
             return has_talk_ballte();
 
-
+        if(task_battle!=null&& !task_battle.is_talk_battle)
+            SpecialBattleInitializer.getInstance().generateSpecialBattle(task_battle);
 
         condition = TaskController.TASKCONDITION.DOING;
         return has_talk_ballte();
@@ -59,6 +61,7 @@ public class Task  {
     {
         if (has_talk_ballte())
         {
+            InitEnemys.setNextTalkBattle(task_battle.id);
             TimeController.getInstance()?.changeScene(true);
             SceneManager.LoadScene("BattleScene");
         }
@@ -116,4 +119,6 @@ public class Task  {
             result = task_battle.is_talk_battle;
         return result;
     }
+
+
 }

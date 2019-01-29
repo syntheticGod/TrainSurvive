@@ -30,7 +30,7 @@
     </rewardList >
   </battle>
 
-  <battle id="7" name="黑暗森林" expNum="25" type="generate" posX="2" posY="0">
+  <battle id="7" name="黑暗森林" expNum="25" type="generate" posX="now" posY="now">
     <monsterList>
       <monster id="16" num="1" />
     </monsterList >
@@ -39,7 +39,7 @@
     </rewardList >
   </battle>
 
-  <battle id="8" name="父神之怒" expNum="15" type="talk">
+  <battle id="8" name="父神之怒" expNum="15" type="generate" posX="2" posY="0">
     <monsterList>
       <monster id="17" num="1" />
     </monsterList >

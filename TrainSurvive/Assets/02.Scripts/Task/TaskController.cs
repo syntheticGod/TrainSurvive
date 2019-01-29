@@ -26,6 +26,10 @@ public class TaskController  {
     private static TaskController instance = null;
 
     public Task[] TaskList = new Task[taskMaxIndex];
+    /// <summary>
+    /// 前者为battleid,后者为taskid
+    /// </summary>
+    private SerializableDictionary<int, int> battleid_taskid_dic = new SerializableDictionary<int, int>();
 
     private TaskController()
     {
@@ -60,7 +64,8 @@ public class TaskController  {
                         foreach (XmlElement influence in influenceList)
                         {
                             int battleId = int.Parse(influence.Attributes["id"].Value);
-                            //待补充，加载特殊战斗信息
+                            task.task_battle = SpecialBattleInitializer.getInstance().loadBattle(battleId);
+                            con.battleid_taskid_dic.Add(battleId, task.id);
                         }
                     }
 
@@ -144,6 +149,16 @@ public class TaskController  {
     {
         return TaskList[taskId];
     }
+    /// <summary>
+    /// 返回特殊战斗，不存在返回null
+    /// </summary>
+    /// <param name="battleId"></param>
+    /// <returns></returns>
+    public SpecialBattle getBattle(int battleId)
+    {
+        if (battleid_taskid_dic.ContainsKey(battleId))
+            return null;
 
-    
+        return TaskList[battleid_taskid_dic[battleId]].task_battle;
+    }
 }

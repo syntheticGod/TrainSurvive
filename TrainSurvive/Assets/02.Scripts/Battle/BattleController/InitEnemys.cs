@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using TTT.Utility;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace WorldBattle
 {
@@ -17,12 +18,8 @@ namespace WorldBattle
         /// <summary>
         /// 用于判断是否是通过对话进入的战斗，注意在经过一次敌人生成完毕后要重新设置为false
         /// </summary>
-        private static bool is_talkbattle = false;
-
-        public static void setMode_talkBattle()
-        {
-            is_talkbattle = true;
-        }
+        private static bool nextBattleIs_talkbattle = false;
+        private static int nextBatttle_talk_id;
         /// <summary>
         /// 初始化敌人
         /// 创建GameObject
@@ -37,7 +34,7 @@ namespace WorldBattle
             //获取battleController
             BattleController battleController = BattleController.getInstance();
 
-            if (!is_talkbattle)//不是对话进入的战斗，而是通过进入地图地块触发的战斗
+            if (!nextBattleIs_talkbattle)//不是对话进入的战斗，而是通过进入地图地块触发的战斗
             {
 
                 //获取探险队所在地块的怪物难度系数或者特殊战斗id
@@ -105,58 +102,109 @@ namespace WorldBattle
                             InitPlayers.initPersonPara(ref battleActor, 1.0f);
                             */
                             //初始化人物的位置
-                            battleActor.pos = battleController.battleMapLen;
-                            //赋值人物id
-                            battleActor.myId = i;
-                            //初始化人物是否为玩家角色
-                            battleActor.isPlayer = false;
-
-                            //创建一个新的panel
-                            GameObject curPanel = Instantiate(battleController.enemyPanel);
-                            //将panel增加到panel列表中
-                            battleController.enemyPanels.Add(curPanel);
-                            //将当前的panel绑定到canvas中
-                            curPanel.transform.SetParent(battleController.curCanvas.transform);
-
-                            //设置敌人是右上角（从右向左）
-                            RectTransform rect = curPanel.GetComponent<RectTransform>();
-                            rect.pivot = Vector2.one;
-                            rect.anchorMin = Vector2.one;
-                            rect.anchorMax = Vector2.one;
-                            rect.anchoredPosition = new Vector3();
-
-                            //改变rect的位置
-                            curPanel.transform.position -=
-                                new Vector3(curPanel.GetComponent<RectTransform>().rect.width * i, 0, 0);
-                            //绑定战斗角色和操作表
-                            PanelBind.bindEnemyPanel(battleActor, curPanel.transform);
-
-                            //绑定玩家的姓名
-                            battleActor.nameText.text = "敌人" + (i + 1);
-
-                            //添加到玩家列表中
-                            battleController.enemyActors.Add(battleActor);
+                            setBattleActorInfo(ref battleActor, i);
                         }
                         break;
 
                     case WorldMap.SpawnPoint.SpecialTerrainEnum.SPECIAL_AREA:
                         int specialBattle_id = monsterLevel;
-                        //根据id获取特殊战斗信息，
-                        //battleController.dropsList..
-                        break;
+                        //根据id获取特殊战斗信息
+                        SpecialBattle battleInfo =SpecialBattleInitializer.getInstance().getBattle(specialBattle_id);
+                        foreach(ValueTuple<int, int> monsterTurple in battleInfo.monsterList)
+                        {
+                            int index = 0;
+                            for(int i=0;i< monsterTurple.Item2; i++)
+                            {
+                                //生成敌人
+                                GameObject curPlayer = Instantiate(battleController.player,battleController.orign,Quaternion.identity);
+                                curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
-                }
-
-
-               
+                                BattleActor battleActor;
+                                MonsterInitializer mi = MonsterInitializer.getInstance();
+                                mi.initializeMonster(ref curPlayer, monsterTurple.Item1);
+                                battleActor = mi.getBattleActor();
+                                setBattleActorInfo(ref battleActor, index);
+                                index++;
+                            }                                                      
+                        }
+                        foreach (ValueTuple<int, int> rewardTurple in battleInfo.rewardList)//添加战利品，目前仅特殊战斗有指定战利品
+                        {
+                            battleController.dropsList.Add(rewardTurple);
+                        }                           
+                            break;
+                }     
             }
             else
             {//是对话进入的战斗
+                //根据id获取特殊战斗信息
+                SpecialBattle battleInfo = SpecialBattleInitializer.getInstance().getBattle(nextBatttle_talk_id);
+                foreach (ValueTuple<int, int> monsterTurple in battleInfo.monsterList)
+                {
+                    int index = 0;
+                    for (int i = 0; i < monsterTurple.Item2; i++)
+                    {
+                        //生成敌人
+                        GameObject curPlayer = Instantiate(battleController.player, battleController.orign, Quaternion.identity);
+                        curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
-                is_talkbattle = false;
+                        BattleActor battleActor;
+                        MonsterInitializer mi = MonsterInitializer.getInstance();
+                        mi.initializeMonster(ref curPlayer, monsterTurple.Item1);
+                        battleActor = mi.getBattleActor();
+                        setBattleActorInfo(ref battleActor, index);
+                        index++;
+                    }
+                }
+                foreach (ValueTuple<int, int> rewardTurple in battleInfo.rewardList)//添加战利品，目前仅特殊战斗有指定战利品
+                {
+                    battleController.dropsList.Add(rewardTurple);
+                }
+                nextBattleIs_talkbattle = false;
             }
            
         }
-    }
+
+        private static void setBattleActorInfo(ref BattleActor battleActor,int index)
+        {
+            //初始化人物的位置
+            BattleController battleController = BattleController.getInstance();
+            battleActor.pos = battleController.battleMapLen;
+            //赋值人物id
+            battleActor.myId = index;
+            //初始化人物是否为玩家角色
+            battleActor.isPlayer = false;
+            //创建一个新的panel
+            GameObject curPanel = Instantiate(battleController.enemyPanel);
+            //将panel增加到panel列表中
+            battleController.enemyPanels.Add(curPanel);
+            //将当前的panel绑定到canvas中
+            curPanel.transform.SetParent(battleController.curCanvas.transform);
+            //设置敌人是右上角（从右向左）
+            RectTransform rect = curPanel.GetComponent<RectTransform>();
+            rect.pivot = Vector2.one;
+            rect.anchorMin = Vector2.one;
+            rect.anchorMax = Vector2.one;
+            rect.anchoredPosition = new Vector3();
+            //改变rect的位置
+            curPanel.transform.position -=
+                new Vector3(curPanel.GetComponent<RectTransform>().rect.width * index, 0, 0);
+            //绑定战斗角色和操作表
+            PanelBind.bindEnemyPanel(battleActor, curPanel.transform);
+            //绑定玩家的姓名
+            battleActor.nameText.text = "敌人" + (index + 1);
+            //添加到玩家列表中
+            battleController.enemyActors.Add(battleActor);
+        }
+
+        /// <summary>
+        /// 只有在进入对话战斗场景才能调用
+        /// </summary>
+        /// <param name="battleId"></param>
+        public static void setNextTalkBattle(int battleId)
+        {
+            nextBattleIs_talkbattle = true;
+            nextBatttle_talk_id = battleId;
+        }
+    } 
 }
 
