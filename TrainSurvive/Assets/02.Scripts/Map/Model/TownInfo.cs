@@ -8,6 +8,7 @@ using UnityEngine;
 using System;
 using System.Xml;
 using System.Runtime.Serialization;
+using TTT.Utility;
 
 namespace WorldMap.Model
 {
@@ -94,6 +95,13 @@ namespace WorldMap.Model
             townInfo.PosInArea = new Vector2Int(posx, posy);
             return townInfo;
         }
-
+        /// <summary>
+        /// 随机获取一个普通城镇的ID
+        /// </summary>
+        /// <returns></returns>
+        public static int RandomCommenID()
+        {
+            return MathTool.RandomRange(1000, Increasement);
+        }
     }
 }

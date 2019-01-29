@@ -91,18 +91,6 @@ public class World
     private uint foodOutMax = 0;
     private float energyMax = 1000;
     private float electricityMax = 1000;
-    //----------物品----------↓
-    //public float trainInventoryMaxSize = 50;    //需要使用相关方法来确定这个属性的值，然后其他的Inventory系统会自己使用它
-    //public float trainInventoryCurSize = 0;
-    //public List<ItemData> itemDataInTrain = new List<ItemData>();
-    //public List<ItemData> itemDataInTeam = new List<ItemData>();
-    /// <summary>
-    /// 仓库——探险队和列车都同用一个仓库
-    /// </summary>
-    public Storage storage = new Storage();
-    //public List<int> itemIDs;
-    //public List<int> itemNums;
-    //----------物品----------↑
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt = 1;
@@ -140,12 +128,13 @@ public class World
     public int numPersonPlayer = 1;
     public int numPersonWolrd = 101;
     public int numBuildInst = 101;
-
-
-    //public gridMap[,] gridsMap=new gridMap[mapWidth, mapHeight];
-    //public gridTrain[,] gridsTrain = new gridTrain[trainWidth, trainHeight];
-
+    
+    /// <summary>
+    /// 仓库——探险队和列车都同用一个仓库
+    /// </summary>
+    public Storage storage = new Storage();
     public TownDataSet Towns = new TownDataSet();
+    public NpcDataSet Npcs = new NpcDataSet();
     public List<Person> persons = new List<Person>();
     public Person GetPerson(int index)
     {

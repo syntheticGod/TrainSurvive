@@ -40,7 +40,7 @@ namespace Story.Scripts{
                 List<string> sentences = new List<string>();
                 foreach(XmlNode sentenceNode in sentencesNode)
                     sentences.Add(sentenceNode.InnerText);
-                Debug.Log("name:" + node.Name);
+                //Debug.Log("name:" + node.Name);
                 texts.Add(node.Name, sentences);
             }
                 

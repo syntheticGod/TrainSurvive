@@ -21,10 +21,12 @@ namespace WorldMap.Model
         {
             Pos = pos;
             Info = info;
+            Npcs = new List<int>();
         }
         public TownData(SerializationInfo info, StreamingContext context)
         {
             Info = info.GetValue("TownInfo", typeof(TownInfo)) as TownInfo;
+            Npcs = info.GetValue("Npcs", typeof(List<int>)) as List<int>;
             int posx = info.GetInt32("PosX");
             int posy = info.GetInt32("PosY");
             Pos = new Vector2Int(posx, posy);
@@ -32,23 +34,22 @@ namespace WorldMap.Model
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("TownInfo", Info, typeof(TownInfo));
+            info.AddValue("Npcs", Npcs, typeof(List<int>));
             info.AddValue("PosX", Pos.x, typeof(int));
             info.AddValue("PosY", Pos.y, typeof(int));
         }
         public TownInfo Info { get; private set; }
         public Vector2Int Pos { get; private set; }
+        public List<int> Npcs { get; private set; }
 
-        public ETownType TownType { get { return Info.Type; } }
         public int ID { get { return Info.ID; } }
-        public string Name { get { return Info.Name; } }
 
-        
         /// <summary>
         /// 招募NPC
         /// </summary>
         /// <param name="theOne"></param>
         /// <returns></returns>
-        public bool RecruitNPC(NpcData theOne)
+        public bool RecruitNPC(int theOne)
         {
             //if (!NPCs.Remove(theOne))
             //{
@@ -108,7 +109,7 @@ namespace WorldMap.Model
         }
         public override string ToString()
         {
-            return "城镇名：" + Name + " ";
+            return "城镇ID：" + ID + "；城镇名：" + Info.Name ;
         }
 
     }

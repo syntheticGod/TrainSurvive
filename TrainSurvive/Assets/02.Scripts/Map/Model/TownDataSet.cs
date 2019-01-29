@@ -28,16 +28,12 @@ namespace WorldMap.Model
 
         public void Init()
         {
+            init = true;
             posToTown = new Dictionary<Vector2Int, TownData>();
             idToTown = new Dictionary<int, TownData>();
             //设置坐标到城镇的索引
             foreach (TownData townData in towns)
             {
-                if (townData == null)
-                {
-                    Debug.LogError("townData is null");
-                    continue;
-                }
                 posToTown.Add(townData.Pos, townData);
                 idToTown.Add(townData.ID, townData);
             }
@@ -87,7 +83,22 @@ namespace WorldMap.Model
         {
             return PosToTown.TryGetValue(pos, out town);
         }
-
-
+        public bool Find(int id, out TownData town)
+        {
+            return IdToTown.TryGetValue(id, out town);
+        }
+        public bool Find(int xInAre, int yInAre, out TownData town)
+        {
+            foreach(TownData data in towns)
+            {
+                if(data.Info.PosInArea.x == xInAre && data.Info.PosInArea.y == yInAre)
+                {
+                    town = data;
+                    return true;
+                }
+            }
+            town = null;
+            return false;
+        }
     }
 }

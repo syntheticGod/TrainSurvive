@@ -9,12 +9,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-using Story.Faker;
 using Story.MyTools;
-using Story.Scripts;
 
 using TTT.Resource;
-using WorldMap.Model;
 
 namespace Story.Communication
 {
@@ -22,8 +19,8 @@ namespace Story.Communication
     public class ChatRoom
     {
 
-        List<NpcData> persons;
-        public ChatRoom(List<NpcData> members)
+        List<int> persons;
+        public ChatRoom(List<int> members)
         {
             persons = members;
         }
@@ -42,18 +39,18 @@ namespace Story.Communication
 #if DEBUG
             for (int i = 0; i < shuffled.Count; i++)
             {
-                Debug.Log("人物排序 ：" + shuffled[i]);
+                //Debug.Log("人物排序 ：" + shuffled[i]);
             }
 #endif
             List<KeyValuePair<chatType, List<int>>> chatPattern = matchChatType(divided);
             for (int i = 0; i < chatPattern.Count; i++)
             {
-                Debug.Log("----" + chatPattern[i].Key.ToString());
+                //Debug.Log("----" + chatPattern[i].Key.ToString());
                 List<int> g = chatPattern[i].Value;
 #if DEBUG
                 for (int j = 0; j < g.Count; j++)
                 {
-                    Debug.Log(g[j]);
+                    //Debug.Log(g[j]);
                 }
 #endif
             }

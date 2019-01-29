@@ -29,60 +29,25 @@ namespace WorldMap.Controller
         private TownChatListView townChatListView;
         private NullListView nullListView;
         private Button[] chatBtns;
-        private Model.TownData currentTown;
+        private TownData currentTown;
         private ChatRoom chatRoom;
         private List<KeyValuePair<int, string>> chatSentences;
         private List<ChatSentence>[] sentences;
-        private List<NpcData> npcs;
         List<int> nullData;
-        public void SetTown(Model.TownData town)
+        public void SetTown(TownData town)
         {
             currentTown = town;
-            //npcs = town.NPCs;
-            npcs = null;
-            //chatRoom = new ChatRoom(town.NPCs);
+            chatRoom = new ChatRoom(town.Npcs);
             chatSentences = chatRoom.chat();
-            //sentences = new List<ChatSentence>[town.NPCCnt + 1];
+            sentences = new List<ChatSentence>[town.Npcs.Count + 1];
             for (int i = 0; i < sentences.Length; i++)
                 sentences[i] = new List<ChatSentence>();
             foreach (KeyValuePair<int, string> sentence in chatSentences)
-            {
-                NpcData npc = town.FindNPCByID(sentence.Key);
-                if (npc == null)
-                {
-                    Debug.LogError("在城市" + town.Name + "中找不到指定NPC：" + sentence.Key);
-                    continue;
-                }
-                string content = sentence.Value;
-                //替换@+id 为 @+NPC名字
-                int atIndex = content.IndexOf('@');
-                if (atIndex != -1)
-                {
-                    string at = content;
-                    //去掉@前面的字符串
-                    at = at.Remove(0, atIndex);
-                    int endIndex = 1;
-                    while (endIndex < at.Length && at[endIndex] >= '0' && at[endIndex] <= '9')
-                        endIndex++;
-                    at = at.Remove(endIndex, at.Length - endIndex);
-                    string id = at.Remove(0, 1);
-                    try
-                    {
-                        NpcData target = town.FindNPCByID(int.Parse(id));
-                        if(target != null)
-                            content = content.Replace(at, "@"+target.Name+" ");
-                    }
-                    catch (System.FormatException e)
-                    {
-                        Debug.LogError(id+"  "+e.ToString());
-                    }
-                }
-                sentences[0].Add(new ChatSentence(npc, content));
-            }
+                sentences[0].Add(new ChatSentence(sentence.Key, sentence.Value));
         }
         protected override void CreateModel()
         {
-            m_titleString = "酒馆";
+            m_titleString = currentTown.Info.TavernName;
             m_windowSizeType = EWindowSizeType.MIDDLE14x12;
             base.CreateModel();
             SetBackground("tavern_bg_01");
@@ -137,14 +102,14 @@ namespace WorldMap.Controller
         }
         protected override void AfterShowWindow()
         {
-            tavernNPCListView.Datas = npcs;
+            tavernNPCListView.Datas = currentTown.Npcs;
             tavernNPCListView.ClickManually(0);
             townChatListView.Datas = sentences[0];
             nullListView.Datas = nullData;
         }
-        public void OnItemClick(ListViewItem item, NpcData npc)
+        public void OnItemClick(ListViewItem item, int npc)
         {
-            selectedIndex = npcs.IndexOf(npc);
+            selectedIndex = currentTown.Npcs.IndexOf(npc);
             for (int i = 0; i < chatBtns.Length; i++)
             {
                 chatBtns[i].GetComponentInChildren<Text>().text = personalChatBtnsStrs[i];
@@ -171,15 +136,13 @@ namespace WorldMap.Controller
                     if (selectedIndex != UNSELECTED)
                     {
                         //私聊：最近过的怎么样
-                        //NpcData npc = currentTown.NPCs[selectedIndex];
-                        NpcData npc = null;
+                        int npc = currentTown.Npcs[selectedIndex];
                         chat = new ChatSentence(npc, "挺好的");
                     }
                     else
                     {
                         //公聊选项1：大家好
-                        //List<NpcData> npcs = currentTown.NPCs;
-                        List<NpcData> npcs = null;
+                        List<int> npcs = currentTown.Npcs;
                         if (npcs.Count == 0)
                         {
                             chat = new ChatSentence("回响", chatBtnsStrs[id - BUTTON_ID.TAVERN_NONE - 1]);
@@ -187,7 +150,7 @@ namespace WorldMap.Controller
                         else
                         {
                             int randomIndex = MathTool.RandomInt(npcs.Count);
-                            NpcData randomNPC = npcs[randomIndex];
+                            int randomNPC = npcs[randomIndex];
                             chat = new ChatSentence(randomNPC, "你好");
                         }
                     }
@@ -203,17 +166,16 @@ namespace WorldMap.Controller
                             InfoDialog.Show("人物已满，无法招募更多的人");
                             return;
                         }
-                        //NpcData currentNPC = currentTown.NPCs[selectedIndex];
-                        NpcData currentNPC = null;
+                        int currentNPC = currentTown.Npcs[selectedIndex];
                         if (!currentTown.RecruitNPC(currentNPC))
                         {
                             Debug.LogError("系统：招募NPC失败");
                             break;
                         }
-                        if (WorldForMap.Instance.IfTeamOuting)
-                            Team.Instance.CallBackRecruit(currentNPC.PersonInfo);
-                        else
-                            Train.Instance.CallBackRecruit(currentNPC.PersonInfo);
+                        //if (WorldForMap.Instance.IfTeamOuting)
+                        //    Team.Instance.CallBackRecruit(currentNPC.PersonInfo);
+                        //else
+                        //    Train.Instance.CallBackRecruit(currentNPC.PersonInfo);
                         tavernNPCListView.RemoveData(currentNPC);
                         tavernNPCListView.ClickManually(0);
                         break;

@@ -6,37 +6,22 @@
  */
 using System;
 using TTT.Utility;
+using TTT.Xml;
 
 namespace WorldMap.Model
 {
     [Serializable]
     public class NpcData
     {
-
-        public Person PersonInfo { private set; get; }
-        public string Name { get { return PersonInfo.name; } }
-        public int Strength { get { return PersonInfo.strength; } }
         public int ID { get; private set; }
-        private NpcData()
+        public NpcInfo Info { get { return NpcInfoLoader.Instance.Find(ID); } }
+        public NpcData(int id)
         {
-            PersonInfo = Person.RandomPerson();
-            ID = MathTool.GenerateID();
+            ID = id;
         }
-        public static NpcData Random()
+        public override string ToString()
         {
-            return new NpcData();
-        }
-        public string Info
-        {
-            get
-            {
-                return "名字：" + PersonInfo.name + "\n" +
-                    "力量：" + PersonInfo.strength + 
-                    " 体力：" + PersonInfo.vitality + 
-                    " 敏捷：" + PersonInfo.agile + 
-                    "\n技巧：" + PersonInfo.technique + 
-                    " 智力：" + PersonInfo.intelligence;
-            }
+            return "ID：" + ID + "；名字：" + Info.Name;
         }
     }
 }

@@ -34,10 +34,6 @@ namespace TestWorldMap.UI
         }
         private void TestAppendItem()
         {
-            listViewController.AddItem(NpcData.Random().PersonInfo);
-            listViewController.AddItem(NpcData.Random().PersonInfo);
-            listViewController.AddItem(NpcData.Random().PersonInfo);
-            listViewController.AddItem(NpcData.Random().PersonInfo);
         }
     }
 }

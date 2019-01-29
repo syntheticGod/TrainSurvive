@@ -10,20 +10,22 @@ using UnityEngine.UI;
 using TTT.Utility;
 using TTT.UI.ListView;
 using WorldMap.Model;
+using TTT.Xml;
 
 namespace WorldMap.UI
 {
-    public class TavernNPCListView : BaseListView<NpcData>
+    public class TavernNPCListView : BaseListView<int>
     {
         private static string[] persistentStrs = new string[] { "大厅" };
         protected override int GetPersistentCount()
         {
             return persistentStrs.Length;
         }
-        protected override void OnItemView(ListViewItem item, NpcData data, int itemIndex)
+        protected override void OnItemView(ListViewItem item, int id, int itemIndex)
         {
-            ViewTool.ForceGetComponentInChildren<PersonBaseItem>(item, "NPC").GetComponentInChildren<Text>().text = data.Name;
-            item.Tag = data;
+            NpcInfo info = NpcInfoLoader.Instance.Find(id);
+            ViewTool.ForceGetComponentInChildren<PersonBaseItem>(item, "NPC").GetComponentInChildren<Text>().text = info.Name;
+            item.Tag = info;
         }
         protected override void OnPersistentItemView(ListViewItem item, int index)
         {

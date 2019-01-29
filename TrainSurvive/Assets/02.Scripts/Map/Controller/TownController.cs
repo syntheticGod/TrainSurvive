@@ -66,11 +66,11 @@ namespace WorldMap.Controller
         }
         public void RefreshView()
         {
-            SetTitle(currentTown.Name);
+            SetTitle(currentTown.Info.Name);
             townInfoText.text = currentTown.ToString();
             float delta;
             int showCount;
-            if (currentTown.TownType != ETownType.COMMON)
+            if (currentTown.Info.Type != ETownType.COMMON)
             {
                 showCount = btnsStrs.Length;
                 ViewTool.SetBtnContent(btns[btnsStrs.Length - 1], currentTown.Info.TavernName);
