@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TTT.Item;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Task  {
@@ -17,7 +18,7 @@ public class Task  {
     public string name;
     public string description;
     /// <summary>
-    /// 任务状态
+    /// 任务状态，可以直接通过判断任务状态进行后续操作
     /// </summary>
     public TaskController.TASKCONDITION condition;
 
@@ -35,6 +36,33 @@ public class Task  {
     /// 奖励金钱，目前例子里暂时都为0
     /// </summary>
     public int rewardMoney=0;
+    private SpecialBattle task_battle =null;
+    /// <summary>
+    /// 尝试接取任务，只有当任务处于可接取状态调用才有效，调用后状态变为进行中，有时接取任务意味着地图上会生成特殊战斗
+    /// </summary>
+    /// <returns>为true代表该任务有对话战斗，需要ui控件调用任务方法进入
+    ///          为false说明没有</returns>
+    public bool get_task()
+    {
+        if (condition != TaskController.TASKCONDITION.CAN_DO)
+            return has_talk_ballte();
+
+
+
+        condition = TaskController.TASKCONDITION.DOING;
+        return has_talk_ballte();
+    }
+    /// <summary>
+    /// 切换场景，进入该任务的对话战斗，只在该任务确实有对话战斗时才有效
+    /// </summary>
+    public void enter_talk_battle()
+    {
+        if (has_talk_ballte())
+        {
+            TimeController.getInstance()?.changeScene(true);
+            SceneManager.LoadScene("BattleScene");
+        }
+    }
     /// <summary>
     /// 尝试交付任务，只有当前任务状态处于进行中调用才有效，如果满足任务完成条件则任务状态变成可交付CAN_FINISH，有时交付意味着上交任务物品
     /// </summary>
@@ -65,7 +93,6 @@ public class Task  {
         if (condition != TaskController.TASKCONDITION.CAN_FINISH)
             return;
 
-
         TaskController con = TaskController.getInstance();
         foreach(int taskId in LatterTaskIDList)
         {
@@ -80,5 +107,13 @@ public class Task  {
         if (rewardMoney > 0)
             World.getInstance().addMoney(rewardMoney);
         condition = TaskController.TASKCONDITION.FINISH;
+    }
+
+    private bool has_talk_ballte()
+    {
+        bool result = false;
+        if (task_battle != null)
+            result = task_battle.is_talk_battle;
+        return result;
     }
 }

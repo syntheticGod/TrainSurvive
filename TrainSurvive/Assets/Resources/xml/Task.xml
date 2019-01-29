@@ -44,6 +44,9 @@
   </task>
 
   <task id="5" name="黑暗森林" condition="0" description="前往黑暗森林寻找圣药，并带回给弗里茨。">
+    <influenceList>
+      <battle id="7" />
+    </influenceList>
     <requimentList>
       <requiment type="giveItem" itemId="706" num="1" />
     </requimentList>
@@ -84,6 +87,9 @@
   </task>
 
   <task id="9" name="双宿双飞" condition="0" description="找到并击败雄巨神鹰，取得它的血。">
+    <influenceList>
+      <battle id="5" />
+    </influenceList>
     <requimentList>
       <requiment type="giveItem" itemId="707" num="1" />
     </requimentList>

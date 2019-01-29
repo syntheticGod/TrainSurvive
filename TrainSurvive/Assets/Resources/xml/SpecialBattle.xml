@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<battlelist>
+  <battle id="2" name="知行合一" expNum="50" type="talk">
+    <monsterList>
+      <monster id="23" num="1" /> 
+    </monsterList >
+  </battle>
+
+  <battle id="3" name="狮王之吼" expNum="10" type="talk">
+    <monsterList>
+      <monster id="24" num="1" />
+    </monsterList >
+  </battle>
+  
+  <battle id="4" name="神鹰之血" expNum="15" type="generate" posX="0" posY="2">
+    <monsterList>
+      <monster id="19" num="1" />
+    </monsterList >
+    <rewardList>
+      <reward type="item" id="705" num="1" />
+    </rewardList >
+  </battle>
+
+  <battle id="5" name="双宿双飞" expNum="20" type="generate" posX="0" posY="2">
+    <monsterList>
+      <monster id="20" num="1" />
+    </monsterList >
+    <rewardList>
+      <reward type="item" id="707" num="1" />
+    </rewardList >
+  </battle>
+
+  <battle id="7" name="黑暗森林" expNum="25" type="generate" posX="2" posY="0">
+    <monsterList>
+      <monster id="16" num="1" />
+    </monsterList >
+    <rewardList>
+      <reward type="item" id="706" num="1" />
+    </rewardList >
+  </battle>
+
+  <battle id="8" name="父神之怒" expNum="15" type="talk">
+    <monsterList>
+      <monster id="17" num="1" />
+    </monsterList >
+    <rewardList>
+      <reward type="item" id="708" num="1" />
+    </rewardList >
+  </battle>
+
+  <battle id="9" name="挑战弗雷兹" expNum="15" type="talk">
+    <monsterList>
+      <monster id="25" num="1" />
+    </monsterList >
+  </battle>
+
+  <battle id="10" name="车轮战I" expNum="15" type="talk">
+    <monsterList>
+      <monster id="26" num="1" />
+    </monsterList >
+  </battle>
+
+  <battle id="11" name="车轮战II" expNum="20" type="talk">
+    <monsterList>
+      <monster id="27" num="1" />
+    </monsterList >
+  </battle>
+
+  <battle id="12" name="车轮战III" expNum="25" type="talk">
+    <monsterList>
+      <monster id="28" num="1" />
+    </monsterList >
+  </battle>
+</battlelist>

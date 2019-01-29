@@ -5,6 +5,7 @@
  * 版本：v0.1
  */
 using Assets._02.Scripts.zhxUIScripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TTT.Item;
@@ -56,6 +57,8 @@ namespace WorldBattle {
         //掉落战利品的gameObject
         public GameObject dropSpoilsPanelPrefab;
         private GameObject dropSpoilsPanel;
+        //战后的战利品列表，由初始化敌人每个怪物添加（还没写），以及特殊战斗会额外给予战利品，目前不考虑金钱为战利品，元组前者为物品id后者为物品数量
+        public List<ValueTuple<int, int>> dropsList=new List<ValueTuple<int, int>>();
 
         //敌人的显示面板Prefab
         public GameObject enemyPanel;
@@ -192,6 +195,16 @@ namespace WorldBattle {
             HelpGameObjectAnchor.setCenter(dropSpoilsPanel);
 
             //获取掉落的战利品
+            int index = 0;
+            foreach(ValueTuple<int,int> t in dropsList)
+            {
+                ItemData assets = new ItemData(t.Item1, t.Item2);
+                DropSpoils.setItem(dropSpoilsPanel.transform, assets, index);//貌似多个同一材料在UI组件上可能出BUG？
+                World.getInstance().storage.AddItem(assets);
+                index++;
+            }
+
+            //测试用，暂时保留
             for (int i = 0; i < 12; i++) {
                 //获取一个随机的材料
                 ItemData assets = ItemData.RandomMaterial();

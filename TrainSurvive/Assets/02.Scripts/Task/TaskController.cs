@@ -60,7 +60,7 @@ public class TaskController  {
                         foreach (XmlElement influence in influenceList)
                         {
                             int battleId = int.Parse(influence.Attributes["id"].Value);
-                            //待补充，生成特殊战斗
+                            //待补充，加载特殊战斗信息
                         }
                     }
 
