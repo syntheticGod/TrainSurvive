@@ -97,7 +97,7 @@ public class TechTree : MonoBehaviour {
             if (TechObjects[i] == null)
                 continue;
             int index = i;
-            TechObjects[index].Action = () => {
+            TechObjects[index].Action = (button) => {
                 CurrentSelect = index;
             };
             TechObjects[index].MaxValue = TechTreeManager.TechSettings[index].TotalWorks;
@@ -186,7 +186,7 @@ public class TechTree : MonoBehaviour {
         }
     }
 
-    public void ClickResearch() {
+    public void ClickResearch(ProgressButton button) {
         if (TechTreeManager.Instance.Techs[CurrentSelect].TechState == Tech.State.WORKING) {
             TechTreeManager.Instance.CurrentWorking = -1;
         } else if (TechTreeManager.Instance.Techs[CurrentSelect].TechState == Tech.State.UNLOCKED) {

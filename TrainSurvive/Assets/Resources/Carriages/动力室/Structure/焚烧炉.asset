@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
+  m_Name: "\u711A\u70E7\u7089"
+  m_EditorClassIdentifier: 
+  Name: "\u711A\u70E7\u7089"
+  HasUI: 1
+  Initializer: Item_EnergyStructure
+  InitializeValues:
+  - Name: _conversions
+    TypeName: Item_EnergyStructure+Conversion[]
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue:
+    - ItemID: 235
+      EnergyRate: 3
+      ProcessTimeRatio: 0.2
+      ProduceEnergyRatio: 10
+    - ItemID: 236
+      EnergyRate: 3
+      ProcessTimeRatio: 0.2
+      ProduceEnergyRatio: 10
+    - ItemID: 237
+      EnergyRate: 0.8
+      ProcessTimeRatio: 0.4
+      ProduceEnergyRatio: 10
+    - ItemID: 238
+      EnergyRate: 1.2
+      ProcessTimeRatio: 0.4
+      ProduceEnergyRatio: 10
+    - ItemID: 239
+      EnergyRate: 1.8
+      ProcessTimeRatio: 0.4
+      ProduceEnergyRatio: 10
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _conversionRate
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0.8
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _processSpeed
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 1
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _energyType
+    TypeName: Item_EnergyStructure+EnergyType
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 4e45d34cddb5ca9429f431b356b8d09c, type: 3}

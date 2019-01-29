@@ -188,6 +188,7 @@ public class World
     public int[] personTeamIDArray;
 
 
+    public SerializableDictionary<string, CarriageBackend> carriageBackends = new SerializableDictionary<string, CarriageBackend>();
     public LinkedList<Structure> buildInstArray = new LinkedList<Structure>();
     public LinkedList<TrainCarriage> carriageInstArray = new LinkedList<TrainCarriage>();
     public bool[] carriageUnlock;

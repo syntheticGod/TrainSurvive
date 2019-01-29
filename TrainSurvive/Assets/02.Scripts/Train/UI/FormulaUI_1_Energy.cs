@@ -42,7 +42,7 @@ public class FormulaUI_1_Energy : MonoBehaviour {
             Raw.SetItemData(value.ID, value.Number);
         }
     }
-    public Item2EnergyStructure.EnergyType OutputType {
+    public Item_EnergyStructure.EnergyType OutputType {
         get {
             return _outputType;
         }
@@ -81,7 +81,7 @@ public class FormulaUI_1_Energy : MonoBehaviour {
     public event Action<int> OnPriorityChanged;
 
     private ItemData _rawItem;
-    private Item2EnergyStructure.EnergyType _outputType;
+    private Item_EnergyStructure.EnergyType _outputType;
     private int _outputCount, _time;
 
     private void Awake() {

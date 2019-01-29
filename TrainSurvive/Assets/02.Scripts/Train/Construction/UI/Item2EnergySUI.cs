@@ -26,7 +26,7 @@ public class Item2EnergySUI : FacilityUI {
         foreach (Formula<Item2EnergyStructure.Conversion> formula in Structure.Conversions) {
             FormulaUI_1_Energy formulaUI = Instantiate(FormulaPrefab, ScrollContent).GetComponent<FormulaUI_1_Energy>();
             formulaUI.RawItem = new ItemData(formula.Conversion.ItemID, 1);
-            formulaUI.OutputType = Structure.GeneratedEnergyType;
+            //formulaUI.OutputType = Structure.GeneratedEnergyType;
             formulaUI.OutputCount = (int)(formula.Conversion.ProduceEnergy * Structure.ConversionRate * Structure.ConversionRateRatio);
             formulaUI.Time = (int)(formula.Conversion.ProcessTime * 10 / (Structure.ProcessSpeed * Structure.ProcessSpeedRatio));
             formulaUI.OnPriorityChanged += (priority) => {
