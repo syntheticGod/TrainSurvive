@@ -83,7 +83,6 @@ public abstract class CarriageBackend : ISerializable {
     #region 序列化组
     public CarriageBackend() {
         UpgradedID = new SortedSet<int>();
-        UpgradedID.Add(-1);
         Start();
     }
     protected CarriageBackend(SerializationInfo info, StreamingContext context) {

@@ -10,6 +10,10 @@ using UnityEngine.UI;
 
 public class CarriageUI : MonoBehaviour {
 
+    [Tooltip("初始显示的UI")]
+    [SerializeField]
+    private string[] InitialUIs;
+
     #region 资源
     private GameObject P_pageButton {
         get {
@@ -97,13 +101,14 @@ public class CarriageUI : MonoBehaviour {
             GameObject buttonInst = Instantiate(P_pageButton, C_pageButtonGroup);
             ProgressButton progressButton = buttonInst.GetComponent<ProgressButton>();
             buttonInst.name = name;
-            buttonInst.GetComponentInChildren<Text>().text = name;
+            buttonInst.GetComponentInChildren<Text>().text = page.name;
             progressButton.Action = OnClickPageButton;
             InitableUI initableUI = page.GetComponent<InitableUI>();
             initableUI.Init(Carriage);
             Pages.Add(name, initableUI);
             PageButtons.Add(name, progressButton);
             page.SetActive(false);
+            progressButton.gameObject.SetActive(false);
         }
         // 将研究界面加入
         C_researchPage.Init(Carriage);
@@ -112,15 +117,32 @@ public class CarriageUI : MonoBehaviour {
         C_research.Action = OnClickPageButton;
         // 初始显示研究页
         CurrentPage = "Research";
+
+        foreach(string ui in InitialUIs) {
+            ToggleUI(ui, true);
+        }
+        foreach (int id in Carriage.UpgradedID) {
+            Carriage_OnUpgraded(id);
+        }
+        Carriage.OnUpgraded += Carriage_OnUpgraded;
     }
+
     #endregion
 
     #region 私有函数
     private void OnClickPageButton(ProgressButton button) {
         CurrentPage = button.gameObject.name;
     }
+    private void Carriage_OnUpgraded(int id) {
+        if (PageButtons.ContainsKey(Carriage.ResearchSettings[id].UnlockUI)) {
+            ToggleUI(Carriage.ResearchSettings[id].UnlockUI, true);
+        }
+    }
     #endregion
 
     #region 公有函数
+    public void ToggleUI(string name, bool enable) {
+        PageButtons[name].gameObject.SetActive(enable);
+    }
     #endregion
 }

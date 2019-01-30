@@ -30,6 +30,10 @@ public class CarriageResearchSetting : ScriptableObject {
     public string Name;
     [Tooltip("描述")]
     public string Description;
+    [Tooltip("解锁的UI")]
+    public string UnlockUI;
+    [Tooltip("升级研究运算需要的参数")]
+    public string Parameter;
     [Tooltip("升级时需要更新的贴图")]
     public UpgradeSprite[] UpgradeSprites;
     [Tooltip("耗材")]

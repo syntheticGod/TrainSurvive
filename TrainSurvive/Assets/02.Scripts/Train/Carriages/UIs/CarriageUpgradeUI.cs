@@ -50,7 +50,7 @@ public class CarriageUpgradeUI : InitableUI {
         foreach (CarriageResearchSetting setting in carriage.ResearchSettings.Values) {
             GameObject upgradeItem = Instantiate(P_upgradeItem, C_ContentTransform);
             CarriageUpgradeItemUI upgradeItemUI = upgradeItem.GetComponent<CarriageUpgradeItemUI>();
-            upgradeItemUI.SetItem(carriage, setting, carriage.UpgradedID.Contains(setting.ID), setting.Dependency == -1 ? null : carriage.ResearchSettings[setting.Dependency].Name, carriage.UpgradedID.Contains(setting.Dependency));
+            upgradeItemUI.SetItem(carriage, setting, carriage.UpgradedID.Contains(setting.ID), setting.Dependency == -1 ? null : carriage.ResearchSettings[setting.Dependency].Name, setting.Dependency == -1 || carriage.UpgradedID.Contains(setting.Dependency));
         }
     }
     #endregion

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Name: "\u711A\u70E7\u7089"
   m_EditorClassIdentifier: 
   Name: "\u711A\u70E7\u7089"
-  HasUI: 1
   Initializer: Item_EnergyStructure
   InitializeValues:
   - Name: _conversions
@@ -49,7 +48,7 @@ MonoBehaviour:
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0.8
+    System_SingleValue: 0.5
     System_StringValue: 
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []

@@ -4,6 +4,7 @@
  * 创建时间：2019/1/29 20:23:02
  * 版本：v0.7
  */
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Item_EnergySUI : InitableUI {
@@ -26,6 +27,7 @@ public class Item_EnergySUI : InitableUI {
     }
 
     private Item_EnergyStructure Structure { get; set; }
+
 
     private Transform _ScrollContent;
     private GameObject _FormulaPrefab;
@@ -63,8 +65,11 @@ public class Item_EnergySUI : InitableUI {
 
     private void UpdateUI() {
         foreach (Formula<Item_EnergyStructure.Conversion> formula in Structure.Conversions) {
-            ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_Energy>().ProduceCount = formula.Count;
-            ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_Energy>().ChangeProgress(0, formula.Conversion.ProcessTime, formula.Progress);
+            FormulaUI_1_Energy formulaUI = ScrollContent.GetChild(formula.Priority).GetComponent<FormulaUI_1_Energy>();
+            formulaUI.ProduceCount = formula.Count;
+            formulaUI.ChangeProgress(0, formula.Conversion.ProcessTime, formula.Progress);
+            formulaUI.OutputCount = (int)(formula.Conversion.ProduceEnergy * Structure.ConversionRate * Structure.ConversionRateRatio);
+            formulaUI.Time = (int)(formula.Conversion.ProcessTime * 10 / (Structure.ProcessSpeed * Structure.ProcessSpeedRatio));
         }
     }
 

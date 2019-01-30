@@ -29,7 +29,7 @@ public class CarriageGameObject : MonoBehaviour {
     #endregion
 
     #region 私有属性
-    private Dictionary<string, StructureGameObject> StructureSprites { get; } = new Dictionary<string, StructureGameObject>();
+    private Dictionary<string, TrainSpriteController> StructureSprites { get; } = new Dictionary<string, TrainSpriteController>();
     #endregion
 
     #region 严禁调用的隐藏变量
@@ -55,16 +55,22 @@ public class CarriageGameObject : MonoBehaviour {
     }
 
     private void CarriageBackend_OnUpgraded(int id) {
-        throw new System.NotImplementedException();//TODO 更新贴图
+        CarriageResearchSetting setting = CarriageBackend.ResearchSettings[id];
+        foreach (CarriageResearchSetting.UpgradeSprite upgradeSprite in setting.UpgradeSprites) {
+            if (!StructureSprites.ContainsKey(upgradeSprite.Name)) {
+                StructureSprites.Add(upgradeSprite.Name, transform.Find(upgradeSprite.Name).GetComponent<TrainSpriteController>());
+            }
+            StructureSprites[upgradeSprite.Name].Level = upgradeSprite.Level;
+        }
     }
     private void UpdateSprite() {
-        // TODO 更新贴图
-    }
-    private void SetLevel(string name, int level) {
-        if (!StructureSprites.ContainsKey(name)) {
-            StructureSprites.Add(name, transform.Find(name).GetComponent<StructureGameObject>());
+        TrainSpriteController[] controllers = GetComponentsInChildren<TrainSpriteController>();
+        foreach (TrainSpriteController controller in controllers) {
+            controller.Level = controller.DefaultLevel;
         }
-        StructureSprites[name].Level = level;
+        foreach (int upgraded in CarriageBackend.UpgradedID) {
+            CarriageBackend_OnUpgraded(upgraded);
+        }
     }
     #endregion
 
