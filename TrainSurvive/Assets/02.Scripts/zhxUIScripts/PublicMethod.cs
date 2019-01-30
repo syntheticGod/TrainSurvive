@@ -164,8 +164,6 @@ namespace Assets._02.Scripts.zhxUIScripts
         /// </summary>
         /// <param name="consumeList">物品列表</param>
         /// <returns>
-        /// TRUE：有足够的物品
-        /// FALSE：没有足够的物品
         /// </returns>
         public static bool IfHaveEnoughItems(ItemData[] consumeList)    //测试成功
         {
@@ -177,6 +175,23 @@ namespace Assets._02.Scripts.zhxUIScripts
                 }
             }
             return true;
+        }
+        /// <summary>
+        /// 判断仓库中是否有充足的物品
+        /// </summary>
+        /// <param name="consumeList">物品列表</param>
+        /// <returns>
+        /// itemdata：不足的物品,number表示缺少数量
+        /// </returns>
+        public static List<ItemData> CheckItems(ItemData[] consumeList)    //测试成功
+        {
+            List<ItemData> list = new List<ItemData>(); 
+            for (int i = 0; i < consumeList.Length; ++i) {
+                if (!CanConsumeItem(consumeList[i].ID, consumeList[i].Number)) {
+                    list.Add(new ItemData(consumeList[i].ID, consumeList[i].Number - World.getInstance().storage.GetNumberByID(consumeList[i].ID)));
+                }
+            }
+            return list;
         }
         /// <summary>
         /// 往仓库中添加指定物品

@@ -76,7 +76,7 @@ public class ProgressButton : MonoBehaviour {
         }
     }
 
-    public UnityAction Action { get; set; }
+    public UnityAction<ProgressButton> Action { get; set; }
 
     public float MaxValue { get; set; }
 
@@ -154,7 +154,7 @@ public class ProgressButton : MonoBehaviour {
     }
     
     public void OnClick() {
-        Action?.Invoke();
+        Action?.Invoke(this);
     }
 
     public void OnPointerEnterOrUp() {

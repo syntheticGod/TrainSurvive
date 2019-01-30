@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9781a74543c26f045b0df288eb8b3ca1, type: 3}
+  m_Name: 211
+  m_EditorClassIdentifier: 
+  ID: 211
+  Dependency: -1
+  Name: "\u592A\u9633\u80FD\u4F9B\u7535I "
+  Description: "\u6301\u7EED\u5730\u5C06\u592A\u9633\u80FD\u8F6C\u5316\u4E3A\u52A8\u80FD\u3002 "
+  CostItems: []
