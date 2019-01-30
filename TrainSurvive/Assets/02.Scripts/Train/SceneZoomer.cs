@@ -25,33 +25,33 @@ public class SceneZoomer : MonoBehaviour {
     [SerializeField]
     private float MoveSpeed;
 
-    [Tooltip("右边界")]
+    [Tooltip("背景包围盒")]
     [SerializeField]
-    private float RightBound;
+    private BoxCollider2D C_Box;
 
-    [Tooltip("左侧留空")]
-    [SerializeField]
-    private float LeftPadding;
+    private Vector3 LeftBottom {
+        get {
+            return C_Box.bounds.min;
+        }
+    }
+    private Vector3 RightTop {
+        get {
+            return C_Box.bounds.max;
+        }
+    }
 
     private bool CanDrag { get; set; }
-
+    
     private void Update() {
         if (!EventSystem.current.IsPointerOverGameObject()) {
             if (Input.mouseScrollDelta != Vector2.zero) {
-                float value = Camera.main.orthographicSize - Input.mouseScrollDelta.y * ZoomSpeed * Time.unscaledDeltaTime;
-                value = Mathf.Clamp(value, MinZoom, MaxZoom);
-                if (transform.position.y + value > MaxZoom) {
-                    transform.Translate(0, Camera.main.orthographicSize - value, 0, Space.World);
-                }else if(transform.position.y - value < -MaxZoom) {
-                    transform.Translate(0, value - Camera.main.orthographicSize, 0, Space.World);
-                }
-                float x = ConstructionManager.Instance.Carriages.Last.Value.Position.x - LeftPadding;
-                if (transform.position.y + value * Camera.main.aspect > RightBound) {
-                    transform.Translate(Camera.main.orthographicSize - value * Camera.main.aspect, 0, 0, Space.World);
-                } else if (transform.position.y - value * Camera.main.aspect < x) {
-                    transform.Translate(value * Camera.main.aspect - Camera.main.orthographicSize, 0, 0, Space.World);
-                }
-                Camera.main.orthographicSize = value;
+                float orthographicSize = Camera.main.orthographicSize - Input.mouseScrollDelta.y * ZoomSpeed * Time.unscaledDeltaTime;
+                orthographicSize = Mathf.Clamp(orthographicSize, MinZoom, MaxZoom);
+                Camera.main.orthographicSize = orthographicSize;
+                float cameraHalfWidth = orthographicSize * ((float)Screen.width / Screen.height);
+                float x = Mathf.Clamp(transform.position.x, LeftBottom.x + cameraHalfWidth, RightTop.x - cameraHalfWidth);
+                float y = Mathf.Clamp(transform.position.y, LeftBottom.y + orthographicSize, RightTop.y - orthographicSize);
+                transform.position = new Vector3(x, y, transform.position.z);
             }
             if (Input.GetMouseButtonDown(0)) {
                 CanDrag = true;
@@ -59,14 +59,11 @@ public class SceneZoomer : MonoBehaviour {
             if (Input.GetMouseButton(0) && CanDrag) {
                 float h = Input.GetAxis("Mouse X") * MoveSpeed * Time.unscaledDeltaTime;
                 float v = Input.GetAxis("Mouse Y") * MoveSpeed * Time.unscaledDeltaTime;
-                Vector3 newPos = transform.position - new Vector3(h, v, 0);
-                if ((newPos.y + Camera.main.orthographicSize <= MaxZoom || v > 0) && (newPos.y - Camera.main.orthographicSize >= -MaxZoom || v < 0)) {
-                    transform.Translate(0, -v, 0, Space.World);
-                }
-                float x = ConstructionManager.Instance.Carriages.Last.Value.Position.x - LeftPadding;
-                if ((newPos.x + Camera.main.orthographicSize * Camera.main.aspect <= RightBound || h > 0) && (newPos.x - Camera.main.orthographicSize * Camera.main.aspect >= x || h < 0)) {
-                    transform.Translate(-h, 0, 0, Space.World);
-                }
+                float orthographicSize = Camera.main.orthographicSize;
+                float cameraHalfWidth = orthographicSize * ((float)Screen.width / Screen.height);
+                float x = Mathf.Clamp(transform.position.x - h, LeftBottom.x + cameraHalfWidth, RightTop.x - cameraHalfWidth);
+                float y = Mathf.Clamp(transform.position.y - v, LeftBottom.y + orthographicSize, RightTop.y - orthographicSize);
+                transform.position = new Vector3(x, y, transform.position.z);
             }
         }
         if (Input.GetMouseButtonUp(0)) {
