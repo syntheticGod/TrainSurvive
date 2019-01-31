@@ -6210,7 +6210,7 @@ GameObject:
   - component: {fileID: 536742432}
   - component: {fileID: 536742431}
   m_Layer: 0
-  m_Name: ExampleBuilding
+  m_Name: "\u711A\u70E7\u7089"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6250,7 +6250,7 @@ Animator:
   m_GameObject: {fileID: 536742429}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c6ff6821bc758254ca16e0e85d64feaa, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0a96a86f5ce83994ca5bb83b90a2e880, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -24464,7 +24464,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbfb218a82f1629498c1dc03ca392627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BackendClass: PowerhouseCarriage
 --- !u!60 &2073905278
 PolygonCollider2D:
   m_ObjectHideFlags: 0

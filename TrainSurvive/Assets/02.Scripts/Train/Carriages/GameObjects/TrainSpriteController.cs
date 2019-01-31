@@ -51,4 +51,7 @@ public class TrainSpriteController : MonoBehaviour {
         }
     }
     
+    public void SetBool(string key, bool value) {
+        C_Animator.SetBool(key, value);
+    }
 }

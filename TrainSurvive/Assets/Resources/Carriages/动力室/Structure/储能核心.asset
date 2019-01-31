@@ -9,64 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
-  m_Name: "\u711A\u70E7\u7089"
+  m_Name: "\u50A8\u80FD\u6838\u5FC3"
   m_EditorClassIdentifier: 
-  Name: "\u711A\u70E7\u7089"
+  Name: "\u50A8\u80FD\u6838\u5FC3"
   InitialEnabled: 1
-  Initializer: Item_EnergyStructure
+  Initializer: ContainerStructure
   InitializeValues:
-  - Name: _conversions
-    TypeName: Item_EnergyStructure+Conversion[]
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 0
-    System_StringValue: 
-    Item_EnergyStructure_EnergyTypeValue: 0
-    Item_EnergyStructure_ConversionArrayValue:
-    - ItemID: 235
-      EnergyRate: 3
-      ProcessTimeRatio: 0.2
-      ProduceEnergyRatio: 10
-    - ItemID: 236
-      EnergyRate: 3
-      ProcessTimeRatio: 0.2
-      ProduceEnergyRatio: 10
-    - ItemID: 237
-      EnergyRate: 0.8
-      ProcessTimeRatio: 0.4
-      ProduceEnergyRatio: 10
-    - ItemID: 238
-      EnergyRate: 1.2
-      ProcessTimeRatio: 0.4
-      ProduceEnergyRatio: 10
-    - ItemID: 239
-      EnergyRate: 1.8
-      ProcessTimeRatio: 0.4
-      ProduceEnergyRatio: 10
-    Item2ItemStructure_ConversionArrayValue: []
-    Seed2ItemStructure_ConversionArrayValue: []
-  - Name: _conversionRate
+  - Name: _addEnergyMax
     TypeName: System.Single
     System_Int32Value: 0
     System_BooleanValue: 0
-    System_SingleValue: 0.5
+    System_SingleValue: 1000
     System_StringValue: 
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []
-  - Name: _processSpeed
-    TypeName: System.Single
-    System_Int32Value: 0
-    System_BooleanValue: 0
-    System_SingleValue: 1
-    System_StringValue: 
-    Item_EnergyStructure_EnergyTypeValue: 0
-    Item_EnergyStructure_ConversionArrayValue: []
-    Item2ItemStructure_ConversionArrayValue: []
-    Seed2ItemStructure_ConversionArrayValue: []
-  - Name: _energyType
-    TypeName: Item_EnergyStructure+EnergyType
+  - Name: _addMemberMax
+    TypeName: System.Int32
     System_Int32Value: 0
     System_BooleanValue: 0
     System_SingleValue: 0
@@ -75,4 +35,14 @@ MonoBehaviour:
     Item_EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []
-  InitializerObject: {fileID: 11500000, guid: 4e45d34cddb5ca9429f431b356b8d09c, type: 3}
+  - Name: _addFoodMax
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item2ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: bea37c0e5e2bac141975a72cb5129733, type: 3}

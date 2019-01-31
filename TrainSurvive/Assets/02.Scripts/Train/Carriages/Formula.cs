@@ -32,7 +32,11 @@ public class Formula<C> : ISerializable where C : IConversion {
             return _count;
         }
         set {
-            _count = value;
+            if (value < -1) {
+                _count = -1;
+            } else {
+                _count = value;
+            }
             OnCountChanged?.Invoke(Priority, value);
         }
     }

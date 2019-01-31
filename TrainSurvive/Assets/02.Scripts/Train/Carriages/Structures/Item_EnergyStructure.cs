@@ -13,7 +13,7 @@ using UnityEngine;
 
 public class Item_EnergyStructure : CarriageStructure {
     public enum EnergyType {
-        ENERGY, ELECT, FOOD
+        ENERGY, FOOD
     }
 
     [Serializable]
@@ -41,7 +41,7 @@ public class Item_EnergyStructure : CarriageStructure {
         }
     }
 
-    public Item_EnergyStructure(string name) : base(name) { }
+    public Item_EnergyStructure(string name, bool initialEnabled) : base(name, initialEnabled) { }
 
     protected Item_EnergyStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
         _conversions = (Conversion[])info.GetValue("_conversions", typeof(Conversion[]));
@@ -118,7 +118,7 @@ public class Item_EnergyStructure : CarriageStructure {
     public int Concurrency { get; set; } = 1;
 
     private Coroutine RunningCoroutine { get; set; }
-
+    
     [StructurePublicField(Tooltip = "转化列表")]
     private Conversion[] _conversions;
     [StructurePublicField(Tooltip = "转化率")]
@@ -134,7 +134,29 @@ public class Item_EnergyStructure : CarriageStructure {
         base.OnStart();
         RunningCoroutine = TimeController.getInstance().StartCoroutine(Run());
     }
-    
+
+    public override void OnUpgraded(CarriageResearchSetting upgrade) {
+        base.OnUpgraded(upgrade);
+        string[] parameters = upgrade.Parameter.Split('|');
+        if (parameters.Length != 3) {
+            Debug.LogError("第" + upgrade.ID + "号升级所需参数为([float]ConversionRate|[float]ProcessSpeed|[int]Concurrency)");
+            return;
+        }
+
+        if (parameters[0].Length > 0) {
+            float rate = float.Parse(parameters[0]);
+            ConversionRateRatio = rate / ConversionRate;
+        }
+        if (parameters[1].Length > 0) {
+            float rate = float.Parse(parameters[1]);
+            ProcessSpeedRatio = rate / ProcessSpeed;
+        }
+        if (parameters[2].Length > 0) {
+            int value = int.Parse(parameters[2]);
+            Concurrency = value;
+        }
+    }
+
     private IEnumerator Run() {
         WaitUntil wait = new WaitUntil(WaitForAvailable);
         while (true) {
@@ -142,7 +164,9 @@ public class Item_EnergyStructure : CarriageStructure {
                 foreach (Formula<Conversion> formula in Conversions) {
                     formula.Progress = 0;
                 }
+                UpdateState("Running", false);
                 yield return wait;
+                UpdateState("Running", true);
             }
             int currentConcurrency = 0;
             foreach (Formula<Conversion> formula in Conversions) {
@@ -159,9 +183,6 @@ public class Item_EnergyStructure : CarriageStructure {
                                 switch (GeneratedEnergyType) {
                                     case EnergyType.ENERGY:
                                         World.getInstance().addEnergy(generatedAmount);
-                                        break;
-                                    case EnergyType.ELECT:
-                                        World.getInstance().addElectricity(generatedAmount);
                                         break;
                                     case EnergyType.FOOD:
                                         World.getInstance().addFoodIn(generatedAmount);
@@ -184,9 +205,6 @@ public class Item_EnergyStructure : CarriageStructure {
         switch (GeneratedEnergyType) {
             case EnergyType.ENERGY:
                 energyFull = World.getInstance().getEnergy() >= World.getInstance().getEnergyMax();
-                break;
-            case EnergyType.ELECT:
-                energyFull = World.getInstance().getElectricity() >= World.getInstance().getElectricityMax();
                 break;
             case EnergyType.FOOD:
                 energyFull = World.getInstance().getFoodIn() >= World.getInstance().getFoodInMax();

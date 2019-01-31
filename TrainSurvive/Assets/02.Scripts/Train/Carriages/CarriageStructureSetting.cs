@@ -37,6 +37,8 @@ public class CarriageStructureSetting : ScriptableObject {
     
     [Tooltip("设施名字")]
     public string Name;
+    [Tooltip("初始是否启用")]
+    public bool InitialEnabled;
     [Tooltip("用于初始化该建筑的类型函数，须要为CarriageStructure类型")]
     [SerializeField]
     private string Initializer;
@@ -49,7 +51,7 @@ public class CarriageStructureSetting : ScriptableObject {
 
     public CarriageStructure Instantiate() {
         Type type = Type.GetType(Initializer);
-        object o = type.GetConstructor(new Type[] { typeof(string) }).Invoke(new object[] { Name });
+        object o = type.GetConstructor(new Type[] { typeof(string), typeof(bool) }).Invoke(new object[] { Name, InitialEnabled });
         foreach (InitializeValue value in InitializeValues) {
             Type t = type;
             do {

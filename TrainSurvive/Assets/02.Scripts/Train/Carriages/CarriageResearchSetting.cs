@@ -9,19 +9,7 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "策划/车厢升级配置")]
 public class CarriageResearchSetting : ScriptableObject {
-
-    [Serializable]
-    private struct Cost {
-        public int ID;
-        public int Count;
-    }
-
-    [Serializable]
-    public struct UpgradeSprite {
-        public string Name;
-        public int Level;
-    }
-
+    
     [Tooltip("ID")]
     public int ID;
     [Tooltip("依赖ID")]
@@ -30,27 +18,17 @@ public class CarriageResearchSetting : ScriptableObject {
     public string Name;
     [Tooltip("描述")]
     public string Description;
-    [Tooltip("解锁的UI")]
-    public string UnlockUI;
-    [Tooltip("升级研究运算需要的参数")]
-    public string Parameter;
-    [Tooltip("升级时需要更新的贴图")]
-    public UpgradeSprite[] UpgradeSprites;
     [Tooltip("耗材")]
-    [SerializeField]
-    private Cost[] CostItems;
-
-    public ItemData[] Costs {
-        get {
-            if (_costs == null) {
-                _costs = new ItemData[CostItems.Length];
-                for (int i = 0; i < CostItems.Length; i++) {
-                    _costs[i] = new ItemData(CostItems[i].ID, CostItems[i].Count);
-                }
-            }
-            return _costs;
-        }
-    }
-
-    private ItemData[] _costs;
+    public ItemData[] Costs;
+    [Space]
+    [Tooltip("处理升级的设施名称。为空的话则将升级运算交给CarriageBackend（及其子类）处理。")]
+    public string StructureName;
+    [Tooltip("升级运算需要的参数")]
+    public string Parameter;
+    [Tooltip("是否解锁同名的UI，若StructureName为空则无效。")]
+    public bool UnlockUI;
+    [Tooltip("是否解锁设施，若StructureName为空则无效。")]
+    public bool UnlockStructure;
+    [Tooltip("更新同名设施贴图至某一级，-1表示不更新，若StructureName为空则无效。")]
+    public int SpriteLevel = -1;
 }

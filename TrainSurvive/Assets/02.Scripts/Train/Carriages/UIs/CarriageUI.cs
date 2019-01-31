@@ -118,6 +118,7 @@ public class CarriageUI : MonoBehaviour {
         // 初始显示研究页
         CurrentPage = "Research";
 
+        // 控制UI显示
         foreach(string ui in InitialUIs) {
             ToggleUI(ui, true);
         }
@@ -134,8 +135,9 @@ public class CarriageUI : MonoBehaviour {
         CurrentPage = button.gameObject.name;
     }
     private void Carriage_OnUpgraded(int id) {
-        if (PageButtons.ContainsKey(Carriage.ResearchSettings[id].UnlockUI)) {
-            ToggleUI(Carriage.ResearchSettings[id].UnlockUI, true);
+        CarriageResearchSetting setting = Carriage.ResearchSettings[id];
+        if (setting.StructureName.Length > 0 && setting.UnlockUI) {
+            ToggleUI(setting.StructureName, true);
         }
     }
     #endregion

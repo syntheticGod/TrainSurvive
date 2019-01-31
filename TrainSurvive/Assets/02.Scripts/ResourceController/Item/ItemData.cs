@@ -20,11 +20,11 @@ public class ItemData
     /// <summary>
     /// 物品ID
     /// </summary>
-    public int ID { get; }
+    public int ID;
     /// <summary>
     /// 物品拥有数量
     /// </summary>
-    public int Number { get; set; }
+    public int Number;
     /// <summary>
     /// 物品稀有度
     /// </summary>
@@ -141,7 +141,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomMaterial()
     {
-        return new ItemData(MathTool.RandomRange(201, 254), MathTool.RandomRange(1, 5));
+        return new ItemData(237, MathTool.RandomRange(1, 5));//MathTool.RandomRange(201, 254)
     }
     /// <summary>
     /// 随机生成指定数量的材料

@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
-public abstract class CarriageBackend : ISerializable {
+public class CarriageBackend : ISerializable {
     
     #region 公有属性
-    public abstract string Name { get; }
+    public string Name { get; set; }
     public Dictionary<int, CarriageResearchSetting> ResearchSettings {
         get {
             if (_researchSettings == null) {
@@ -68,6 +68,7 @@ public abstract class CarriageBackend : ISerializable {
 
     #region 事件
     public event Action<int> OnUpgraded;
+    public event Action<string, string, object> OnStructureStateChanged;
     #endregion
 
     #region 私有属性
@@ -81,18 +82,21 @@ public abstract class CarriageBackend : ISerializable {
     #endregion
 
     #region 序列化组
-    public CarriageBackend() {
+    public CarriageBackend(string name) {
         UpgradedID = new SortedSet<int>();
+        Name = name;
         Start();
     }
     protected CarriageBackend(SerializationInfo info, StreamingContext context) {
         UpgradedID = (SortedSet<int>)info.GetValue("UpgradedID", typeof(SortedSet<int>));
         Structures = (SerializableDictionary<string, CarriageStructure>)info.GetValue("Structures", typeof(SerializableDictionary<string, CarriageStructure>));
+        Name = info.GetString("Name");
         Start();
     }
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context) {
         info.AddValue("UpgradedID", UpgradedID);
         info.AddValue("Structures", Structures);
+        info.AddValue("Name", Name);
     }
     #endregion
 
@@ -114,18 +118,36 @@ public abstract class CarriageBackend : ISerializable {
     public List<ItemData> IsResearchCostsAvailable(int id) {
         return PublicMethod.CheckItems(ResearchSettings[id].Costs);
     }
+    public void CallOnStructureStateChanged(string name, string state, object value) {
+        OnStructureStateChanged?.Invoke(name, state, value);
+    }
     #endregion
 
     #region 私有函数
-    protected virtual void OnUpgradedSuccess(int id) {
+    private void OnUpgradedSuccess(int id) {
         OnUpgraded?.Invoke(id);
+        CarriageResearchSetting setting = ResearchSettings[id];
+        if (setting.StructureName.Length > 0) {
+            CarriageStructure structure = Structures[setting.StructureName];
+            if (setting.UnlockStructure) {
+                structure.Enabled = true;
+                structure.OnStart();
+            }
+            Structures[setting.StructureName].OnUpgraded(setting);
+        } else {
+            Upgrade(setting);
+        }
     }
+    protected virtual void Upgrade(CarriageResearchSetting setting) { }
     /// <summary>
     /// 开始工作！
     /// </summary>
     private void Start() {
         foreach (CarriageStructure structure in Structures.Values) {
-            structure.OnStart();
+            structure.CarriageBackend = this;
+            if (structure.Enabled) {
+                structure.OnStart();
+            }
         }
     }
     #endregion

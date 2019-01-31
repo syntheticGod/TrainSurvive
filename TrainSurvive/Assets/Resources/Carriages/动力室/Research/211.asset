@@ -15,4 +15,9 @@ MonoBehaviour:
   Dependency: -1
   Name: "\u592A\u9633\u80FD\u4F9B\u7535I "
   Description: "\u6301\u7EED\u5730\u5C06\u592A\u9633\u80FD\u8F6C\u5316\u4E3A\u52A8\u80FD\u3002 "
-  CostItems: []
+  Costs: []
+  StructureName: "\u592A\u9633\u80FD\u7535\u6C60\u677F"
+  Parameter: 1|
+  UnlockUI: 0
+  UnlockStructure: 1
+  SpriteLevel: -1

@@ -17,6 +17,7 @@ public class CarriageStructureSettingEditor : Editor {
 
     public override void OnInspectorGUI() {
         SerializedProperty nameProperty = serializedObject.FindProperty("Name");
+        SerializedProperty initialEnabledProperty = serializedObject.FindProperty("InitialEnabled");
         SerializedProperty initializerProperty = serializedObject.FindProperty("Initializer");
         SerializedProperty initializerObjectProperty = serializedObject.FindProperty("InitializerObject");
         SerializedProperty initializeValuesProperty = serializedObject.FindProperty("InitializeValues");
@@ -24,6 +25,7 @@ public class CarriageStructureSettingEditor : Editor {
         EditorGUILayout.BeginVertical();
         
         EditorGUILayout.PropertyField(nameProperty);
+        EditorGUILayout.PropertyField(initialEnabledProperty);
         InitializerProperty(initializerProperty, initializerObjectProperty, initializeValuesProperty);
     
         EditorGUILayout.EndVertical();

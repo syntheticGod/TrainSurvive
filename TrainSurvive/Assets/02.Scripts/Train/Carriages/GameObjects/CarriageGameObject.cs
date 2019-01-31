@@ -10,9 +10,6 @@ using UnityEngine;
 
 public class CarriageGameObject : MonoBehaviour {
     
-    [Tooltip("Backend类名")]
-    public string BackendClass;
-
     #region 组件
     private CarriageUI C_CarriageUI {
         get {
@@ -40,9 +37,12 @@ public class CarriageGameObject : MonoBehaviour {
     private void OnEnable() {
         UpdateSprite();
         CarriageBackend.OnUpgraded += CarriageBackend_OnUpgraded;
+        CarriageBackend.OnStructureStateChanged += CarriageBackend_OnStructureStateChanged;
     }
+
     private void OnDisable() {
         CarriageBackend.OnUpgraded -= CarriageBackend_OnUpgraded;
+        CarriageBackend.OnStructureStateChanged -= CarriageBackend_OnStructureStateChanged;
     }
     #endregion
 
@@ -56,13 +56,26 @@ public class CarriageGameObject : MonoBehaviour {
 
     private void CarriageBackend_OnUpgraded(int id) {
         CarriageResearchSetting setting = CarriageBackend.ResearchSettings[id];
-        foreach (CarriageResearchSetting.UpgradeSprite upgradeSprite in setting.UpgradeSprites) {
-            if (!StructureSprites.ContainsKey(upgradeSprite.Name)) {
-                StructureSprites.Add(upgradeSprite.Name, transform.Find(upgradeSprite.Name).GetComponent<TrainSpriteController>());
+        if (setting.StructureName.Length > 0 && setting.SpriteLevel >= 0) {
+            if (!StructureSprites.ContainsKey(setting.StructureName)) {
+                Transform obj = transform.Find(setting.StructureName);
+                if (obj == null)
+                    return;
+                StructureSprites.Add(setting.StructureName, obj.GetComponent<TrainSpriteController>());
             }
-            StructureSprites[upgradeSprite.Name].Level = upgradeSprite.Level;
+            StructureSprites[setting.StructureName].Level = setting.SpriteLevel;
         }
     }
+    private void CarriageBackend_OnStructureStateChanged(string name, string state, object value) {
+        if (!StructureSprites.ContainsKey(name)) {
+            Transform obj = transform.Find(name);
+            if (obj == null)
+                return;
+            StructureSprites.Add(name, obj.GetComponent<TrainSpriteController>());
+        }
+        StructureSprites[name].SetBool(state, (bool) value);
+    }
+
     private void UpdateSprite() {
         TrainSpriteController[] controllers = GetComponentsInChildren<TrainSpriteController>();
         foreach (TrainSpriteController controller in controllers) {
@@ -71,9 +84,13 @@ public class CarriageGameObject : MonoBehaviour {
         foreach (int upgraded in CarriageBackend.UpgradedID) {
             CarriageBackend_OnUpgraded(upgraded);
         }
+
+        foreach (CarriageStructure structure in CarriageBackend.Structures.Values) {
+            foreach (KeyValuePair<string, object> item in structure.States) {
+                CarriageBackend_OnStructureStateChanged(structure.Name, item.Key, item.Value);
+            }
+        }
     }
     #endregion
-
-    #region 公有函数
-    #endregion
+    
 }
