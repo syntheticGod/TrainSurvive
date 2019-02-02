@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
-  m_Name: "\u52A0\u70ED\u5BA4"
+  m_Name: "\u7194\u7089"
   m_EditorClassIdentifier: 
-  Name: "\u52A0\u70ED\u5BA4"
+  Name: "\u7194\u7089"
   InitialEnabled: 0
   Initializer: Item_ItemStructure
   InitializeValues:
@@ -24,18 +24,30 @@ MonoBehaviour:
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []
     Item_ItemStructure_ConversionArrayValue:
-    - FromItemID: 233
-      FromItemNum: 1
-      ToItemID: 234
+    - FromItemID: 237
+      FromItemNum: 3
+      ToItemID: 236
+      ToItemNum: 1
+      ProcessTime: 0.5
+      UnlockUpgradeID: 407
+    - FromItemID: 246
+      FromItemNum: 4
+      ToItemID: 247
       ToItemNum: 1
       ProcessTime: 1
-      UnlockUpgradeID: 311
-    - FromItemID: 231
+      UnlockUpgradeID: 407
+    - FromItemID: 248
       FromItemNum: 4
-      ToItemID: 232
+      ToItemID: 249
       ToItemNum: 1
-      ProcessTime: 1.5
-      UnlockUpgradeID: 311
+      ProcessTime: 1
+      UnlockUpgradeID: 407
+    - FromItemID: 249
+      FromItemNum: 4
+      ToItemID: 250
+      ToItemNum: 1
+      ProcessTime: 2
+      UnlockUpgradeID: 407
     Seed2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
     TypeName: System.Single

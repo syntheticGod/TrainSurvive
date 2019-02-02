@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
-  m_Name: "\u52A0\u70ED\u5BA4"
+  m_Name: "\u5DE5\u4F5C\u53F0"
   m_EditorClassIdentifier: 
-  Name: "\u52A0\u70ED\u5BA4"
+  Name: "\u5DE5\u4F5C\u53F0"
   InitialEnabled: 0
   Initializer: Item_ItemStructure
   InitializeValues:
@@ -24,18 +24,42 @@ MonoBehaviour:
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []
     Item_ItemStructure_ConversionArrayValue:
-    - FromItemID: 233
-      FromItemNum: 1
-      ToItemID: 234
+    - FromItemID: 237
+      FromItemNum: 4
+      ToItemID: 238
       ToItemNum: 1
       ProcessTime: 1
-      UnlockUpgradeID: 311
-    - FromItemID: 231
+      UnlockUpgradeID: 401
+    - FromItemID: 240
       FromItemNum: 4
-      ToItemID: 232
+      ToItemID: 241
       ToItemNum: 1
-      ProcessTime: 1.5
-      UnlockUpgradeID: 311
+      ProcessTime: 1
+      UnlockUpgradeID: 401
+    - FromItemID: 243
+      FromItemNum: 4
+      ToItemID: 244
+      ToItemNum: 1
+      ProcessTime: 1
+      UnlockUpgradeID: 401
+    - FromItemID: 238
+      FromItemNum: 4
+      ToItemID: 239
+      ToItemNum: 1
+      ProcessTime: 2
+      UnlockUpgradeID: 401
+    - FromItemID: 241
+      FromItemNum: 4
+      ToItemID: 242
+      ToItemNum: 1
+      ProcessTime: 2
+      UnlockUpgradeID: 401
+    - FromItemID: 244
+      FromItemNum: 4
+      ToItemID: 245
+      ToItemNum: 1
+      ProcessTime: 2
+      UnlockUpgradeID: 401
     Seed2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
     TypeName: System.Single

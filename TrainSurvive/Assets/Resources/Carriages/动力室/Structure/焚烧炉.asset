@@ -48,7 +48,7 @@ MonoBehaviour:
       ProcessTime: 0.1
       ProduceEnergyRatio: 10
       UnlockUpgradeID: -1
-    Item2ItemStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []
   - Name: _conversionRate
     TypeName: System.Single
@@ -58,7 +58,7 @@ MonoBehaviour:
     System_StringValue: 
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []
-    Item2ItemStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []
   - Name: _processSpeed
     TypeName: System.Single
@@ -68,7 +68,7 @@ MonoBehaviour:
     System_StringValue: 
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []
-    Item2ItemStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []
   - Name: _energyType
     TypeName: Item_EnergyStructure+EnergyType
@@ -78,6 +78,6 @@ MonoBehaviour:
     System_StringValue: 
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue: []
-    Item2ItemStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []
   InitializerObject: {fileID: 11500000, guid: 4e45d34cddb5ca9429f431b356b8d09c, type: 3}
