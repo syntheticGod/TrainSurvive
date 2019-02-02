@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
-  m_Name: "\u711A\u70E7\u7089"
+  m_Name: "\u98DF\u7269\u5904\u7406\u673A"
   m_EditorClassIdentifier: 
-  Name: "\u711A\u70E7\u7089"
+  Name: "\u98DF\u7269\u5904\u7406\u673A"
   InitialEnabled: 1
   Initializer: Item_EnergyStructure
   InitializeValues:
@@ -23,28 +23,28 @@ MonoBehaviour:
     System_StringValue: 
     Item_EnergyStructure_EnergyTypeValue: 0
     Item_EnergyStructure_ConversionArrayValue:
-    - ItemID: 235
+    - ItemID: 230
+      EnergyRate: 1
+      ProcessTime: 0.1
+      ProduceEnergyRatio: 10
+      UnlockUpgradeID: -1
+    - ItemID: 231
+      EnergyRate: 0.6
+      ProcessTime: 0.1
+      ProduceEnergyRatio: 10
+      UnlockUpgradeID: -1
+    - ItemID: 232
       EnergyRate: 3
       ProcessTime: 0.1
       ProduceEnergyRatio: 10
       UnlockUpgradeID: -1
-    - ItemID: 236
+    - ItemID: 233
+      EnergyRate: 1.5
+      ProcessTime: 0.1
+      ProduceEnergyRatio: 10
+      UnlockUpgradeID: -1
+    - ItemID: 234
       EnergyRate: 3
-      ProcessTime: 0.1
-      ProduceEnergyRatio: 10
-      UnlockUpgradeID: -1
-    - ItemID: 237
-      EnergyRate: 0.8
-      ProcessTime: 0.1
-      ProduceEnergyRatio: 10
-      UnlockUpgradeID: -1
-    - ItemID: 238
-      EnergyRate: 1.2
-      ProcessTime: 0.1
-      ProduceEnergyRatio: 10
-      UnlockUpgradeID: -1
-    - ItemID: 239
-      EnergyRate: 1.8
       ProcessTime: 0.1
       ProduceEnergyRatio: 10
       UnlockUpgradeID: -1
@@ -76,7 +76,7 @@ MonoBehaviour:
     System_BooleanValue: 0
     System_SingleValue: 0
     System_StringValue: 
-    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_EnergyTypeValue: 1
     Item_EnergyStructure_ConversionArrayValue: []
     Item2ItemStructure_ConversionArrayValue: []
     Seed2ItemStructure_ConversionArrayValue: []

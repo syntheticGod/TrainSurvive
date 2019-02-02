@@ -22,7 +22,7 @@ public class CarriageStructureSetting : ScriptableObject {
         public string System_StringValue;
         public Item_EnergyStructure.EnergyType Item_EnergyStructure_EnergyTypeValue;
         public Item_EnergyStructure.Conversion[] Item_EnergyStructure_ConversionArrayValue;
-        public Item2ItemStructure.Conversion[] Item2ItemStructure_ConversionArrayValue;
+        public Item_ItemStructure.Conversion[] Item_ItemStructure_ConversionArrayValue;
         public Seed2ItemStructure.Conversion[] Seed2ItemStructure_ConversionArrayValue;
 
         public object GetValue() {

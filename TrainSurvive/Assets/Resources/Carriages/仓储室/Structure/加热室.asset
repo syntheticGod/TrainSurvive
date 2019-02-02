@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
+  m_Name: "\u52A0\u70ED\u5BA4"
+  m_EditorClassIdentifier: 
+  Name: "\u52A0\u70ED\u5BA4"
+  InitialEnabled: 0
+  Initializer: Item_ItemStructure
+  InitializeValues:
+  - Name: _conversions
+    TypeName: Item_ItemStructure+Conversion[]
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue:
+    - FromItemID: 233
+      FromItemNum: 1
+      ToItemID: 234
+      ToItemNum: 1
+      ProcessTime: 10
+      UnlockUpgradeID: 311
+    - FromItemID: 231
+      FromItemNum: 4
+      ToItemID: 232
+      ToItemNum: 1
+      ProcessTime: 15
+      UnlockUpgradeID: 311
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _processSpeed
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 1
+    System_StringValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 2c216da1b86dffc4e83bcdb34f70c1d3, type: 3}

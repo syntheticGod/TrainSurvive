@@ -14,7 +14,10 @@ public class CarriageGameObject : MonoBehaviour {
     private CarriageUI C_CarriageUI {
         get {
             if (_c_CarriageUI == null) {
-                _c_CarriageUI = GameObject.Find("Canvas/CarriageUI/" + name).GetComponent<CarriageUI>();
+                GameObject ui = GameObject.Find("Canvas/CarriageUI/" + name);
+                if (ui != null) {
+                    _c_CarriageUI = ui.GetComponent<CarriageUI>();
+                }
             }
             return _c_CarriageUI;
         }
@@ -48,7 +51,7 @@ public class CarriageGameObject : MonoBehaviour {
 
     #region 私有函数
     private void OnMouseOver() {
-        if (Input.GetMouseButtonUp(1)) {
+        if (Input.GetMouseButtonUp(1) && C_CarriageUI) {
             C_CarriageUI.Carriage = CarriageBackend;
             C_CarriageUI.gameObject.SetActive(true);
         }

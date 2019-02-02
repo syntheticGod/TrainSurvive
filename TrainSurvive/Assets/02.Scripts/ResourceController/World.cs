@@ -87,10 +87,10 @@ public class World
     private uint money = 0;
     private uint strategy = 0;
     private float electricity = 0;
-    private float foodInMax = 10000;
+    private float foodInMax = 1000;
     private uint foodOutMax = 0;
     private float energyMax = 1000;
-    private float electricityMax = 1000;
+    private float electricityMax = 0;
     public int time = 0;
     public int timeSpd = 1;
     public int dayCnt = 1;

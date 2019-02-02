@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9781a74543c26f045b0df288eb8b3ca1, type: 3}
-  m_Name: 205
+  m_Name: 311
   m_EditorClassIdentifier: 
-  ID: 205
-  Dependency: 204
-  Name: "\u711A\u70E7\u7089\u5347\u7EA7V "
-  Description: "\u711A\u70E7\u52A8\u80FD\u8F6C\u5316\u7387\u63D0\u9AD8\u81F3100%\u3002 "
+  ID: 311
+  Dependency: -1
+  Name: "\u5EFA\u9020\u52A0\u70ED\u5BA4"
+  Description: "\u80FD\u591F\u52A0\u5DE5\u751F\u8089\u548C\u5C0F\u9EA6\u3002"
   Costs: []
-  StructureName: "\u711A\u70E7\u7089"
-  Parameter: 1.0||
-  UnlockUI: 0
-  UnlockStructure: 0
+  StructureName: "\u52A0\u70ED\u5BA4"
+  Parameter: '|'
+  UnlockUI: 1
+  UnlockStructure: 1
   SpriteLevel: -1
