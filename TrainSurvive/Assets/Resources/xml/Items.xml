@@ -50,20 +50,20 @@ maxPileNum：最大堆叠数 //现在统一为材料64，其他都是1
   facHit：受伤系数（Factor of Hit）
   facSDmg：技伤系数（Factor of Skill Damage）
   -->
-  <component id="11" name="短柄" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="11" name="短柄" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="0" range="0.2" bbdist="0" facAtk="1" facAts="1" facSpd="1.2" modCrc="0.5" facHit="1.2" facSDmg="1"/>
-  <component id="12" name="中柄" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="12" name="中柄" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="0" range="0.4" bbdist="0.1" facAtk="1" facAts="1.2" facSpd="1" modCrc="0" facHit="1" facSDmg="1"/>
-  <component id="13" name="长柄" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="13" name="长柄" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="0" range="1.7" bbdist="0.2" facAtk="1.4" facAts="1" facSpd="0.8" modCrc="0" facHit="0.8" facSDmg="1"/>
 
-  <component id="21" name="短刃" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="21" name="短刃" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="1" range="0.4" bbdist="0" facAtk="0.6" facAts="1.4" facSpd="1.2" modCrc="0" facHit="1.2" facSDmg="1"/>
-  <component id="22" name="剑刃" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="22" name="剑刃" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="1" range="0.6" bbdist="0" facAtk="1" facAts="1.1" facSpd="1" modCrc="0" facHit="1" facSDmg="1"/>
-  <component id="23" name="矛头" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="23" name="矛头" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="1" range="0.3" bbdist="0.2" facAtk="2" facAts="0.7" facSpd="0.8" modCrc="0" facHit="0.8" facSDmg="1"/>
-  <component id="24" name="宝石" description="" rarity="-1" sellRatio="0.8" size="1" maxPileNum="1"
+  <component id="24" name="宝石" description="" rarity="0" sellRatio="0.8" size="1" maxPileNum="1"
                       position="1" range="5" bbdist="0" facAtk="0.1" facAts="0.5" facSpd="1" modCrc="0" facHit="1" facSDmg="4"/>
   <!-- 
   饰品****必须****拥有的额外属性：

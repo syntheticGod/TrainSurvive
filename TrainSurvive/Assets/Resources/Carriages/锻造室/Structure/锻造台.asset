@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07ed77e898f1db46951fccb68631247, type: 3}
+  m_Name: "\u953B\u9020\u53F0"
+  m_EditorClassIdentifier: 
+  Name: "\u953B\u9020\u53F0"
+  InitialEnabled: 0
+  Initializer: ForgeStructure
+  InitializeValues:
+  - Name: _processTime
+    TypeName: System.Single
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 3
+    System_StringValue: 
+    System_Int32ArrayValue: 
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  - Name: _componentIDs
+    TypeName: System.Int32[]
+    System_Int32Value: 0
+    System_BooleanValue: 0
+    System_SingleValue: 0
+    System_StringValue: 
+    System_Int32ArrayValue: 0b0000000c0000000d00000015000000160000001700000018000000
+    Item_EnergyStructure_EnergyTypeValue: 0
+    Item_EnergyStructure_ConversionArrayValue: []
+    Item_ItemStructure_ConversionArrayValue: []
+    Seed2ItemStructure_ConversionArrayValue: []
+  InitializerObject: {fileID: 11500000, guid: 420c8bd0dbac36943a907b1611ff6792, type: 3}

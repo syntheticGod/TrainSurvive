@@ -37,7 +37,8 @@ namespace TTT.UI
         public override void Clear()
         {
             base.Clear();
-            numView.text = "";
+            if (numView)
+                numView.text = "";
             Number = 0;
         }
         //Operations

@@ -19,7 +19,7 @@ public class PersonListContent : MonoBehaviour {
     // Use this for initialization
     void Start () {
         reloadData();
-        EquipmentCtrl.OnChargeIn = (int itemID, int number) => StaticResource.GetItemInfoByID<WeaponInfo>(itemID) != null;
+        EquipmentCtrl.OnChargeIn = (sender, itemID, number) => StaticResource.GetItemInfoByID<WeaponInfo>(itemID) != null;
     }
 	
 

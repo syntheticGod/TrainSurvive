@@ -137,6 +137,10 @@ namespace TTT.Controller
         {
             packLV.Datas = items;
         }
+
+        public void UpdatePack() {
+            OnEnable();
+        }
 #if DEBUG
         public void AddRandomMaterial()
         {

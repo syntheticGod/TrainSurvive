@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CarriageGameObject : MonoBehaviour {
     
@@ -51,7 +52,7 @@ public class CarriageGameObject : MonoBehaviour {
 
     #region 私有函数
     private void OnMouseOver() {
-        if (Input.GetMouseButtonUp(1) && C_CarriageUI) {
+        if (Input.GetMouseButtonUp(1) && !EventSystem.current.IsPointerOverGameObject() && C_CarriageUI) {
             C_CarriageUI.Carriage = CarriageBackend;
             C_CarriageUI.gameObject.SetActive(true);
         }

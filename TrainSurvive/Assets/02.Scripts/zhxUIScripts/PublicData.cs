@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using TTT.UI;
 
 namespace Assets._02.Scripts.zhxUIScripts
 {
@@ -99,7 +100,7 @@ namespace Assets._02.Scripts.zhxUIScripts
         /// TRUE：不允许
         /// FALSE：允许
         /// </returns>
-        public delegate bool Charge(int itemID, int number);
+        public delegate bool Charge(DragableAndDropableAssetsItemView sender, int itemID, int number);
 
         public static class Copy<TIn, TOut>
         {

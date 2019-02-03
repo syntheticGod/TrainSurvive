@@ -20,6 +20,7 @@ public class CarriageStructureSetting : ScriptableObject {
         public bool System_BooleanValue;
         public float System_SingleValue;
         public string System_StringValue;
+        public int[] System_Int32ArrayValue;
         public Item_EnergyStructure.EnergyType Item_EnergyStructure_EnergyTypeValue;
         public Item_EnergyStructure.Conversion[] Item_EnergyStructure_ConversionArrayValue;
         public Item_ItemStructure.Conversion[] Item_ItemStructure_ConversionArrayValue;

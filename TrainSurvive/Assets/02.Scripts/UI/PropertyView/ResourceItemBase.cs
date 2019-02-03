@@ -68,12 +68,25 @@ namespace TTT.UI
             markImage.color = markColors[(int)item.Rarity];
         }
         /// <summary>
+        /// 通过物品的ID设置 图标 稀有度
+        /// </summary>
+        /// <param name="id">物品ID</param>
+        /// <param name="rarity">物品稀有度</param>
+        public void SetItemIDAndRarity(int id, PublicData.Rarity rarity) {
+            ItemID = id;
+            ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
+            targetImage.sprite = item.BigSprite;
+            markImage.color = markColors[(int)rarity];
+        }
+        /// <summary>
         /// 清除所有东西：id=-1、图片变为默认、稀有度变为最低
         /// </summary>
         public virtual void Clear()
         {
-            markImage.color = markColors[(int)PublicData.Rarity.Poor];
-            targetImage.sprite = null;
+            if (markImage)
+                markImage.color = markColors[(int)PublicData.Rarity.Random];
+            if (targetImage)
+                targetImage.sprite = null;
             ItemID = -1;
         }
         /// <summary>

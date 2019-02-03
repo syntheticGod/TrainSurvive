@@ -24,4 +24,28 @@ public class UnitInventoryCtrl : DragableAndDropableAssetsItemView
         if(!IfEmpty())
             SetItemData(id, num);
     }
+
+    public override void OnDrop(PointerEventData eventData) {
+        if (enabled) {
+            base.OnDrop(eventData);
+        }
+    }
+
+    public override void OnBeginDrag(PointerEventData eventData) {
+        if (enabled) {
+            base.OnBeginDrag(eventData);
+        }
+    }
+
+    public override void OnDrag(PointerEventData eventData) {
+        if (enabled) {
+            base.OnDrag(eventData);
+        }
+    }
+
+    public override void OnEndDrag(PointerEventData eventData) {
+        if (enabled) {
+            base.OnEndDrag(eventData);
+        }
+    }
 }

@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Assets._02.Scripts.zhxUIScripts;
 using TTT.Resource;
 using TTT.Item;
+using TTT.UI;
 
 public class PersonTextPanel : MonoBehaviour
 {
@@ -112,7 +113,7 @@ public class PersonTextPanel : MonoBehaviour
         return indexOfpersonUsed;
     }
 
-    bool canEuqip(int itemID, int number)
+    bool canEuqip(DragableAndDropableAssetsItemView sender, int itemID, int number)
     {
         if (StaticResource.GetItemInfoByID<WeaponInfo>(itemID) == null)
             return false;

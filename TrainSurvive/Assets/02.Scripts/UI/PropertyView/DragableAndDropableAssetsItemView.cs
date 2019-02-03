@@ -24,12 +24,12 @@ namespace TTT.UI
         /// 该物品允许被拖入的回调处理函数
         /// </summary>
         public Action<int, int> OnItemDropIn { get; set; }
-        public void OnDrop(PointerEventData eventData)
+        public virtual void OnDrop(PointerEventData eventData)
         {
             DragableAssetsItemView item = eventData.pointerDrag.GetComponent<DragableAssetsItemView>();
             //如果ChargeIn为空，则表示不需要判断是否允许拖入
             if (item == null
-                || (OnChargeIn?.Invoke(item.ItemID, item.Number) ?? false))
+                || (OnChargeIn?.Invoke(this, item.ItemID, item.Number) ?? false))
                 return;
             SetItemData(item.ItemID, item.Number);
             item.CallBackDropSucess();
