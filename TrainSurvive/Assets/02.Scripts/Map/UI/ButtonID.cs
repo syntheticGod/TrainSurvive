@@ -33,9 +33,9 @@ namespace WorldMap.UI
         TOWN_NUM,
 
         TAVERN_NONE,//酒馆界面
-        TAVERN_BUTTON3,
-        TAVERN_BUTTON2,
         TAVERN_BUTTON1,
+        TAVERN_BUTTON2,
+        TAVERN_BUTTON3,
         TAVERN_NUM,
 
         TEAM_SELECT_DIALOG_NONE,//探险队选择框

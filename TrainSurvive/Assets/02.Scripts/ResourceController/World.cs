@@ -135,6 +135,7 @@ public class World
     public Storage storage = new Storage();
     public TownDataSet Towns = new TownDataSet();
     public NpcDataSet Npcs = new NpcDataSet();
+    public DialogueDataSet Dialogues = new DialogueDataSet();
     public List<Person> persons = new List<Person>();
     public Person GetPerson(int index)
     {

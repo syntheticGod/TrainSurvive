@@ -30,7 +30,6 @@ namespace WorldMap.Controller
         private Text teamActionBtn;
         //主摄像机焦点控制器
         private ICameraFocus cameraFocus;
-        private float lastSize = 0;
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -93,13 +92,6 @@ namespace WorldMap.Controller
                 transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
                 GetComponentInChildren<SpriteRenderer>().sortingOrder = 12;
             }
-            //FOR TEST：检测背包重量测试
-            if (!Mathf.Approximately(lastSize, team.Inventory.GetWeight()))
-            {
-                Debug.Log("探险队背包变化：" + team.Inventory.GetWeight());
-                lastSize = team.Inventory.GetWeight();
-            }
-            //---
         }
         public void OnClick(BUTTON_ID id)
         {

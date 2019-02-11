@@ -76,6 +76,14 @@ namespace WorldMap {
             }
             return true;
         }
+        /// <summary>
+        /// 根据地图坐标获取区块坐标
+        /// 条件是：假设区块的划分是根据同一纬度中城镇的个数等距划分
+        /// </summary>
+        /// <param name="position">地图坐标</param>
+        /// <returns>
+        /// 区块坐标
+        /// </returns>
         public Vector2Int CalArea(Vector2Int position)
         {
             int x = (position.x * towns.GetLength(0)) / colNum;

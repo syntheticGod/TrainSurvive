@@ -12,7 +12,6 @@ using System;
 using TTT.Item;
 using TTT.Utility;
 using System.Collections;
-using Assets._02.Scripts.zhxUIScripts;
 using Story.Scripts;
 
 namespace TTT.Resource
