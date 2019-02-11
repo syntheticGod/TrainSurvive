@@ -16,8 +16,8 @@ MonoBehaviour:
   Name: "\u5EFA\u9020\u953B\u9020\u53F0"
   Description: "\u53EF\u4EE5\u953B\u9020\u6B66\u5668\u90E8\u4EF6\u5E76\u7EC4\u88C5\u6210\u5B8C\u6574\u7684\u6B66\u5668"
   Costs: []
-  StructureName: "\u953B\u9020\u53F0"
-  Parameter: '|'
-  UnlockUI: 1
-  UnlockStructure: 1
+  StructureName: 
+  Parameter: 
+  UnlockUI: 0
+  UnlockStructure: 0
   SpriteLevel: -1

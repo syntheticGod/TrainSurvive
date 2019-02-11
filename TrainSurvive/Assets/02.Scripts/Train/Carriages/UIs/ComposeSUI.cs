@@ -1,7 +1,7 @@
 /*
  * 描述：
  * 作者：刘旭涛
- * 创建时间：2019/2/3 13:47:03
+ * 创建时间：2019/2/11 13:47:56
  * 版本：v0.7
  */
 using Assets._02.Scripts.zhxUIScripts;
@@ -13,20 +13,18 @@ using TTT.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ForgeSUI : InitableUI {
+public class ComposeSUI : InitableUI {
     private UnitInventoryCtrl[] _c_Materials;
     private Slider _c_ProgressBar;
-    private ResourceItemBase _c_Component;
-    private SelectionsUI _c_SelectionsUI;
+    private ResourceItemBase _c_Weapon;
     private PackController _c_PackController;
     private Button _c_Button;
-    private Button _c_ComponentButton;
 
     private UnitInventoryCtrl[] C_Materials {
         get {
             if (_c_Materials == null) {
-                _c_Materials = new UnitInventoryCtrl[6];
-                for (int i = 0; i < 6; i++) {
+                _c_Materials = new UnitInventoryCtrl[2];
+                for (int i = 0; i < 2; i++) {
                     _c_Materials[i] = transform.Find("Materials/Material" + (i + 1)).GetComponent<UnitInventoryCtrl>();
                 }
             }
@@ -41,20 +39,12 @@ public class ForgeSUI : InitableUI {
             return _c_ProgressBar;
         }
     }
-    private ResourceItemBase C_Component {
+    private ResourceItemBase C_Weapon {
         get {
-            if (_c_Component == null) {
-                _c_Component = transform.Find("Component").GetComponent<ResourceItemBase>();
+            if (_c_Weapon == null) {
+                _c_Weapon = transform.Find("Weapon").GetComponent<ResourceItemBase>();
             }
-            return _c_Component;
-        }
-    }
-    private SelectionsUI C_SelectionsUI {
-        get {
-            if (_c_SelectionsUI == null) {
-                _c_SelectionsUI = transform.Find("Selections").GetComponent<SelectionsUI>();
-            }
-            return _c_SelectionsUI;
+            return _c_Weapon;
         }
     }
     private PackController C_PackController {
@@ -73,29 +63,8 @@ public class ForgeSUI : InitableUI {
             return _c_Button;
         }
     }
-    private Button C_ComponentButton {
-        get {
-            if (_c_ComponentButton == null) {
-                _c_ComponentButton = transform.Find("Component").GetComponent<Button>();
-            }
-            return _c_ComponentButton;
-        }
-    }
 
-    private ForgeStructure Structure { get; set; }
-    private int SelectedComponentID {
-        get {
-            return Structure.SelectedComponentID;
-        }
-        set {
-            if (value == -1) {
-                C_Component.Clear();
-            } else {
-                C_Component.SetItemIDAndRarity(value, (PublicData.Rarity)Math.Round(Structure.GetResultRarity()));
-            }
-            Structure.SelectedComponentID = value;
-        }
-    }
+    private ComposeStructure Structure { get; set; }
 
     private void OnEnable() {
         C_PackController.gameObject.SetActive(true);
@@ -104,15 +73,17 @@ public class ForgeSUI : InitableUI {
         Structure.OnProgressUpdate += Structure_OnProgressUpdate;
 
         for (int i = 0; i < Structure.Materials.Length; i++) {
-            if (Structure.Materials[i] != null && Structure.UnlockMaterials[i]) {
+            if (Structure.Materials[i] != null) {
                 C_Materials[i].SetItemData(Structure.Materials[i]);
             } else {
                 C_Materials[i].Clear();
             }
-            C_Materials[i].gameObject.SetActive(Structure.UnlockMaterials[i]);
         }
-        SelectedComponentID = Structure.SelectedComponentID;
-
+        if (Structure.SelectedFormula == -1) {
+            C_Weapon.Clear();
+        } else {
+            C_Weapon.SetItemID(Structure.Formulas[Structure.SelectedFormula].ToWeapon);
+        }
 
         if (Structure.Progress > 0) {
             LockUI(false);
@@ -127,32 +98,27 @@ public class ForgeSUI : InitableUI {
     }
 
     public override void Init(CarriageBackend carriage) {
-        Structure = carriage.Structures[gameObject.name] as ForgeStructure;
-
-        C_SelectionsUI.SetData(Structure.ComponentIDs, (id) => SelectedComponentID = id);
-        C_SelectionsUI.gameObject.SetActive(false);
-
+        Structure = carriage.Structures[gameObject.name] as ComposeStructure;
+        
         for (int i = 0; i < C_Materials.Length; i++) {
-            C_Materials[i].gameObject.SetActive(Structure.UnlockMaterials[i]);
             C_Materials[i].OnChargeIn = OnChargeIn;
         }
     }
-    
+
     private bool OnChargeIn(DragableAndDropableAssetsItemView sender, int id, int num) {
         ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
-        if (item.Type == PublicData.ItemType.Material) {
+        if (item.Type == PublicData.ItemType.Component) {
             int index = Array.IndexOf(C_Materials, sender);
-            Structure.Materials[index] = new ItemData(item.ID, 1);
-            if (SelectedComponentID != -1) {
-                C_Component.SetItemIDAndRarity(SelectedComponentID, (PublicData.Rarity)Math.Round(Structure.GetResultRarity()));
-            }
-            if (num > 1) {
-                sender.SetItemData(item.ID, 1);
-                PublicMethod.ConsumeItems(new ItemData[] { new ItemData(item.ID, 1) });
-                C_PackController.UpdatePack();
-                return true;
-            } else {
+            int formulaIndex = ContainsFormula(item.ID, index == 0);
+            if (formulaIndex >= 0) {
+                Structure.Materials[index] = new ComponentData(id, 1, 0); //TODO 需要取到拖进来物体的品质等信息，物品系统没有提供。
+                if (Structure.Materials[1 - index] != null) {
+                    Structure.SelectedFormula = formulaIndex;
+                    C_Weapon.SetItemID(Structure.Formulas[formulaIndex].ToWeapon);
+                }
                 return false;
+            } else {
+                return true;
             }
         } else {
             return true;
@@ -169,7 +135,6 @@ public class ForgeSUI : InitableUI {
 
     private void LockUI(bool isLocked) {
         C_Button.interactable = isLocked;
-        C_ComponentButton.interactable = isLocked;
         for (int i = 0; i < C_Materials.Length; i++) {
             C_Materials[i].enabled = isLocked;
         }
@@ -185,7 +150,26 @@ public class ForgeSUI : InitableUI {
         for (int i = 0; i < C_Materials.Length; i++) {
             C_Materials[i].Clear();
         }
-        C_Component.SetItemIDAndRarity(SelectedComponentID, (PublicData.Rarity)Math.Round(Structure.GetResultRarity()));
+        C_Weapon.Clear();
         C_PackController.UpdatePack();
+    }
+
+    private int ContainsFormula(int componentID, bool component1) {
+        if (component1) {
+            for (int i = 0; i < Structure.Formulas.Length; i++) {
+                if (Array.IndexOf(Structure.Formulas[i].FromComponent1, componentID) >= 0 && 
+                    (Structure.Materials[1] == null || Array.IndexOf(Structure.Formulas[i].FromComponent2, Structure.Materials[1].ID) >= 0)) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < Structure.Formulas.Length; i++) {
+                if (Array.IndexOf(Structure.Formulas[i].FromComponent2, componentID) >= 0 &&
+                    (Structure.Materials[0] == null || Array.IndexOf(Structure.Formulas[i].FromComponent1, Structure.Materials[0].ID) >= 0)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 }

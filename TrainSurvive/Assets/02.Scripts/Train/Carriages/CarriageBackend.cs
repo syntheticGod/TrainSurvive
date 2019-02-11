@@ -138,7 +138,18 @@ public class CarriageBackend : ISerializable {
             Upgrade(setting);
         }
     }
-    protected virtual void Upgrade(CarriageResearchSetting setting) { }
+    protected virtual void Upgrade(CarriageResearchSetting setting) {
+        switch (setting.ID) {
+            case 501: {
+                CarriageStructure forgeStructure = Structures["锻造台"];
+                CarriageStructure composeStructure = Structures["组装台"];
+                forgeStructure.Enabled = true;
+                forgeStructure.OnStart();
+                composeStructure.Enabled = true;
+                composeStructure.OnStart();
+            }break;
+        }
+    }
     /// <summary>
     /// 开始工作！
     /// </summary>

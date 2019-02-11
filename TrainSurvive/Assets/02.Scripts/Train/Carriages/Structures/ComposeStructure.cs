@@ -1,7 +1,7 @@
 /*
  * 描述：
  * 作者：刘旭涛
- * 创建时间：2019/2/3 11:38:11
+ * 创建时间：2019/2/11 13:13:01
  * 版本：v0.7
  */
 using Assets._02.Scripts.zhxUIScripts;
@@ -9,36 +9,39 @@ using System;
 using System.Collections;
 using System.Runtime.Serialization;
 using TTT.Item;
-using TTT.Resource;
 using UnityEngine;
 
-public class ForgeStructure : CarriageStructure {
+public class ComposeStructure : CarriageStructure {
 
-    public ForgeStructure(string name, bool initialEnabled) : base(name, initialEnabled) { }
+    [Serializable]
+    public struct ComposeFormula {
+        public int[] FromComponent1;
+        public int[] FromComponent2;
+        public int ToWeapon;
+    }
 
-    protected ForgeStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
-        Materials = (ItemData[])info.GetValue("Materials", typeof(ItemData[]));
-        UnlockMaterials = (bool[])info.GetValue("UnlockMaterials", typeof(bool[]));
+    public ComposeStructure(string name, bool initialEnabled) : base(name, initialEnabled) { }
+
+    protected ComposeStructure(SerializationInfo info, StreamingContext context) : base(info, context) {
+        Materials = (ComponentData[])info.GetValue("Materials", typeof(ComponentData[]));
         _processTime = info.GetSingle("_processTime");
         ProcessSpeedRatio = info.GetSingle("ProcessSpeedRatio");
-        _componentIDs = (int[])info.GetValue("_componentIDs", typeof(int[]));
         Progress = info.GetSingle("Progress");
-        SelectedComponentID = info.GetInt32("SelectedComponentID");
+        _formulas = (ComposeFormula[])info.GetValue("_formulas", typeof(ComposeFormula[]));
+        SelectedFormula = info.GetInt32("SelectedFormula");
     }
 
     public override void GetObjectData(SerializationInfo info, StreamingContext context) {
         base.GetObjectData(info, context);
         info.AddValue("Materials", Materials);
-        info.AddValue("UnlockMaterials", UnlockMaterials);
         info.AddValue("_processTime", _processTime);
         info.AddValue("ProcessSpeedRatio", ProcessSpeedRatio);
-        info.AddValue("_componentIDs", _componentIDs);
         info.AddValue("Progress", Progress);
-        info.AddValue("SelectedComponentID", SelectedComponentID);
+        info.AddValue("_formulas", _formulas);
+        info.AddValue("SelectedFormula", SelectedFormula);
     }
 
-    public ItemData[] Materials { get; set; } = new ItemData[6];
-    public bool[] UnlockMaterials { get; set; } = { true, true, true, false, false, false };
+    public ComponentData[] Materials { get; set; } = new ComponentData[2];
 
     /// <summary>
     /// 处理时间
@@ -49,11 +52,11 @@ public class ForgeStructure : CarriageStructure {
         }
     }
     /// <summary>
-    /// 部件ID
+    /// 配方
     /// </summary>
-    public int[] ComponentIDs {
+    public ComposeFormula[] Formulas {
         get {
-            return _componentIDs;
+            return _formulas;
         }
     }
     /// <summary>
@@ -65,17 +68,17 @@ public class ForgeStructure : CarriageStructure {
     /// </summary>
     public float Progress { get; set; }
     /// <summary>
-    /// 选中的组件ID
+    /// 已选中的配方
     /// </summary>
-    public int SelectedComponentID { get; set; } = -1;
+    public int SelectedFormula { get; set; } = -1;
 
     public event Action OnFinished;
     public event Action<float, float> OnProgressUpdate;
 
     [StructurePublicField(Tooltip = "处理时间")]
     private float _processTime;
-    [StructurePublicField(Tooltip = "部件ID")]
-    private int[] _componentIDs;
+    [StructurePublicField(Tooltip = "配方")]
+    private ComposeFormula[] _formulas;
 
     public override void OnStart() {
         base.OnStart();
@@ -88,40 +91,20 @@ public class ForgeStructure : CarriageStructure {
     public override void OnUpgraded(CarriageResearchSetting upgrade) {
         base.OnUpgraded(upgrade);
         string[] parameters = upgrade.Parameter.Split('|');
-        if (parameters.Length != 2) {
-            Debug.LogError("第" + upgrade.ID + "号升级所需参数为([int]UnlockMaterials|[float]ProcessSpeedRatio)");
+        if (parameters.Length != 1) {
+            Debug.LogError("第" + upgrade.ID + "号升级所需参数为([float]ProcessSpeedRatio)");
             return;
         }
 
         if (parameters[0].Length > 0) {
-            int count = int.Parse(parameters[0]);
-            for (int i = 0; i < count && i < UnlockMaterials.Length; i++) {
-                UnlockMaterials[i] = true;
-            }
-            for (int i = count; i < UnlockMaterials.Length; i++) {
-                UnlockMaterials[i] = false;
-                Materials[i] = null;
-            }
-        }
-        if (parameters[1].Length > 0) {
-            float value = float.Parse(parameters[1]);
+            float value = float.Parse(parameters[0]);
             ProcessSpeedRatio = value;
         }
     }
 
-    public float GetResultRarity() {
-        float rarities = 0;
-        foreach (ItemData item in Materials) {
-            if (item != null) {
-                rarities += (int)item.Rarity;
-            }
-        }
-        return 0.5f + rarities / 100;
-    }
-
     public bool Forge() {
         for (int i = 0; i < Materials.Length; i++) {
-            if (Materials[i] != null && UnlockMaterials[i] && SelectedComponentID != -1) {
+            if (Materials[i] != null && SelectedFormula != -1) {
                 TimeController.getInstance().StartCoroutine(Run());
                 return true;
             }
@@ -139,11 +122,12 @@ public class ForgeStructure : CarriageStructure {
         UpdateState("Running", false);
         Progress = 0;
         OnProgressUpdate?.Invoke(Progress, ProcessTime);
-        ItemData item = new ComponentData(SelectedComponentID, 1, GetResultRarity());
+        ItemData item = new WeaponData(Formulas[SelectedFormula].ToWeapon, Materials[0], Materials[1]);
         PublicMethod.AppendItemsInBackEnd(new ItemData[] { item });
         for (int i = 0; i < Materials.Length; i++) {
             Materials[i] = null;
         }
+        SelectedFormula = -1;
         OnFinished?.Invoke();
     }
 }

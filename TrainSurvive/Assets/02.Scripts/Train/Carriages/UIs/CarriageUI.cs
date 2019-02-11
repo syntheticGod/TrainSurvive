@@ -138,6 +138,11 @@ public class CarriageUI : MonoBehaviour {
         CarriageResearchSetting setting = Carriage.ResearchSettings[id];
         if (setting.StructureName.Length > 0 && setting.UnlockUI) {
             ToggleUI(setting.StructureName, true);
+        } else {
+            if (id == 501) {
+                ToggleUI("锻造台", true);
+                ToggleUI("组装台", true);
+            }
         }
     }
     #endregion

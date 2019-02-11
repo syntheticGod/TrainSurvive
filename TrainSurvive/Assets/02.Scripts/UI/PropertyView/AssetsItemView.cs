@@ -63,7 +63,7 @@ namespace TTT.UI
             numView.text = number.ToString();
         }
         /// <summary>
-        /// 设置物体的数据，只获取ItemData中的ID和数量
+        /// 设置物体的数据，只获取ItemData中的ID和数量??
         /// </summary>
         /// <param name="data"></param>
         public void SetItemData(ItemData data)

@@ -24,6 +24,7 @@ public class CarriageStructureSetting : ScriptableObject {
         public Item_EnergyStructure.EnergyType Item_EnergyStructure_EnergyTypeValue;
         public Item_EnergyStructure.Conversion[] Item_EnergyStructure_ConversionArrayValue;
         public Item_ItemStructure.Conversion[] Item_ItemStructure_ConversionArrayValue;
+        public ComposeStructure.ComposeFormula[] ComposeStructure_ComposeFormulaArrayValue;
         public Seed2ItemStructure.Conversion[] Seed2ItemStructure_ConversionArrayValue;
 
         public object GetValue() {

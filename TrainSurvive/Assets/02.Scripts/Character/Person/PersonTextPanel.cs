@@ -113,9 +113,9 @@ public class PersonTextPanel : MonoBehaviour
         return indexOfpersonUsed;
     }
 
-    bool canEuqip(DragableAndDropableAssetsItemView sender, int itemID, int number)
+    bool canEuqip(DragableAndDropableAssetsItemView sender, int id, int num)
     {
-        if (StaticResource.GetItemInfoByID<WeaponInfo>(itemID) == null)
+        if (StaticResource.GetItemInfoByID<WeaponInfo>(id) == null)
             return false;
         //以后补充职业相关
         return true;
