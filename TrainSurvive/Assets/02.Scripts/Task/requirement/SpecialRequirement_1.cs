@@ -19,7 +19,7 @@ public class SpecialRequirement_1 : TaskRequirement
     }
     public override bool achieveGoal()
     {
-        foreach(Person p in World.getInstance().persons)
+        foreach(Person p in World.getInstance().Persons)
         {
             if (p.ismale = false && p.intelligence >= 25 && p.agile >= 15)
             {

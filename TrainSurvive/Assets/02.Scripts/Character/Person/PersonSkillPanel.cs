@@ -30,7 +30,7 @@ public class PersonSkillPanel : MonoBehaviour {
         uncarry_bt.interactable = false;
         person_index = personIndex;
         skillSelected_id = -1;
-        Person p = World.getInstance().persons[person_index];
+        Person p = World.getInstance().Persons[person_index];
         skillListContent.updatePanel(p);
         update_skillDescription();
         int skillId_1 = p.getSkillCarryed(1);
@@ -71,7 +71,7 @@ public class PersonSkillPanel : MonoBehaviour {
     {
         if (skillSelected_id != -1)
         {
-            Person p = World.getInstance().persons[person_index];
+            Person p = World.getInstance().Persons[person_index];
             p.carry_skill(skillSelected_id);
             int skillId_1=p.getSkillCarryed(1);
             int skillId_2 = p.getSkillCarryed(2);
@@ -102,7 +102,7 @@ public class PersonSkillPanel : MonoBehaviour {
     {
         if (skillSelected_id != -1)
         {
-            Person p = World.getInstance().persons[person_index];
+            Person p = World.getInstance().Persons[person_index];
             p.uncarry_skill(skillSelected_id);
             int skillId_1 = p.getSkillCarryed(1);
             int skillId_2 = p.getSkillCarryed(2);

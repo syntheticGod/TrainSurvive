@@ -181,7 +181,7 @@ namespace WorldMap.Controller
         public void RefreshView()
         {
             int i;
-            for (i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
+            for (i = 0; i < teamPersons.Length && i < World.getInstance().Persons.Count; i++)
             {
                 teamPersons[i].gameObject.SetActive(true);
             }
@@ -202,7 +202,7 @@ namespace WorldMap.Controller
         }
         private void FaceTowardsBottom()
         {
-            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < World.getInstance().Persons.Count; i++)
             {
                 if (i == 1)
                     teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 3);
@@ -213,7 +213,7 @@ namespace WorldMap.Controller
         }
         private void FaceTowardsTop()
         {
-            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < World.getInstance().Persons.Count; i++)
             {
                 if (i == 1)
                     teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 9);
@@ -224,7 +224,7 @@ namespace WorldMap.Controller
         }
         private void FaceTowardsLeft()
         {
-            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < World.getInstance().Persons.Count; i++)
             {
                 if (i == 1)
                     teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 6);
@@ -235,7 +235,7 @@ namespace WorldMap.Controller
         }
         private void FaceTowardsRight()
         {
-            for (int i = 0; i < teamPersons.Length && i < WorldForMap.Instance.TeamNumber(); i++)
+            for (int i = 0; i < teamPersons.Length && i < World.getInstance().Persons.Count; i++)
             {
                 if (i == 1)
                     teamPersons[i].sprite = StaticResource.GetSprite("Sprite/map/person/person1", 6);
@@ -300,6 +300,10 @@ namespace WorldMap.Controller
                     FaceTowardsLeft();
                     break;
             }
+        }
+        public void ObserverUpdate(int state, int echo, object tag = null)
+        {
+            ObserverUpdate(state, echo);
         }
     }
 }

@@ -60,10 +60,6 @@ namespace WorldMap.Model
         //列车移动速度
         private float velocity = 0.0F;
         public PassBlockCenterCallBack OnPassBlockCenter;
-        public override int MaxState()
-        {
-            return (int)STATE.NUM;
-        }
         public static Train Instance { get; } = new Train();
         private Train() : base()
         {
@@ -330,7 +326,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("列车：招募到" + theOne.name);
-            WorldForMap.Instance.TrainRecruit(theOne);
+            World.getInstance().Persons.Add(theOne);
         }
         //列车属性判断
         public bool IsRunning

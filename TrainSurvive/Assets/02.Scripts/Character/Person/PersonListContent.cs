@@ -31,7 +31,7 @@ public class PersonListContent : MonoBehaviour {
         bool teamPerson_display = togTeam.isOn;
         World world = World.getInstance();
         int index = 0;
-        foreach (Person person in world.persons)
+        foreach (Person person in world.Persons)
         {
             if((trainPerson_display&&!person.ifReadyForFighting)|| (teamPerson_display && person.ifReadyForFighting))
             {

@@ -53,7 +53,7 @@ namespace WorldBattle {
                 battleController.personNum = 0;
 
                 //遍历world中的人物列表，将小队人物参战
-                foreach (Person person in World.getInstance().persons) {
+                foreach (Person person in World.getInstance().Persons) {
                     //如果当前人不处于出战状态，返回false
                     if (person.ifReadyForFighting == false) {
                         continue;

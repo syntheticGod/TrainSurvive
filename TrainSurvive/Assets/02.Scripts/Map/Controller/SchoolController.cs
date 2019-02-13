@@ -58,7 +58,7 @@ namespace WorldMap.Controller
                     heroProfile.gameObject.AddComponent<Button>().onClick.AddListener(delegate ()
                     {
                         HeroSelectDialog dialog = BaseDialog.CreateDialog<HeroSelectDialog>("HeroSelectDialog");
-                        dialog.SetDatas(WorldForMap.Instance.GetAllPersons());
+                        dialog.SetDatas(World.getInstance().Persons.CopyAll());
                         dialog.DialogCallBack = this;
                         dialog.ShowDialog();
                     });
@@ -121,7 +121,7 @@ namespace WorldMap.Controller
         {
             professionListView.SetData(new List<Profession>());
             List<Person> heros;
-            heros = WorldForMap.Instance.GetAllPersons();
+            heros = World.getInstance().Persons.CopyAll();
             if (heros.Count > 0)
             {
                 ShowHero(heros[0]);

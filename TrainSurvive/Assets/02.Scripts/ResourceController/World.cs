@@ -7,6 +7,7 @@ using WorldMap;
 using System;
 using TTT.Item;
 using WorldMap.Model;
+using TTT.Team;
 
 [System.Serializable]
 public class World
@@ -133,33 +134,22 @@ public class World
     /// 仓库——探险队和列车都同用一个仓库
     /// </summary>
     public Storage storage = new Storage();
+    /// <summary>
+    /// 城镇
+    /// </summary>
     public TownDataSet Towns = new TownDataSet();
+    /// <summary>
+    /// NPC
+    /// </summary>
     public NpcDataSet Npcs = new NpcDataSet();
+    /// <summary>
+    /// 对话
+    /// </summary>
     public DialogueDataSet Dialogues = new DialogueDataSet();
-    public List<Person> persons = new List<Person>();
-    public Person GetPerson(int index)
-    {
-        return persons[index];
-    }
-    public void AddPerson(Person person)
-    {
-        persons.Add(person);
-    }
-    public int CountOfFighter
-    {
-        get
-        {
-            int count = 0;
-            foreach (Person person in persons)
-            {
-                if (person.ifReadyForFighting)
-                    count++;
-            }
-            return count;
-        }
-    }
-    public int[] personTeamIDArray;
-
+    /// <summary>
+    /// 操控的人物
+    /// </summary>
+    public PersonSet Persons = new PersonSet();
 
     public SerializableDictionary<string, CarriageBackend> carriageBackends = new SerializableDictionary<string, CarriageBackend>();
     public LinkedList<Structure> buildInstArray = new LinkedList<Structure>();
@@ -168,12 +158,9 @@ public class World
     public Tech[] techArray;
     public int techUnlock;
     public bool automata;
-
-    public int[] abiAllin;
-    public int[] abiAllOut;
+    
     public int numIn;
     public int numOut;
-    public int personNumMax = 15;
     public uint teamPoint
     {
         get { return teamPoint; }
@@ -580,24 +567,6 @@ public class World
     {
         return addFoodOut((int)-(foodConsumed_eachPerson * numOut));
     }
-    /// <summary>
-    /// 获取队伍的总属性
-    /// </summary>
-    /// <returns></returns>
-    public int getTotalProperty()
-    {
-        int totalProperty = 0;
-        foreach (Person p in persons)
-        {
-            totalProperty += p.intelligence;
-            totalProperty += p.vitality;
-            totalProperty += p.strength;
-            totalProperty += p.technique;
-            totalProperty += p.agile;
-        }
-        return totalProperty;
-    }
-
     public static void destroyWorld()
     {
         instance = null;

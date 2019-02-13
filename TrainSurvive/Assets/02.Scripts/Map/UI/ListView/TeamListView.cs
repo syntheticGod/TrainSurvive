@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TTT.UI;
 using TTT.UI.ListView;
 using TTT.Utility;
+using TTT.Team;
 
 namespace WorldMap.UI
 {
@@ -50,13 +51,13 @@ namespace WorldMap.UI
                 action.onClick.AddListener(delegate ()
                 {
                     bool swithFight = !currentData.ifReadyForFighting;
-                    if (WorldForMap.Instance.TeamConfigFight(currentData, swithFight))
+                    if (World.getInstance().Persons.ConfigFight(currentData, swithFight))
                     {
                         SetActionBtn(currentData.ifReadyForFighting);
                     }
                     else
                     {
-                        InfoDialog.Show(swithFight ? "出战人数已经达到上限" + WorldForMap.MAX_NUMBER_FIGHER + "人" : "必须有一人出战");
+                        InfoDialog.Show(swithFight ? "出战人数已经达到上限" + PersonSet.MAX_NUMBER_FIGHER + "人" : "必须有一人出战");
                     }
                 });
             }

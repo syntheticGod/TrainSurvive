@@ -127,7 +127,7 @@ namespace WorldMap.Controller
         }
         protected override void AfterShowWindow()
         {
-            teamListView.Datas = WorldForMap.Instance.GetAllPersons();
+            teamListView.Datas = World.getInstance().Persons.CopyAll();
             if (teamListView.Datas.Count > 0)
                 teamListView.ClickManually(0);
         }

@@ -145,7 +145,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
         else if(belongContainer != null && belongContainer.name == "WeaponGrid")            //卸载装备需要做的信息更新
         {
             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
-            Person curPerson = World.getInstance().persons[personID];
+            Person curPerson = World.getInstance().Persons[personID];
             curPerson.unequipWeapon();
             GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID, false);
         }
@@ -261,7 +261,7 @@ public class ItemGridCtrl : MonoBehaviour, ItemController, IDropHandler, IBeginD
                         if (belongContainer.name == "WeaponGrid")            //更换装备需要做的信息更新
                         {
                             int personID = GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().getIndexOfpersonUsed();
-                            Person curPerson = World.getInstance().persons[personID];
+                            Person curPerson = World.getInstance().Persons[personID];
                             curPerson.unequipWeapon();
                             curPerson.equipWeapon((Weapon)item);
                             GameObject.Find("gcTextPanel").GetComponent<PersonTextPanel>().updatePanel(personID,false);

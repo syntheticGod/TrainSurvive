@@ -74,16 +74,15 @@ namespace WorldMap
         /// </summary>
         private void FillMoreData()
         {
-            world = WorldForMap.Instance;
             if (mapGenerate.isCreateMap)
             {
-                world.TrainSetMapPos(initIndexForTrain);
+                WorldForMap.Instance.TrainSetMapPos(initIndexForTrain);
                 //初始化城镇数据
                 World.getInstance().Towns.Init(Map.GetInstance().towns);
                 World.getInstance().Npcs.Init();
                 World.getInstance().Dialogues.InitOnce();
                 //初始化档案时随机生成3个人物
-                world.RandomPersonInTrain(3);
+                World.getInstance().Persons.RandomPersons(3);
                 World.getInstance().save();
             }
         }

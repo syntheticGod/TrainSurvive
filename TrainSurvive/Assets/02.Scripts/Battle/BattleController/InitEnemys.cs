@@ -45,7 +45,7 @@ namespace WorldBattle
                     case WorldMap.SpawnPoint.SpecialTerrainEnum.MONSTER:
                         //根据玩家出战人数n，随机产生敌人数量
                         {
-                            int countOfFighter = World.getInstance().CountOfFighter;
+                            int countOfFighter = World.getInstance().Persons.CountOfFighter();
                             int randomInt = MathTool.RandomInt(100);
                             if (randomInt < 20)
                             {//20% 人数+1

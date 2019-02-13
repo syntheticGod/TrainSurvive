@@ -27,106 +27,61 @@ namespace WorldMap
     }
     public interface Subject
     {
-        List<ObserverWithEcho>[] Observers { get; }
-        int MaxState();
-    }
-    public static class SubjectExtension
-    {
+        List<ObserverWithEcho> Observers { get; }
         /// <summary>
         /// 绑定监听所有状态的监听者
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="subject"></param>
-        /// <param name="obs"></param>
+        /// <param name="obs">监听者</param>
         /// <returns></returns>
-        public static bool Attach<T>(this T subject, Observer obs, int echo = 0) where T : Subject
-        {
-            return Attach(subject, obs, subject.MaxState(), echo);
-        }
-        /// <summary>
-        /// 绑定指定状态的监听者
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="subject"></param>
-        /// <param name="obs"></param>
-        /// <param name="state">state==STATE.NUM时，表示监听所有状态</param>
-        /// <returns></returns>
-        public static bool Attach<T>(this T subject, Observer obs, int state, int echo) where T : Subject
-        {
-            if (state > subject.MaxState())
-                return false;
-            subject.Observers[state].Add(new ObserverWithEcho { Observer = obs, EchoCode = echo });
-            return true;
-        }
+        bool Attach(Observer obs, int echo = 0);
         /// <summary>
         /// 移出监听所有状态的监听这
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="subject"></param>
         /// <param name="obs">监听者</param>
         /// <returns></returns>
-        public static bool Detach<T>(this T subject, Observer obs) where T : Subject
+        bool Detach(Observer obs);
+    }
+    public abstract class SubjectBase : Subject
+    {
+        public List<ObserverWithEcho> Observers { get; private set; }
+        protected SubjectBase()
         {
-            return Detach(subject, obs, subject.MaxState());
+            Observers = new List<ObserverWithEcho>();
         }
-        /// <summary>
-        /// 移出监听指定状态的监听者
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="subject"></param>
-        /// <param name="obs">监听者</param>
-        /// <param name="state">指定状态</param>
-        /// <returns></returns>
-        public static bool Detach<T>(this T subject, Observer obs, int state) where T : Subject
+        public bool Attach(Observer obs, int echo = 0)
         {
-            if (state > subject.MaxState()) return false;
+            Observers.Add(new ObserverWithEcho { Observer = obs, EchoCode = echo });
+            return true;
+        }
+        public bool Detach(Observer obs)
+        {
             //不关心EchoCode是多少，所以EchoCode=0
-            return subject.Observers[state].Remove(new ObserverWithEcho { Observer = obs, EchoCode = 0 });
+            return Observers.Remove(new ObserverWithEcho { Observer = obs, EchoCode = 0 });
         }
         /// <summary>
         /// 通知监听者状态发生变化了
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="subject"></param>
         /// <param name="state">新状态</param>
         /// <returns></returns>
-        public static bool Notify<T>(this T subject, int state) where T : Subject
+        protected bool Notify(int state)
         {
-            if (state >= subject.MaxState()) return false;
-            //通知相应监听状态的监听者
-            foreach (var obs in subject.Observers[state])
-            {
+            //通知监听所有的监听者
+            foreach (var obs in Observers)
                 obs.Observer.ObserverUpdate(state, obs.EchoCode);
-            }
-            //通知监听所有状态的监听者
-            foreach (var obs in subject.Observers[subject.MaxState()])
-            {
-                obs.Observer.ObserverUpdate(state, obs.EchoCode);
-            }
             return true;
         }
-    }
-    public abstract class SubjectBase : Subject
-    {
-        public List<ObserverWithEcho>[] observers;
-        public List<ObserverWithEcho>[] Observers
+        /// <summary>
+        /// 通知监听者状态发生变化了，同时夹带信息
+        /// </summary>
+        /// <param name="state">新状态</param>
+        /// <param name="tag">信息</param>
+        /// <returns></returns>
+        protected bool Notify(int state, object tag)
         {
-            get
-            {
-                return observers;
-            }
+            foreach (var obs in Observers)
+                obs.Observer.ObserverUpdate(state, obs.EchoCode, tag);
+            return true;
         }
-        protected SubjectBase()
-        {
-            //最后一个存监听所有状态
-            observers = new List<ObserverWithEcho>[MaxState()+1];
-            for (int i = 0; i < observers.Length; ++i)
-            {
-                observers[i] = new List<ObserverWithEcho>();
-            }
-        }
-        //状态的最大值
-        public abstract int MaxState();
     }
 }
 

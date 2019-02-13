@@ -25,7 +25,7 @@ public class ProfessionPanel : MonoBehaviour {
 	
 	public void updatePanel(int personIndex)
     {
-        Person person = World.getInstance().persons[personIndex];
+        Person person = World.getInstance().Persons.At(personIndex);
         Profession mainProfession = person.getTopProfession();
         Profession[] ps = new Profession[3];
         for(int i = 0; i < 3; i++)

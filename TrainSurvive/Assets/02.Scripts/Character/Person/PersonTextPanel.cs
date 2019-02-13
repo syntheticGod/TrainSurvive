@@ -77,7 +77,7 @@ public class PersonTextPanel : MonoBehaviour
         }
 
 
-        Person p = World.getInstance().persons[personIndex];
+        Person p = World.getInstance().Persons.At(personIndex);
         //Weapon w = (Weapon)PublicMethod.GenerateItem(p.weaponId)[0];  
         vit.text = "体力：" + p.vitality;
         str.text = "力量：" + p.strength;

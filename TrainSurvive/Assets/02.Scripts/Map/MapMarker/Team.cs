@@ -35,7 +35,7 @@ namespace WorldMap.Model
             set
             {
                 state = value;
-                this.Notify((int)state);
+                Notify((int)state);
                 switch (state)
                 {
                     case STATE.STOP_OUT:
@@ -63,10 +63,6 @@ namespace WorldMap.Model
         //背包
         public InventoryForTeam Inventory { private set; get; }
         public PassBlockCenterCallBack OnPassBlockCenter;
-        public override int MaxState()
-        {
-            return (int)STATE.NUM;
-        }
         public static Team Instance { get; } = new Team();
         private Team() : base()
         {
@@ -179,7 +175,7 @@ namespace WorldMap.Model
         public void CallBackRecruit(Person theOne)
         {
             Debug.Log("探险队：招募到" + theOne.name);
-            WorldForMap.Instance.TeamRecruit(theOne);
+            World.getInstance().Persons.Add(theOne);
         }
         /// <summary>
         /// 移动到指定坐标

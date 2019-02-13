@@ -46,7 +46,7 @@ public class ContainerStructure : CarriageStructure {
         }
         set {
             int change = value - _addMemberMax;
-            World.getInstance().personNumMax += change;
+            World.getInstance().Persons.MaxMember += change;
             _addMemberMax = value;
         }
     }

@@ -125,7 +125,7 @@ public class MaxValueModifiableStructure : Structure {
             AddElectMaxRatio = 1;
             AddEnergyMaxRatio = 1;
             AddFoodMaxRatio = 1;
-            World.getInstance().personNumMax += AddMemberMax;
+            World.getInstance().Persons.MaxMember += AddMemberMax;
         }
     }
 
@@ -134,6 +134,6 @@ public class MaxValueModifiableStructure : Structure {
         AddElectMaxRatio = 0;
         AddEnergyMaxRatio = 0;
         AddFoodMaxRatio = 0;
-        World.getInstance().personNumMax -= AddMemberMax;
+        World.getInstance().Persons.MaxMember -= AddMemberMax;
     }
 }

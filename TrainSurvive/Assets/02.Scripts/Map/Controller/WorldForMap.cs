@@ -34,7 +34,7 @@ namespace WorldMap
         }
         public void AddMoney(int money)
         {
-            WorldForMap.Instance.AddMoney(money);
+            world.addMoney(money);
         }
         private bool PushItem(int itemID, int number)
         {
@@ -92,24 +92,6 @@ namespace WorldMap
         }
         public int Money { get { return (int)world.getMoney(); } }
         /// <summary>
-        /// 在列车内部随机生成人物
-        /// </summary>
-        /// <param name="count"></param>
-        public void RandomPersonInTrain(int count)
-        {
-            world.numIn = count;
-            for (int i = 0; i < count; i++)
-            {
-                Person person = Person.RandomPerson();
-                //默认全部出战，直到上限
-                if (i < MAX_NUMBER_FIGHER)
-                {
-                    person.ifReadyForFighting = true;
-                }
-                AddPerson(person);
-            }
-        }
-        /// <summary>
         /// DEBUG模式，添加金钱等
         /// </summary>
         public void InitInDebug()
@@ -118,26 +100,6 @@ namespace WorldMap
             WorldForMap.Instance.AddMoney(10000);
             world.addStrategy(1000);
 #endif
-        }
-        /// <summary>
-        /// 添加英雄
-        /// </summary>
-        /// <param name="person"></param>
-        public void AddPerson(Person person)
-        {
-            world.AddPerson(person);
-        }
-        public List<Person> GetAllPersons()
-        {
-            return new List<Person>(world.persons); ;
-        }
-        public int PersonCount()
-        {
-            return world.persons.Count;
-        }
-        public int MaxPersonCount()
-        {
-            return world.personNumMax;
         }
         //-----------------------------Team----------↓↓↓↓↓↓↓↓↓↓
         public bool IfTeamOuting
@@ -198,7 +160,7 @@ namespace WorldMap
             }
             Debug.Log("探险队：我们（人数：" + world.numOut + "）回车了。" +
                 "带回食物：" + remain + "，列车现在有食物：" + world.getFoodIn());
-            world.numIn = world.persons.Count;
+            world.numIn = world.Persons.Count;
             world.numOut = 0;
         }
         /// <summary>
@@ -206,7 +168,7 @@ namespace WorldMap
         /// </summary>
         public void TeamGetOut()
         {
-            int food = world.persons.Count * 200;
+            int food = world.Persons.Count * 200;
             if (food > world.getFoodIn())
                 food = (int)world.getFoodIn();
             if (world.addFoodIn(-food) != 1)
@@ -214,7 +176,7 @@ namespace WorldMap
                 Debug.LogWarning("列车食物减少不正常——探险队外出！");
             }
             world.numIn = 0;
-            world.numOut = world.persons.Count;
+            world.numOut = world.Persons.Count;
             Debug.Log("列车：探险队外出了，剩下" + world.numIn + "人，剩下" + world.getFoodIn() + "食物");
             if (!world.setFoodOut((uint)food))
             {
@@ -224,18 +186,10 @@ namespace WorldMap
             world.FullOutVit();
             world.ifTeamOuting = true;
         }
-        public void TeamRecruit(Person person)
-        {
-            world.AddPerson(person);
-        }
         public void TeamSetMapPos(Vector2Int mapPos)
         {
             world.posTeamX = mapPos.x;
             world.posTeamY = mapPos.y;
-        }
-        public int TeamNumber()
-        {
-            return world.persons.Count;
         }
         public Vector2Int TeamMapPos()
         {
@@ -257,46 +211,9 @@ namespace WorldMap
         {
             return world.addFoodIn(food);
         }
-        public const int MAX_NUMBER_FIGHER = 5;
-        /// <summary>
-        /// 设置指定人物的出战设置
-        /// </summary>
-        /// <param name="person">人物</param>
-        /// <param name="ifReadyForFight">是否出战</param>
-        /// <returns>
-        /// TRUE：设置成功
-        /// FALSE：
-        /// 当ifReadyForFight为TRUE时，出战人数不能超过上限
-        /// 当ifReadyForFight为FALSE时，出战人数不能少于一人
-        /// </returns>
-        public bool TeamConfigFight(Person person, bool ifReadyForFight)
-        {
-            int num = 0;
-            foreach (Person itr in world.persons)
-            {
-                if (itr.ifReadyForFighting) num++;
-            }
-
-            if (ifReadyForFight)
-            {
-                if (num >= MAX_NUMBER_FIGHER)
-                    return false;
-            }
-            else
-            {
-                if (num <= 1)
-                    return false;
-            }
-            person.ifReadyForFighting = ifReadyForFight;
-            return true;
-        }
         //-----------------------------Team----------↑↑↑↑↑↑↑↑↑↑↑↑
 
         //-----------------------------Train----------↓↓↓↓↓↓↓↓↓↓
-        public void TrainRecruit(Person person)
-        {
-            world.AddPerson(person);
-        }
         public void TrainMoving()
         {
             world.ifTrainMoving = true;

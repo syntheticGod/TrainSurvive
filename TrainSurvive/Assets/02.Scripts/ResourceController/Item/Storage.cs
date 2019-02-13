@@ -11,11 +11,19 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using WorldMap;
+
 namespace TTT.Item
 {
     [Serializable]
-    public class Storage : ISerializable
+    public class Storage : SubjectBase, ISerializable
     {
+        public enum EAction
+        {
+            NONE = -1,
+            ADD_ITEM,
+            REMOVE_ITEM
+        }
         private List<ItemData> storage;
         public int Count { get { return storage.Count; } }
         /// <summary>
@@ -63,15 +71,17 @@ namespace TTT.Item
         /// <param name="number">物品数量</param>
         public void AddItem(int itemID, int number)
         {
-            storage.Add(new ItemData(itemID, number));
+            ItemData itemData = new ItemData(itemID, number);
+            storage.Add(itemData);
+            Notify((int)EAction.ADD_ITEM, itemData);
         }
         /// <summary>
         /// 直接往仓库最后添加物品，不会进行整理
         /// </summary>
         /// <param name="assets">物品对象</param>
-        public void AddItem(ItemData assets)
+        public void AddItem(ItemData item)
         {
-            storage.Add(assets);
+            AddItem(item.ID, item.Number);
         }
         /// <summary>
         /// 从仓库中删除指定数量的指定ID的物品
@@ -110,6 +120,7 @@ namespace TTT.Item
                     }
                 }
             }
+            Notify((int)EAction.REMOVE_ITEM, new ItemData(id, number));
             return true;
         }
         /// <summary>

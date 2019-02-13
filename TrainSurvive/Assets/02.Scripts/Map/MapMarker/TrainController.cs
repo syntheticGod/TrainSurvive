@@ -231,5 +231,9 @@ namespace WorldMap.Controller
             }
         }
 
+        public void ObserverUpdate(int state, int echo, object tag = null)
+        {
+            ObserverUpdate(state, echo);
+        }
     }
 }

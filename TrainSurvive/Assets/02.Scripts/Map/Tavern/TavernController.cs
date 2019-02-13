@@ -16,6 +16,7 @@ using WorldMap.Model;
 using WorldMap.UI;
 using Story.Communication;
 using TTT.Xml;
+using TTT.Team;
 
 namespace WorldMap.Controller
 {
@@ -257,7 +258,7 @@ namespace WorldMap.Controller
         {
             //私聊选项2：请加入我
             Debug.Log("玩家：招募指令");
-            if (WorldForMap.Instance.PersonCount() >= WorldForMap.Instance.MaxPersonCount())
+            if (World.getInstance().Persons.Count >= World.getInstance().Persons.MaxMember)
             {
                 InfoDialog.Show("人物已满，无法招募更多的人");
                 return;

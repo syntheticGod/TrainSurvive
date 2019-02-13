@@ -14,8 +14,8 @@ public class PersonNumsText : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Text t = gameObject.GetComponent<Text>();
-        int maxP = World.getInstance().personNumMax;
-        int numP = World.getInstance().persons.Count;
+        int maxP = World.getInstance().Persons.MaxMember;
+        int numP = World.getInstance().Persons.Count;
         t.text = "总人数：" + numP + "/" + maxP;
     }
 	
