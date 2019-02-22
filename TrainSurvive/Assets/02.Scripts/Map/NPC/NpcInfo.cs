@@ -21,11 +21,7 @@ namespace WorldMap.Model
         /// 性别。男：1；女：0
         /// </summary>
         public bool Gender { get; private set; }
-        public int Vitality { get; private set; }
-        public int Strength { get; private set; }
-        public int Agile { get; private set; }
-        public int Technique { get; private set; }
-        public int Intelligence { get; private set; }
+        public int[] AttriNumber { get; private set; }
         public EAttribute[] Professions { get; private set; }
         public int WeaponID { get; private set; }
         public int DecorationsID { get; private set; }
@@ -36,11 +32,12 @@ namespace WorldMap.Model
             ID = int.Parse(node.Attributes["id"].Value);
             Name = node.Attributes["name"].Value;
             Gender = int.Parse(node.Attributes["gender"].Value) == 1;
-            Vitality = int.Parse(node.Attributes["vitality"].Value);
-            Strength = int.Parse(node.Attributes["strength"].Value);
-            Agile = int.Parse(node.Attributes["agile"].Value);
-            Technique = int.Parse(node.Attributes["technique"].Value);
-            Intelligence = int.Parse(node.Attributes["intelligence"].Value);
+            AttriNumber = new int[(int)EAttribute.NUM];
+            AttriNumber[(int)EAttribute.VITALITY] = int.Parse(node.Attributes["vitality"].Value);
+            AttriNumber[(int)EAttribute.STRENGTH] = int.Parse(node.Attributes["strength"].Value);
+            AttriNumber[(int)EAttribute.AGILE] = int.Parse(node.Attributes["agile"].Value);
+            AttriNumber[(int)EAttribute.TECHNIQUE] = int.Parse(node.Attributes["technique"].Value);
+            AttriNumber[(int)EAttribute.INTELLIGENCE] = int.Parse(node.Attributes["intelligence"].Value);
             Professions = new EAttribute[3];
             for (int i = 0; i < Professions.Length; i++)
                 Professions[i] = Compile(node.Attributes["profession" + (i + 1)].Value);

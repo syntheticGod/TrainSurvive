@@ -7,6 +7,7 @@
  * 创建时间：2018/11/22 11:32:41
  * 版本：v0.1
  */
+using System;
 using System.Collections.Generic;
 
 namespace WorldMap
@@ -41,12 +42,15 @@ namespace WorldMap
         /// <returns></returns>
         bool Detach(Observer obs);
     }
+    [Serializable]
     public abstract class SubjectBase : Subject
     {
-        public List<ObserverWithEcho> Observers { get; private set; }
+        [NonSerialized]
+        private List<ObserverWithEcho> _observers;
+        public List<ObserverWithEcho> Observers { get { return _observers; } }
         protected SubjectBase()
         {
-            Observers = new List<ObserverWithEcho>();
+            _observers = new List<ObserverWithEcho>();
         }
         public bool Attach(Observer obs, int echo = 0)
         {

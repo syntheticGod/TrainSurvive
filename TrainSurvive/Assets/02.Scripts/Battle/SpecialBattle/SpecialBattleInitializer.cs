@@ -88,7 +88,7 @@ public class SpecialBattleInitializer  {
         int posY;
         if (battle.posX == "now")
         {
-            Vector2Int teamPosition = new Vector2Int(World.getInstance().posTeamX, World.getInstance().posTeamY);
+            Vector2Int teamPosition = World.getInstance().PMarker.TeamMapPos;
             Vector2Int blockPos = Map.GetInstance().CalArea(teamPosition);
             posX = blockPos.x;
             posY= blockPos.y;

@@ -410,9 +410,9 @@ namespace TTT.UI.ListView
         public void CallbackItemClick(ListViewItem item)
         {
             int index = items.IndexOf(item);
+            SelectIndex = index;
             if (IfSelectable)
             {
-                SelectIndex = index;
                 if (lastClickedItem != null && item != lastClickedItem)
                     lastClickedItem.ShowBaseColor();
                 item.ShowSelectedColor();
@@ -497,6 +497,26 @@ namespace TTT.UI.ListView
         /// <param name="index"></param>
         protected virtual void OnPersistentItemView(ListViewItem item, int index)
         { }
+        /// <summary>
+        /// 根据索引返回item的对象，不包括PersistentItem
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <returns></returns>
+        public D this[int index]
+        {
+            get { return m_datas[index]; }
+        }
+        /// <summary>
+        /// 搜索指定的对象，并返回第一个匹配的项
+        /// </summary>
+        /// <param name="data">要在 List<T> 中定位的对象。 对于引用类型，该值可以为 null。</param>
+        /// <returns>
+        /// -1：不存在
+        /// 不为-1：第一个匹配项的从零开始的索引</returns>
+        public int IndexOf(D data)
+        {
+            return m_datas.IndexOf(data);
+        }
     }
     public class ListViewItem : Image, IPointerClickHandler
     {

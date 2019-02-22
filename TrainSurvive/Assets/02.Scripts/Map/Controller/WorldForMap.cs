@@ -186,15 +186,6 @@ namespace WorldMap
             world.FullOutVit();
             world.ifTeamOuting = true;
         }
-        public void TeamSetMapPos(Vector2Int mapPos)
-        {
-            world.posTeamX = mapPos.x;
-            world.posTeamY = mapPos.y;
-        }
-        public Vector2Int TeamMapPos()
-        {
-            return new Vector2Int(world.posTeamX, world.posTeamY);
-        }
         public int TeamGetFoodOut()
         {
             return (int)world.getFoodOut();
@@ -227,15 +218,6 @@ namespace WorldMap
         public int TrainGetFoodIn()
         {
             return (int)world.getFoodIn();
-        }
-        public void TrainSetMapPos(Vector2Int mapPos)
-        {
-            world.posTrainX = mapPos.x;
-            world.posTrainY = mapPos.y;
-        }
-        public Vector2Int TrainMapPos()
-        {
-            return new Vector2Int(world.posTrainX, world.posTrainY);
         }
         public bool IfEnergyEmpty()
         {

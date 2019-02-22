@@ -18,10 +18,13 @@ namespace TTT.Xml
         protected TownInfoLoader() : base("TownInfo")
         { }
         /// <summary>
-        /// 按照城镇的ID 排序，从ID1开始。
+        /// 按照城镇的ID 排序，ID为0的城镇信息为随机城镇的基本信息
         /// </summary>
         TownInfo[] specialTowns;
-        public int SpecailTownsCount { get { return specialTowns.Length; } }
+        /// <summary>
+        /// 特殊城镇的个数，不包括随机城镇的基本信息
+        /// </summary>
+        public int SpecailTownsCount { get { return specialTowns.Length - 1; } }
         string[] randomName;
         protected override void LoadFromXml(XmlDocument document)
         {
@@ -44,7 +47,7 @@ namespace TTT.Xml
         /// <returns></returns>
         public TownInfo FindSTownInfoByID(int id)
         {
-            return specialTowns[id - 1];
+            return specialTowns[id];
         }
         public string RandomTownName()
         {

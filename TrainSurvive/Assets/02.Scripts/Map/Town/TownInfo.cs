@@ -9,6 +9,7 @@ using System;
 using System.Xml;
 using System.Runtime.Serialization;
 using TTT.Utility;
+using TTT.Xml;
 
 namespace WorldMap.Model
 {
@@ -39,16 +40,24 @@ namespace WorldMap.Model
         /// 5X5 大区块中的位置
         /// </summary>
         public Vector2Int PosInArea { get; private set; }
+        /// <summary>
+        /// 城镇开场白
+        /// </summary>
+        public DialogueInfo Dialogue { get; private set; }
         public TownInfo(XmlNode node)
         {
             ID = int.Parse(node.Attributes["id"].Value);
             Type = ETownType.COMMON + int.Parse(node.Attributes["typeId"].Value);
             Name = node.Attributes["name"].Value;
             Description = node.Attributes["description"].Value;
-            int posx = int.Parse(node.Attributes["posx"].Value);
-            int posy = int.Parse(node.Attributes["posy"].Value);
-            PosInArea = new Vector2Int(posx, posy);
+            if (node.Attributes["posx"] != null && node.Attributes["posy"] != null)
+            {
+                int posx = int.Parse(node.Attributes["posx"].Value);
+                int posy = int.Parse(node.Attributes["posy"].Value);
+                PosInArea = new Vector2Int(posx, posy);
+            }
             TavernName = node.Attributes["tavernName"].Value;
+            Dialogue = new TavernDialogueInfo(TavernName, node.SelectSingleNode("dialogue"));
         }
         public TownInfo(SerializationInfo info, StreamingContext context)
         {
@@ -56,11 +65,12 @@ namespace WorldMap.Model
             Type = (ETownType)info.GetValue("Type", typeof(ETownType));
             Name = info.GetString("Name");
             Description = info.GetString("Description");
-            TavernName = info.GetString("TavernName");
-            int posx = info.GetInt32("PosX");
-            int posy = info.GetInt32("PosY");
-            PosInArea = new Vector2Int(posx, posy);
-            Increasement = info.GetInt32("Increasement");
+            PosInArea = new Vector2Int(info.GetInt32("PosXInArea"), info.GetInt32("PosYInArea"));
+            //普通城镇的基本信息 在 xml中
+            TownInfo baseInfo = TownInfoLoader.Instance.FindSTownInfoByID(Type == ETownType.COMMON ? 0 : ID);
+            //与城镇开场白对话 和 城镇名 不存档
+            Dialogue = baseInfo.Dialogue;
+            TavernName = baseInfo.TavernName;
         }
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -68,11 +78,8 @@ namespace WorldMap.Model
             info.AddValue("Type", Type, typeof(ETownType));
             info.AddValue("Name", Name, typeof(string));
             info.AddValue("Description", Description, typeof(string));
-            info.AddValue("TavernName", TavernName, typeof(string));
-            info.AddValue("PosX", PosInArea.x, typeof(int));
-            info.AddValue("PosY", PosInArea.y, typeof(int));
-            info.AddValue("Increasement", Increasement, typeof(int));
-            
+            info.AddValue("PosXInArea", PosInArea.x, typeof(int));
+            info.AddValue("PosYInArea", PosInArea.y, typeof(int));
         }
         private TownInfo() { }
         private static int Increasement = 1000;
@@ -81,19 +88,28 @@ namespace WorldMap.Model
         /// 城镇ID 从1000起头
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="posx"></param>
-        /// <param name="posy"></param>
+        /// <param name="posInAreaX"></param>
+        /// <param name="posInAreaY"></param>
         /// <returns></returns>
-        public static TownInfo Random(string name, int posx, int posy)
+        public static TownInfo Random(string name, int posInAreaX, int posInAreaY)
         {
-            TownInfo townInfo = new TownInfo();
+            //获取随机城镇的默认信息
+            TownInfo townInfo = TownInfoLoader.Instance.FindSTownInfoByID(0).Clone();
             townInfo.ID = Increasement++;
-            townInfo.Type = ETownType.COMMON;
             townInfo.Name = name;
-            townInfo.Description = "";
-            townInfo.TavernName = "酒馆";
-            townInfo.PosInArea = new Vector2Int(posx, posy);
+            townInfo.PosInArea = new Vector2Int(posInAreaX, posInAreaY);
             return townInfo;
+        }
+        public TownInfo Clone()
+        {
+            TownInfo ret = new TownInfo();
+            ret.ID = ID;
+            ret.Type = Type;
+            ret.Name = Name;
+            ret.Description = Description;
+            ret.TavernName = TavernName;
+            ret.PosInArea = PosInArea;
+            return ret;
         }
         /// <summary>
         /// 随机获取一个普通城镇的ID

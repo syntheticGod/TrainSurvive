@@ -12,20 +12,20 @@ using System.Collections.Generic;
 
 namespace TTT.Xml
 {
-    public class DialogueInfoLoader : BaseXmlLoader
+    public class NpcDialogueInfoLoader : BaseXmlLoader
     {
-        private static DialogueInfoLoader loader;
-        public static DialogueInfoLoader Instance { get { if (loader == null) loader = new DialogueInfoLoader(); return loader; } }
-        private DialogueInfo[] dialogues;
-        private DialogueInfoLoader() : base("Dialogue")
+        private static NpcDialogueInfoLoader loader;
+        public static NpcDialogueInfoLoader Instance { get { if (loader == null) loader = new NpcDialogueInfoLoader(); return loader; } }
+        private NpcDialogueInfo[] dialogues;
+        private NpcDialogueInfoLoader() : base("Dialogue")
         { }
 
         protected override void LoadFromXml(XmlDocument document)
         {
             XmlNodeList dialoguesNodeList = document.SelectSingleNode("dialogues").SelectNodes("dialogue");
-            dialogues = new DialogueInfo[dialoguesNodeList.Count];
+            dialogues = new NpcDialogueInfo[dialoguesNodeList.Count];
             for(int i = 0; i < dialogues.Length; i++)
-                dialogues[i] = new DialogueInfo(dialoguesNodeList[i]);
+                dialogues[i] = new NpcDialogueInfo(dialoguesNodeList[i]);
         }
         /// <summary>
         /// 返回满足当前状态的指定NPC的所有对话
@@ -34,19 +34,13 @@ namespace TTT.Xml
         /// <returns>
         /// 对话列表，以xml中的顺序为序
         /// </returns>
-        public List<DialogueInfo> FindSatisfy(int npcID)
+        public List<NpcDialogueInfo> FindSatisfy(int npcID)
         {
-            List<DialogueInfo> ans = new List<DialogueInfo>();
-            foreach(DialogueInfo dialogue in dialogues)
+            List<NpcDialogueInfo> ans = new List<NpcDialogueInfo>();
+            foreach(NpcDialogueInfo dialogue in dialogues)
             {
                 if (dialogue.NpcID != npcID) continue;
-                bool satisfy = true;
-                foreach(DialogueCondition condition in dialogue.preconditions)
-                {
-                    satisfy = condition.IfSatisfy();
-                    if (!satisfy) break;
-                }
-                if (satisfy)
+                if(dialogue.IfAllSatisfy())
                     ans.Add(dialogue);
             }
             return ans;

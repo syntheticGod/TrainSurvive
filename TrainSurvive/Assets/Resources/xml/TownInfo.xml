@@ -1,16 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Towns>
-  <Town id="1"  name = "鲁特" typeId ="1" posx="0" posy="0" tavernName="酒馆" description="出生地"/>
+  <!--随机城镇的一些共有信息-->
+  <Town id="0" name="随机名" typeId="0" tavernName="酒馆" description="">
+    <!--dialogue需要包含的属性见Dialogue.xml文件-->
+    <dialogue precondition="">
+      <sentence precondition="count npc = 0" speakerType="tavern" type="0" content="一个普通的酒馆。空无一任，冷清极了。"/>
+      <sentence precondition="count npc = 1" speakerType="tavern" type="0" content="一个普通的酒馆。环顾四周，只有一个怪异的陌生人在角落看着你。"/>
+      <sentence precondition="count npc > 1" speakerType="tavern" type="0" content="一个普通的酒馆。只有寥寥几人，但比起其他城镇还算热闹。"/>
+    </dialogue>
+  </Town>
 
-  <Town id="2" name = "圣都" typeId ="2" posx="2" posy="2" tavernName="光神殿" description="光之城镇"/>
+  <Town id="1"  name = "鲁特" typeId ="1" posx="0" posy="0" tavernName="酒馆" description="出生地">
+    <dialogue precondition="">
+      <sentence precondition="" speakerType="tavern" type="0" content="家乡的酒馆，十分温馨。"/>
+    </dialogue>
+  </Town>
 
-  <Town id="3" name = "阿诺斯" typeId ="3" posx="2" posy="4" tavernName="水神殿" description="水之城镇"/>
+  <Town id="2" name = "圣都" typeId ="2" posx="2" posy="2" tavernName="光神殿" description="光之城镇">
+    <dialogue precondition="">
+      <sentence precondition="" speakerType="tavern" type="0" content="【暂用】这里就是大名鼎鼎的光神殿了。"/>
+    </dialogue>
+  </Town>
 
-  <Town id="4" name = "加索" typeId ="4" posx="2" posy="0" tavernName="火神殿" description="火之城镇"/>
 
-  <Town id="5" name = "晶安" typeId ="5" posx="4" posy="2" tavernName="风神殿" description="风之城镇"/>
+  <Town id="3" name = "阿诺斯" typeId ="3" posx="2" posy="4" tavernName="水神殿" description="水之城镇">
+    <dialogue precondition="">
+      <sentence precondition="" speakerType="tavern" type="0" content="【暂用】这里就是大名鼎鼎的水神殿了。"/>
+    </dialogue>
+  </Town>
 
-  <Town id="6" name = "西西里" typeId ="6" posx="0" posy="2" tavernName="雷神殿" description="雷之城镇"/>
+  <Town id="4" name = "加索" typeId ="4" posx="2" posy="0" tavernName="火神殿" description="火之城镇">
+    <dialogue precondition="">
+      <sentence precondition="" speakerType="tavern" type="0" content="【暂用】这里就是大名鼎鼎的火神殿了。"/>
+    </dialogue>
+  </Town>
+
+  <Town id="5" name = "晶安" typeId ="5" posx="4" posy="2" tavernName="风神殿" description="风之城镇">
+    <dialogue precondition="">
+      <sentence precondition="" speakerType="tavern" type="0" content="【暂用】这里就是大名鼎鼎的风神殿了。"/>
+    </dialogue>
+  </Town>
+
+  <Town id="6" name = "西西里" typeId ="6" posx="0" posy="2" tavernName="雷神殿" description="雷之城镇">
+    <dialogue precondition="">
+      <sentence precondition="" speakerType="tavern" type="0" content="【暂用】这里就是大名鼎鼎的雷神殿了。"/>
+    </dialogue>
+  </Town>
   <!--随机城市名字库-->
   <Names>
     <Name content="香格里拉"/>

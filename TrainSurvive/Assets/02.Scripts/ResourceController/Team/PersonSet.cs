@@ -11,6 +11,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 using WorldMap;
+using TTT.Xml;
+using WorldMap.Model;
 
 namespace TTT.Team
 {
@@ -23,7 +25,7 @@ namespace TTT.Team
             /// <summary>
             /// 招募人物
             /// </summary>
-            ADD_PERSON,
+            RECRUIT_PERSON,
             /// <summary>
             /// 出战
             /// </summary>
@@ -75,13 +77,21 @@ namespace TTT.Team
             return new List<Person>(persons); ;
         }
         /// <summary>
-        /// 增加新人
+        /// 根据npc的ID招募人物
         /// </summary>
-        /// <param name="person"></param>
-        public void Add(Person person)
+        /// <param name="npcID">NPC的ID</param>
+        public void RecruitNpc(int npcID)
         {
-            persons.Add(person);
-            Notify((int)EAction.ADD_PERSON, person);
+            NpcInfo npc;
+            if(NpcInfoLoader.Instance.Find(npcID, out npc))
+            {
+                persons.Add(new Person(npc));
+                Notify((int)EAction.RECRUIT_PERSON, npcID);
+            }
+            else
+            {
+                Debug.LogError("指定NPC不存在，ID" + npcID);
+            }
         }
         /// <summary>
         /// 准备出战的人数
@@ -112,7 +122,7 @@ namespace TTT.Team
                 {
                     person.ifReadyForFighting = true;
                 }
-                Add(person);
+                persons.Add(person);
             }
         }
         /// <summary>

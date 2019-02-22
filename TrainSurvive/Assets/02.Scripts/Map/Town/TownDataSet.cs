@@ -21,9 +21,15 @@ namespace WorldMap.Model
         private bool init = false;
         [NonSerialized]
         private Dictionary<int, TownData> idToTown = new Dictionary<int, TownData>();
+        /// <summary>
+        /// 城镇ID 到 城镇的映射
+        /// </summary>
         private Dictionary<int, TownData> IdToTown { get { if (!init) Init(); return idToTown; } }
         [NonSerialized]
         private Dictionary<Vector2Int, TownData> posToTown = new Dictionary<Vector2Int, TownData>();
+        /// <summary>
+        /// 地图坐标 到 城镇的映射
+        /// </summary>
         private Dictionary<Vector2Int, TownData> PosToTown { get { if (!init) Init(); return posToTown; } }
 
         public void Init()
@@ -49,6 +55,7 @@ namespace WorldMap.Model
             bool[,] isSpecailTown = new bool[townNumOfX, townNumOfY];
             for (int i = 1; i <= TownInfoLoader.Instance.SpecailTownsCount; i++)
             {
+                //特殊城镇的ID为 [1,特殊城镇数量]
                 TownInfo info = TownInfoLoader.Instance.FindSTownInfoByID(i);
                 int posx = info.PosInArea.x;
                 int posy = info.PosInArea.y;

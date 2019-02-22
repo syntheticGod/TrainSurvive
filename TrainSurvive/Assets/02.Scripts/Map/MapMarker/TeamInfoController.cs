@@ -147,7 +147,7 @@ namespace WorldMap.Controller
                 case 0:
                     infoContentBG.color = new Color(0.85f, 0.85f, 0.85f);
                     attributePanelView.gameObject.SetActive(true);
-                    attributePanelView.SetNumbers(targetPerson.GetAttriNumbers());
+                    attributePanelView.SetNumbers(targetPerson.AttriNumbers);
                     break;
                 case 1:
                     //TODO 显示技能

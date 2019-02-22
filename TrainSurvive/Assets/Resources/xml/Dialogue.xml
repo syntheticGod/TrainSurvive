@@ -2,11 +2,17 @@
 <dialogues>
   <!--
   对话需要包含的属性：
+  type：{ npc | tavern } 
+            + npc  与npc之间的对话
+            + tavern 与酒馆之间的对话
+  precondition：对话可触发的前提条件
+  类型为npc时必须包含的属性：
   id：对话的ID
+  npcId：npc的ID
   -->
   <!--
   句子需要包含的属性：
-  speakerType：讲话人的类型 { npc | player }
+  speakerType：讲话人的类型 { npc | player | tavern }
   type：句子类型：0 普通句子 1选择句
   content：普通句子的内容
   ok：选择句的确定选项

@@ -38,7 +38,7 @@ namespace WorldBattle
             {
 
                 //获取探险队所在地块的怪物难度系数或者特殊战斗id
-                Vector2Int teamPosition = new Vector2Int(World.getInstance().posTeamX, World.getInstance().posTeamY);
+                Vector2Int teamPosition = World.getInstance().PMarker.TeamMapPos;
                 int monsterLevel = WorldMap.Map.GetInstance().GetMonsterLevel(teamPosition); ; 
                 switch (WorldMap.Map.GetInstance().spowns[teamPosition.x, teamPosition.y].specialTerrainType)
                 {

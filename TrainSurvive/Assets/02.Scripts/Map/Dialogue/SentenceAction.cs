@@ -22,6 +22,32 @@ namespace WorldMap.Model
         /// 当行为组中的某个行为失败之后，需要撤销之前做过的行为。
         /// </summary>
         public abstract void UnDoAction();
+        public static SentenceAction[] Compile(string action)
+        {
+            SentenceAction[] ans;
+            if (action != null && action.Length != 0)
+            {
+                string[] actions = action.Split(';');
+                ans = new SentenceAction[actions.Length];
+                for (int i = 0; i < ans.Length; i++)
+                {
+                    string[] words = actions[i].Split(' ');
+                    switch (words[1])
+                    {
+                        case "item": ans[i] = new ItemAction(words); break;
+                        case "battle": ans[i] = new BattleAction(words); break;
+                        case "task": ans[i] = new TaskAction(words); break;
+                        case "npc": ans[i] = new NpcAction(words); break;
+                        case "money": ans[i] = new MoneyAction(words); break;
+                    }
+                }
+            }
+            else
+            {
+                ans = new SentenceAction[0];
+            }
+            return ans;
+        }
     }
     public class ItemAction : SentenceAction
     {
@@ -163,7 +189,7 @@ namespace WorldMap.Model
     public class NpcAction : SentenceAction
     {
         /// <summary>
-        /// {0：招募NPC | 1：消失NPC}
+        /// {0：招募NPC | 1：在大地图上消失NPC}
         /// </summary>
         public int Type { get; private set; }
         /// <summary>
@@ -182,7 +208,12 @@ namespace WorldMap.Model
 
         public override bool DoAction()
         {
-            throw new System.NotImplementedException();
+            switch (Type)
+            {
+                case 0: World.getInstance().Persons.RecruitNpc(NpcID); break;
+                case 1: throw new System.NotImplementedException();
+            }
+            return true;
         }
 
         public override void UnDoAction()

@@ -229,7 +229,7 @@ namespace WorldMap.Model
         private void PassCenterCallBack(Vector2Int center)
         {
             Map.GetInstance().MoveToThisSpawn(center);
-            WorldForMap.Instance.TrainSetMapPos(center);
+            World.getInstance().PMarker.TrainMapPos = center;
             //暂时性停车
             if (ifTemporarilyStop)
             {
@@ -318,15 +318,6 @@ namespace WorldMap.Model
             State = STATE.STOPING;
             ifTemporarilyStop = true;
             return true;
-        }
-        /// <summary>
-        /// 列车招募到英雄的回调函数
-        /// </summary>
-        /// <param name="theOne"></param>
-        public void CallBackRecruit(Person theOne)
-        {
-            Debug.Log("列车：招募到" + theOne.name);
-            World.getInstance().Persons.Add(theOne);
         }
         //列车属性判断
         public bool IsRunning

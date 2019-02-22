@@ -53,13 +53,18 @@ namespace TTT.Resource
         }
         /// <summary>
         /// 根据传入的专精获取下一级别的专精
+        /// </summary>
+        /// <example>
         /// NULL => 一级
         /// 一级   => 二级
         /// 二级   => 三级
         /// 三级   => NULL
-        /// </summary>
-        /// <param name="profession"></param>
-        /// <returns></returns>
+        /// </example>
+        /// <param name="profession">当前专精</param>
+        /// <returns>
+        /// NULL：无下一级别
+        /// NOT NULL：下一级别的专精数组，大小为EAttribute.NUM
+        /// </returns>
         public static Profession[] GetNextProfessions(Profession profession)
         {
             const int NumOfAttribute = (int)EAttribute.NUM;
@@ -357,7 +362,7 @@ namespace TTT.Resource
         /// </summary>
         private static SkillInfo[] skills;
         /// <summary>
-        /// 无条件就获得的技能
+        /// 所有技能包括无条件获得的
         /// </summary>
         private static SkillInfo[] Skills { get { if (skills == null) LoadSkillFormXml(); return skills; } }
         private static void LoadSkillFormXml()
@@ -412,7 +417,7 @@ namespace TTT.Resource
         /// NOT NULL：技能数组
         /// NULL：无符合的
         /// </returns>
-        public static SkillInfo[] GetAvailableSkills(int[] attributes, ESkillComeFrom comeFrom)
+        public static List<SkillInfo> GetAvailableSkills(int[] attributes, ESkillComeFrom comeFrom)
         {
             List<SkillInfo> availableSkills = new List<SkillInfo>();
             SkillInfo[] skillInfos = Skills;
@@ -421,7 +426,7 @@ namespace TTT.Resource
                 if (skillInfos[i].ComeFrom == comeFrom && skillInfos[i].IfAvailable(attributes))
                     availableSkills.Add(skillInfos[i]);
             }
-            return availableSkills.ToArray();
+            return availableSkills;
         }
         //----------技能----------↑----------物品----------↓
         private static Hashtable itemTable;

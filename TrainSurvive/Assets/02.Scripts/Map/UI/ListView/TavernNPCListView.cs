@@ -11,15 +11,26 @@ using TTT.Utility;
 using TTT.UI.ListView;
 using WorldMap.Model;
 using TTT.Xml;
+using WorldMap.Controller;
 
 namespace WorldMap.UI
 {
     public class TavernNPCListView : BaseListView<int>
     {
+        public TavernController Context { get; set; }
         private static string[] persistentStrs = new string[] { "大厅" };
         protected override int GetPersistentCount()
         {
             return persistentStrs.Length;
+        }
+        protected override void Start()
+        {
+            GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            GridConstraintCount = 2;
+            StartAxis = GridLayoutGroup.Axis.Horizontal;
+            ScrollDirection = ScrollType.Vertical;
+            onItemClick = OnItemClick;
+            onPersistentItemClick = OnPersistentClick;
         }
         protected override void OnItemView(ListViewItem item, int id, int itemIndex)
         {
@@ -34,5 +45,21 @@ namespace WorldMap.UI
             ViewTool.FullFillRectTransform(text, Vector2.zero, Vector2.zero);
         }
 
+        public void OnItemClick(ListViewItem item, int npc)
+        {
+            Context.ShowSelectedNpc(SelectIndex);
+        }
+        public void OnPersistentClick(ListViewItem item, int index)
+        {
+            Context.ShowSelectedNpc(index);
+        }
+        /// <summary>
+        /// 判断当前是否在大厅
+        /// </summary>
+        /// <returns></returns>
+        public bool IfInHill()
+        {
+            return SelectIndex == 0;
+        }
     }
 }

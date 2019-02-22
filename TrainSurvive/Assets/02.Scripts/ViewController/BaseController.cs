@@ -62,6 +62,13 @@ namespace TTT.Controller
                 return false;
             return true;
         }
+        /// <summary>
+        /// 隐藏
+        /// </summary>
+        /// <returns>
+        /// TRUE：隐藏成功
+        /// FALSE：子控制器存在，且未隐藏
+        /// </returns>
         public bool Hide()
         {
             if (!UnFocus())

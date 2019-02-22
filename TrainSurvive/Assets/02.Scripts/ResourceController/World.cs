@@ -118,18 +118,14 @@ public class World
     /// </summary>
     public float outMood = 0;
     public float outMoodMax = 100;
-
-    public int posTrainX;
-    public int posTrainY;
-    public int posTeamX;
-    public int posTeamY;
+    
     public int distView = 1;
 
     public int numWeapon = 101;
     public int numPersonPlayer = 1;
     public int numPersonWolrd = 101;
     public int numBuildInst = 101;
-    
+
     /// <summary>
     /// 仓库——探险队和列车都同用一个仓库
     /// </summary>
@@ -143,13 +139,17 @@ public class World
     /// </summary>
     public NpcDataSet Npcs = new NpcDataSet();
     /// <summary>
-    /// 对话
+    /// Npc对话
     /// </summary>
-    public DialogueDataSet Dialogues = new DialogueDataSet();
+    public NpcDialogueDataSet Dialogues = new NpcDialogueDataSet();
     /// <summary>
     /// 操控的人物
     /// </summary>
     public PersonSet Persons = new PersonSet();
+    /// <summary>
+    /// 大地图上 玩家控制的图标（列车、小队）
+    /// </summary>
+    public PlayerMarker PMarker = new PlayerMarker();
 
     public SerializableDictionary<string, CarriageBackend> carriageBackends = new SerializableDictionary<string, CarriageBackend>();
     public LinkedList<Structure> buildInstArray = new LinkedList<Structure>();

@@ -118,7 +118,7 @@ namespace WorldMap.Model
         {
             Map map = Map.GetInstance();
             map.MoveToThisSpawn(StaticResource.BlockIndex(position));
-            WorldForMap.Instance.TeamSetMapPos(position);
+            World.getInstance().PMarker.TeamMapPos = position;
             OnPassBlockCenter?.Invoke(position);
             if (map.IfMonsterArea(position))
             {
@@ -167,15 +167,6 @@ namespace WorldMap.Model
         {
             State = STATE.IN_TRAIN;
             return true;
-        }
-        /// <summary>
-        /// 探险队招募到英雄的回调函数
-        /// </summary>
-        /// <param name="theOne"></param>
-        public void CallBackRecruit(Person theOne)
-        {
-            Debug.Log("探险队：招募到" + theOne.name);
-            World.getInstance().Persons.Add(theOne);
         }
         /// <summary>
         /// 移动到指定坐标

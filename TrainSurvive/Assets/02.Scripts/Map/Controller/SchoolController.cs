@@ -215,7 +215,7 @@ namespace WorldMap.Controller
                 InfoDialog.Show("无更多专精槽，专精槽可以通过剧情解锁");
                 return;
             }
-            heroChoosed.setProfession(wanted, EAttribute.NONE + 1 + professionListView.SelectIndex);
+            heroChoosed.SetProfession(wanted, EAttribute.NONE + 1 + professionListView.SelectIndex);
             InitProfessions();
             ShowProfession();
         }

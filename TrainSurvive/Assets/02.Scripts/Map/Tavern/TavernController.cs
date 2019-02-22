@@ -17,18 +17,17 @@ using WorldMap.UI;
 using Story.Communication;
 using TTT.Xml;
 using TTT.Team;
+using System;
 
 namespace WorldMap.Controller
 {
-    public class TavernController : WindowsController
+    public class TavernController : WindowsController, Observer
     {
-        private const int UNSELECTED = -1;
-        private static string[] chatBtnsStrs = { "大家好", "", "" };
-        private int selectedIndex = UNSELECTED;
-
         private TavernNPCListView tavernNPCListView;
         private TownChatListView townChatListView;
         private NullListView nullListView;
+
+        private const int BUTTON_COUNT = 3;
         private Button[] chatBtns;
         public enum BUTTON_ACTION
         {
@@ -44,20 +43,35 @@ namespace WorldMap.Controller
         private BUTTON_ACTION[] actions;
 
         private TownData currentTown;
-        private DialogueInfo currentDialogue;
-        private int sentenceIndex;
+        private DialogueCursor dialogueCursor;
         private ChatRoom chatRoom;
 
-        private List<ChatSentence>[] sentences;
+        private List<List<ChatSentence>> sentences;
         private List<int> nullData;
-
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            World.getInstance().Persons.Attach(this);
+        }
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            World.getInstance().Persons.Detach(this);
+        }
         public void SetTown(TownData town)
         {
             currentTown = town;
             chatRoom = new ChatRoom(town.Npcs);
-            sentences = new List<ChatSentence>[town.Npcs.Count + 1];
-            for (int i = 0; i < sentences.Length; i++)
-                sentences[i] = new List<ChatSentence>();
+            sentences = new List<List<ChatSentence>>();
+            for (int i = 0; i <= town.Npcs.Count; i++)
+                sentences.Add(new List<ChatSentence>());
+            //酒馆开场白
+            DialogueCursor openTalkCursor = new DialogueCursor(town.Info.Dialogue);
+            //判断是否满足城镇
+            if (openTalkCursor.Dialogue.IfAllSatisfy())
+                sentences[0].AddRange(openTalkCursor.Next());
+
+            //酒馆人物间的对话
             List<KeyValuePair<int, string>> chatSentences = chatRoom.chat();
             foreach (KeyValuePair<int, string> sentence in chatSentences)
                 sentences[0].Add(new ChatSentence(sentence.Key, sentence.Value));
@@ -70,12 +84,7 @@ namespace WorldMap.Controller
             SetBackground("tavern_bg_01");
             //左上角的头像框
             tavernNPCListView = new GameObject("HeroListView").AddComponent<TavernNPCListView>();
-            tavernNPCListView.GridConstraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            tavernNPCListView.GridConstraintCount = 2;
-            tavernNPCListView.StartAxis = GridLayoutGroup.Axis.Horizontal;
-            tavernNPCListView.ScrollDirection = ScrollType.Vertical;
-            tavernNPCListView.onItemClick = OnItemClick;
-            tavernNPCListView.onPersistentItemClick = OnPersistentClick;
+            tavernNPCListView.Context = this;
             ViewTool.SetParent(tavernNPCListView, this);
             ViewTool.Anchor(tavernNPCListView, new Vector2(0.0417F, 0.2F), new Vector2(0.292F, 0.8F));
             //中间聊天窗
@@ -90,14 +99,14 @@ namespace WorldMap.Controller
             ViewTool.Anchor(townChatListView, new Vector2(0.375F, 0.35F), new Vector2(0.792F, 0.8F));
             //中间选择按钮
             RectTransform chatBtnsRect = new GameObject("ChatBtns").AddComponent<RectTransform>();
-            chatBtns = new Button[chatBtnsStrs.Length];
+            chatBtns = new Button[BUTTON_COUNT];
             actions = new BUTTON_ACTION[chatBtns.Length];
             ViewTool.SetParent(chatBtnsRect, this);
             ViewTool.Anchor(chatBtnsRect, new Vector2(0.375F, 0.2F), new Vector2(0.792F, 0.35F));
             float deltaY = 1.0f / chatBtns.Length;
             for (int i = 0; i < chatBtns.Length; i++)
             {
-                chatBtns[i] = ViewTool.CreateBtn("ChatBtn" + i, chatBtnsStrs[i]);
+                chatBtns[i] = ViewTool.CreateBtn("ChatBtn" + i, "");
                 ViewTool.SetParent(chatBtns[i], chatBtnsRect);
                 ViewTool.Anchor(chatBtns[i], new Vector2(0, 1 - deltaY * (i + 1)), new Vector2(1, 1 - deltaY * i));
                 BUTTON_ID bid = BUTTON_ID.TAVERN_BUTTON1 + i;
@@ -126,86 +135,92 @@ namespace WorldMap.Controller
             townChatListView.Datas = sentences[0];
             nullListView.Datas = nullData;
         }
-        public void SetDialogue(DialogueInfo dialogue)
-        {
-            currentDialogue = dialogue;
-            sentenceIndex = 0;
-            if (dialogue != null)
-                NextSentence();
-        }
         public void SetBtnText(string[] texts)
         {
             for (int i = 0; i < chatBtns.Length; i++)
                 chatBtns[i].GetComponentInChildren<Text>().text = (texts == null ? "" : texts[i]);
         }
-        public void ClearBtnActions()
+        /// <summary>
+        /// 匹配到下一句玩家的句子
+        /// </summary>
+        /// <returns>
+        /// TRUE：成功
+        /// FALSE：对话已经结束
+        /// </returns>
+        public bool ShowNextDialogue()
         {
-            for (int i = 0; i < actions.Length; i++)
-                actions[i] = BUTTON_ACTION.NONE;
-        }
-        public bool NextSentence()
-        {
-            if (currentDialogue == null) return false;
-            ChatSentence[] sentences = currentDialogue.Sentences;
-            if (sentenceIndex >= sentences.Length) return false;
-            //找到player的句子
-            for (; sentenceIndex < sentences.Length && sentences[sentenceIndex].IsNPC; sentenceIndex++)
-                townChatListView.AddItem(sentences[sentenceIndex]);
-#if DEBUG
-            //最后一句为NPC的句子
-            if (sentenceIndex == sentences.Length)
+            if (dialogueCursor == null) return false;
+            List<ChatSentence> nextSentences = dialogueCursor.Next();
+            if (nextSentences.Count == 0) return false;
+            int i;
+            for (i = 0; i < nextSentences.Count; i++)
             {
-                Debug.LogError("最后一句必须是玩家的句子，对话xml配置错误。");
-                return false;
+                townChatListView.AddItem(nextSentences[i]);
             }
-#endif
-            ClearBtnActions();
-            ChatSentence playerSentence = sentences[sentenceIndex];
+            ChatSentence playerSentence = dialogueCursor.CurrentSentence;
             string[] texts = new string[3];
-            if (playerSentence.Type == 0)
+            //清除按钮行为
+            for (i = 0; i < actions.Length; i++)
+                actions[i] = BUTTON_ACTION.NONE;
+            if (playerSentence != null && playerSentence.IsPlayer)
             {
-                texts[0] = playerSentence.Content;
-                actions[0] = BUTTON_ACTION.CONTINUE;
+                if (playerSentence.Type == 0)
+                {
+                    texts[0] = playerSentence.Content;
+                    actions[0] = BUTTON_ACTION.CONTINUE;
+                }
+                else
+                {
+                    texts[0] = playerSentence.OkContent;
+                    actions[0] = BUTTON_ACTION.OK;
+                    texts[1] = playerSentence.CancelContent;
+                    actions[1] = BUTTON_ACTION.CANCEL;
+                }
             }
             else
             {
-                texts[0] = playerSentence.OkContent;
-                actions[0] = BUTTON_ACTION.OK;
-                texts[1] = playerSentence.CancelContent;
-                actions[1] = BUTTON_ACTION.CANCEL;
+                //如果最后一句不是玩家的句子，则只有一个选择，返回
+                texts[0] = "返回大厅";
+                actions[0] = BUTTON_ACTION.CANCEL;
             }
             SetBtnText(texts);
             return true;
         }
-        public void OnItemClick(ListViewItem item, int npc)
+        public void ShowSelectedNpc(int index)
         {
-            selectedIndex = currentTown.Npcs.IndexOf(npc);
-            //Debug.Log("点击了" + currentTown.NPCs[selectedIndex].Name);
-            SetBtnText(null);
-            townChatListView.Datas = sentences[selectedIndex + 1];
-            List<DialogueInfo> dialogues = DialogueInfoLoader.Instance.FindSatisfy(npc);
-            if (dialogues.Count != 0)
-                SetDialogue(dialogues[0]);
-        }
-        public void OnPersistentClick(ListViewItem item, int index)
-        {
-            GoToHill();
-        }
-        /// <summary>
-        /// 去往大厅
-        /// </summary>
-        public void GoToHill()
-        {
-            SetBtnText(chatBtnsStrs);
-            selectedIndex = UNSELECTED;
-            //显示大厅聊天记录
-            townChatListView.Datas = sentences[0];
-            SetDialogue(null);
+            //选择大厅
+            if (index == 0)
+            {
+                string[] chatBtnsStrs = { "大家好", "", "" };
+                SetBtnText(chatBtnsStrs);
+                //显示大厅聊天记录
+                townChatListView.Datas = sentences[0];
+                dialogueCursor = null;
+            }
+            else
+            {
+                SetBtnText(null);
+                sentences[index].Clear();
+                townChatListView.Datas = sentences[index];
+                int npc = tavernNPCListView[index - 1];
+                List<NpcDialogueInfo> dialogues = NpcDialogueInfoLoader.Instance.FindSatisfy(npc);
+                for (int i = 0; i < dialogues.Count; i++)
+                {
+                    //不是循环对话 同时 对话未结束
+                    if (!dialogues[i].IsForever && !World.getInstance().Dialogues.IfTalked(dialogues[i].ID))
+                    {
+                        dialogueCursor = new DialogueCursor(dialogues[i]);
+                        ShowNextDialogue();
+                        break;
+                    }
+                }
+            }
+
         }
         public void OnClick(BUTTON_ID id)
         {
             //公聊
-            if (selectedIndex == UNSELECTED)
+            if (tavernNPCListView.IfInHill())
             {
                 switch (id)
                 {
@@ -215,7 +230,7 @@ namespace WorldMap.Controller
                             List<int> npcs = currentTown.Npcs;
                             if (npcs.Count == 0)
                             {
-                                chat = new ChatSentence("回响", chatBtnsStrs[id - BUTTON_ID.TAVERN_NONE - 1]);
+                                chat = new ChatSentence("回响", "~~~~");
                             }
                             else
                             {
@@ -238,20 +253,27 @@ namespace WorldMap.Controller
                 switch (actions[index])
                 {
                     case BUTTON_ACTION.CONTINUE:
-                        currentDialogue.Sentences[sentenceIndex].DoAllActions();
+                        dialogueCursor.CurrentSentence.DoAllActions();
                         //跳过玩家的回答句子
-                        sentenceIndex++;
-                        if (!NextSentence())
+                        ChatSentence playerSentence = dialogueCursor.Ignore();
+                        if (playerSentence == null)
+                        {
+                            Debug.LogError("最后一句不是玩家说的");
+                            gotoHill = true;
+                            break;
+                        }
+                        townChatListView.AddItem(playerSentence);
+                        if (!ShowNextDialogue())
                             gotoHill = true;
                         break;
                     case BUTTON_ACTION.OK:
-                        currentDialogue.Sentences[sentenceIndex].DoAllActions();
+                        dialogueCursor.CurrentSentence.DoAllActions();
                         gotoHill = true;
                         break;
                     case BUTTON_ACTION.CANCEL: gotoHill = true; break;
                     default: break;
                 }
-                if (gotoHill) GoToHill();
+                if (gotoHill) ShowSelectedNpc(0);
             }
         }
         public void RecruitNpc(int selectedIndex)
@@ -269,12 +291,22 @@ namespace WorldMap.Controller
                 Debug.LogError("系统：招募NPC失败");
                 return;
             }
-            //if (WorldForMap.Instance.IfTeamOuting)
-            //    Team.Instance.CallBackRecruit(currentNPC.PersonInfo);
-            //else
-            //    Train.Instance.CallBackRecruit(currentNPC.PersonInfo);
             tavernNPCListView.RemoveData(currentNPC);
             tavernNPCListView.ClickManually(0);
+        }
+        public void ObserverUpdate(int state, int echo, object tag = null)
+        {
+
+            switch ((PersonSet.EAction)state)
+            {
+                case PersonSet.EAction.RECRUIT_PERSON:
+                    int npcID = (int)tag;
+                    int index = tavernNPCListView.IndexOf(npcID);
+                    if (index == tavernNPCListView.SelectIndex)
+                        ShowSelectedNpc(0);
+                    tavernNPCListView.RemoveData(npcID);
+                    break;
+            }
         }
     }
 }

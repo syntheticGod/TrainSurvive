@@ -11,7 +11,7 @@ using TTT.Xml;
 namespace WorldMap.Model
 {
     [Serializable]
-    public class DialogueDataSet
+    public class NpcDialogueDataSet
     {
         public enum EDialogueState
         {
@@ -21,6 +21,9 @@ namespace WorldMap.Model
             TALKED,//交谈完毕
             NUM
         }
+        /// <summary>
+        /// 根据对话ID存储对话
+        /// </summary>
         [SerializeField]
         private EDialogueState[] State;
         /// <summary>
@@ -28,7 +31,7 @@ namespace WorldMap.Model
         /// </summary>
         public void InitOnce()
         {
-            State = new EDialogueState[DialogueInfoLoader.Instance.DialoguesCount()];
+            State = new EDialogueState[NpcDialogueInfoLoader.Instance.DialoguesCount()];
         }
         /// <summary>
         /// 根据对话ID获得对话的状态
@@ -38,7 +41,7 @@ namespace WorldMap.Model
         public EDialogueState GetState(int dialogueID)
         {
 #if DEBUG
-            if(dialogueID >= State.Length)
+            if (dialogueID >= State.Length)
                 Debug.LogError("不存在该ID的对话：" + dialogueID);
 #endif
             return State[dialogueID];
@@ -53,12 +56,16 @@ namespace WorldMap.Model
         /// </returns>
         public bool IfTalked(int[] ids)
         {
-            foreach(int id in ids)
+            foreach (int id in ids)
             {
                 if (GetState(id) != EDialogueState.TALKED)
                     return false;
             }
             return true;
+        }
+        public bool IfTalked(int id)
+        {
+            return GetState(id) == EDialogueState.TALKED;
         }
     }
 }

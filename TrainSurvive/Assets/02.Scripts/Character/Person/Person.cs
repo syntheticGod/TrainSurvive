@@ -13,11 +13,12 @@ using TTT.Resource;
 using TTT.Utility;
 using WorldMap.UI;
 using System.Text;
+using WorldMap.Model;
 
 [System.Serializable]
 public class Person
 {
-    //----------个人信息----------↓
+    #region 个人信息
     /// <summary>
     /// 人物姓名
     /// </summary>
@@ -49,7 +50,7 @@ public class Person
     {
         get
         {
-            return string.Format("{0}/{1}/{2}", StaticResource.GetAttributeName(proAttributes[0]), StaticResource.GetAttributeName(proAttributes[1]), StaticResource.GetAttributeName(proAttributes[2]));
+            return string.Format("{0}/{1}/{2}", StaticResource.GetAttributeName(profAttris[0]), StaticResource.GetAttributeName(profAttris[1]), StaticResource.GetAttributeName(profAttris[2]));
         }
     }
     public string BackgroundStoreInfo
@@ -59,75 +60,100 @@ public class Person
             return "背景故事正在路上。。。";
         }
     }
-    //----------个人信息----------↑----------人物状态----------↓
+    #endregion 个人信息
+
+    #region 人物状态
     /// <summary>
     /// 人物是否出战
     /// </summary>
     public bool ifReadyForFighting = false;
-    //----------人物状态----------↑----------属性----------↓
+    #endregion 人物状态
+
+    #region 属性
     /// <summary>
     /// 体力
     /// </summary>
-    public int vitality { get { return attriNumber[(int)EAttribute.VITALITY]; } set { attriNumber[(int)EAttribute.VITALITY] = value; } }
+    public int vitality { get { return AttriNumbers[(int)EAttribute.VITALITY]; } set { AttriNumbers[(int)EAttribute.VITALITY] = value; } }
     /// <summary>
     /// 力量
     /// </summary>
-    public int strength { get { return attriNumber[(int)EAttribute.STRENGTH]; } set { attriNumber[(int)EAttribute.STRENGTH] = value; } }
+    public int strength { get { return AttriNumbers[(int)EAttribute.STRENGTH]; } set { AttriNumbers[(int)EAttribute.STRENGTH] = value; } }
     /// <summary>
     /// 敏捷
     /// </summary>
-    public int agile { get { return attriNumber[(int)EAttribute.AGILE]; } set { attriNumber[(int)EAttribute.AGILE] = value; } }
+    public int agile { get { return AttriNumbers[(int)EAttribute.AGILE]; } set { AttriNumbers[(int)EAttribute.AGILE] = value; } }
     /// <summary>
     /// 技巧
     /// </summary>
-    public int technique { get { return attriNumber[(int)EAttribute.TECHNIQUE]; } set { attriNumber[(int)EAttribute.TECHNIQUE] = value; } }
+    public int technique { get { return AttriNumbers[(int)EAttribute.TECHNIQUE]; } set { AttriNumbers[(int)EAttribute.TECHNIQUE] = value; } }
     /// <summary>
     /// 智力
     /// </summary>
-    public int intelligence { get { return attriNumber[(int)EAttribute.INTELLIGENCE]; } set { attriNumber[(int)EAttribute.INTELLIGENCE] = value; } }
-    /// <summary>
-    /// 小数属性保留的位数
-    /// </summary>
-    private const int numsLeft = 3;
-    private int[] attriNumber;
-    private int[] attriMaxNumber;
-    public int[] GetAttriNumbers()
-    {
-        return attriNumber;
-    }
-    /// <summary>
-    /// 获得相应属性值
-    /// </summary>
-    /// <param name="eAttribute">属性</param>
-    /// <returns>属性值</returns>
-    public int GetAttriNumber(EAttribute eAttribute)
-    {
-        return attriNumber[(int)eAttribute];
-    }
-    /// <summary>
-    /// 获得相应最大属性值
-    /// </summary>
-    /// <param name="eAttribute">属性</param>
-    /// <returns>最大属性值</returns>
-    public int GetAttriMaxNumber(EAttribute eAttribute)
-    {
-        return attriMaxNumber[(int)eAttribute];
-    }
+    public int intelligence { get { return AttriNumbers[(int)EAttribute.INTELLIGENCE]; } set { AttriNumbers[(int)EAttribute.INTELLIGENCE] = value; } }
+
+    public int[] AttriNumbers;
+    private int[] AttriMaxNumbers;
     /// <summary>
     /// 已训练次数
     /// </summary>
     public int trainCnt = 0;
-    /// 增加人物属性，同时获得相应技能
+    /// <summary>
+    ///  增加人物属性，同时获得相应技能
     /// </summary>
     /// <param name="eAttribute">属性</param>
     /// <param name="delta">增值</param>
-    public void AddAttriNumber(EAttribute eAttribute, int delta)
+    private void AddAttriNumber(EAttribute eAttribute, int delta)
     {
-        attriNumber[(int)eAttribute] += delta;
+    }
+    /// <summary>
+    /// 先支付金额或策略点后加属性
+    /// </summary>
+    /// <param name="attribute">属性</param>
+    /// <param name="delta">增加差值</param>
+    /// <param name="payByWhat">0：金钱 1：策略点</param>
+    /// <returns>
+    /// 1：添加属性成功
+    /// -1：失败，金钱/策略点 不足
+    /// -2：失败，属性达到上限
+    /// -3：失败，扣款/扣策略点 失败（检测时金钱足够，扣款时金钱不足）
+    /// </returns>
+    public int AddAttributeWithPay(EAttribute attribute, int delta, int payByWhat)
+    {
+        //检查属性上限
+        if (AttriNumbers[(int)attribute] + delta > AttriMaxNumbers[(int)attribute])
+            return -2;
+        //计算金币
+        int cost;
+        if (payByWhat == 0)
+        {
+            cost = CalMoneyByAttribute(attribute, delta);
+            if (!World.getInstance().IfMoneyEnough(cost))
+                return -1;
+        }
+        else
+        {
+            cost = CallStrategyByAttribute(attribute, delta);
+            if (!World.getInstance().IfStrategyEnough(cost))
+                return -1;
+        }
+        //扣款 加属性
+        if (payByWhat == 0)
+        {
+            if (!World.getInstance().PayByMoney(cost))
+                return -3;
+        }
+        else
+        {
+            if (!World.getInstance().PayByStrategy(cost))
+                return -3;
+        }
+        //属性添加动作
+        AttriNumbers[(int)attribute] += delta;
         trainCnt++;
-        SkillInfo[] skills = StaticResource.GetAvailableSkills(attriNumber, ESkillComeFrom.SCHOOL);
+        //获取技能
+        List<SkillInfo> skills = StaticResource.GetAvailableSkills(AttriNumbers, ESkillComeFrom.SCHOOL);
         List<SkillInfo> newSkills = new List<SkillInfo>();
-        for (int i = 0; i < skills.Length; i++)
+        for (int i = 0; i < skills.Count; i++)
         {
             if (IfHaveGotTheSkill(skills[i]) == false)
             {
@@ -146,57 +172,6 @@ public class Person
             sb.Remove(sb.Length - 1, 1);
             InfoDialog.Show(sb.ToString());
         }
-    }
-    /// <summary>
-    /// 先支付金额或策略点后加属性
-    /// </summary>
-    /// <param name="attribute">属性</param>
-    /// <param name="delta">增加差值</param>
-    /// <param name="payByWhat">0：金钱 1：策略点</param>
-    /// <returns>
-    /// 1：添加属性成功
-    /// -1：失败，金钱/策略点 不足
-    /// -2：失败，属性达到上限
-    /// -3：失败，扣款/扣策略点 失败（检测时金钱足够，扣款时金钱不足）
-    /// </returns>
-    public int AddAttributeWithPay(EAttribute attribute, int delta, int payByWhat)
-    {
-        World world = World.getInstance();
-        //计算金币
-        int cost;
-        if (payByWhat == 0)
-        {
-            cost = CalMoneyByAttribute(attribute, delta);
-            if (!world.IfMoneyEnough(cost))
-                return -1;
-        }
-        else
-        {
-            cost = CallStrategyByAttribute(attribute, delta);
-            if (!world.IfStrategyEnough(cost))
-                return -1;
-        }
-        //检查属性上限
-        int maxAttributeNumber;
-        //专精可以解锁属性上限
-        if (IfProfession(attribute))
-            maxAttributeNumber = 999;
-        else
-            maxAttributeNumber = GetAttriMaxNumber(attribute);
-        if (GetAttriNumber(attribute) + delta > maxAttributeNumber)
-            return -2;
-        //扣款 加属性
-        if (payByWhat == 0)
-        {
-            if (!world.PayByMoney(cost))
-                return -3;
-        }
-        else
-        {
-            if (!world.PayByStrategy(cost))
-                return -3;
-        }
-        AddAttriNumber(attribute, delta);
         return 1;
     }
     /// <summary>
@@ -219,7 +194,7 @@ public class Person
     /// </returns>
     public int CalMoneyByAttribute(EAttribute attribute, int deltaNumber)
     {
-        float money = deltaNumber * 1000F * (1 + GetAttriNumber(attribute) * 0.05F) * (1 + CallMoneyIncreaseByTrainCnt() / 100.0f);
+        float money = deltaNumber * 1000F * (1 + AttriNumbers[(int)attribute] * 0.05F) * (1 + CallMoneyIncreaseByTrainCnt() / 100.0f);
         if (IfProfession(attribute))
             money *= getTopProfession().GetDiscountByAttri(attribute);
         return Mathf.RoundToInt(money);
@@ -237,6 +212,10 @@ public class Person
         float money = CalMoneyByAttribute(attribute, deltaNumber);
         return Mathf.RoundToInt(money * 0.1f);
     }
+    /// <summary>
+    /// 小数属性保留的位数
+    /// </summary>
+    private const int numsLeft = 3;
     //以下获取的属性均保留numsLeft位小数
     public double getHpMax()
     {
@@ -335,7 +314,9 @@ public class Person
         }
         return Math.Round(num, numsLeft);
     }
-    //----------属性----------↑----------武器----------↓
+    #endregion
+
+    #region 武器
     public bool hasWeapon = false;
     public int weaponId = 0;
     /// <summary>
@@ -357,7 +338,9 @@ public class Person
         weaponId = -1;
         hasWeapon = false;
     }
-    //----------武器----------↑----------技能----------↓
+    #endregion 武器
+
+    #region 技能
     private List<int> skillsCarryed = new List<int>();
     private int skill_carryed_maxNum = 2;
     /// <summary>
@@ -367,12 +350,10 @@ public class Person
     /// <returns></returns>
     public int getSkillCarryed(int index)
     {
-        if (index > skill_carryed_maxNum|| index> skillsCarryed.Count)
+        if (index > skill_carryed_maxNum || index > skillsCarryed.Count)
             return -1;
         return skillsCarryed[index - 1];
     }
-
-  
     public void carry_skill(int skillId)
     {
         if (!skillsCarryed.Contains(skillId))
@@ -383,16 +364,15 @@ public class Person
     }
     public void uncarry_skill(int skillId)
     {
-       for(int i=0;i< skill_carryed_maxNum&&i< skillsCarryed.Count; i++)
+        for (int i = 0; i < skill_carryed_maxNum && i < skillsCarryed.Count; i++)
         {
-            if(skillsCarryed[i]== skillId)
+            if (skillsCarryed[i] == skillId)
             {
                 skillsCarryed.RemoveAt(i);
                 break;
             }
         }
     }
-
     /// <summary>
     /// 已经获得的技能
     /// </summary>
@@ -418,12 +398,25 @@ public class Person
     {
         return ContainerTool.IfContainByBinarySearching(skillsGot, skill.ID);
     }
-    //----------技能----------↑----------专精----------↓
+    /// <summary>
+    /// 根据初始属性获取技能
+    /// </summary>
+    private void InitSkill()
+    {
+        List<SkillInfo> avaliableSkills = StaticResource.GetAvailableSkills(AttriNumbers, ESkillComeFrom.SCHOOL);
+        foreach (SkillInfo skill in avaliableSkills)
+        {
+            AddGotSkill(skill.ID);
+        }
+    }
+    #endregion 技能
+
+    #region 专精
     /// <summary>
     /// 三个专精槽位
     /// 存放的是专精的ID
     /// </summary>
-    private int[] professions;
+    private int[] profIDs;
     /// <summary>
     /// 允许的槽位
     /// </summary>
@@ -431,7 +424,7 @@ public class Person
     /// <summary>
     /// 玩家选择的专精属性次序
     /// </summary>
-    private EAttribute[] proAttributes;
+    private EAttribute[] profAttris;
     /// <summary>
     /// 获取第index级专精
     /// </summary>
@@ -442,9 +435,9 @@ public class Person
     /// </returns>
     public Profession getProfession(int index)
     {
-        if (professions[index] == -1)
+        if (profIDs[index] == -1)
             return null;
-        return StaticResource.GetProfessionByID(professions[index]);
+        return StaticResource.GetProfessionByID(profIDs[index]);
     }
     /// <summary>
     /// 判断专精槽是否足够
@@ -452,7 +445,8 @@ public class Person
     /// <returns></returns>
     public bool IfProfessionAvailable()
     {
-        return professions[professionAvaliable - 1] == -1;
+        if (professionAvaliable == 0) return false;
+        return profIDs[professionAvaliable - 1] == -1;
     }
     /// <summary>
     /// 判断指定属性是否已专精
@@ -461,9 +455,9 @@ public class Person
     /// <returns></returns>
     public bool IfProfession(EAttribute attribute)
     {
-        for (int i = 0; i < proAttributes.Length; i++)
+        for (int i = 0; i < profAttris.Length; i++)
         {
-            if (proAttributes[i] == attribute)
+            if (profAttris[i] == attribute)
                 return true;
         }
         return false;
@@ -477,10 +471,10 @@ public class Person
     /// </returns>
     public Profession getTopProfession()
     {
-        for (int i = professions.Length - 1; i >= 0; i--)
+        for (int i = profIDs.Length - 1; i >= 0; i--)
         {
-            if (professions[i] != -1)
-                return StaticResource.GetProfessionByID(professions[i]);
+            if (profIDs[i] != -1)
+                return StaticResource.GetProfessionByID(profIDs[i]);
         }
         return null;
     }
@@ -488,28 +482,52 @@ public class Person
     /// 根据专精的Level绑定专精
     /// </summary>
     /// <param name="profession"></param>
-    public void setProfession(Profession profession, EAttribute attribute)
+    public void SetProfession(Profession profession, EAttribute attribute)
     {
         if (profession.Level == EProfessionLevel.NONE)
         {
             Debug.LogError("专精错误");
             return;
         }
-        professions[(int)profession.Level] = profession.ID;
-        proAttributes[(int)profession.Level] = attribute;
+        profIDs[(int)profession.Level] = profession.ID;
+        profAttris[(int)profession.Level] = attribute;
+        //解锁上限
+        AttriMaxNumbers[(int)attribute] = 999;
     }
-    //----------专精----------↑
+    #endregion 专精
+
+    #region 构造函数
     private Person()
     {
         //保留以后用
-        professions = new int[3] { -1, -1, -1 };
-        proAttributes = new EAttribute[3] { EAttribute.NONE, EAttribute.NONE, EAttribute.NONE };
-        attriNumber = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
+        profIDs = new int[3] { -1, -1, -1 };
+        profAttris = new EAttribute[3] { EAttribute.NONE, EAttribute.NONE, EAttribute.NONE };
+        AttriNumbers = new int[(int)EAttribute.NUM] { 0, 0, 0, 0, 0 };
         //默认最大属性为10
-        attriMaxNumber = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
+        AttriMaxNumbers = new int[(int)EAttribute.NUM] { 10, 10, 10, 10, 10 };
         //初始专精槽数为1
         professionAvaliable = 1;
         ifReadyForFighting = false;
+    }
+    public Person(NpcInfo npc) : this()
+    {
+        ismale = npc.Gender;
+        name = npc.Name;
+        for (int i = 0; i < AttriNumbers.Length; i++)
+        {
+            AttriNumbers[i] = npc.AttriNumber[i];
+        }
+        professionAvaliable = 0;
+        Profession lastProf = null;
+        foreach (EAttribute currentAttri in npc.Professions)
+        {
+            if (currentAttri == EAttribute.NONE) break;
+            Profession prof = StaticResource.GetNextProfessions(lastProf)[(int)currentAttri];
+            SetProfession(prof, currentAttri);
+            professionAvaliable++;
+            lastProf = prof;
+        }
+        InitSkill();
     }
     /// <summary>
     /// 生成一个随机属性的人物（未持有武器）
@@ -522,17 +540,10 @@ public class Person
         p.name = StaticResource.RandomNPCName(p.ismale);
         for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)
         {
-            p.attriNumber[(int)itr] = MathTool.RandomRange(0, p.attriMaxNumber[(int)itr]);
+            p.AttriNumbers[(int)itr] = MathTool.RandomRange(0, p.AttriMaxNumbers[(int)itr]);
         }
-        //获得无条件获得的技能
-        SkillInfo[] avaliableSkills = StaticResource.GetAvailableSkills(p.attriNumber, ESkillComeFrom.SCHOOL);
-        if (avaliableSkills != null)
-        {
-            foreach (SkillInfo skill in avaliableSkills)
-            {
-                p.AddGotSkill(skill.ID);
-            }
-        }
+        p.InitSkill();
         return p;
     }
+    #endregion
 }

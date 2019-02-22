@@ -5,15 +5,46 @@
  * 版本：v0.7
  */
 using System.Xml;
+using TTT.Xml;
 
 namespace WorldMap.Model
 {
-    public class DialogueInfo
+    public abstract class DialogueInfo
     {
         /// <summary>
         /// 对话句子列表
         /// </summary>
         public ChatSentence[] Sentences { get; private set; }
+        /// <summary>
+        /// 触发该对话的前提条件列表
+        /// </summary>
+        public Precondition[] Preconditions { get; private set; }
+        public DialogueInfo(XmlNode root)
+        {
+            Preconditions = Precondition.Compile(root.Attributes["precondition"]?.Value);
+        }
+        protected void InitSentence(string oppositeName, XmlNode root)
+        {
+            XmlNodeList sentenceNodeList = root.SelectNodes("sentence");
+            Sentences = new ChatSentence[sentenceNodeList.Count];
+            for (int i = 0; i < Sentences.Length; i++)
+                Sentences[i] = new ChatSentence(oppositeName, sentenceNodeList[i]);
+        }
+        /// <summary>
+        /// 判断该对话是否满足所有条件
+        /// </summary>
+        /// <returns></returns>
+        public bool IfAllSatisfy(object context = null)
+        {
+            foreach (Precondition condition in Preconditions)
+            {
+                if (!condition.IfSatisfy()) return false;
+            }
+            return true;
+        }
+    }
+    public class NpcDialogueInfo : DialogueInfo
+    {
         /// <summary>
         /// 对话ID
         /// </summary>
@@ -23,48 +54,23 @@ namespace WorldMap.Model
         /// </summary>
         public int NpcID { get; private set; }
         /// <summary>
-        /// 触发该对话的前提条件列表
+        /// 对话是否可以无限触发
         /// </summary>
-        public DialogueCondition[] preconditions { get; private set; }
-        public DialogueInfo(XmlNode root)
+        public bool IsForever { get; private set; }
+        public NpcDialogueInfo(XmlNode root) : base(root)
         {
             ID = int.Parse(root.Attributes["id"].Value);
             NpcID = int.Parse(root.Attributes["npcId"].Value);
-            string condition = root.Attributes["precondition"].Value;
-            if(condition.Length != 0)
-            {
-                string[] precon = condition.Split(';');
-                preconditions = new DialogueCondition[precon.Length];
-                for (int i = 0; i < precon.Length; i++)
-                {
-                    string[] words = precon[i].Split(' ');
-                    switch (words[1])
-                    {
-                        case "task": preconditions[i] = new TaskCondition(words); break;
-                        case "other": preconditions[i] = new OtherCondition(words); break;
-                    }
-                }
-            }
-            else
-            {
-                preconditions = new DialogueCondition[0];
-            }
-            XmlNodeList sentenceNodeList = root.SelectNodes("sentence");
-            Sentences = new ChatSentence[sentenceNodeList.Count];
-            for (int i = 0; i < Sentences.Length; i++)
-                Sentences[i] = new ChatSentence(sentenceNodeList[i], NpcID);
+            IsForever = root.Attributes["type"]?.Value == "forever";
+            string name = NpcInfoLoader.Instance.Find(NpcID).Name;
+            InitSentence(name, root);
         }
-        /// <summary>
-        /// 判断该对话是否满足所有条件
-        /// </summary>
-        /// <returns></returns>
-        public bool IfAllSatisfy()
+    }
+    public class TavernDialogueInfo : DialogueInfo
+    {
+        public TavernDialogueInfo(string tavernName, XmlNode root) : base(root)
         {
-            foreach (DialogueCondition condition in preconditions)
-            {
-                if (!condition.IfSatisfy()) return false;
-            }
-            return true;
+            InitSentence(tavernName, root);
         }
     }
 }

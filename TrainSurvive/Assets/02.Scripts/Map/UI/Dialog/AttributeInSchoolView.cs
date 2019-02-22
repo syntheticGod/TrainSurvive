@@ -33,20 +33,20 @@ namespace WorldMap.UI
         {
             moneyPanel.onAddAttribute = delegate ()
                  {
-                     attributePanel.SetNumbers(person.GetAttriNumbers());
+                     attributePanel.SetNumbers(person.AttriNumbers);
                      onAddAttribute?.Invoke();
                      strategyPanel.SetNumbers();
                  };
             strategyPanel.onAddAttribute = delegate ()
                  {
-                     attributePanel.SetNumbers(person.GetAttriNumbers());
+                     attributePanel.SetNumbers(person.AttriNumbers);
                      onAddAttribute?.Invoke();
                      moneyPanel.SetNumbers();
                  };
         }
         public void SetPerson(Person person)
         {
-            attributePanel.SetNumbers(person.GetAttriNumbers());
+            attributePanel.SetNumbers(person.AttriNumbers);
             this.person = person;
             moneyPanel.person = person;
             strategyPanel.person = person;

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Story.MyTools;
 using Story.Faker;
 using WorldMap.Model;
+using TTT.Resource;
 
 namespace Story.Communication{
     public class Talk{
@@ -119,29 +120,8 @@ namespace Story.Communication{
         //todo 完善语料库，更改叙述方式
         private string getSelfInfoWords(int rdSelf, ref NpcData npc)
         {
-            string result = "";
-            switch(rdSelf){
-                case 0:
-                    result += "我的体力是" + npc.Info.Vitality;
-                    break;
-                case 1:
-                    result += "我的力量是" + npc.Info.Strength;
-                    break;
-                case 2:
-                    result += "我的敏捷是" + npc.Info.Agile;
-                    break;
-                case 3:
-                    result += "我的技巧是" + npc.Info.Technique;
-                    break;
-                case 4:
-                    result += "我的智力是" + npc.Info.Intelligence;
-                    break;
-                default:
-                    break;
-            }
-            return result;
+            return "我的" + StaticResource.GetAttributeName(rdSelf) + "是" + npc.Info.AttriNumber[rdSelf];
         }
-
 
         private bool existRandomEvent(){
             return RandomEventpool.instance.existEvent();
