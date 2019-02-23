@@ -33,13 +33,89 @@
   <!--增加500%攻速，持续三次攻击。-->
   <Skill id = "11" skillType="ACTIVE" needAp ="35" />
 
-  <!--开启后持续消耗AP，技能开启期间攻速增加100%-->
-  <Skill id = "12" skillType="SWITCH" needAp ="50" atkSpeedRate="2" />
+  <!--wu 开启后持续消耗AP，技能开启期间攻速增加100%-->
+  <Skill id = "12" skillType="SWITCH" needAp ="50" attackRate="2" />
+  
+  <!--wu 开启后持续消耗AP，技能开启期间攻速增加100%，攻击力增加50%，但受到伤害增加20%-->
+  <Skill id = "13" skillType="SWITCH" needAp ="70" attackRate="2" atkDamageRate="1.5" injuryedRate="1.2" />
+  
+  <!--wu 进入持续10秒的隐身状态，移动速度增加50%且无法被选中为目标，攻击或释放技能会打破隐身状态-->
+  
+  <!-- 抓取当前攻击目标至面前1米处，并晕眩3秒 -->
+  <Skill id = "15" skillType="ACTIVE" needAp ="40" rangeRate ="1" timeRate="3"/>
 
-  <!--开启后持续消耗AP，技能开启期间攻速增加100%，攻击力增加50%，但受到伤害增加20%-->
-  <Skill id = "13" skillType="SWITCH" needAp ="70" atkSpeedRate="2" atkDamageRate="1.5" injuryedRate="1.2" />
+  <!-- 对当前攻击目标造成200%攻击力的伤害，并晕眩5秒 -->
+  <Skill id = "16" skillType="ACTIVE" needAp ="30" attackRate="2" timeRate="5"/>
 
-  <!--进入持续10秒的隐身状态，移动速度增加50%且无法被选中为目标，攻击或释放技能会打破隐身状态-->
-  <Skill id = "14" skillType="SWITCH" needAp ="50" timeRate="10" atkDamageRate="1.5" injuryedRate="1.2" />
+  <!-- 呼叫毁灭性飞弹袭击，对敌方全体造成 7x技巧 伤害 -->
+  <Skill id = "17" skillType="ACTIVE" needAp ="100" attackRate="7"/>
 
+  <!--无法实现减去当前生命值的百分比，测试实现的是减去固定的值，现在要改要全部重写-->
+  <!--目前实现每秒是去（层数*5）的生命值-->
+  <!--攻击附带中毒效果：每秒失去（层数*1）%当前生命值，并降低（层数*4）%的攻速与移速，最高叠加至20层-->
+  <Skill id = "18" skillType="ATTACK" needAp ="0"/>
+
+  
+  <!--初阶光系魔法，瞬间后移10米-->
+  <Skill id = "19" skillType="ACTIVE" needAp ="40" rate ="10" />
+
+  <!--wu 初阶水系魔法，将自身冰封5秒，无法行动，减少80%所受伤害，每秒恢复10%最大生命值-->
+  <!--不能增加百分比，改为增加50了-->
+  <Skill id = "20" skillType="ACTIVE" needAp ="30" timeRate="5"/>
+  
+  
+  <!--初阶火系魔法，在当前攻击目标身上引爆火球，造成 8x智力 伤害-->
+  <Skill id = "21" skillType="ACTIVE" needAp ="60" attackRate ="8" />
+
+  <!--初阶风系魔法，小队全体增加（技能携带者智力*0.5）%移速，（技能携带者智力*1）%攻速-->
+  <Skill id = "22" skillType="PASSIVE" needAp ="0" moveRate ="0.5" atkSpeedRate="1" />
+
+  <!--初阶雷系魔法，对敌方全体造成 2x智力 伤害-->
+  <Skill id = "23" skillType="ACTIVE" needAp ="30" attackRate ="2" />
+
+  <!--进阶光系魔法，对小队全体造成 3x智力 治疗-->
+  <Skill id = "24" skillType="ACTIVE" needAp ="40" attackRate ="3" />
+
+  <!--进阶水系魔法，将目标冰冻5秒-->
+  <Skill id = "25" skillType="ACTIVE" needAp ="50" timeRate ="5" />
+  
+  <!--进阶火系魔法，在目标位置落下陨石，对半径2米内敌人造成 10x智力 伤害-->
+  <Skill id = "26" skillType="ACTIVE" needAp ="100" rangeRate="2" attackRate ="10" />
+
+  <!--进阶风系魔法，推出一道飓风至面前20米的位置，并击退路径上所有敌人。-->
+  <Skill id = "27" skillType="ACTIVE" needAp ="60" rangeRate="20"/>
+
+  <!--进阶雷系魔法，对敌方当前生命值最高的单位造成 15x智力 伤害-->
+  <Skill id = "28" skillType="ACTIVE" needAp ="80" attackRate ="15" />
+
+  <!--增加自身（体力*5）%攻击力-->
+  <Skill id = "29" skillType="PASSIVE" needAp ="0" attackRate ="5" />
+
+  <!--增加自身（智力*5）%攻击力-->
+  <Skill id = "30" skillType="PASSIVE" needAp ="0" attackRate ="5" />
+
+  <!--新机制-->
+  <!--生命值百分比跌至20%以下触发，每秒恢复10%最大生命值，持续至战斗结束。-->
+  
+  <!--瞬间位移至目标身后1尺处，并增加30%攻速，持续5秒-->
+  <Skill id = "32" skillType="ACTIVE" needAp ="50" rangeRate="1" atkSpeedRate ="0.3" timeRate ="5" />
+
+  <!--在身前1米、身后1米处各召唤1只野狼  【怪物ID=6】-->
+  <Skill id = "33" skillType="ACTIVE" needAp ="60" rangeRate="1" monsterId="6" />
+
+  <!--在身前1米、身后1米处各召唤1只头狼  【怪物ID=7】-->
+  <Skill id = "34" skillType="ACTIVE" needAp ="100" rangeRate="1" monsterId="7" />
+
+  <!--在身后1米，召唤一支骷髅军队【怪物ID=11、12、13、14各一只】-->
+  <!--从id11开始，召唤四个-->
+  <Skill id = "35" skillType="ACTIVE" needAp ="150" rangeRate="1" monsterId="11" monsterNum="4" />
+
+  <!--增加自身80%攻速与200%击退距离，但降低50%攻击力，持续5秒-->
+  <Skill id = "36" skillType="ACTIVE" needAp ="80"/>
+
+  <!--初阶暗系魔法，目标ap恢复降低80%，受到伤害增加20%，持续5秒-->
+  <Skill id = "37" skillType="ACTIVE" needAp ="50"/>
+
+  <!--将目标击退10米-->
+  <Skill id = "38" skillType="ACTIVE" needAp ="50" rangeRate="10"/>
 </SkillPool>

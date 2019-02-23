@@ -71,7 +71,10 @@ namespace WorldBattle
             monster.intelligence = int.Parse(propertyNode.Attributes["intelligence"].Value);
             monster.model = int.Parse(propertyNode.Attributes["model"].Value);
             monster.rank = int.Parse(propertyNode.Attributes["rank"].Value);
-            monster.size = int.Parse(propertyNode.Attributes["size"].Value);
+
+            //size应该为float
+            monster.size = float.Parse(propertyNode.Attributes["size"].Value);
+
             monster.exp = int.Parse(propertyNode.Attributes["exp"].Value);
 
             if (aiNode == null)
@@ -122,8 +125,13 @@ namespace WorldBattle
                 }
             }
             battleActor.playerPrefab = character;
-            MonsterAdapter.setMonsterBattleActor(ref battleActor, ref monster);      
-            addTaskListener(ref battleActor, ref monster);
+            MonsterAdapter.setMonsterBattleActor(ref battleActor, ref monster);
+
+            //如果在战斗场景测试状态，就不添加任务监听
+            //集成测试时isTest为false
+            if (BattleController.getInstance().isTest == false) {
+                addTaskListener(ref battleActor, ref monster);
+            }
         }
         /// <summary>
         /// 根据level难度生成一个怪物

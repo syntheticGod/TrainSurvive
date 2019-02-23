@@ -51,16 +51,15 @@ namespace WorldBattle {
         public float critDamage { get; set; }
         //当前角色的技能系数加成
         public float skillPara { get; set; }
+        //当前角色击退距离系数(默认0.5)
+        public float repelDistance { get; set; }
+
         //击败获得经验
         public float exp;
         public float size;
         public string name_str;
         public int rank;
         public int model;//使用模型
-        public BattleActor()
-        {
-            skillList = new List<Skill>();
-        }
         //移动速度（每1s移动的距离）
         public float moveSpeed {
             get {
@@ -131,6 +130,8 @@ namespace WorldBattle {
         public int myId { get; set; }
         //本次战斗中是否是玩家角色
         public bool isPlayer { get; set; }
+        //判断是不是召唤物，召唤物不更新Hp，Ap
+        public bool isSummon { get; set; }
 
         //生命值Slider
         public Slider hpSlider;
@@ -188,7 +189,7 @@ namespace WorldBattle {
         //获取当前的BattleController
         public BattleController battleController;
         //获取当前的Animator
-        private Animator animator;
+        public Animator animator;
         //获取当前的Text
         public Text nameText;
 
@@ -202,7 +203,7 @@ namespace WorldBattle {
         public int actorStopNum;
 
         //当前角色身上的技能
-        public List<Skill> skillList { get; private set; }
+        public List<BaseSkill> skillList { get; private set; }
         //当前释放的技能id
         public int curSkillId = -1;
 
@@ -237,6 +238,24 @@ namespace WorldBattle {
             NUM
         }
 
+        public BattleActor() {
+            skillList = new List<BaseSkill>();
+
+            //初始化移速改变比率为1.0
+            moveSpeedChangeRate = 1.0f;
+
+            //当前没有战斗目标，也没有选中的战斗目标
+            atkTarget = -1;
+            selectedAtkTarget = -1;
+            //当前处于存活状态
+            isAlive = true;
+            //当前角色未停止
+            isActorStop = false;
+            //当前眩晕buff的个数为0
+            actorStopNum = 0;
+            //默认不是召唤物
+            isSummon = false;
+        }
         // Use this for initialization
         void Start() {
             //保存transform的引用，加快速度
@@ -247,7 +266,7 @@ namespace WorldBattle {
             orign = battleController.orign;
             battleMapLen = battleController.battleMapLen;
 
-            //初始化玩家和敌人的对象
+            //初始化玩家和敌人的对象(会重复初始化，但必须)
             if (isPlayer) {
                 playerActors = battleController.playerActors;
                 enemyActors = battleController.enemyActors;
@@ -255,6 +274,13 @@ namespace WorldBattle {
                 playerActors = battleController.enemyActors;
                 enemyActors = battleController.playerActors;
             }
+
+            //初始化当前角色规定的朝向正负（玩家为正，敌人为负）
+            forwardDir = isPlayer ? 1 : -1;
+            //当前角色往认为自己为正的朝向
+            isForward = 1;
+            //当前角色的前进方向应是正向方向
+            curMotionDir = forwardDir;
 
             //将当前位置赋予角色上
             changeRealPos(pos);
@@ -266,30 +292,14 @@ namespace WorldBattle {
 
             //绑定当前的Animator
             this.animator = this.GetComponentInChildren<Animator>();
-            //初始化移速改变比率为1.0
-            moveSpeedChangeRate = 1.0f;
-
-            //初始化当前角色规定的朝向正负（玩家为正，敌人为负）
-            forwardDir = isPlayer ? 1 : -1;
-            //当前角色往认为自己为正的朝向
-            isForward = 1;
-            //当前角色的前进方向应是正向方向
-            curMotionDir = forwardDir;
-
-            //当前没有战斗目标，也没有选中的战斗目标
-            atkTarget = -1;
-            selectedAtkTarget = -1;
-            //当前处于存活状态
-            isAlive = true;
-            //当前角色未停止
-            isActorStop = false;
-            //当前眩晕buff的个数为0
-            actorStopNum = 0;
 
             //初始化子状态控制器
             subStateController = new SubStateController(this, animator);
             //初始化buff状态列表
             buffEffects = new List<Buff>();
+
+            //设置击退距离
+            repelDistance = 0.2f;
 
             //其它子类的继承方法
             otherInit();
@@ -404,6 +414,7 @@ namespace WorldBattle {
         public float getDamage(int id, float damagePoint) {
             //真实受到的伤害先乘上受伤比例
             float realDamage = damagePoint * damageRate;
+            //Debug.Log(damageRate + " " + realDamage);
 
             //如果当前处于休息状态，受到的伤害加倍
             if (subStateController.curActionState == ActionStateEnum.REST) {
@@ -428,14 +439,17 @@ namespace WorldBattle {
         public void addHealthPoint(int id, float addHp) {
             curHealthPoint = Mathf.Clamp(curHealthPoint + addHp, 0.0f, maxHealthPoint);
 
-            //更新hp的显示
-            hpSlider.value = curHealthPoint / maxHealthPoint;
-            hpTxt.text = Mathf.Floor(curHealthPoint).ToString();
+            //非召唤物更新面板
+            if (isSummon == false) {
+                //更新hp的显示
+                hpSlider.value = curHealthPoint / maxHealthPoint;
+                hpTxt.text = Mathf.Floor(curHealthPoint).ToString();
+            }
 
             //如果当前生命值变成0，无论是技能，攻击，Buff，挂掉
             if (curHealthPoint <= 0.0f) {
-                if (!isPlayer)             
-                    task_kill_handler?.Invoke(task_monsterId);                
+                if (!isPlayer)
+                    task_kill_handler?.Invoke(task_monsterId);
                 changeSubState(ActionStateEnum.DEAD);
             }
         }
@@ -448,12 +462,15 @@ namespace WorldBattle {
         public void addActionPoint(int id, float addAp) {
             curActionPoint = Mathf.Clamp(curActionPoint + addAp, 0.0f, maxActionPoint);
 
-            //更新ap的显示
-            apSlider.value = curActionPoint / maxActionPoint;
-            apTxt.text = Mathf.Floor(curActionPoint).ToString();
+            //非召唤物更新面板
+            if (isSummon == false) {
+                //更新ap的显示
+                apSlider.value = curActionPoint / maxActionPoint;
+                apTxt.text = Mathf.Floor(curActionPoint).ToString();
 
-            //人物角色可选择将技能按钮激活
-            changeSkillBtn();
+                //人物角色可选择将技能按钮激活
+                changeSkillBtn();
+            }
         }
 
         /// <summary>
@@ -520,13 +537,28 @@ namespace WorldBattle {
         /// 目前假设被动buff都是攻击触发
         /// </summary>
         /// <param name="targetActor"></param>
-        public void releasePassiveBuff(BattleActor targetActor) {
+        public void releaseAttackPassiveSkill(BattleActor targetActor) {
             //遍历技能列表
-            foreach (Skill skill in skillList) {
+            foreach (BaseSkill skill in skillList) {
                 //只有当前是攻击执行的被动技能再执行
-                if (skill.skillType == Skill.SkillType.ATTACK) {
+                if (skill.skillType == BaseSkill.SkillType.ATTACK) {
                     //对目标执行被动技能
                     skill.release(targetActor);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 释放被动技能（开场）
+        /// </summary>
+        /// <param name="targetActor"></param>
+        public void releasePassiveSkill() {
+            //遍历技能列表
+            foreach (BaseSkill skill in skillList) {
+                //只有当前是攻击执行的被动技能再执行
+                if (skill.skillType == BaseSkill.SkillType.PASSIVE) {
+                    //对目标执行被动技能
+                    skill.release();
                 }
             }
         }
@@ -567,7 +599,7 @@ namespace WorldBattle {
         public void addSkill(int skillId) {
             //如果当前为空，将其初始化
             if (skillList == null) {
-                skillList = new List<Skill>();
+                skillList = new List<BaseSkill>();
             }
 
             //将指定技能id加入到技能列表中

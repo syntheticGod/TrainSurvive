@@ -263,8 +263,10 @@ namespace WorldBattle {
         /// </summary>
         protected override void changeSkillBtn() {
             for (int i = 0; i < skillList.Count; i++) {
-                //如果当前技能是主动技能且能释放，则该按钮可用
-                if (skillList[i].skillType == Skill.SkillType.ACTIVE && skillList[i].canReleaseSkill()) {
+                //如果当前技能是主动技能或者是开关型技能且能释放，则该按钮可用
+                if ((skillList[i].skillType == BaseSkill.SkillType.ACTIVE
+                    || skillList[i].skillType == BaseSkill.SkillType.SWITCH)
+                    && skillList[i].canReleaseSkill()) {
                     skillBtn[i].interactable = true;
                 } else {
                     //否则设置其不可用

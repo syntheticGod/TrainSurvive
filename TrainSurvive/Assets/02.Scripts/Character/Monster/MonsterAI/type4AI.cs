@@ -91,21 +91,21 @@ namespace WorldBattle
        
 
         return;
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     protected override void otherInit()
     {
             mapLength = BattleController.getInstance().battleMapLen;
         int index = 0;
-        foreach (Skill skill in skillList)
+        foreach (BaseSkill skill in skillList)
         {
-            if (skill.skillType == Skill.SkillType.ACTIVE)
+            if (skill.skillType == BaseSkill.SkillType.ACTIVE)
                 active_skill_indexList.Add(index);
             index++;
         }
         has_active_skill = active_skill_indexList.Count == 0 ? false : true;
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
 

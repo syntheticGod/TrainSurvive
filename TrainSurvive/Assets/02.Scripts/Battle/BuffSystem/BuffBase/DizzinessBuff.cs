@@ -76,6 +76,8 @@ namespace WorldBattle {
 
             //当前眩晕buff数减1
             battleActor.actorStopNum--;
+            //当前效果置空
+            floorNum = 0;
             //如果当前眩晕buff数为0且当前角色还存活，恢复行动数
             if (battleActor.actorStopNum == 0 && battleActor.isAlive == true) {
                 battleActor.isActorStop = false;

@@ -6,14 +6,15 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Resource;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace WorldBattle {
     public class InitPlayers : MonoBehaviour {
         //技能1，2（测试）
-        public static int skill1 = 2;
-        public static int skill2 = 10;
+        public static int skill1 = 35;
+        public static int skill2 = 27;
 
         /// <summary>
         /// 初始化玩家操作的角色
@@ -33,12 +34,6 @@ namespace WorldBattle {
             if (battleController.isTest) {
                 //和玩家生成的统一
                 for (int i = 0; i < battleController.personNum; i++) {
-                    //绑定两个技能
-                    //skill1 = Random.Range(1, 12);
-                    //skill2 = Random.Range(1, 12);
-                    skill1 = 9;
-                    skill2 = 10;
-
                     //生成指定的玩家对象，绑定脚本和指令框
                     BattleActor battleActor = generatePlayer(battleController.player, "玩家" + (i + 1), i);
 
@@ -59,9 +54,9 @@ namespace WorldBattle {
                         continue;
                     }
 
-                    //绑定两个技能
-                    skill1 = Random.Range(1, 12);
-                    skill2 = Random.Range(1, 12);
+                    //无法改变绑定和初始化人物的属性，所以只能暂时用静态skill读取
+                    skill1 = person.getSkillCarryed(1);
+                    skill2 = person.getSkillCarryed(2);
 
                     //生成指定的玩家对象，绑定脚本和指令框
                     BattleActor battleActor = generatePlayer(battleController.player, person.name, battleController.personNum);
@@ -172,8 +167,8 @@ namespace WorldBattle {
             battleActor.intelligence = person.intelligence;
 
             //初始化两个技能
-            battleActor.addSkill(skill1);
-            battleActor.addSkill(skill2);
+            battleActor.addSkill(person.getSkillCarryed(1));
+            battleActor.addSkill(person.getSkillCarryed(2));
         }
 
         /// <summary>
@@ -183,17 +178,17 @@ namespace WorldBattle {
         /// <param name="para">相应参数的弱化</param>
         public static void initPersonPara(ref BattleActor person, float para) {
             //初始化人物各属性值(随机)，只做测试使用
-            person.maxHealthPoint = Random.Range(150.0f, 200.0f) * para;
-            person.maxActionPoint = Random.Range(50.0f, 100.0f) * para;
+            person.maxHealthPoint = 2000.0f * para;
+            person.maxActionPoint = 2000.0f * para;
             person.hpRecovery = 5;
             if (BattleController.getInstance().isTest == true) {
                 person.apRecovery = 100;
             } else {
                 person.apRecovery = 5;
             }
-            person.atkNeedTime = 1 / (Random.Range(0.5f, 1.5f) * para);
-            person.moveSpeed = Random.Range(0.5f, 2.0f);
-            person.atkDamage = Random.Range(5f, 10f) * para;
+            person.atkNeedTime = 1 / para;
+            person.moveSpeed = 3.0f;
+            person.atkDamage = 10f * para;
             person.atkRange = Random.Range(1f, 5f) * para;
             person.damageRate = 1.0f;
             person.critDamage = 1.6f;
@@ -203,11 +198,11 @@ namespace WorldBattle {
             person.skillPara = 1.0f;
 
             //初始化五个属性
-            person.vitality = 5;
-            person.strength = 5;
-            person.agility = 5;
-            person.technical = 5;
-            person.intelligence = 5;
+            person.vitality = 50;
+            person.strength = 50;
+            person.agility = 50;
+            person.technical = 50;
+            person.intelligence = 50;
 
             //初始化两个技能
             person.addSkill(skill1);

@@ -20,6 +20,18 @@ namespace WorldBattle {
             //更改攻击速度
             ATTACK_SPEED,
 
+            //更改攻击力
+            ATTACK,
+
+            //更改击退距离
+            REPEL_DISTANCE,
+
+            //Ap恢复值
+            AP_RECOVERY,
+
+            //所受伤害值
+            DAMAGE_RATE,
+
             NUM
         }
 
@@ -27,7 +39,7 @@ namespace WorldBattle {
         public readonly float changeRate;
         //所要改变角色的属性
         public readonly RatePropertyEnum actorProperty;
-       
+
         public ChangePropertyRateBuff(BattleActor battleActor,
             float changeRate, float maxDurationTime, RatePropertyEnum actorProperty,
             bool isCanOverlay, int maxFloorNum = 1)
@@ -56,8 +68,13 @@ namespace WorldBattle {
                 //通过绑定的对象启动线程(当前没有执行)
                 battleActor.StartCoroutine(effectActor());
             } else {
+                //层数更新，相应属性也随之更新
+                //恢复原本的角色属性
+                changeActorProperty(actorProperty, 1.0f / (1 - changeRate * floorNum));
                 //增加相应的层数
                 floorNum = Mathf.Min(addFloorNum + floorNum, maxFloorNum);
+                //改变角色相应的属性
+                changeActorProperty(actorProperty, (1 - changeRate * floorNum));
             }
         }
 
@@ -67,8 +84,8 @@ namespace WorldBattle {
         /// </summary>
         /// <returns></returns>
         private IEnumerator effectActor() {
-            //按比率更改相应的角色属性
-            changeActorProperty(actorProperty, changeRate * floorNum);
+            //改变角色相应的属性
+            changeActorProperty(actorProperty, (1 - changeRate * floorNum));
 
             //等待对应的时间
             while (curPassTime < maxDurationTime) {
@@ -77,7 +94,7 @@ namespace WorldBattle {
             }
 
             //恢复原本的角色属性
-            changeActorProperty(actorProperty, 1.0f / (changeRate * floorNum));
+            changeActorProperty(actorProperty, 1.0f / (1 - changeRate * floorNum));
             //设置当前不执行
             floorNum = 0;
         }
@@ -99,6 +116,26 @@ namespace WorldBattle {
                 case RatePropertyEnum.ATTACK_SPEED:
                     battleActor.atkNeedTime /= rate;
                     Debug.Log(battleActor.atkNeedTime);
+                    break;
+
+                //更改攻击力
+                case RatePropertyEnum.ATTACK:
+                    battleActor.atkDamage *= rate;
+                    break;
+
+                //更改击退距离
+                case RatePropertyEnum.REPEL_DISTANCE:
+                    battleActor.repelDistance *= rate;
+                    break;
+
+                //更改AP恢复值
+                case RatePropertyEnum.AP_RECOVERY:
+                    battleActor.apRecovery *= rate;
+                    break;
+
+                //更改受伤系数
+                case RatePropertyEnum.DAMAGE_RATE:
+                    battleActor.damageRate *= rate;
                     break;
             }
         }

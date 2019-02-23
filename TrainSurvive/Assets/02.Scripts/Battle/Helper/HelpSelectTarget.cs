@@ -68,6 +68,18 @@ namespace WorldBattle {
         }
 
         /// <summary>
+        /// 查找生命值最大的存活目标
+        /// 距离相等时则找序号最小的
+        /// </summary>
+        /// <returns>返回目标的id</returns>
+        public static int getHPMaxestEnemy(BattleActor battleActor) {
+            return getMapEnemy(battleActor,
+                (BattleActor curActor, BattleActor enemyActor, BattleActor selectedActor) => {
+                    return selectedActor.curHealthPoint < enemyActor.curHealthPoint;
+                });
+        }
+
+        /// <summary>
         /// 获取在指定条件下敌人列表中满足条件的对象
         /// 如果敌人列表全部死亡，则返回-1
         /// </summary>

@@ -112,6 +112,28 @@ namespace WorldBattle {
 
             //初始化小队操作的指令
             PanelBind.initTeamPanel();
+
+            //初始化角色的队伍
+            foreach (BattleActor battleActor in playerActors) {
+                //初始化玩家和敌人的对象
+                battleActor.playerActors = battleController.playerActors;
+                battleActor.enemyActors = battleController.enemyActors;
+            }
+            foreach (BattleActor battleActor in enemyActors) {
+                //初始化玩家和敌人的对象
+                battleActor.playerActors = battleController.enemyActors;
+                battleActor.enemyActors = battleController.playerActors;
+            }
+
+            //启动玩家或者敌人队伍的开场被动技能
+            foreach (BattleActor battleActor in playerActors) {
+                //回合开始检查是否有被动技能，有即释放
+                battleActor.releasePassiveSkill();
+            }
+            foreach (BattleActor battleActor in enemyActors) {
+                //回合开始检查是否有被动技能，有即释放
+                battleActor.releasePassiveSkill();
+            }
         }
       
         /// <summary>

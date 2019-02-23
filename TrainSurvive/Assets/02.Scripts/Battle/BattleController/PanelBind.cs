@@ -6,6 +6,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Resource;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,8 +39,10 @@ namespace WorldBattle {
             person.skillBtn[1].onClick.AddListener(() => person.startSkillRelease(1));
 
             //设置技能名
-            panel.Find("skill1").Find("skillName").GetComponent<Text>().text = "测试" + InitPlayers.skill1;
-            panel.Find("skill2").Find("skillName").GetComponent<Text>().text = "测试" + InitPlayers.skill2;
+            panel.Find("skill1").Find("skillName").GetComponent<Text>().text
+                = InitPlayers.skill1 == -1 ? "无" : StaticResource.GetSkillByID(InitPlayers.skill1).Name;
+            panel.Find("skill2").Find("skillName").GetComponent<Text>().text
+                = InitPlayers.skill2 == -1 ? "无" : StaticResource.GetSkillByID(InitPlayers.skill2).Name;
 
             //初始化下拉选取框
             Dropdown dropdown = panel.Find("SelectTarget").GetComponent<Dropdown>();

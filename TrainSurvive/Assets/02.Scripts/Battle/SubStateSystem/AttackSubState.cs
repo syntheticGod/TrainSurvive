@@ -63,7 +63,7 @@ namespace WorldBattle {
                 float damage = battleActor.enemyActors[atkTarget].getDamage(battleActor.myId, battleActor.atkDamage);
 
                 //增加攻击上浮数值
-                HelpGenerateInfo.generateInfo(battleActor.enemyActors[atkTarget], "" + (int)damage);
+                HelpGenerateInfo.generateInfo(battleActor.enemyActors[atkTarget], "" + Mathf.Round(damage));
 
                 //每次攻击后增加行动值，保证不大于最大值
                 battleActor.addActionPoint(battleActor.myId, battleActor.apRecovery);
@@ -77,11 +77,11 @@ namespace WorldBattle {
 
                 //给每个人增加普攻击退
                 battleActor.enemyActors[atkTarget].changeRealPos(
-                    battleActor.enemyActors[atkTarget].pos + battleActor.getMotionDir() * 0.5f
+                    battleActor.enemyActors[atkTarget].pos + battleActor.getMotionDir() * battleActor.repelDistance
                     );
 
                 //给攻击目标执行被动技能
-                battleActor.releasePassiveBuff(battleActor.enemyActors[atkTarget]);
+                battleActor.releaseAttackPassiveSkill(battleActor.enemyActors[atkTarget]);
             } else {
                 //如果此次攻击被敌人闪避
                 Debug.Log((battleActor.isPlayer ? "玩家" : "敌人")

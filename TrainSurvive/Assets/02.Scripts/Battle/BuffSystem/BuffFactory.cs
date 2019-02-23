@@ -69,6 +69,11 @@ namespace WorldBattle {
             XmlNode rootNode = xmlDoc.SelectSingleNode("BuffPool");
             //遍历所有子节点
             foreach (XmlNode curBuffNode in rootNode.ChildNodes) {
+                //如果当前行是注释，跳过
+                if (curBuffNode.NodeType == XmlNodeType.Comment) {
+                    continue;
+                }
+
                 //先获取buff的name
                 string buffName = curBuffNode.Attributes["name"].Value;
                 //每次出创建一个绑定空角色的buff

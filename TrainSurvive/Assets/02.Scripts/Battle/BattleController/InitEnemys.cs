@@ -11,10 +11,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-namespace WorldBattle
-{
-    public class InitEnemys : MonoBehaviour
-    {
+namespace WorldBattle {
+    public class InitEnemys : MonoBehaviour {
         /// <summary>
         /// 用于判断是否是通过对话进入的战斗，注意在经过一次敌人生成完毕后要重新设置为false
         /// </summary>
@@ -27,96 +25,91 @@ namespace WorldBattle
         /// 绑定panel
         /// 设置战利品（每个怪物及特殊战斗的额外战利品）
         /// </summary>
-        public static void initEnemys()
-        {
+        public static void initEnemys() {
             //注意对于对话进入战斗场景，可以直接切换至battlescene但是要采取不同的怪物初始化方法
 
             //获取battleController
             BattleController battleController = BattleController.getInstance();
 
-            if (!nextBattleIs_talkbattle)//不是对话进入的战斗，而是通过进入地图地块触发的战斗
-            {
+            //如果是测试
+            if (battleController.isTest == true) {
+
+                battleController.enemyActors = new List<BattleActor>();
+                battleController.enemyPanels = new List<GameObject>();
+                for (int i = 0; i < battleController.enemyNum; i++) {
+                    //生成敌人
+                    GameObject curPlayer = Instantiate(battleController.player,
+                        battleController.orign,
+                        Quaternion.identity);
+                    curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
+
+                    BattleActor battleActor;
+                    //测试用自己的
+                    battleActor = curPlayer.AddComponent<EnemyAI>();
+                    battleActor.playerPrefab = curPlayer;
+                    InitPlayers.initPersonPara(ref battleActor, 1.0f);
+
+                    //初始化人物的位置
+                    setBattleActorInfo(ref battleActor, i);
+                }
+            } else if (!nextBattleIs_talkbattle)//不是对话进入的战斗，而是通过进入地图地块触发的战斗
+              {
 
                 //获取探险队所在地块的怪物难度系数或者特殊战斗id
                 Vector2Int teamPosition = World.getInstance().PMarker.TeamMapPos;
-                int monsterLevel = WorldMap.Map.GetInstance().GetMonsterLevel(teamPosition); ; 
-                switch (WorldMap.Map.GetInstance().spowns[teamPosition.x, teamPosition.y].specialTerrainType)
-                {
+                int monsterLevel = WorldMap.Map.GetInstance().GetMonsterLevel(teamPosition); ;
+                switch (WorldMap.Map.GetInstance().spowns[teamPosition.x, teamPosition.y].specialTerrainType) {
                     case WorldMap.SpawnPoint.SpecialTerrainEnum.MONSTER:
                         //根据玩家出战人数n，随机产生敌人数量
                         {
-                            int countOfFighter = World.getInstance().Persons.CountOfFighter();
-                            int randomInt = MathTool.RandomInt(100);
-                            if (randomInt < 20)
-                            {//20% 人数+1
-                                battleController.enemyNum = countOfFighter + 1;
-                            }
-                            else if (randomInt < 70)
-                            {//50% 人数
-                                battleController.enemyNum = countOfFighter;
-                            }
+                        int countOfFighter = World.getInstance().Persons.CountOfFighter();
+                        int randomInt = MathTool.RandomInt(100);
+                        if (randomInt < 20) {//20% 人数+1
+                            battleController.enemyNum = countOfFighter + 1;
+                        } else if (randomInt < 70) {//50% 人数
+                            battleController.enemyNum = countOfFighter;
+                        } else {//30% 人数-1，至少为1
+                            if (countOfFighter != 1)
+                                battleController.enemyNum = countOfFighter - 1;
                             else
-                            {//30% 人数-1，至少为1
-                                if (countOfFighter != 1)
-                                    battleController.enemyNum = countOfFighter - 1;
-                                else
-                                    battleController.enemyNum = 1;
-                            }
+                                battleController.enemyNum = 1;
                         }
-                      
-                        if (monsterLevel <= 0)
-                            Debug.LogError("当前区块不是怪物区块 坐标：(" + teamPosition.x + "," + teamPosition.y + ")");
-                        Debug.Log("进入难度级别为" + monsterLevel + "的地块。");
-                        //初始化敌人
-                        battleController.enemyActors = new List<BattleActor>();
-                        battleController.enemyPanels = new List<GameObject>();
-                        for (int i = 0; i < battleController.enemyNum; i++)
-                        {
-                            //生成敌人
-                            GameObject curPlayer = Instantiate(battleController.player,
-                                battleController.orign,
-                                Quaternion.identity);
-                            curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
+                    }
 
-                            BattleActor battleActor;
-                            if (battleController.isTest == false)
-                            {
-                                //获取当前地块的怪物级别
-                                MonsterInitializer mi = MonsterInitializer.getInstance();
-                                //根据怪物的级别生成随机ID的怪物
-                                mi.randomMonster(ref curPlayer, monsterLevel);
-                                battleActor = mi.getBattleActor();
-                            }
-                            else
-                            {
-                                //测试用自己的
-                                battleActor = curPlayer.AddComponent<EnemyAI>();
-                                battleActor.playerPrefab = curPlayer;
-                                InitPlayers.initPersonPara(ref battleActor, 1.0f);
-                            }
+                    if (monsterLevel <= 0)
+                        Debug.LogError("当前区块不是怪物区块 坐标：(" + teamPosition.x + "," + teamPosition.y + ")");
+                    Debug.Log("进入难度级别为" + monsterLevel + "的地块。");
+                    //初始化敌人
+                    battleController.enemyActors = new List<BattleActor>();
+                    battleController.enemyPanels = new List<GameObject>();
+                    for (int i = 0; i < battleController.enemyNum; i++) {
+                        //生成敌人
+                        GameObject curPlayer = Instantiate(battleController.player,
+                            battleController.orign,
+                            Quaternion.identity);
+                        curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
-                            /*
-                            //怪物AI目前有问题
-                            battleActor = curPlayer.AddComponent<EnemyAI>();
-                            battleActor.playerPrefab = curPlayer;
-                            InitPlayers.initPersonPara(ref battleActor, 1.0f);
-                            */
-                            //初始化人物的位置
-                            setBattleActorInfo(ref battleActor, i);
-                        }
-                        break;
+                        BattleActor battleActor;
+                        //获取当前地块的怪物级别
+                        MonsterInitializer mi = MonsterInitializer.getInstance();
+                        //根据怪物的级别生成随机ID的怪物
+                        mi.randomMonster(ref curPlayer, monsterLevel);
+                        battleActor = mi.getBattleActor();
+
+                        //初始化人物的位置
+                        setBattleActorInfo(ref battleActor, i);
+                    }
+                    break;
 
                     case WorldMap.SpawnPoint.SpecialTerrainEnum.SPECIAL_AREA:
                         int specialBattle_id = monsterLevel;
                         //根据id获取特殊战斗信息
-                        SpecialBattle battleInfo =SpecialBattleInitializer.getInstance().getBattle(specialBattle_id);
-                        foreach(ValueTuple<int, int> monsterTurple in battleInfo.monsterList)
-                        {
+                        SpecialBattle battleInfo = SpecialBattleInitializer.getInstance().getBattle(specialBattle_id);
+                        foreach (ValueTuple<int, int> monsterTurple in battleInfo.monsterList) {
                             int index = 0;
-                            for(int i=0;i< monsterTurple.Item2; i++)
-                            {
+                            for (int i = 0; i < monsterTurple.Item2; i++) {
                                 //生成敌人
-                                GameObject curPlayer = Instantiate(battleController.player,battleController.orign,Quaternion.identity);
+                                GameObject curPlayer = Instantiate(battleController.player, battleController.orign, Quaternion.identity);
                                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
                                 BattleActor battleActor;
@@ -125,24 +118,20 @@ namespace WorldBattle
                                 battleActor = mi.getBattleActor();
                                 setBattleActorInfo(ref battleActor, index);
                                 index++;
-                            }                                                      
+                            }
                         }
                         foreach (ValueTuple<int, int> rewardTurple in battleInfo.rewardList)//添加战利品，目前仅特殊战斗有指定战利品
                         {
                             battleController.dropsList.Add(rewardTurple);
-                        }                           
-                            break;
-                }     
-            }
-            else
-            {//是对话进入的战斗
+                        }
+                        break;
+                }
+            } else {//是对话进入的战斗
                 //根据id获取特殊战斗信息
                 SpecialBattle battleInfo = SpecialBattleInitializer.getInstance().getBattle(nextBatttle_talk_id);
-                foreach (ValueTuple<int, int> monsterTurple in battleInfo.monsterList)
-                {
+                foreach (ValueTuple<int, int> monsterTurple in battleInfo.monsterList) {
                     int index = 0;
-                    for (int i = 0; i < monsterTurple.Item2; i++)
-                    {
+                    for (int i = 0; i < monsterTurple.Item2; i++) {
                         //生成敌人
                         GameObject curPlayer = Instantiate(battleController.player, battleController.orign, Quaternion.identity);
                         curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
@@ -161,11 +150,10 @@ namespace WorldBattle
                 }
                 nextBattleIs_talkbattle = false;
             }
-           
+
         }
 
-        private static void setBattleActorInfo(ref BattleActor battleActor,int index)
-        {
+        private static void setBattleActorInfo(ref BattleActor battleActor, int index) {
             //初始化人物的位置
             BattleController battleController = BattleController.getInstance();
             battleActor.pos = battleController.battleMapLen;
@@ -200,11 +188,10 @@ namespace WorldBattle
         /// 只有在进入对话战斗场景才能调用
         /// </summary>
         /// <param name="battleId"></param>
-        public static void setNextTalkBattle(int battleId)
-        {
+        public static void setNextTalkBattle(int battleId) {
             nextBattleIs_talkbattle = true;
             nextBatttle_talk_id = battleId;
         }
-    } 
+    }
 }
 

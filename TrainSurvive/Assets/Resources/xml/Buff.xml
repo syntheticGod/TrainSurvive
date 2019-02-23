@@ -13,9 +13,35 @@
   </Buff>
   
   <Buff name = "Posion">
-    <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
-    <Effect changeWhat ="CHANGE_RATE" changeRate="0.1" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.99" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.99" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="false" maxFloorNum="1"/>
     <Effect changeWhat ="CHANGE_VALUE" changeValue="-5" intervalTime="0.5" maxDurationTime="5" propertyEnum="HP" isCanOverlay="true" maxFloorNum="999"/>
+  </Buff>
+
+  <!--武器涂毒-->
+  <Buff name = "WeaponPosion">
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.04" maxDurationTime="5" propertyEnum="MOVE_SPEED" isCanOverlay="true" maxFloorNum="20"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.04" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="true" maxFloorNum="20"/>
+    <Effect changeWhat ="CHANGE_VALUE" changeValue="-5" intervalTime="1" maxDurationTime="5" propertyEnum="HP" isCanOverlay="true" maxFloorNum="20"/>
+  </Buff>
+
+  <!--枪林弹雨-->
+  <Buff name = "Bullets">
+    <Effect changeWhat ="CHANGE_RATE" changeRate="-0.8" maxDurationTime="5" propertyEnum="ATTACK_SPEED" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="-2.0" maxDurationTime="5" propertyEnum="REPEL_DISTANCE" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.5" maxDurationTime="5" propertyEnum="ATTACK" isCanOverlay="false" maxFloorNum="1"/>
+  </Buff>
+
+  <!--诅咒-->
+  <Buff name = "Curse">
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.8" maxDurationTime="5" propertyEnum="AP_RECOVERY" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_RATE" changeRate="-0.2" maxDurationTime="5" propertyEnum="DAMAGE_RATE" isCanOverlay="false" maxFloorNum="1"/>
+  </Buff>
+
+  <!--寒冰守护-->
+  <Buff name = "IceProtect">
+    <Effect changeWhat ="CHANGE_RATE" changeRate="0.8" maxDurationTime="5" propertyEnum="DAMAGE_RATE" isCanOverlay="false" maxFloorNum="1"/>
+    <Effect changeWhat ="CHANGE_VALUE" changeValue="50" intervalTime="1" maxDurationTime="5" propertyEnum="HP" isCanOverlay="false" maxFloorNum="1"/>
   </Buff>
   
 </BuffPool>
