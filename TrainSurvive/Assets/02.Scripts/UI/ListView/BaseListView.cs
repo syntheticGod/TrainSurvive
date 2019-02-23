@@ -379,6 +379,8 @@ namespace TTT.UI.ListView
                 if (m_ifRecycle)
                 {
                     item.Recycle();
+                    //将回收的item移到最后
+                    item.GetComponent<Transform>().SetSiblingIndex(content.childCount - 1);
                     item.gameObject.SetActive(false);
                     recycal.Add(item);
                 }
@@ -471,16 +473,11 @@ namespace TTT.UI.ListView
             RectTransform rectOfItem = new GameObject("Item", typeof(RectTransform)).GetComponent<RectTransform>();
             if (m_itemContentPrefab != null)
             {
-                GameObject contentGameObject = Instantiate(m_itemContentPrefab);
-                RectTransform rectContent = contentGameObject.GetComponent<RectTransform>();
-                if (rectContent == null)
-                    rectContent = contentGameObject.AddComponent<RectTransform>();
-                SetParent(contentGameObject.GetComponent<RectTransform>(), rectOfItem);
+                RectTransform rectContent = CompTool.ForceGetComponent<RectTransform>(Instantiate(m_itemContentPrefab));
+                ViewTool.SetParent(rectOfItem, rectContent);
             }
-            ListViewItem listViewItem = rectOfItem.GetComponent<ListViewItem>();
-            if (listViewItem == null)
-                listViewItem = rectOfItem.gameObject.AddComponent<ListViewItem>();
-            SetParent(rectOfItem, content.GetComponent<RectTransform>());
+            ListViewItem listViewItem = CompTool.ForceGetComponent<ListViewItem>(rectOfItem);
+            ViewTool.SetParent(rectOfItem, content);
             return listViewItem;
         }
         /// <summary>

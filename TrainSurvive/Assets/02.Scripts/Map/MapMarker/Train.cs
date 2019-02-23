@@ -62,8 +62,7 @@ namespace WorldMap.Model
         public PassBlockCenterCallBack OnPassBlockCenter;
         public static Train Instance { get; } = new Train();
         private Train() : base()
-        {
-        }
+        { }
         /// <summary>
         /// 设置列车的基础属性
         /// </summary>

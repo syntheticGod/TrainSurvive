@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using WorldMap;
 using TTT.Xml;
 using WorldMap.Model;
+using System.Runtime.Serialization;
 
 namespace TTT.Team
 {
@@ -35,8 +36,18 @@ namespace TTT.Team
             /// </summary>
             REST
         }
-        [SerializeField]
         private List<Person> persons = new List<Person>();
+        public PersonSet()
+        { }
+        public PersonSet(SerializationInfo info, StreamingContext context) 
+            : base(info, context)
+        {
+            persons = (List<Person>)info.GetValue("persons", typeof(List<Person>));
+        }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("persons", persons);
+        }
         public int Count { get { return persons.Count; } }
         /// <summary>
         /// 获取队伍的总属性
@@ -83,7 +94,7 @@ namespace TTT.Team
         public void RecruitNpc(int npcID)
         {
             NpcInfo npc;
-            if(NpcInfoLoader.Instance.Find(npcID, out npc))
+            if (NpcInfoLoader.Instance.Find(npcID, out npc))
             {
                 persons.Add(new Person(npc));
                 Notify((int)EAction.RECRUIT_PERSON, npcID);

@@ -9,6 +9,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace WorldMap
 {
@@ -28,7 +29,6 @@ namespace WorldMap
     }
     public interface Subject
     {
-        List<ObserverWithEcho> Observers { get; }
         /// <summary>
         /// 绑定监听所有状态的监听者
         /// </summary>
@@ -46,21 +46,24 @@ namespace WorldMap
     public abstract class SubjectBase : Subject
     {
         [NonSerialized]
-        private List<ObserverWithEcho> _observers;
-        public List<ObserverWithEcho> Observers { get { return _observers; } }
+        private List<ObserverWithEcho> m_observers;
         protected SubjectBase()
         {
-            _observers = new List<ObserverWithEcho>();
+            m_observers = new List<ObserverWithEcho>();
         }
+        public SubjectBase(SerializationInfo info, StreamingContext context) : this()
+        { }
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        { }
         public bool Attach(Observer obs, int echo = 0)
         {
-            Observers.Add(new ObserverWithEcho { Observer = obs, EchoCode = echo });
+            m_observers.Add(new ObserverWithEcho { Observer = obs, EchoCode = echo });
             return true;
         }
         public bool Detach(Observer obs)
         {
             //不关心EchoCode是多少，所以EchoCode=0
-            return Observers.Remove(new ObserverWithEcho { Observer = obs, EchoCode = 0 });
+            return m_observers.Remove(new ObserverWithEcho { Observer = obs, EchoCode = 0 });
         }
         /// <summary>
         /// 通知监听者状态发生变化了
@@ -70,7 +73,7 @@ namespace WorldMap
         protected bool Notify(int state)
         {
             //通知监听所有的监听者
-            foreach (var obs in Observers)
+            foreach (var obs in m_observers)
                 obs.Observer.ObserverUpdate(state, obs.EchoCode);
             return true;
         }
@@ -82,7 +85,7 @@ namespace WorldMap
         /// <returns></returns>
         protected bool Notify(int state, object tag)
         {
-            foreach (var obs in Observers)
+            foreach (var obs in m_observers)
                 obs.Observer.ObserverUpdate(state, obs.EchoCode, tag);
             return true;
         }

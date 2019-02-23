@@ -6,6 +6,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 [System.Serializable]
@@ -15,7 +16,19 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
     private List<TKey> _keys = new List<TKey>();
     [SerializeField]
     private List<TValue> _values = new List<TValue>();
-
+    public SerializableDictionary() { }
+    public SerializableDictionary(SerializationInfo info, StreamingContext context)
+    {
+        _keys = (List<TKey>)info.GetValue("keys", typeof(List<TKey>));
+        _values = (List<TValue>)info.GetValue("values", typeof(List<TValue>));
+        OnAfterDeserialize();
+    }
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        OnBeforeSerialize();
+        info.AddValue("keys", _keys);
+        info.AddValue("values", _values);
+    }
     public void OnBeforeSerialize()
     {
         _keys.Clear();

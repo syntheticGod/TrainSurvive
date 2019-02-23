@@ -18,6 +18,7 @@ using Story.Communication;
 using TTT.Xml;
 using TTT.Team;
 using System;
+using TTT.UI;
 
 namespace WorldMap.Controller
 {
@@ -305,6 +306,7 @@ namespace WorldMap.Controller
                     if (index == tavernNPCListView.SelectIndex)
                         ShowSelectedNpc(0);
                     tavernNPCListView.RemoveData(npcID);
+                    FlowInfo.ShowInfo("招募新人", NpcInfoLoader.Instance.Find(npcID).Name + "加入小队！");
                     break;
             }
         }
