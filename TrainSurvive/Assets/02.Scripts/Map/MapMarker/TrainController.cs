@@ -70,9 +70,14 @@ namespace WorldMap.Controller
         {
             Debug.Log("TrainController Start");
             base.Start();
-            transform.position = StaticResource.MapPosToWorldPos(Train.Instance.PosTrain, levelOfTrain);
+            transform.position = MathTool.AcceptZ(Train.Instance.PosTrain, levelOfTrain);
             GetComponentInChildren<SpriteRenderer>().sortingOrder = 10;
         }
+#if DEBUG
+        //瞬移列车 测试时使用
+        private Vector2 lashFlashPosition;
+        public Vector2 flashPosition;
+#endif
         protected override void Update()
         {
             base.Update();
@@ -90,7 +95,7 @@ namespace WorldMap.Controller
                 //因为摄像机的Projection 为 Orthographic，所以Ray的方向都是平行的
                 Debug.Log("origin of ray:" + ray.origin + " dire:" + ray.direction);
                 Debug.Log("mouse position " + Input.mousePosition);
-                Vector2 clickedPosition = StaticResource.WorldPosToMapPos(ray.origin);
+                Vector2 clickedPosition = MathTool.IgnoreZ(ray.origin);
                 if (Map.GetInstance().isSpawnVisible(StaticResource.BlockIndex(clickedPosition)))
                 {
                     if (!train.StartRun(clickedPosition))
@@ -105,9 +110,18 @@ namespace WorldMap.Controller
                     return;
                 }
             }
-            Vector2 current = StaticResource.WorldPosToMapPos(transform.position);
+            Vector2 current = MathTool.IgnoreZ(transform.position);
+#if DEBUG
+            if (!MathTool.Approximately(flashPosition, lashFlashPosition))
+            {
+                train.FlashTo(ref current, flashPosition);
+                transform.position = MathTool.AcceptZ(current, levelOfTrain);
+                lashFlashPosition = flashPosition;
+                return;
+            }
+#endif
             if (train.Run(ref current))
-                transform.position = StaticResource.MapPosToWorldPos(current, levelOfTrain);
+                transform.position = MathTool.AcceptZ(current, levelOfTrain);
         }
         /// <summary>
         /// UI按钮的点击事件，地图的鼠标事件在Update中处理。
@@ -142,7 +156,7 @@ namespace WorldMap.Controller
                     Debug.Log("进入区域指令");
                     //TODO：目前只有城镇
                     TownData town;
-                    if (World.getInstance().Towns.Find(train.MapPosTrain, out town))
+                    if (World.getInstance().PMarker.FindCurrentTown(out town))
                     {
                         //进入城镇后不能操作列车
                         Train.Instance.IsMovable = false;
@@ -166,7 +180,7 @@ namespace WorldMap.Controller
 
                         Train.Instance.IsMovable = false;
                         ActiveBTs(false);
-                        Team.Instance.OutPrepare(Train.Instance.PosTrain);
+                        Team.Instance.OutPrepare();
                         ControllerManager.ShowController("Team", "Character");
                         UnFocus();
                     }

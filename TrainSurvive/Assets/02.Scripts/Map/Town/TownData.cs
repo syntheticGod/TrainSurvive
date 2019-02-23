@@ -111,6 +111,5 @@ namespace WorldMap.Model
         {
             return "城镇ID：" + ID + "；城镇名：" + Info.Name ;
         }
-
     }
 }

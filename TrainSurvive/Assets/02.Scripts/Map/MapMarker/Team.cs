@@ -60,8 +60,6 @@ namespace WorldMap.Model
         private float velocity = 0.0F;
         //移动时下一临近块
         private Vector2 nextStopPosition;
-        //背包
-        public InventoryForTeam Inventory { private set; get; }
         public PassBlockCenterCallBack OnPassBlockCenter;
         public static Team Instance { get; } = new Team();
         private Team() : base()
@@ -72,9 +70,7 @@ namespace WorldMap.Model
         /// 仅没设置探险队位置的初始化
         /// </summary>
         public void Init()
-        {
-            Inventory = new InventoryForTeam(float.MaxValue);
-        }
+        { }
         /// <summary>
         /// 配置探险队的初始坐标
         /// </summary>
@@ -130,14 +126,29 @@ namespace WorldMap.Model
         /// <summary>
         /// 探险队外出时，探险队该做的准备
         /// </summary>
-        /// <param name="initPosition">出现的世界坐标</param>
-        /// <param name="selectedFood">外带的食物</param>
-        /// <param name="selectedPersons">选择的成员</param>
-        public void OutPrepare(Vector2 initPosition)
+        public void OutPrepare()
         {
-            PosTeam = initPosition;
-            WorldForMap.Instance.TeamGetOut();
-            State = IfInTown() ? STATE.STOP_TOWN : STATE.STOP_OUT;
+            PosTeam = World.getInstance().PMarker.TrainMapPos;
+            //准备事物
+            int food = World.getInstance().Persons.Count * 200;
+            if (food > World.getInstance().getFoodIn())
+                food = (int)World.getInstance().getFoodIn();
+            if (World.getInstance().addFoodIn(-food) != 1)
+            {
+                Debug.LogWarning("列车食物减少不正常——探险队外出！");
+            }
+            World.getInstance().numIn = 0;
+            World.getInstance().numOut = World.getInstance().Persons.Count;
+            Debug.Log("列车：探险队外出了，剩下" + World.getInstance().numIn + "人，剩下" + World.getInstance().getFoodIn() + "食物");
+            if (!World.getInstance().setFoodOut((uint)food))
+            {
+                Debug.LogWarning("探险队携带外出食物不正常！");
+            }
+            Debug.Log("探险队：我们（一共" + World.getInstance().numOut + "人）外出了，带走了" + World.getInstance().getFoodOut() + "点食物");
+            World.getInstance().FullOutVit();
+            World.getInstance().ifTeamOuting = true;
+
+            State = World.getInstance().PMarker.IfInTown() ? STATE.STOP_TOWN : STATE.STOP_OUT;
             OnPassBlockCenter?.Invoke(MapPosTeam);
         }
         /// <summary>
@@ -220,10 +231,6 @@ namespace WorldMap.Model
             {
                 return MathTool.IfBetweenBoth((int)STATE.MOVING_TOP, (int)STATE.MOVING_LEFT, (int)state);
             }
-        }
-        private bool IfInTown()
-        {
-            return Map.GetInstance().IfTown(StaticResource.BlockIndex(PosTeam));
         }
         public enum STATE
         {

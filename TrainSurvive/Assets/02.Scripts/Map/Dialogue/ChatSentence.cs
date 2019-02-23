@@ -19,11 +19,12 @@ namespace WorldMap.Model
         /// </summary>
         public string Name { get; private set; }
         /// <summary>
-        /// 讲话者类型。0：npc；1：player；
+        /// 讲话者类型。0：npc；1：player；2：tavern。
         /// </summary>
         public int SpeakerType { get; private set; }
         public bool IsNPC { get { return SpeakerType == 0; } }
         public bool IsPlayer { get { return SpeakerType == 1; } }
+        public bool IsTavern { get { return SpeakerType == 2; } }
         /// <summary>
         /// 句子类型：0：普通句子；1：选择句（目前只有玩家才有选择句）
         /// </summary>

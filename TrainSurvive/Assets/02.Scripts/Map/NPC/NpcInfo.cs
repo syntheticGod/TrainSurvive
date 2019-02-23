@@ -25,7 +25,7 @@ namespace WorldMap.Model
         public EAttribute[] Professions { get; private set; }
         public int WeaponID { get; private set; }
         public int DecorationsID { get; private set; }
-        public int Birthplace { get; private set; }
+        public string Birthplace { get; private set; }
         public string Description { get; private set; }
         public NpcInfo(XmlNode node)
         {
@@ -43,31 +43,8 @@ namespace WorldMap.Model
                 Professions[i] = Compile(node.Attributes["profession" + (i + 1)].Value);
             WeaponID = int.Parse(node.Attributes["weaponID"].Value);
             DecorationsID = int.Parse(node.Attributes["decorationsID"].Value);
-            Birthplace = CompileBirthplace(node.Attributes["birthplace"].Value);
+            Birthplace = node.Attributes["birthplace"].Value;
             Description = node.Attributes["description"].Value;
-        }
-        private int CompileBirthplace(string birthplace)
-        {
-            if (birthplace.Equals("-")) return -1;
-            if (birthplace[0] == '(')
-            {
-                birthplace = birthplace.Remove(birthplace.Length - 1, 1);
-                birthplace = birthplace.Remove(0, 1);
-                string[] coord = birthplace.Split(',');
-                int x = int.Parse(coord[0]);
-                int y = int.Parse(coord[1]);
-                TownData town;
-                if (!World.getInstance().Towns.Find(x, y, out town))
-                {
-                    Debug.LogError("找不到区块坐标为 (" + x + "," + y + ")" + "中的城镇，默认成不分配。");
-                    return -1;
-                }
-                return town.ID;
-            }
-            int birthtown = int.Parse(birthplace);
-            if (birthtown == 0)
-                return TownInfo.RandomCommenID();
-            return birthtown;
         }
         private EAttribute Compile(string profession)
         {

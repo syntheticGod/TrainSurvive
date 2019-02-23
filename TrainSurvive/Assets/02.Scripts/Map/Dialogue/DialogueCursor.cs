@@ -64,11 +64,12 @@ namespace WorldMap.Model
             List<ChatSentence> ans = new List<ChatSentence>();
             ChatSentence[] sentences = Dialogue.Sentences;
             if (currentIndex >= sentences.Length) return ans;
-            //添加所有 {NPC的} 和 {满足条件的} 句子
-            while (currentIndex < sentences.Length && sentences[currentIndex].IsNPC)
+            //添加所有 {不是玩家的} 和 {满足条件的} 句子
+            while (currentIndex < sentences.Length && !sentences[currentIndex].IsPlayer)
             {
                 if (sentences[currentIndex].IfAllSatisfy())
-                    ans.Add(sentences[currentIndex++]);
+                    ans.Add(sentences[currentIndex]);
+                currentIndex++;
             }
             return ans;
         }

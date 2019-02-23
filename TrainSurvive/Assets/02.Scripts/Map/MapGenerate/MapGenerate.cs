@@ -75,7 +75,7 @@ namespace WorldMap {
             CreateModel();
 
             //测试，设置人物出生地点为第一个城镇
-            World.getInstance().PMarker.TrainMapPos = mapData.towns[0, 0].position;
+            //World.getInstance().PMarker.TrainMapPos = mapData.towns[0, 0].position;
         }
 
         //创建地图

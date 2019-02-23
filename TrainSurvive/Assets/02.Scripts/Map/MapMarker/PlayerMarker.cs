@@ -12,9 +12,13 @@ namespace WorldMap.Model
     [Serializable]
     public class PlayerMarker
     {
+        [SerializeField]
         private int posTeamX;
+        [SerializeField]
         private int posTeamY;
+        [SerializeField]
         private int posTrainX;
+        [SerializeField]
         private int posTrainY;
         public Vector2Int TrainMapPos
         {
@@ -47,6 +51,14 @@ namespace WorldMap.Model
             TownData town;
             World.getInstance().Towns.Find(MapPos, out town);
             return town;
+        }
+        public bool FindCurrentTown(out TownData town)
+        {
+            return World.getInstance().Towns.Find(MapPos, out town);
+        }
+        public bool IfInTown()
+        {
+            return Map.GetInstance().IfTown(MapPos);
         }
     }
 }

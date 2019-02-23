@@ -91,13 +91,13 @@ namespace WorldMap.Controller
             goodInPack.Number = numberBuy;
             if (WorldForMap.Instance.IfTeamOuting)
             {
-                InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
-                if (!inventoryForTeam.CanPushItemToPack(goodInPack.ID, goodInPack.Number))
-                {
-                    InfoDialog.Show("背包已满");
-                    return;
-                }
-                inventoryForTeam.PushItemFromShop(goodInPack.ID, goodInPack.Number);
+                //InventoryForTeam inventoryForTeam = Team.Instance.Inventory;
+                //if (!inventoryForTeam.CanPushItemToPack(goodInPack.ID, goodInPack.Number))
+                //{
+                //    InfoDialog.Show("背包已满");
+                //    return;
+                //}
+                //inventoryForTeam.PushItemFromShop(goodInPack.ID, goodInPack.Number);
             }
             else
             {

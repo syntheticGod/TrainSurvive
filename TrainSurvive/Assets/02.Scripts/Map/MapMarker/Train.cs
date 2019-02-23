@@ -22,14 +22,6 @@ namespace WorldMap.Model
         public float SmoothTime { set; get; } = 0.3F;
         //列车所在的世界坐标
         public Vector2 PosTrain { private set; get; }
-        //列车所在的地图坐标
-        public Vector2Int MapPosTrain
-        {
-            get
-            {
-                return StaticResource.BlockIndex(PosTrain);
-            }
-        }
         //列车状态
         private STATE state;
         private STATE State
@@ -82,9 +74,8 @@ namespace WorldMap.Model
         /// </summary>
         public void Init()
         {
-            Vector2Int initPosition = MapPosTrain;
+            Vector2Int initPosition = World.getInstance().PMarker.TrainMapPos;
             State = Map.GetInstance().IfTown(initPosition) == true ? STATE.STOP_TOWN : STATE.STOP_RAIL;
-            //初始化时
             PassCenterCallBack(initPosition);
         }
         /// <summary>
@@ -219,6 +210,16 @@ namespace WorldMap.Model
             }
             current = PosTrain = currentNext;
             return true;
+        }
+        public void FlashTo(ref Vector2 current, Vector2 target)
+        {
+            Vector2Int targetIndex = StaticResource.BlockIndex(target);
+            if (World.getInstance().Towns.Find(targetIndex) != null)
+                State = STATE.STOP_TOWN;
+            else
+                State = STATE.STOP_RAIL;
+            PassCenterCallBack(targetIndex);
+            current = PosTrain = StaticResource.BlockCenter(targetIndex);
         }
         /// <summary>
         /// 列车经过一个方块的中心点时的回调函数，不包括起点。

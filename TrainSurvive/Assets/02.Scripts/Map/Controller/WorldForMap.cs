@@ -141,9 +141,6 @@ namespace WorldMap
                 FlowInfo.ShowInfo("采集信息", "很遗憾一个东西都没采集到");
             return true;
         }
-        public void StopGather()
-        {
-        }
         /// <summary>
         /// 探险队回车
         /// </summary>
@@ -163,44 +160,9 @@ namespace WorldMap
             world.numIn = world.Persons.Count;
             world.numOut = 0;
         }
-        /// <summary>
-        /// 探险队外出
-        /// </summary>
-        public void TeamGetOut()
-        {
-            int food = world.Persons.Count * 200;
-            if (food > world.getFoodIn())
-                food = (int)world.getFoodIn();
-            if (world.addFoodIn(-food) != 1)
-            {
-                Debug.LogWarning("列车食物减少不正常——探险队外出！");
-            }
-            world.numIn = 0;
-            world.numOut = world.Persons.Count;
-            Debug.Log("列车：探险队外出了，剩下" + world.numIn + "人，剩下" + world.getFoodIn() + "食物");
-            if (!world.setFoodOut((uint)food))
-            {
-                Debug.LogWarning("探险队携带外出食物不正常！");
-            }
-            Debug.Log("探险队：我们（一共" + world.numOut + "人）外出了，带走了" + world.getFoodOut() + "点食物");
-            world.FullOutVit();
-            world.ifTeamOuting = true;
-        }
-        public int TeamGetFoodOut()
-        {
-            return (int)world.getFoodOut();
-        }
         public int TeamGetFootOutMax()
         {
             return (int)world.getFoodOutMax();
-        }
-        public void TeamSetFoodOut(int food)
-        {
-            world.setFoodOut(food < 0 ? 0 : (uint)food);
-        }
-        public int TeamAddFoodIn(int food)
-        {
-            return world.addFoodIn(food);
         }
         //-----------------------------Team----------↑↑↑↑↑↑↑↑↑↑↑↑
 

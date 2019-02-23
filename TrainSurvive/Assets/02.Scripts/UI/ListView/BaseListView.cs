@@ -551,7 +551,7 @@ namespace TTT.UI.ListView
         }
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("条款被点击了");
+            //Debug.Log("条款被点击了");
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 callBackItemClick?.Invoke(this);

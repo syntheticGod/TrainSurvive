@@ -85,11 +85,11 @@ namespace WorldMap.Controller
         {
             base.Update();
             KeyEventDetecter();
-            Vector2 current = StaticResource.WorldPosToMapPos(transform.position);
+            Vector2 current = MathTool.IgnoreZ(transform.position);
             Team team = Team.Instance;
             if (team.Run(ref current))
             {
-                transform.position = StaticResource.MapPosToWorldPos(current, levelOfTeam);
+                transform.position = MathTool.AcceptZ(current, levelOfTeam);
                 GetComponentInChildren<SpriteRenderer>().sortingOrder = 12;
             }
         }
@@ -270,7 +270,7 @@ namespace WorldMap.Controller
         {
             ActiveBTs(true);
             cameraFocus.focusLock(transform);
-            transform.position = StaticResource.MapPosToWorldPos(Team.Instance.MapPosTeam, levelOfTeam);
+            transform.position = MathTool.AcceptZ(Team.Instance.MapPosTeam, levelOfTeam);
             RefreshView();
             return true;
         }

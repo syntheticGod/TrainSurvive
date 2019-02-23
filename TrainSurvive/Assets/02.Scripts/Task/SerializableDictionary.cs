@@ -4,10 +4,12 @@
  * 创建时间：2018/12/22 22:24:20
  * 版本：v0.1
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using WorldMap.Model;
 
 [System.Serializable]
 public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver

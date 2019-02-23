@@ -14,10 +14,12 @@ namespace WorldMap.Model
     public class NpcData
     {
         public int ID { get; private set; }
+        public int HometownID { get; private set; }
         public NpcInfo Info { get { return NpcInfoLoader.Instance.Find(ID); } }
-        public NpcData(int id)
+        public NpcData(int id, int hometownID)
         {
             ID = id;
+            HometownID = hometownID;
         }
         public override string ToString()
         {

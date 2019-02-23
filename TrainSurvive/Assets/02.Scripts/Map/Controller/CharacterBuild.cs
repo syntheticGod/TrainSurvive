@@ -48,6 +48,8 @@ namespace WorldMap
             MapGenerate mapGenerate = GameObject.Find("MapBuild").GetComponent<MapGenerate>();
             if (mapGenerate.isCreateMap)
             {
+                //设置人物出生地点为第一个城镇
+                World.getInstance().PMarker.TrainMapPos = Map.GetInstance().towns[0, 0].position;
                 //初始化城镇数据
                 World.getInstance().Towns.Init(Map.GetInstance().towns);
                 World.getInstance().Npcs.Init();
@@ -56,6 +58,7 @@ namespace WorldMap
                 World.getInstance().Persons.RandomPersons(3);
                 World.getInstance().save();
             }
+            Debug.Log(World.getInstance().Npcs.ToString());
         }
         private void CreateModel()
         {

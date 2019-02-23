@@ -53,11 +53,13 @@ namespace WorldMap.Controller
         }
         public void TrainPassBlockCenterCallBack(Vector2Int mapPosition)
         {
-            coordinateText.text = string.Format("列车：({0:D},{1:D})", Train.Instance.MapPosTrain.x, Train.Instance.MapPosTrain.y);
+            Vector2Int trainMapPos = World.getInstance().PMarker.TrainMapPos;
+            coordinateText.text = string.Format("列车：({0:D},{1:D})", trainMapPos.x, trainMapPos.y);
         }
         public void TeamPassBlockCenterCallBack(Vector2Int mapPosition)
         {
-            coordinateText.text = string.Format("探险队：({0:D},{1:D})", Team.Instance.MapPosTeam.x, Team.Instance.MapPosTeam.y);
+            Vector2Int teamMapPos = World.getInstance().PMarker.TeamMapPos;
+            coordinateText.text = string.Format("探险队：({0:D},{1:D})", teamMapPos.x, teamMapPos.y);
         }
     }
 }

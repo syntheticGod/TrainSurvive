@@ -16,7 +16,7 @@ using WorldMap;
 namespace TTT.Item
 {
     [Serializable]
-    public class Storage : SubjectBase, ISerializable
+    public class Storage : SubjectBase
     {
         public enum EAction
         {
@@ -171,7 +171,7 @@ namespace TTT.Item
         {
             return new List<ItemData>(storage);
         }
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("ItemDatas", storage);
         }

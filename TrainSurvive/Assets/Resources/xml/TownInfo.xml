@@ -4,8 +4,8 @@
   <Town id="0" name="随机名" typeId="0" tavernName="酒馆" description="">
     <!--dialogue需要包含的属性见Dialogue.xml文件-->
     <dialogue precondition="">
-      <sentence precondition="count npc = 0" speakerType="tavern" type="0" content="一个普通的酒馆。空无一任，冷清极了。"/>
-      <sentence precondition="count npc = 1" speakerType="tavern" type="0" content="一个普通的酒馆。环顾四周，只有一个怪异的陌生人在角落看着你。"/>
+      <sentence precondition="count npc == 0" speakerType="tavern" type="0" content="一个普通的酒馆。空无一任，冷清极了。"/>
+      <sentence precondition="count npc == 1" speakerType="tavern" type="0" content="一个普通的酒馆。环顾四周，只有一个怪异的陌生人在角落看着你。"/>
       <sentence precondition="count npc > 1" speakerType="tavern" type="0" content="一个普通的酒馆。只有寥寥几人，但比起其他城镇还算热闹。"/>
     </dialogue>
   </Town>

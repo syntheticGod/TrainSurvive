@@ -39,10 +39,9 @@ namespace TTT.Team
         private List<Person> persons = new List<Person>();
         public PersonSet()
         { }
-        public PersonSet(SerializationInfo info, StreamingContext context) 
-            : base(info, context)
+        public PersonSet(SerializationInfo info, StreamingContext context)
         {
-            persons = (List<Person>)info.GetValue("persons", typeof(List<Person>));
+            persons = info.GetValue("persons", typeof(List<Person>)) as List<Person>;
         }
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

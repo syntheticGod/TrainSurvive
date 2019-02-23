@@ -82,7 +82,6 @@ namespace WorldMap.Model
             info.AddValue("PosYInArea", PosInArea.y, typeof(int));
         }
         private TownInfo() { }
-        private static int Increasement = 1000;
         /// <summary>
         /// 根据城镇名字 和 坐标 随机一个城镇信息
         /// 城镇ID 从1000起头
@@ -95,7 +94,7 @@ namespace WorldMap.Model
         {
             //获取随机城镇的默认信息
             TownInfo townInfo = TownInfoLoader.Instance.FindSTownInfoByID(0).Clone();
-            townInfo.ID = Increasement++;
+            townInfo.ID = World.getInstance().Towns.NewID();
             townInfo.Name = name;
             townInfo.PosInArea = new Vector2Int(posInAreaX, posInAreaY);
             return townInfo;
@@ -110,14 +109,6 @@ namespace WorldMap.Model
             ret.TavernName = TavernName;
             ret.PosInArea = PosInArea;
             return ret;
-        }
-        /// <summary>
-        /// 随机获取一个普通城镇的ID
-        /// </summary>
-        /// <returns></returns>
-        public static int RandomCommenID()
-        {
-            return MathTool.RandomRange(1000, Increasement);
         }
     }
 }

@@ -258,24 +258,6 @@ namespace TTT.Resource
         {
             return BlockCenter(BlockIndex(position));
         }
-        /// <summary>
-        /// 3D世界坐标转化为地图平面的2D世界坐标
-        /// </summary>
-        /// <param name="worldPosition">3D世界坐标</param>
-        /// <returns></returns>
-        public static Vector2 WorldPosToMapPos(Vector3 worldPosition)
-        {
-            return MathTool.IgnoreZ(worldPosition);
-        }
-        /// <summary>
-        /// 地图平面的2D世界坐标转化为3D世界坐标
-        /// </summary>
-        /// <param name="mapPosition">地图平面的2D世界坐标</param>
-        /// <returns></returns>
-        public static Vector3 MapPosToWorldPos(Vector2 mapPosition, int level)
-        {
-            return MathTool.AcceptZ(mapPosition, level);
-        }
         //----------属性----------↓
         private static string[] AttributeName { get; } = { "体力", "力量", "敏捷", "技巧", "智力" };
         public static int AttributeCount { get { return AttributeName.Length; } }

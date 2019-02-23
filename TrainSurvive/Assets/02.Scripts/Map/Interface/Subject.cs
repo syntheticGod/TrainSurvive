@@ -43,7 +43,7 @@ namespace WorldMap
         bool Detach(Observer obs);
     }
     [Serializable]
-    public abstract class SubjectBase : Subject
+    public abstract class SubjectBase : Subject, ISerializable
     {
         [NonSerialized]
         private List<ObserverWithEcho> m_observers;
