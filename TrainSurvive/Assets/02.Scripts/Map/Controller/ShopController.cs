@@ -77,7 +77,7 @@ namespace WorldMap.Controller
         {
             //TODO：弹出选择窗口
             int numberBuy = good.Number;
-            if (!WorldForMap.Instance.Pay(good.OriginPrice * numberBuy))
+            if (!World.getInstance().PayByMoney(good.OriginPrice * numberBuy))
             {
                 InfoDialog.Show("你的金额不足");
                 return;
@@ -101,8 +101,7 @@ namespace WorldMap.Controller
             }
             else
             {
-                //TODO：需要列车中的仓库是否满
-                WorldForMap.Instance.PushItemToTrain(good.ID, numberBuy);
+                World.getInstance().storage.AddItem(good.ID, numberBuy);
             }
             if (!currentTown.BuyGoods(good, numberBuy))
             {
@@ -133,7 +132,7 @@ namespace WorldMap.Controller
             {
                 WorldForMap.Instance.SellGoodsFromTrain(good.ID, numberSell);
             }
-            WorldForMap.Instance.AddMoney(numberSell * good.SellPrice);
+            World.getInstance().addMoney(numberSell * good.SellPrice);
             good.Number -= numberSell;
             Debug.Log("商店：你出售了" + numberSell + "个" + good.Name + " 剩余：" + good.Number + " 获得金币：" + numberSell * good.SellPrice + " 现有金币：" + WorldForMap.Instance.Money);
             //ListView会自动清楚数量为0的条款

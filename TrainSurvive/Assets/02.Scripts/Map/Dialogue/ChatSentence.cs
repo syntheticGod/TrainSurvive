@@ -101,29 +101,51 @@ namespace WorldMap.Model
 
         #region 共有方法
         /// <summary>
-        /// 
+        /// 句子结束后，执行句子的动作
         /// </summary>
         /// <returns></returns>
         public bool DoAllActions()
         {
             if (Actions == null) return true;
             for (int i = 0; i < Actions.Length; i++)
-            {
-                if (!Actions[i].DoAction())
-                {
-                    //撤销之前做过的行为
-                    while (i >= 0) Actions[i].UnDoAction();
-                    return false;
-                }
-            }
+                Actions[i].DoAction();
             return true;
         }
+        /// <summary>
+        /// 判断句子的条件是否都满足
+        /// </summary>
+        /// <returns>
+        /// TRUE：满足所有条件
+        /// FALSE：不满足其中一个条件
+        /// </returns>
         public bool IfAllSatisfy()
         {
             foreach (Precondition condition in Preconditions)
             {
                 if (condition.IfSatisfy() == false)
                     return false;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 判断句子的条件是否都满足。
+        /// 并返回第一个不满足的条件。
+        /// </summary>
+        /// <param name="failureCondition">不满足的条件</param>
+        /// <returns>
+        /// TRUE：满足所有条件
+        /// FALSE：不满足其中一个条件
+        /// </returns>
+        public bool IfAllSatisfy(out Precondition failureCondition)
+        {
+            failureCondition = null;
+            foreach (Precondition condition in Preconditions)
+            {
+                if (condition.IfSatisfy() == false)
+                {
+                    failureCondition = condition;
+                    return false;
+                }
             }
             return true;
         }

@@ -43,6 +43,10 @@ namespace TTT.Item
             }
             return false;
         }
+        public bool ContainItem(int id, int number)
+        {
+            return GetNumberByID(id) >= number;
+        }
         /// <summary>
         /// 获取仓库中指定ID物品的数量
         /// 因为仓库中相同ID的物品 不一定存在一起，可能会分开。这是为了拆分物品而设计。

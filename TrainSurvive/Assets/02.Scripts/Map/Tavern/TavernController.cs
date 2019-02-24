@@ -268,8 +268,17 @@ namespace WorldMap.Controller
                             gotoHill = true;
                         break;
                     case BUTTON_ACTION.OK:
-                        dialogueCursor.CurrentSentence.DoAllActions();
-                        gotoHill = true;
+                        ChatSentence chatSentence = dialogueCursor.CurrentSentence;
+                        Precondition failureCondition = null;
+                        if (chatSentence.IfAllSatisfy(out failureCondition))
+                        {
+                            chatSentence.DoAllActions();
+                            gotoHill = true;
+                        }
+                        else
+                        {
+                            FlowInfo.ShowInfo("失败", failureCondition.FailureMessage());
+                        }
                         break;
                     case BUTTON_ACTION.CANCEL: gotoHill = true; break;
                     default: break;

@@ -24,42 +24,6 @@ namespace WorldMap
         {
             world = World.getInstance();
         }
-        public bool IfMoneyEnough(int cost)
-        {
-            return world.IfMoneyEnough(cost);
-        }
-        public bool Pay(int cost)
-        {
-            return world.PayByMoney(cost);
-        }
-        public void AddMoney(int money)
-        {
-            world.addMoney(money);
-        }
-        private bool PushItem(int itemID, int number)
-        {
-            world.storage.AddItem(itemID, number);
-            return true;
-        }
-        public void PushItemToTrain(int itemID, int numberBuy)
-        {
-            PushItem(itemID, numberBuy);
-        }
-        public bool PushGoodsToTeam(int itemID, int numberBuy)
-        {
-            PushItem(itemID, numberBuy);
-            return true;
-        }
-        public bool CanPushGoodsToTeam(int itemID, int numberBuy)
-        {
-            //无限仓库
-            return true;
-        }
-        public float GetPackWeightInTeam()
-        {
-            //TODO 暂时使用数量代替重量
-            return world.storage.Count;
-        }
         /// <summary>
         /// 售卖仓库中的物品
         /// </summary>
@@ -91,16 +55,6 @@ namespace WorldMap
             SellGoods(itemID, numberSell);
         }
         public int Money { get { return (int)world.getMoney(); } }
-        /// <summary>
-        /// DEBUG模式，添加金钱等
-        /// </summary>
-        public void InitInDebug()
-        {
-#if DEBUG
-            WorldForMap.Instance.AddMoney(10000);
-            world.addStrategy(1000);
-#endif
-        }
         //-----------------------------Team----------↓↓↓↓↓↓↓↓↓↓
         public bool IfTeamOuting
         {

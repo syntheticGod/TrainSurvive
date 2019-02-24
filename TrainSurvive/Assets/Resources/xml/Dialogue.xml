@@ -85,8 +85,8 @@
   </dialogue>
   <dialogue id="6" npcId="2" precondition="doing task 5">
     <sentence speakerType="npc" type="0" content="找到圣药了吗？"/>
-    <sentence speakerType="player" type="1" ok="是它吗？" cancel="还没有。" 
-              action ="offer item 706:1"/>
+    <sentence speakerType="player" type="1" ok="是它吗？" cancel="还没有。"
+              precondition="have item 706:1" action ="loss item 706:1"/>
     <sentence speakerType="npc" type="0" content="就是这个！你没有受伤吧？"/>
     <sentence speakerType="player" type="0" content="我…我们在遗迹里遇到了十分危险的死灵法师，还好我们的队伍足够强大，打败了它。"/>
     <sentence speakerType="npc" type="0" content="你真是没有辜负我的期望，有了这瓶圣药，我就有机会解除阿狄丽娜的石化诅咒了！"/>
@@ -140,7 +140,7 @@
   <dialogue id="11" npcId="4" precondition="doing task 8">
     <sentence speakerType="npc" type="0" content="你带回来了吗？" />
     <sentence speakerType="player" type="1" ok="你看看，是这个吗。" cancel="还没有。"
-              action="offer item 705:1"/>
+              precondition="have item 705:1"/>
     <sentence speakerType="npc" type="0" content="（仔细查看）" />
     <sentence speakerType="npc" type="0" content="从外表上看得出这瓶血中隐含着魔力，你确定是从巨神鹰身上取回来的吗？" />
     <sentence speakerType="player" type="0" content="确定。" />
@@ -156,12 +156,12 @@
     <sentence speakerType="player" type="0" content="书上说有附近栖息着一对巨神鹰，我刚刚打败的是雌巨神鹰，也就是说应该还有一只雄性的巨神鹰..." />
     <sentence speakerType="npc" type="0" content="（两眼放光）对！我们要找的火之魔力一定就在那只雄巨神鹰的身上！" />
     <sentence speakerType="player" type="0" content="我懂了，马上出发！"
-              action="loss item 705:1;generate battle 5 at (0,2)"/>
+              precondition="have item 705:1" action="loss item 705:1;generate battle 5 at (0,2)"/>
   </dialogue>
   <dialogue id="12" npcId="4" precondition="doing task 9">
     <sentence speakerType="npc" type="0" content="怎么样了？" />
     <sentence speakerType="player" type="1" ok="这次应该没错了！" cancel="请再给我一些时间。"
-              action="offer item 707:1"/>
+              precondition="have item 707:1" action="loss item 707:1"/>
     <sentence speakerType="npc" type="0" content="（小心翼翼地喝下）" />
     <sentence speakerType="player" type="0" content="感觉怎么样？" />
     <sentence speakerType="npc" type="0" content="太神奇了！我感觉充满了活力！万分感谢。" />
@@ -257,7 +257,7 @@
   <dialogue id="23" npcId="6" precondition="doing task 18">
     <sentence speakerType="npc" type="0" content="怎么样了？"/>
     <sentence speakerType="player" type="1" ok="是这个吗？" cancel="请再给我一些时间。"
-              action="offer item 708:1"/>
+              precondition="have item 708:1" action="loss item 708:1"/>
     <sentence speakerType="npc" type="0" content="对，没错，真是太感谢你了！请你稍等一会儿！"/>
     <sentence speakerType="player" type="0" content="什么？"/>
     <sentence speakerType="npc" type="0" content="（三兄弟开始重新锻造父神之怒）"/>
@@ -334,7 +334,7 @@
     <sentence speakerType="player" type="0" content="什么？"/>
     <sentence speakerType="npc"     type="0" content="噢，抱歉，我的意思是，你有面包吗？给我10个面包，我就跟你走。"/>
     <sentence speakerType="player" type="1" ok="面包归你，你归我。" cancel="对不起，我暂时没有那么多面包。"
-              action="loss item 232:10;recruit npc 22"/>
+              precondition="have item 232:10" action="loss item 232:10;recruit npc 22"/>
   </dialogue>
   <!--神秘老人李-->
   <dialogue id="34" npcId="23" precondition="">
@@ -350,13 +350,13 @@
     <sentence speakerType="player" type="0" content="请问有什么事吗？"/>
     <sentence speakerType="npc"     type="0" content="看到我手中的骰子了吗，我们来赌一把，如果你输了，你就要付给我100金币。如果你赢了，我就跟你走。"/>
     <sentence speakerType="player" type="1" ok="好，来！" cancel="不，我厌恶赌博。"
-              action="loss money 100"/>
+              precondition="have money 100" action="loss money 100"/>
     <sentence speakerType="npc"     type="0" content="（一轮博弈之后）你输了！还要继续吗？"/>
     <sentence speakerType="player" type="1" ok="继续。" cancel="不，你就是个骗子。"
-              action="loss money 100"/>
+              precondition="have money 100" action="loss money 100"/>
     <sentence speakerType="npc"     type="0" content="（第二轮博弈后）哈哈，你又输了！"/>
     <sentence speakerType="player" type="1" ok="……再来一次！" cancel="沉默不语，转身离开。"
-              action="loss money 100"/>
+              precondition="have money 100" action="loss money 100"/>
     <sentence speakerType="npc"     type="0" content="（第三轮博弈后）看起来这次是你赢了，按照之前约定的那样，今天起我们就是伙伴了，哈哈！"/>
     <sentence speakerType="player" type="1" ok="欢迎你。" cancel="不，至少不是今天。"
               action="recruit npc 24"/>
@@ -376,7 +376,7 @@
   <dialogue id="37" npcId="25" precondition="doing task 22">
     <sentence speakerType="npc"     type="0" content="你已经杀了那鹰王了吗？"/>
     <sentence speakerType="player" type="1" ok="这是你的东西吧。" cancel="还没有。"
-              action="loss item 722:1;fulfil task 22"/>
+              precondition="have item 722:1" action="loss item 722:1;fulfil task 22"/>
   </dialogue>
   <dialogue id="38" npcId="25" precondition="finish task 22">
     <sentence speakerType="npc"     type="0" content="谢谢你，如果你需要帮助的话，我愿意加入。"/>

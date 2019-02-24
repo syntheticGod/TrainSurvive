@@ -17,11 +17,7 @@ namespace WorldMap.Model
         /// 句子结束后的行为，如：获得物品等等
         /// </summary>
         /// <returns></returns>
-        public abstract bool DoAction();
-        /// <summary>
-        /// 当行为组中的某个行为失败之后，需要撤销之前做过的行为。
-        /// </summary>
-        public abstract void UnDoAction();
+        public abstract void DoAction();
         public static SentenceAction[] Compile(string action)
         {
             SentenceAction[] ans;
@@ -80,7 +76,7 @@ namespace WorldMap.Model
             Number = int.Parse(item[1]);
         }
 
-        public override bool DoAction()
+        public override void DoAction()
         {
             Storage storage = World.getInstance().storage;
             switch (Type)
@@ -90,24 +86,7 @@ namespace WorldMap.Model
                     break;
                 case 1:
                 case 2:
-                    if (!storage.RemoveItem(ItemID, Number)) return false;
-                    break;
-            }
-            return true;
-        }
-
-        public override void UnDoAction()
-        {
-            Storage storage = World.getInstance().storage;
-            switch (Type)
-            {
-                case 0:
-                    if (!storage.RemoveItem(ItemID, Number))
-                        Debug.LogError("Undo sentence action失败，物品" + ItemID + "的数量少于" + Number);
-                    break;
-                case 1:
-                case 2:
-                    storage.AddItem(ItemID, Number);
+                    storage.RemoveItem(ItemID, Number);
                     break;
             }
         }
@@ -145,14 +124,22 @@ namespace WorldMap.Model
             BattleID = int.Parse(words[2]);
         }
 
-        public override bool DoAction()
+        public override void DoAction()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnDoAction()
-        {
-            throw new System.NotImplementedException();
+            SpecialBattle specialBattle = SpecialBattleInitializer.getInstance().loadBattle(BattleID);
+            if (specialBattle == null)
+            {
+                Debug.LogError("特殊战斗不存在 ID：" + BattleID);
+                return;
+            }
+            switch (Type)
+            {
+                case 0:
+                    break;
+                case 1:
+                    SpecialBattleInitializer.getInstance().generateSpecialBattle(specialBattle);
+                    break;
+            }
         }
     }
     public class TaskAction : SentenceAction
@@ -176,14 +163,24 @@ namespace WorldMap.Model
             TaskID = int.Parse(words[2]);
         }
 
-        public override bool DoAction()
+        public override void DoAction()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnDoAction()
-        {
-            throw new System.NotImplementedException();
+            Task task = TaskController.getInstance().getTask(TaskID);
+            if(task == null)
+            {
+                Debug.LogError("任务不存在 ID" + TaskID);
+                return;
+            }
+            switch (Type)
+            {
+                case 0:
+                    if (!task.get_task())
+                        Debug.LogError("接收任务失败 ID" + TaskID);
+                    break;
+                case 1:
+                    task.achieve_task();
+                    break;
+            }
         }
     }
     public class NpcAction : SentenceAction
@@ -206,19 +203,13 @@ namespace WorldMap.Model
             NpcID = int.Parse(words[2]);
         }
 
-        public override bool DoAction()
+        public override void DoAction()
         {
             switch (Type)
             {
                 case 0: World.getInstance().Persons.RecruitNpc(NpcID); break;
                 case 1: throw new System.NotImplementedException();
             }
-            return true;
-        }
-
-        public override void UnDoAction()
-        {
-            throw new System.NotImplementedException();
         }
     }
     public class MoneyAction : SentenceAction
@@ -234,14 +225,9 @@ namespace WorldMap.Model
             Money = int.Parse(words[2]);
         }
 
-        public override bool DoAction()
+        public override void DoAction()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnDoAction()
-        {
-            throw new System.NotImplementedException();
+            World.getInstance().PayByMoney(Money);
         }
     }
 }

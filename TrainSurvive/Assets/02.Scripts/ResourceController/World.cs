@@ -421,9 +421,8 @@ public class World
         return result;
     }
     /// <summary>
-    /// num可为负代表减少
+    /// 使用金币支付
     /// </summary>
-    /// <param name="num"></param>
     /// <param name="cost">需要支付的金额</param>
     /// <returns></returns>
     public bool PayByMoney(int cost)

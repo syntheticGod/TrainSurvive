@@ -5,6 +5,10 @@
  * 创建时间：2019/2/11 22:03:25
  * 版本：v0.7
  */
+using System.Xml;
+using TTT.Item;
+using TTT.Resource;
+
 namespace WorldMap.Model
 {
     public abstract class Precondition
@@ -34,6 +38,8 @@ namespace WorldMap.Model
                     string[] words = precon[i].Split(' ');
                     switch (words[1])
                     {
+                        case "item": preconditions[i] = new ItemCondition(words); break;
+                        case "money": preconditions[i] = new MoneyCondition(words); break;
                         case "task": preconditions[i] = new TaskCondition(words); break;
                         case "other": preconditions[i] = new OtherCondition(words); break;
                         case "npc": preconditions[i] = new NpcCondition(words); break;
@@ -45,6 +51,70 @@ namespace WorldMap.Model
                 preconditions = new Precondition[0];
             }
             return preconditions;
+        }
+        public abstract string FailureMessage();
+    }
+    public class ItemCondition : Precondition
+    {
+        /// <summary>
+        /// 类型 {0 | 拥有物品 }
+        /// </summary>
+        public int Type { get; private set; }
+        public int ItemID { get; private set; }
+        public int Number { get; private set; }
+        public ItemCondition(string[] words)
+        {
+            switch (words[0])
+            {
+                case "have": Type = 0; break;
+                default:
+                    throw new XmlException("不支持的物品指令");
+            }
+            string[] item = words[2].Split(':');
+            ItemID = int.Parse(item[0]);
+            Number = int.Parse(item[1]);
+        }
+        public override bool IfSatisfy()
+        {
+            return World.getInstance().storage.ContainItem(ItemID, Number);
+        }
+
+        public override string FailureMessage()
+        {
+            ItemInfo info = StaticResource.GetItemInfoByID<ItemInfo>(ItemID);
+            string ans = "";
+            switch (Type)
+            {
+                case 0: ans = "背包中的" + info.Name + "少于" + Number + "个"; break;
+            }
+            return ans;
+        }
+    }
+    public class MoneyCondition : Precondition
+    {
+        /// <summary>
+        /// 类型 { 0 | 拥有金额 }
+        /// </summary>
+        public int Type { get; private set; }
+        public int Money { get; private set; }
+        public MoneyCondition(string[] words)
+        {
+            switch (words[0])
+            {
+                case "have": Type = 0; break;
+                default:
+                    throw new XmlException("不支持的物品指令");
+            }
+            Money = int.Parse(words[2]);
+        }
+        public override bool IfSatisfy()
+        {
+            return World.getInstance().IfMoneyEnough(Money);
+        }
+
+        public override string FailureMessage()
+        {
+            return "金币不足";
         }
     }
     public class OtherCondition : Precondition
@@ -64,6 +134,11 @@ namespace WorldMap.Model
         public override bool IfSatisfy()
         {
             return World.getInstance().Dialogues.IfTalked(OtherDialogueID);
+        }
+
+        public override string FailureMessage()
+        {
+            return "";
         }
     }
     public class TaskCondition : Precondition
@@ -95,6 +170,17 @@ namespace WorldMap.Model
             }
             return false;
         }
+
+        public override string FailureMessage()
+        {
+            string ans = "";
+            switch (Type)
+            {
+                case 0: ans = "未接受指定任务"; break;
+                case 1: ans = "任务未完成"; break;
+            }
+            return ans;
+        }
     }
     public class NpcCondition : Precondition
     {
@@ -113,9 +199,9 @@ namespace WorldMap.Model
                     m_comparer = cmd[2];
                     Count = int.Parse(cmd[3]);
                     break;
-                default:Type = -1;break;
+                default: Type = -1; break;
             }
-            
+
         }
         public override bool IfSatisfy()
         {
@@ -131,10 +217,24 @@ namespace WorldMap.Model
                         case "<": return town.Npcs.Count < Count;
                         case "<=": return town.Npcs.Count <= Count;
                         case "==": return town.Npcs.Count == Count;
-                        default:return false;
+                        default: return false;
                     }
             }
             return false;
+        }
+
+        public override string FailureMessage()
+        {
+            string ans = "该城的NPC的数量";
+            switch (m_comparer)
+            {
+                case ">": return ans += "不多于"+Count+"个";
+                case ">=": return ans += "少于" + Count + "个";
+                case "<": return ans += "不少于" + Count + "个";
+                case "<=": return ans += "多于" + Count + "个";
+                case "==": return ans += "不等于" + Count + "个";
+            }
+            return ans;
         }
     }
 }
