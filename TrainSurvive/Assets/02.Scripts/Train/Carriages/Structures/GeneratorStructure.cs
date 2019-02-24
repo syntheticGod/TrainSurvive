@@ -9,6 +9,7 @@ using System.Collections;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class GeneratorStructure : CarriageStructure {
     public GeneratorStructure(string name, bool initialEnabled) : base(name, initialEnabled) { }
 

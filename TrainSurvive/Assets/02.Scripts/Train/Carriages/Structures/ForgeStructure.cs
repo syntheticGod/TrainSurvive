@@ -12,6 +12,7 @@ using TTT.Item;
 using TTT.Resource;
 using UnityEngine;
 
+[Serializable]
 public class ForgeStructure : CarriageStructure {
 
     public ForgeStructure(string name, bool initialEnabled) : base(name, initialEnabled) { }

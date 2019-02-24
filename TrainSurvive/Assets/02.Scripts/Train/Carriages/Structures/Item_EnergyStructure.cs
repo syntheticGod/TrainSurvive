@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class Item_EnergyStructure : CarriageStructure {
     public enum EnergyType {
         ENERGY, FOOD

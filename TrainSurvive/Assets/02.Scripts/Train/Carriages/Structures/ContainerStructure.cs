@@ -8,6 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class ContainerStructure : CarriageStructure {
     public ContainerStructure(string name, bool initialEnabled) : base(name, initialEnabled) { }
 

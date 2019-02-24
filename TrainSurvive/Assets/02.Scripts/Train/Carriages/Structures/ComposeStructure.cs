@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using TTT.Item;
 using UnityEngine;
 
+[Serializable]
 public class ComposeStructure : CarriageStructure {
 
     [Serializable]
