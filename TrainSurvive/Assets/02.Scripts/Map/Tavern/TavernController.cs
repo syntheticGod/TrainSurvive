@@ -249,60 +249,30 @@ namespace WorldMap.Controller
             else
             {
                 int index = id - BUTTON_ID.TAVERN_BUTTON1;
-                bool gotoHill = false;
                 //按钮行为：{ 0 无 | 1 继续 | 2 确定 | 3 取消 }
-                switch (actions[index])
+                if(actions[index] == BUTTON_ACTION.CONTINUE || actions[index] == BUTTON_ACTION.OK)
                 {
-                    case BUTTON_ACTION.CONTINUE:
-                        dialogueCursor.CurrentSentence.DoAllActions();
-                        //跳过玩家的回答句子
-                        ChatSentence playerSentence = dialogueCursor.Ignore();
-                        if (playerSentence == null)
-                        {
-                            Debug.LogError("最后一句不是玩家说的");
-                            gotoHill = true;
-                            break;
-                        }
+                    ChatSentence playerSentence = dialogueCursor.CurrentSentence;
+                    Precondition failureCondition = null;
+                    if (playerSentence.IfAllSatisfy(out failureCondition))
+                    {
+                        playerSentence.DoAllActions();
                         townChatListView.AddItem(playerSentence);
+                        dialogueCursor.Ignore(); //跳过玩家的回答句子
                         if (!ShowNextDialogue())
-                            gotoHill = true;
-                        break;
-                    case BUTTON_ACTION.OK:
-                        ChatSentence chatSentence = dialogueCursor.CurrentSentence;
-                        Precondition failureCondition = null;
-                        if (chatSentence.IfAllSatisfy(out failureCondition))
-                        {
-                            chatSentence.DoAllActions();
-                            gotoHill = true;
-                        }
-                        else
-                        {
-                            FlowInfo.ShowInfo("失败", failureCondition.FailureMessage());
-                        }
-                        break;
-                    case BUTTON_ACTION.CANCEL: gotoHill = true; break;
-                    default: break;
+                            ShowSelectedNpc(0); //前往大厅
+                    }
+                    else
+                    {
+                        FlowInfo.ShowInfo("失败", failureCondition.FailureMessage());
+                    }
                 }
-                if (gotoHill) ShowSelectedNpc(0);
+                else if(actions[index] == BUTTON_ACTION.CANCEL)
+                {
+                    //前往大厅
+                    ShowSelectedNpc(0);
+                }
             }
-        }
-        public void RecruitNpc(int selectedIndex)
-        {
-            //私聊选项2：请加入我
-            Debug.Log("玩家：招募指令");
-            if (World.getInstance().Persons.Count >= World.getInstance().Persons.MaxMember)
-            {
-                InfoDialog.Show("人物已满，无法招募更多的人");
-                return;
-            }
-            int currentNPC = currentTown.Npcs[selectedIndex];
-            if (!currentTown.RecruitNPC(currentNPC))
-            {
-                Debug.LogError("系统：招募NPC失败");
-                return;
-            }
-            tavernNPCListView.RemoveData(currentNPC);
-            tavernNPCListView.ClickManually(0);
         }
         public void ObserverUpdate(int state, int echo, object tag = null)
         {

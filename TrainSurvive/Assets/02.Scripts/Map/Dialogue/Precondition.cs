@@ -8,6 +8,7 @@
 using System.Xml;
 using TTT.Item;
 using TTT.Resource;
+using UnityEngine;
 
 namespace WorldMap.Model
 {
@@ -43,6 +44,7 @@ namespace WorldMap.Model
                         case "task": preconditions[i] = new TaskCondition(words); break;
                         case "other": preconditions[i] = new OtherCondition(words); break;
                         case "npc": preconditions[i] = new NpcCondition(words); break;
+                        default: throw new XmlException("不支持的物品指令");
                     }
                 }
             }
@@ -60,32 +62,57 @@ namespace WorldMap.Model
         /// 类型 {0 | 拥有物品 }
         /// </summary>
         public int Type { get; private set; }
-        public int ItemID { get; private set; }
-        public int Number { get; private set; }
+        public int[] ItemIDs { get; private set; }
+        public int[] Numbers { get; private set; }
         public ItemCondition(string[] words)
         {
             switch (words[0])
             {
                 case "have": Type = 0; break;
-                default:
-                    throw new XmlException("不支持的物品指令");
+                default: throw new XmlException("不支持的物品指令");
             }
-            string[] item = words[2].Split(':');
-            ItemID = int.Parse(item[0]);
-            Number = int.Parse(item[1]);
+            string[] items = words[2].Split(',');
+            ItemIDs = new int[items.Length];
+            Numbers = new int[items.Length];
+            for (int i = 0; i < ItemIDs.Length; i++)
+            {
+                Debug.Log(items[i]);
+                string[] item = items[i].Split(':');
+                ItemIDs[i] = int.Parse(item[0]);
+                Numbers[i] = int.Parse(item[1]);
+            }
         }
         public override bool IfSatisfy()
         {
-            return World.getInstance().storage.ContainItem(ItemID, Number);
+            for(int i = 0; i < ItemIDs.Length; i++)
+            {
+                int itemID = ItemIDs[i];
+                int number = Numbers[i];
+                switch (Type)
+                {
+                    case 0:if (!World.getInstance().storage.ContainItem(itemID, number)) return false;break;
+                    default: throw new XmlException("不支持的物品指令");
+                }
+            }
+            return true;
         }
 
         public override string FailureMessage()
         {
-            ItemInfo info = StaticResource.GetItemInfoByID<ItemInfo>(ItemID);
             string ans = "";
-            switch (Type)
+            for (int i = 0; i < ItemIDs.Length; i++)
             {
-                case 0: ans = "背包中的" + info.Name + "少于" + Number + "个"; break;
+                int itemID = ItemIDs[i];
+                int number = Numbers[i];
+                if (!World.getInstance().storage.ContainItem(itemID, number))
+                {
+                    ItemInfo info = StaticResource.GetItemInfoByID<ItemInfo>(itemID);
+                    switch (Type)
+                    {
+                        case 0: ans = "背包中的" + info.Name + "少于" + number + "个"; break;
+                        default: throw new System.NotImplementedException();
+                    }
+                }
             }
             return ans;
         }
@@ -102,8 +129,7 @@ namespace WorldMap.Model
             switch (words[0])
             {
                 case "have": Type = 0; break;
-                default:
-                    throw new XmlException("不支持的物品指令");
+                default:throw new XmlException("不支持的物品指令");
             }
             Money = int.Parse(words[2]);
         }
@@ -144,7 +170,7 @@ namespace WorldMap.Model
     public class TaskCondition : Precondition
     {
         /// <summary>
-        /// 类型：{0 正在进行任务| 1 完成任务}
+        /// 类型：{0 正在进行任务| 1 完成任务 | 2 解锁任务}
         /// </summary>
         public int Type { get; private set; }
         /// <summary>
@@ -157,16 +183,20 @@ namespace WorldMap.Model
             {
                 case "doing": Type = 0; break;
                 case "finish": Type = 1; break;
+                case "unlock":Type = 2;break;
+                default: throw new XmlException("不支持的物品指令");
             }
             TaskID = int.Parse(cmd[2]);
         }
         public override bool IfSatisfy()
         {
-            Task task = World.getInstance().taskCon.getTask(TaskID);
+            Task task = TaskController.getInstance().getTask(TaskID);
             switch (Type)
             {
                 case 0: if (task.condition == TaskController.TASKCONDITION.DOING) return true; break;
                 case 1: if (task.condition == TaskController.TASKCONDITION.FINISH) return true; break;
+                case 2:if (task.condition == TaskController.TASKCONDITION.CAN_DO) return true;break;
+                default: throw new XmlException("不支持的物品指令");
             }
             return false;
         }
@@ -178,6 +208,8 @@ namespace WorldMap.Model
             {
                 case 0: ans = "未接受指定任务"; break;
                 case 1: ans = "任务未完成"; break;
+                case 2: ans = "前置任务未解锁"; break;
+                default: throw new XmlException("不支持的物品指令");
             }
             return ans;
         }
@@ -199,7 +231,7 @@ namespace WorldMap.Model
                     m_comparer = cmd[2];
                     Count = int.Parse(cmd[3]);
                     break;
-                default: Type = -1; break;
+                default: throw new XmlException("不支持的物品指令");
             }
 
         }
@@ -217,10 +249,10 @@ namespace WorldMap.Model
                         case "<": return town.Npcs.Count < Count;
                         case "<=": return town.Npcs.Count <= Count;
                         case "==": return town.Npcs.Count == Count;
-                        default: return false;
+                        default: throw new XmlException("不支持的物品指令");
                     }
+                default: throw new XmlException("不支持的物品指令");
             }
-            return false;
         }
 
         public override string FailureMessage()
@@ -228,13 +260,13 @@ namespace WorldMap.Model
             string ans = "该城的NPC的数量";
             switch (m_comparer)
             {
-                case ">": return ans += "不多于"+Count+"个";
+                case ">": return ans += "不多于" + Count + "个";
                 case ">=": return ans += "少于" + Count + "个";
                 case "<": return ans += "不少于" + Count + "个";
                 case "<=": return ans += "多于" + Count + "个";
                 case "==": return ans += "不等于" + Count + "个";
+                default: throw new XmlException("不支持的物品指令");
             }
-            return ans;
         }
     }
 }

@@ -28,11 +28,13 @@
     <sentence speakerType="npc" type="0" content="如果你实在想加入的话，就去水火风雷四大神殿，取得相应的凭证，向我证明你的立场和能力!"/>
     <sentence speakerType="player" type="0" content="四大神殿？"/>
     <sentence speakerType="npc" type="0" content="如你所见，我们现在所在的地方是位于世界中心的光神殿。在世界的东、南、西、北，也分别坐落着其他四座神殿。"/>
-    <sentence speakerType="player" type="0" content="我懂了，马上启程。"/>
+    <sentence speakerType="player" type="0" content="我懂了，马上启程。"
+              action="fulfil task 0;take task 1,2,6,10,14"/>
   </dialogue>
   <dialogue id="1" npcId="0" precondition="doing task 1">
     <sentence speakerType="npc" type="0"  content="你集齐四个徽章了吗？"/>
-    <sentence speakerType="player" type="1" ok="请看。" cancel="还没有。"/>
+    <sentence speakerType="player" type="1" ok="请看。" cancel="还没有。"
+              precondition="have item 701:1,702:1,703:1,704:1"/>
     <sentence speakerType="npc" type="0" content="你果然没有让我失望。"/>
     <sentence speakerType="player" type="0" content="请问接下来我需要做什么？"/>
     <sentence speakerType="npc" type="0" content="待开发"/>

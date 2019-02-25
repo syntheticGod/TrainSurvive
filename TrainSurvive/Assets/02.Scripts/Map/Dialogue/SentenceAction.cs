@@ -6,6 +6,7 @@
  */
 using System.Xml;
 using TTT.Item;
+using TTT.UI;
 using UnityEngine;
 
 
@@ -151,7 +152,7 @@ namespace WorldMap.Model
         /// <summary>
         /// 任务ID
         /// </summary>
-        public int TaskID { get; private set; }
+        public int[] TaskIDs { get; private set; }
 
         public TaskAction(string[] words)
         {
@@ -160,26 +161,42 @@ namespace WorldMap.Model
                 case "take": Type = 0; break;
                 case "fulfil": Type = 1; break;
             }
-            TaskID = int.Parse(words[2]);
+            string[] ids = words[2].Split(',');
+            TaskIDs = new int[ids.Length];
+            for (int i = 0; i < TaskIDs.Length; i++)
+                TaskIDs[i] = int.Parse(ids[i]);
         }
 
         public override void DoAction()
         {
-            Task task = TaskController.getInstance().getTask(TaskID);
-            if(task == null)
+            foreach(int TaskID in TaskIDs)
             {
-                Debug.LogError("任务不存在 ID" + TaskID);
-                return;
-            }
-            switch (Type)
-            {
-                case 0:
-                    if (!task.get_task())
-                        Debug.LogError("接收任务失败 ID" + TaskID);
-                    break;
-                case 1:
-                    task.achieve_task();
-                    break;
+                Task task = TaskController.getInstance().getTask(TaskID);
+                if (task == null)
+                {
+                    Debug.LogError("任务不存在 ID" + TaskID);
+                    return;
+                }
+                switch (Type)
+                {
+                    case 0:
+                        if(task.condition == TaskController.TASKCONDITION.CAN_DO)
+                        {
+                            task.get_task();
+                            FlowInfo.ShowInfo("接受新任务", task.name);
+                        }
+                        else
+                        {
+                            Debug.LogError("接受任务失败 任务ID：" + TaskID);
+                        }
+                        break;
+                    case 1:
+                        task.achieve_task();
+                        FlowInfo.ShowInfo("完成任务", task.name);
+                        task.finish_task();
+                        break;
+                }
+
             }
         }
     }
