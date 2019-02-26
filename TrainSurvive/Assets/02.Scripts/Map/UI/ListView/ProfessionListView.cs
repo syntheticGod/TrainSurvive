@@ -11,6 +11,7 @@ using TTT.Resource;
 using TTT.Utility;
 using TTT.UI;
 using TTT.UI.ListView;
+using TTT.Common;
 
 namespace WorldMap.UI
 {
@@ -27,7 +28,7 @@ namespace WorldMap.UI
         {
             base.Start();
             m_cellSize.x = -1;
-            m_cellSize.y = viewPortSize.y / StaticResource.AttributeCount;
+            m_cellSize.y = viewPortSize.y / (int)EAttribute.NUM;
             ConfigCellSize();
         }
         protected override void OnItemView(ListViewItem item, Profession data, int itemIndex)
@@ -35,7 +36,7 @@ namespace WorldMap.UI
             ProfessionItemView view = ViewTool.ForceGetComponentInChildren<ProfessionItemView>(item,"ProfessionItem");
             view.SetIcon(data.IconSmall);
             string[] content = new string[3];
-            content[0] = StaticResource.GetAttributeName(itemIndex);
+            content[0] = AttriTool.NameC[itemIndex];
             content[1] = data.Name;
             content[2] = data.Info;
             view.SetInfo(content);

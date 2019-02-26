@@ -14,6 +14,7 @@ using TTT.Utility;
 using WorldMap.UI;
 using System.Text;
 using WorldMap.Model;
+using TTT.Common;
 
 [System.Serializable]
 public class Person
@@ -50,7 +51,7 @@ public class Person
     {
         get
         {
-            return string.Format("{0}/{1}/{2}", StaticResource.GetAttributeName(profAttris[0]), StaticResource.GetAttributeName(profAttris[1]), StaticResource.GetAttributeName(profAttris[2]));
+            return string.Format("{0}/{1}/{2}", AttriTool.Chinese(profAttris[0]), AttriTool.Chinese(profAttris[1]), AttriTool.Chinese(profAttris[2]));
         }
     }
     public string BackgroundStoreInfo

@@ -46,6 +46,10 @@ namespace WorldMap.Model
         /// </summary>
         public Precondition[] Preconditions { get; private set; }
         /// <summary>
+        /// 确定按钮能过够触发的前提条件
+        /// </summary>
+        public Precondition[] Okconditions { get; private set; }
+        /// <summary>
         /// 语句结束后的指令
         /// </summary>
         public SentenceAction[] Actions { get; private set; }
@@ -96,6 +100,7 @@ namespace WorldMap.Model
             }
             Actions = SentenceAction.Compile(node.Attributes["action"]?.Value);
             Preconditions = Precondition.Compile(node.Attributes["precondition"]?.Value);
+            Okconditions = Precondition.Compile(node.Attributes["okcondition"]?.Value);
         }
         #endregion
 
@@ -140,6 +145,44 @@ namespace WorldMap.Model
         {
             failureCondition = null;
             foreach (Precondition condition in Preconditions)
+            {
+                if (condition.IfSatisfy() == false)
+                {
+                    failureCondition = condition;
+                    return false;
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// 判断确定按钮是否触发
+        /// </summary>
+        /// <returns>
+        /// TRUE：满足所有条件
+        /// FALSE：不满足其中一个条件
+        /// </returns>
+        public bool IfOkSatisfy()
+        {
+            foreach (Precondition condition in Okconditions)
+            {
+                if (condition.IfSatisfy() == false)
+                    return false;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 判断确定按钮是否触发
+        /// 并返回第一个不满足的条件。
+        /// </summary>
+        /// <param name="failureCondition">不满足的条件</param>
+        /// <returns>
+        /// TRUE：满足所有条件
+        /// FALSE：不满足其中一个条件
+        /// </returns>
+        public bool IfOkSatisfy(out Precondition failureCondition)
+        {
+            failureCondition = null;
+            foreach (Precondition condition in Okconditions)
             {
                 if (condition.IfSatisfy() == false)
                 {

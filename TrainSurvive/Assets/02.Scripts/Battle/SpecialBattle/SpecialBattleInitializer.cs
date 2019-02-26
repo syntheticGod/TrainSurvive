@@ -108,6 +108,11 @@ public class SpecialBattleInitializer  {
     /// <returns></returns>
     public SpecialBattle getBattle(int battleId)
     {
-        return TaskController.getInstance().getBattle(battleId);
+        SpecialBattle battle = TaskController.getInstance().getBattle(battleId);
+#if DEBUG
+        if (battle == null)
+            Debug.LogError("已有的任务信息里不存在该战斗，战斗ID：" + battleId);
+#endif
+        return battle;
     }
 }

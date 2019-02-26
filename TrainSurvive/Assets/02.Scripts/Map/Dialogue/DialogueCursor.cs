@@ -44,18 +44,22 @@ namespace WorldMap.Model
 
         #region 操作
         /// <summary>
-        /// 返回下一阶段的 和 满足条件的 句子（不包括玩家的句子，直到玩家对话为止，或对话结束）
+        /// 返回下一阶段的 和 满足条件的 句子（直到满足条件的玩家对话为止，或对话结束）
+        /// 会跳过不满足条件的
         /// </summary>
         /// <example>
         /// 示例：
-        ///     NPC：1
-        ///     NPC：2
-        ///     PLAYER：3
-        ///     NPC：4
+        /// 条件 1发生， 条件2不发生
+        ///     NPC：1 & 当 条件 1        √
+        ///     NPC：2 & 当 条件 2        X，因为条件2没发生
+        ///     PLAYER1 & 当 条件 2      X，因为条件2没发生
+        ///     NPC4 & 当 条件1            √
+        ///     PLAYER2 & 当 条件 1 ----- 指针停在这，因为条件1发生
+        ///     NPC5 & 当 条件1
+        ///     PLAYER3 & 当 条件 1
         /// 返回
-        ///     {NPC1,NPC2}
+        ///     {NPC1, NPC4} 
         /// </example>
-        /// <param name="context">上下文</param>
         /// <returns>
         /// 长度为0：无更对对话
         /// </returns>
@@ -65,8 +69,10 @@ namespace WorldMap.Model
             ChatSentence[] sentences = Dialogue.Sentences;
             if (currentIndex >= sentences.Length) return ans;
             //添加所有 {不是玩家的} 和 {满足条件的} 句子
-            while (currentIndex < sentences.Length && !sentences[currentIndex].IsPlayer)
+            while (currentIndex < sentences.Length)
             {
+                if (sentences[currentIndex].IsPlayer && sentences[currentIndex].IfAllSatisfy())
+                    break;
                 if (sentences[currentIndex].IfAllSatisfy())
                     ans.Add(sentences[currentIndex]);
                 currentIndex++;

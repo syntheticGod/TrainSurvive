@@ -4,12 +4,9 @@
  * 创建时间：2018/12/14 12:48:55
  * 版本：v0.1
  */
-using System.Collections;
-using System.Collections.Generic;
-using TTT.Utility;
-using TTT.Resource;
 using UnityEngine.UI;
 using UnityEngine;
+using TTT.Common;
 
 public class ProfessionPanel : MonoBehaviour {
     //以后添加sprite
@@ -36,26 +33,7 @@ public class ProfessionPanel : MonoBehaviour {
                 Profession.AbiReq[] req = ps[i].AbiReqs;
                 pStr[i] = "";
                 foreach (Profession.AbiReq abiReq in req)
-                {
-                    switch (abiReq.Abi)
-                    {
-                        case EAttribute.VITALITY:
-                            pStr[i] += "体力";
-                            break;
-                        case EAttribute.TECHNIQUE:
-                            pStr[i] += "技巧";
-                            break;
-                        case EAttribute.STRENGTH:
-                            pStr[i] += "力量";
-                            break;
-                        case EAttribute.INTELLIGENCE:
-                            pStr[i] += "智力";
-                            break;
-                        case EAttribute.AGILE:
-                            pStr[i] += "敏捷";
-                            break;                       
-                    }
-                }
+                    pStr[i] += AttriTool.Chinese(abiReq.Abi);
             }
             else
                 pStr[i] = "无";           

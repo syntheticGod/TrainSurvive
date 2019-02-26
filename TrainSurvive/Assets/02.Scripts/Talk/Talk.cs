@@ -9,6 +9,7 @@ using Story.MyTools;
 using Story.Faker;
 using WorldMap.Model;
 using TTT.Resource;
+using TTT.Common;
 
 namespace Story.Communication{
     public class Talk{
@@ -120,7 +121,7 @@ namespace Story.Communication{
         //todo 完善语料库，更改叙述方式
         private string getSelfInfoWords(int rdSelf, ref NpcData npc)
         {
-            return "我的" + StaticResource.GetAttributeName(rdSelf) + "是" + npc.Info.AttriNumber[rdSelf];
+            return "我的" + AttriTool.NameC[rdSelf] + "是" + npc.Info.AttriNumber[rdSelf];
         }
 
         private bool existRandomEvent(){

@@ -4,12 +4,8 @@
  * 创建时间：2019/1/29 12:49:14
  * 版本：v0.7
  */
-using UnityEngine;
-using System.Collections;
 using System.Xml;
-using TTT.Resource;
-using TTT.Utility;
-using TTT.Xml;
+using TTT.Common;
 
 namespace WorldMap.Model
 {

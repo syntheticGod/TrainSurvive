@@ -6,6 +6,7 @@
  */
 
 using System.Xml;
+using TTT.Common;
 using TTT.Resource;
 using UnityEngine;
 public enum ESkillComeFrom

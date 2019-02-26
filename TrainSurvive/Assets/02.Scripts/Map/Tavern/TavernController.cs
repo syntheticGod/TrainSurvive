@@ -152,6 +152,7 @@ namespace WorldMap.Controller
         {
             if (dialogueCursor == null) return false;
             List<ChatSentence> nextSentences = dialogueCursor.Next();
+            //对话已结束
             if (nextSentences.Count == 0) return false;
             int i;
             for (i = 0; i < nextSentences.Count; i++)
@@ -254,7 +255,7 @@ namespace WorldMap.Controller
                 {
                     ChatSentence playerSentence = dialogueCursor.CurrentSentence;
                     Precondition failureCondition = null;
-                    if (playerSentence.IfAllSatisfy(out failureCondition))
+                    if (playerSentence.IfOkSatisfy(out failureCondition))
                     {
                         playerSentence.DoAllActions();
                         townChatListView.AddItem(playerSentence);

@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using TTT.Resource;
 using TTT.Utility;
 using TTT.UI;
+using TTT.Common;
 
 namespace WorldMap.UI
 {
@@ -19,14 +20,14 @@ namespace WorldMap.UI
         Text[] attributeNumberText;
         public override void CreateView()
         {
-            int attriCount = StaticResource.AttributeCount;
+            int attriCount = (int)EAttribute.NUM;
             attributeInfoText = new Text[attriCount];
             attributeNumberText = new Text[attriCount];
             float delta = 1f / attriCount;
             float currentFloat = 1F;
             for (int i = 0; i < attriCount; i++)
             {
-                attributeInfoText[i] = ViewTool.CreateText("attributeInfo" + i, StaticResource.GetAttributeName(i));
+                attributeInfoText[i] = ViewTool.CreateText("attributeInfo" + i, AttriTool.NameC[i]);
                 ViewTool.SetParent(attributeInfoText[i], this);
                 ViewTool.Anchor(attributeInfoText[i], new Vector2(0F, currentFloat - delta), new Vector2(0.5F, currentFloat));
                 attributeNumberText[i] = ViewTool.CreateText("attributeNumber" + i);

@@ -157,8 +157,7 @@ public class TaskController  {
     public SpecialBattle getBattle(int battleId)
     {
         if (battleid_taskid_dic.ContainsKey(battleId))
-            return null;
-
-        return TaskList[battleid_taskid_dic[battleId]].task_battle;
+            return TaskList[battleid_taskid_dic[battleId]].task_battle;
+        return null;
     }
 }

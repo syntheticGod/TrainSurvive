@@ -9,6 +9,7 @@ using UnityEngine;
 
 using TTT.Utility;
 using TTT.Resource;
+using TTT.Common;
 
 public enum EProfessionLevel
 {

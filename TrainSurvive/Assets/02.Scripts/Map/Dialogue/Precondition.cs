@@ -6,6 +6,7 @@
  * 版本：v0.7
  */
 using System.Xml;
+using TTT.Common;
 using TTT.Item;
 using TTT.Resource;
 using UnityEngine;
@@ -44,7 +45,9 @@ namespace WorldMap.Model
                         case "task": preconditions[i] = new TaskCondition(words); break;
                         case "other": preconditions[i] = new OtherCondition(words); break;
                         case "npc": preconditions[i] = new NpcCondition(words); break;
-                        default: throw new XmlException("不支持的物品指令");
+                        case "girl":
+                        case "boy": preconditions[i] = new HeroCondition(words); break;
+                        default: throw new XmlException("不支持的指令：" + words[1]);
                     }
                 }
             }
@@ -55,6 +58,31 @@ namespace WorldMap.Model
             return preconditions;
         }
         public abstract string FailureMessage();
+        protected bool SemanticCompare(int a, int b, string op)
+        {
+
+            switch (op)
+            {
+                case ">": return a > b;
+                case ">=": return a >= b;
+                case "<": return a < b;
+                case "<=": return a <= b;
+                case "==": return a == b;
+                default: throw new XmlException("不支持的指令：" + op);
+            }
+        }
+        protected int SemanticCompareIndex(string op)
+        {
+            switch (op)
+            {
+                case ">": return 0;
+                case ">=": return 1;
+                case "<": return 2;
+                case "<=": return 3;
+                case "==": return 4;
+                default: throw new XmlException("不支持的指令：" + op);
+            }
+        }
     }
     public class ItemCondition : Precondition
     {
@@ -69,14 +97,13 @@ namespace WorldMap.Model
             switch (words[0])
             {
                 case "have": Type = 0; break;
-                default: throw new XmlException("不支持的物品指令");
+                default: throw new XmlException("不支持的指令：" + Type);
             }
             string[] items = words[2].Split(',');
             ItemIDs = new int[items.Length];
             Numbers = new int[items.Length];
             for (int i = 0; i < ItemIDs.Length; i++)
             {
-                Debug.Log(items[i]);
                 string[] item = items[i].Split(':');
                 ItemIDs[i] = int.Parse(item[0]);
                 Numbers[i] = int.Parse(item[1]);
@@ -84,14 +111,14 @@ namespace WorldMap.Model
         }
         public override bool IfSatisfy()
         {
-            for(int i = 0; i < ItemIDs.Length; i++)
+            for (int i = 0; i < ItemIDs.Length; i++)
             {
                 int itemID = ItemIDs[i];
                 int number = Numbers[i];
                 switch (Type)
                 {
-                    case 0:if (!World.getInstance().storage.ContainItem(itemID, number)) return false;break;
-                    default: throw new XmlException("不支持的物品指令");
+                    case 0: if (!World.getInstance().storage.ContainItem(itemID, number)) return false; break;
+                    default: throw new XmlException("不支持的指令：" + Type);
                 }
             }
             return true;
@@ -110,7 +137,7 @@ namespace WorldMap.Model
                     switch (Type)
                     {
                         case 0: ans = "背包中的" + info.Name + "少于" + number + "个"; break;
-                        default: throw new System.NotImplementedException();
+                        default: throw new XmlException("不支持的指令：" + Type);
                     }
                 }
             }
@@ -129,7 +156,7 @@ namespace WorldMap.Model
             switch (words[0])
             {
                 case "have": Type = 0; break;
-                default:throw new XmlException("不支持的物品指令");
+                default: throw new XmlException("不支持的指令：" + words[0]);
             }
             Money = int.Parse(words[2]);
         }
@@ -170,7 +197,7 @@ namespace WorldMap.Model
     public class TaskCondition : Precondition
     {
         /// <summary>
-        /// 类型：{0 正在进行任务| 1 完成任务 | 2 解锁任务}
+        /// 类型：{0 正在进行任务| 1 可完成任务 | 2 已完成任务 | 3 解锁任务}
         /// </summary>
         public int Type { get; private set; }
         /// <summary>
@@ -182,9 +209,10 @@ namespace WorldMap.Model
             switch (cmd[0])
             {
                 case "doing": Type = 0; break;
-                case "finish": Type = 1; break;
-                case "unlock":Type = 2;break;
-                default: throw new XmlException("不支持的物品指令");
+                case "done": Type = 1; break;
+                case "finish": Type = 2; break;
+                case "unlock": Type = 3; break;
+                default: throw new XmlException("不支持的指令：" + cmd[0]);
             }
             TaskID = int.Parse(cmd[2]);
         }
@@ -194,9 +222,10 @@ namespace WorldMap.Model
             switch (Type)
             {
                 case 0: if (task.condition == TaskController.TASKCONDITION.DOING) return true; break;
-                case 1: if (task.condition == TaskController.TASKCONDITION.FINISH) return true; break;
-                case 2:if (task.condition == TaskController.TASKCONDITION.CAN_DO) return true;break;
-                default: throw new XmlException("不支持的物品指令");
+                case 1: if (task.condition == TaskController.TASKCONDITION.CAN_FINISH) return true; break;
+                case 2: if (task.condition == TaskController.TASKCONDITION.FINISH) return true; break;
+                case 3: if (task.condition == TaskController.TASKCONDITION.CAN_DO) return true; break;
+                default: throw new XmlException("不支持的指令：" + Type);
             }
             return false;
         }
@@ -209,7 +238,7 @@ namespace WorldMap.Model
                 case 0: ans = "未接受指定任务"; break;
                 case 1: ans = "任务未完成"; break;
                 case 2: ans = "前置任务未解锁"; break;
-                default: throw new XmlException("不支持的物品指令");
+                default: throw new XmlException("不支持的指令：" + Type);
             }
             return ans;
         }
@@ -221,19 +250,18 @@ namespace WorldMap.Model
         /// </summary>
         public int Type { get; private set; }
         public int Count { get; private set; }
-        private string m_comparer;
+        public string CompareOperator { get; private set; }
         public NpcCondition(string[] cmd)
         {
             switch (cmd[0])
             {
                 case "count":
                     Type = 0;
-                    m_comparer = cmd[2];
+                    CompareOperator = cmd[2];
                     Count = int.Parse(cmd[3]);
                     break;
-                default: throw new XmlException("不支持的物品指令");
+                default: throw new XmlException("不支持的指令：" + cmd[0]);
             }
-
         }
         public override bool IfSatisfy()
         {
@@ -242,31 +270,82 @@ namespace WorldMap.Model
                 case 0:
                     TownData town = World.getInstance().PMarker.GetCurrentTown();
                     if (town == null) return false;
-                    switch (m_comparer)
-                    {
-                        case ">": return town.Npcs.Count > Count;
-                        case ">=": return town.Npcs.Count >= Count;
-                        case "<": return town.Npcs.Count < Count;
-                        case "<=": return town.Npcs.Count <= Count;
-                        case "==": return town.Npcs.Count == Count;
-                        default: throw new XmlException("不支持的物品指令");
-                    }
-                default: throw new XmlException("不支持的物品指令");
+                    return SemanticCompare(town.Npcs.Count, Count, CompareOperator);
+                default: throw new XmlException("不支持的指令：" + Type);
             }
         }
 
         public override string FailureMessage()
         {
-            string ans = "该城的NPC的数量";
-            switch (m_comparer)
+            string[] message = { "不多于", "少于", "不少于", "多于", "不等于" };
+            return "该城的NPC的数量" + message[SemanticCompareIndex(CompareOperator)] + Count + "个";
+        }
+    }
+    public class HeroCondition : Precondition
+    {
+        /// <summary>
+        /// {0 拥有}
+        /// </summary>
+        public int Type { get; private set; }
+        /// <summary>
+        /// 性别 0 男 1 女
+        /// </summary>
+        public int Gender { get; private set; }
+        public int[] AttriNumber { get; private set; }
+        public string[] AttriComparer { get; private set; }
+        public HeroCondition(string[] cmd)
+        {
+            switch (cmd[0])
             {
-                case ">": return ans += "不多于" + Count + "个";
-                case ">=": return ans += "少于" + Count + "个";
-                case "<": return ans += "不少于" + Count + "个";
-                case "<=": return ans += "多于" + Count + "个";
-                case "==": return ans += "不等于" + Count + "个";
-                default: throw new XmlException("不支持的物品指令");
+                case "have": Type = 0; break;
+                default: throw new XmlException("不支持的指令：" + cmd[0]);
             }
+            switch (cmd[1])
+            {
+                case "boy": Gender = 0; break;
+                case "girl": Gender = 1; break;
+                default: throw new XmlException("不支持的指令：" + cmd[1]);
+            }
+            if (cmd.Length < 6)
+                throw new XmlException("指令长度不足");
+            AttriNumber = new int[(int)EAttribute.NUM];
+            AttriComparer = new string[(int)EAttribute.NUM];
+            for (int i = 3; i < cmd.Length; i += 4)
+            {
+                int index = AttriTool.Compile(cmd[i]);
+                AttriComparer[index] = cmd[i + 1];
+                AttriNumber[index] = int.Parse(cmd[i + 2]);
+            }
+        }
+        public override bool IfSatisfy()
+        {
+            foreach (Person person in World.getInstance().Persons)
+            {
+                bool satisfy = true;
+                for (int i = 0; i < AttriNumber.Length; i++)
+                {
+                    if (AttriComparer[i].Length != 0 && !SemanticCompare(person.AttriNumbers[i], AttriNumber[i], AttriComparer[i]))
+                    {
+                        satisfy = false;
+                        break;
+                    }
+                }
+                if (satisfy) return true;
+            }
+            return false;
+        }
+        public override string FailureMessage()
+        {
+            string[] message = { "多于", "多于或等于", "少于", "少于或等于", "等于" };
+            string ans = "队伍中不存在";
+            for (int i = 0; i < AttriNumber.Length; i++)
+            {
+                if (AttriComparer[i].Length != 0)
+                {
+                    ans += AttriTool.NameC[i] + message[SemanticCompareIndex(AttriComparer[i])] + "且";
+                }
+            }
+            return ans.Remove(ans.Length - 1) + "的人物";
         }
     }
 }

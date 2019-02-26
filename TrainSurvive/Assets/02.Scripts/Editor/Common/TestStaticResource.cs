@@ -8,6 +8,7 @@ using NUnit.Framework;
 using UnityEngine;
 
 using TTT.Resource;
+using TTT.Common;
 
 namespace TTT.Test.Resource
 {

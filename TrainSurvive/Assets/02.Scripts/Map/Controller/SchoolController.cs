@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using TTT.Utility;
 using TTT.Controller;
 using TTT.Resource;
+using TTT.Common;
 
 using WorldMap.UI;
 
@@ -40,7 +41,7 @@ namespace WorldMap.Controller
             m_titleString = "学校";
             base.CreateModel();
             SetBackground("tavern_bg_01");
-            int attriCount = StaticResource.AttributeCount;
+            int attriCount = (int)EAttribute.NUM;
             //英雄信息窗口
             {
                 RectTransform heroInfoBorad = new GameObject("HeroInfoBorad", typeof(Image)).GetComponent<RectTransform>();

@@ -13,6 +13,7 @@ using TTT.Item;
 using TTT.Utility;
 using System.Collections;
 using Story.Scripts;
+using TTT.Common;
 
 namespace TTT.Resource
 {
@@ -258,29 +259,7 @@ namespace TTT.Resource
         {
             return BlockCenter(BlockIndex(position));
         }
-        //----------属性----------↓
-        private static string[] AttributeName { get; } = { "体力", "力量", "敏捷", "技巧", "智力" };
-        public static int AttributeCount { get { return AttributeName.Length; } }
-        public static string GetAttributeName(int index)
-        {
-#if DEBUG
-            if (index >= AttributeName.Length)
-            {
-                Debug.LogError("获取属性名失败，index=" + index);
-                return "";
-            }
-#endif
-            if (index < 0)
-                return "无";
-            return AttributeName[index];
-        }
-        public static string GetAttributeName(EAttribute attribute)
-        {
-            if (attribute == EAttribute.NONE)
-                return "无";
-            return AttributeName[(int)attribute];
-        }
-        //----------属性----------↑----------名字----------↓
+        //----------名字----------↓
         private static string[] TOWN_NAME = {
             "香格里拉", "枫丹白露", "翡冷翠", "米兰", "墨尔本",
             "爱丁堡", "普罗旺斯", "哥本哈根", "耶路撒冷", "柏林", "布达佩斯",
@@ -473,18 +452,5 @@ namespace TTT.Resource
         }
         //----------对话----------↑----------城镇信息----------↓
 
-    }
-    /// <summary>
-    /// 人物基础属性
-    /// </summary>
-    public enum EAttribute
-    {
-        NONE = -1,
-        VITALITY,//体力
-        STRENGTH,//力量
-        AGILE,//敏捷
-        TECHNIQUE,//技巧
-        INTELLIGENCE,//智力
-        NUM
     }
 }

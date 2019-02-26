@@ -8,7 +8,8 @@ using System.Xml;
 using TTT.Item;
 using TTT.UI;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using WorldBattle;
 
 namespace WorldMap.Model
 {
@@ -32,10 +33,10 @@ namespace WorldMap.Model
                     switch (words[1])
                     {
                         case "item": ans[i] = new ItemAction(words); break;
-                        case "battle": ans[i] = new BattleAction(words); break;
                         case "task": ans[i] = new TaskAction(words); break;
                         case "npc": ans[i] = new NpcAction(words); break;
                         case "money": ans[i] = new MoneyAction(words); break;
+                        default: throw new XmlException("不支持的指令：" + words[1]);
                     }
                 }
             }
@@ -69,8 +70,7 @@ namespace WorldMap.Model
                 case "get": Type = 0; break;
                 case "loss": Type = 1; break;
                 case "offer": Type = 2; break;
-                default:
-                    throw new XmlException("不支持的物品指令");
+                default:throw new XmlException("不支持的指令：" + words[0]);
             }
             string[] item = words[2].Split(':');
             ItemID = int.Parse(item[0]);
@@ -92,61 +92,10 @@ namespace WorldMap.Model
             }
         }
     }
-    public class BattleAction : SentenceAction
-    {
-        /// <summary>
-        /// 战斗指令类型：{0 马上进入战斗|1 在指定地点生成战斗}
-        /// </summary>
-        public int Type { get; private set; }
-        /// <summary>
-        /// 特殊战斗的ID
-        /// </summary>
-        public int BattleID { get; private set; }
-        /// <summary>
-        /// 生成战斗的地点 如果坐标为-1，-1表示
-        /// </summary>
-        public Vector2Int PosInArea { get; private set; }
-        public BattleAction(string[] words)
-        {
-            switch (words[0])
-            {
-                case "start": Type = 0; break;
-                case "generate":
-                    Type = 1;
-                    char[] charsToTrim = { '(', ')' };
-                    string[] coor = words[4].Trim(charsToTrim).Split(',');
-                    int x = int.Parse(coor[0]);
-                    int y = int.Parse(coor[1]);
-                    PosInArea = new Vector2Int(x, y);
-                    break;
-                default:
-                    throw new XmlException("不支持的战斗指令");
-            }
-            BattleID = int.Parse(words[2]);
-        }
-
-        public override void DoAction()
-        {
-            SpecialBattle specialBattle = SpecialBattleInitializer.getInstance().loadBattle(BattleID);
-            if (specialBattle == null)
-            {
-                Debug.LogError("特殊战斗不存在 ID：" + BattleID);
-                return;
-            }
-            switch (Type)
-            {
-                case 0:
-                    break;
-                case 1:
-                    SpecialBattleInitializer.getInstance().generateSpecialBattle(specialBattle);
-                    break;
-            }
-        }
-    }
     public class TaskAction : SentenceAction
     {
         /// <summary>
-        /// {0：接收任务|1：完成任务}
+        /// {0：接收任务|1：完成任务|2：结束任务}
         /// </summary>
         public int Type { get; private set; }
         /// <summary>
@@ -159,7 +108,10 @@ namespace WorldMap.Model
             switch (words[0])
             {
                 case "take": Type = 0; break;
-                case "fulfil": Type = 1; break;
+                case "achieve":Type = 1;break;
+                case "finish": Type = 2; break;
+                case "fight":Type = 3;break;
+                default: throw new XmlException("不支持的指令：" + words[0]);
             }
             string[] ids = words[2].Split(',');
             TaskIDs = new int[ids.Length];
@@ -190,11 +142,13 @@ namespace WorldMap.Model
                             Debug.LogError("接受任务失败 任务ID：" + TaskID);
                         }
                         break;
-                    case 1:
-                        task.achieve_task();
+                    case 1:task.achieve_task();break;
+                    case 2:
                         FlowInfo.ShowInfo("完成任务", task.name);
                         task.finish_task();
                         break;
+                    case 3:task.enter_talk_battle();break;
+                    default: throw new XmlException("不支持的指令：" + Type);
                 }
 
             }
