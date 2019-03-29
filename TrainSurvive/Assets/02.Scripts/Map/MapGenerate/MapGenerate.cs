@@ -19,7 +19,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace WorldMap {
-    public class MapGenerate : MonoBehaviour, IMapForTrainTemp {
+    public class MapGenerate : MonoBehaviour {
 
         //大地图的宽高（x轴和z轴地块的个数）
         private int mapWidth = 100;
@@ -47,9 +47,9 @@ namespace WorldMap {
 
         //地块大小
         [System.NonSerialized]
-        public static int spawnOffsetX = 1;
+        public static float spawnOffsetX = 0.27F;
         [System.NonSerialized]
-        public static int spawnOffsetZ = 1;
+        public static float spawnOffsetY = 0.27F;
         //地图的起始点
         [System.NonSerialized]
         public static Vector3 orign = new Vector3();
@@ -187,7 +187,7 @@ namespace WorldMap {
             for (int i = 0; i < mapData.rowNum; i++) {
                 for (int j = 0; j < mapData.colNum; j++) {
                     GameObject o = Instantiate(mapObject[(int)mapData.spowns[i, j].terrainType],
-                        orign + new Vector3(spawnOffsetX * i, spawnOffsetZ * j, 0),
+                        orign + new Vector3(spawnOffsetX * i, spawnOffsetY * j, 0),
                         Quaternion.identity);
                     //o.transform.Rotate(90, 0, 0);
                     o.transform.parent = mapParent[(int)mapData.spowns[i, j].terrainType].transform;
@@ -196,30 +196,6 @@ namespace WorldMap {
                     mapData.spowns[i, j].SetSpawnObject(SpawnPoint.SpawnObjectEnum.TERRAIN, o);
                 }
             }
-        }
-
-        /// <summary>
-        /// 获取地图的X轴方块个数，和Z轴的方块个数
-        /// </summary>
-        /// <returns>整数向量为（X轴个数, Z轴个数）</returns>
-        public Vector2Int GetMapSize() {
-            return new Vector2Int(mapWidth, mapHeight);
-        }
-
-        /// <summary>
-        /// 获取第一块方块中心的世界坐标
-        /// </summary>
-        /// <returns>浮点向量为（X轴世界坐标，Z轴世界坐标）</returns>
-        public Vector2 GetMapOrigin() {
-            return new Vector2(orign.x, orign.z);
-        }
-
-        /// <summary>
-        /// 获取一块的长和宽
-        /// </summary>
-        /// <returns>浮点向量为（X轴长度，Z轴长度）</returns>
-        public Vector2 GetBlockSize() {
-            return new Vector2(spawnOffsetX, spawnOffsetZ);
         }
     }
 }

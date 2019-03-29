@@ -134,7 +134,7 @@ namespace WorldMap {
                     Vector2Int mapPos = towns[i, j].position;
                     //对城镇图标进行绘画
                     GameObject o = Instantiate(townObject,
-                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * mapPos.x, MapGenerate.spawnOffsetZ * mapPos.y, 0),
+                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * mapPos.x, MapGenerate.spawnOffsetY * mapPos.y, 0),
                         townObject.transform.rotation);
                     //将城镇图标放在同一gameObject下
                     o.transform.parent = townParentObject.transform;
@@ -397,7 +397,7 @@ namespace WorldMap {
 
             //对铁轨图标进行绘画
             GameObject o = Instantiate(railObject,
-                MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * posx, MapGenerate.spawnOffsetZ * posz, 0),
+                MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * posx, MapGenerate.spawnOffsetY * posz, 0),
                 railObject.transform.rotation);
             //将铁轨图标放在同一gameObject下
             o.transform.parent = railParentObject.transform;

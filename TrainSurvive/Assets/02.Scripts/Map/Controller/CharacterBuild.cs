@@ -22,11 +22,7 @@ namespace WorldMap
         public float maxSpeedForTeam = 0.7F;
         
         public GameObject mapBuild;
-        public GameObject trainPrefab;
-        public GameObject teamPrefab;
-
-        private GameObject trainObject;
-        private GameObject teamObject;
+        
         private GameObject characterObject;
         private void Awake()
         {
@@ -63,13 +59,10 @@ namespace WorldMap
         private void CreateModel()
         {
             characterObject = new GameObject("Character");
-            IMapForTrainTemp mapForTrainTemp = mapBuild.GetComponent<MapGenerate>();
+            MapGenerate map = mapBuild.GetComponent<MapGenerate>();
 
             //设置静态数据
-            StaticResource.BlockSize = mapForTrainTemp.GetBlockSize();
             Debug.Assert(StaticResource.BlockSize.x > 0.1 && StaticResource.BlockSize.y > 0.1, "块大小设置的过小");
-            StaticResource.MapOrigin = mapForTrainTemp.GetMapOrigin();
-            StaticResource.MapOriginUnit = StaticResource.MapOrigin / StaticResource.BlockSize - new Vector2(0.5F, 0.5F);
 
             //列车
             Train.Instance.Config(World.getInstance().PMarker.TrainMapPos, movable: true, maxSpeed: maxSpeedForTrain);

@@ -79,7 +79,7 @@ namespace WorldMap.UI
                     ViewTool.Anchor(item, new Vector2(0, currentFloat - delta), new Vector2(1, currentFloat));
 
                     moneyIcon[i] = ViewTool.CreateImage("MoneyIcon", item);
-                    moneyIcon[i].sprite = StaticResource.GetSprite("ItemSprite/Money");
+                    moneyIcon[i].sprite = StaticResource.GetSprite("Sprite/Item/Money");
                     ViewTool.Anchor(moneyIcon[i], new Vector2(0.0f, 0.0f), new Vector2(0.25f, 0.5f));
                     moneyText[i] = ViewTool.CreateText("MoneyNumber", "", item);
                     ViewTool.Anchor(moneyText[i], new Vector2(0.25f, 0.0f), new Vector2(0.75f, 0.5f));

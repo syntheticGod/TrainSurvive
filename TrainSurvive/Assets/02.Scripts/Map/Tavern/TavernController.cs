@@ -275,7 +275,7 @@ namespace WorldMap.Controller
                 }
             }
         }
-        public void ObserverUpdate(int state, int echo, object tag = null)
+        public void ObsUpdate(int state, int echo, object tag = null)
         {
 
             switch ((PersonSet.EAction)state)

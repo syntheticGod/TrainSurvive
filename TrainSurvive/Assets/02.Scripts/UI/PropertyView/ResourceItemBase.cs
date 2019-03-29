@@ -41,7 +41,7 @@ namespace TTT.UI
         {
             backgroudImage = ViewTool.CreateImage("Backgroud");
             markImage = ViewTool.CreateImage("Mark");
-            markImage.sprite = StaticResource.GetSprite("ItemSprite/RarityMark");
+            markImage.sprite = StaticResource.GetSprite("Sprite/Item/RarityMark");
             targetImage = ViewTool.CreateImage("TargetImage");
         }
         protected override void InitModel()
@@ -64,7 +64,7 @@ namespace TTT.UI
         {
             ItemID = id;
             ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
-            targetImage.sprite = item.BigSprite;
+            targetImage.sprite = item.ItemSprite;
             markImage.color = markColors[(int)item.Rarity];
         }
         /// <summary>
@@ -75,7 +75,7 @@ namespace TTT.UI
         public void SetItemIDAndRarity(int id, PublicData.Rarity rarity) {
             ItemID = id;
             ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
-            targetImage.sprite = item.BigSprite;
+            targetImage.sprite = item.ItemSprite;
             markImage.color = markColors[(int)rarity];
         }
         /// <summary>

@@ -19,7 +19,7 @@ namespace WorldMap {
             //生成特殊战斗区域对象
             GameObject o = Instantiate(MonsterGenerate.specialAreaPic,
                                     MapGenerate.orign + MonsterGenerate.monsterPicOffset
-                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetZ * pos.y, 0),
+                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0),
                                     Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.monsterParent;
@@ -36,7 +36,7 @@ namespace WorldMap {
             //生成是否采集对象
             GameObject o = Instantiate(MonsterGenerate.isGatheredPic,
                                     MapGenerate.orign + MonsterGenerate.isGatheredPicOffset
-                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetZ * pos.y, 0),
+                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0),
                                     Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.isGatheredParent;
@@ -53,7 +53,7 @@ namespace WorldMap {
             //生成怪物等级对象
             GameObject o = Instantiate(MonsterGenerate.levelPic[map.spowns[pos.x, pos.y].monsterId - 1],
                                 MapGenerate.orign + MonsterGenerate.monsterPicOffset
-                                + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetZ * pos.y, 0),
+                                + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0),
                                 Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.monsterParent;

@@ -70,7 +70,7 @@ namespace WorldMap.Controller
             townInfoText.text = currentTown.ToString();
             float delta;
             int showCount;
-            if (currentTown.Info.Type != ETownType.COMMON)
+            if (currentTown.Info.Type != ETownType.COMMON && currentTown.Info.Type != ETownType.HOMETOWN)
             {
                 showCount = btnsStrs.Length;
                 ViewTool.SetBtnContent(btns[btnsStrs.Length - 1], currentTown.Info.TavernName);

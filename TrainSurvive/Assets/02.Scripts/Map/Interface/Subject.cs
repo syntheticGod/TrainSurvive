@@ -41,6 +41,13 @@ namespace WorldMap
         /// <param name="obs">监听者</param>
         /// <returns></returns>
         bool Detach(Observer obs);
+        /// <summary>
+        /// 通知监听者状态发生变化了，同时夹带信息
+        /// </summary>
+        /// <param name="state">新状态</param>
+        /// <param name="tag">信息</param>
+        /// <returns></returns>
+        bool Notify(int state, object tag = null);
     }
     [Serializable]
     public abstract class SubjectBase : Subject, ISerializable
@@ -65,28 +72,10 @@ namespace WorldMap
             //不关心EchoCode是多少，所以EchoCode=0
             return m_observers.Remove(new ObserverWithEcho { Observer = obs, EchoCode = 0 });
         }
-        /// <summary>
-        /// 通知监听者状态发生变化了
-        /// </summary>
-        /// <param name="state">新状态</param>
-        /// <returns></returns>
-        protected bool Notify(int state)
-        {
-            //通知监听所有的监听者
-            foreach (var obs in m_observers)
-                obs.Observer.ObserverUpdate(state, obs.EchoCode);
-            return true;
-        }
-        /// <summary>
-        /// 通知监听者状态发生变化了，同时夹带信息
-        /// </summary>
-        /// <param name="state">新状态</param>
-        /// <param name="tag">信息</param>
-        /// <returns></returns>
-        protected bool Notify(int state, object tag)
+        public bool Notify(int state, object tag = null)
         {
             foreach (var obs in m_observers)
-                obs.Observer.ObserverUpdate(state, obs.EchoCode, tag);
+                obs.Observer.ObsUpdate(state, obs.EchoCode, tag);
             return true;
         }
     }

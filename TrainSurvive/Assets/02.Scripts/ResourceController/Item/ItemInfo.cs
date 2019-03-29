@@ -47,14 +47,7 @@ namespace TTT.Item
         /// 最大堆叠数
         /// </summary>
         public int MaxPileNum { get; }
-        /// <summary>
-        /// 120 x 120 像素
-        /// </summary>
-        public Sprite BigSprite { get; protected set; }
-        /// <summary>
-        /// 60 x 60 像素
-        /// </summary>
-        public Sprite SmallSprite { get; protected set; }
+        public Sprite ItemSprite { get; protected set; }
         public abstract int GetOriginPrice();
         public abstract int GetSellPrice();
         /// <summary>
@@ -71,8 +64,7 @@ namespace TTT.Item
             SellRatio = float.Parse(node.Attributes["sellRatio"].Value);
             Size = float.Parse(node.Attributes["size"].Value);
             MaxPileNum = int.Parse(node.Attributes["maxPileNum"].Value);
-            BigSprite = StaticResource.GetSprite("ItemSprite/Item_" + ID + "_big");
-            SmallSprite = StaticResource.GetSprite("ItemSprite/Item_" + ID + "_small");
+            ItemSprite = StaticResource.GetSprite("Sprite/Item/Item_" + ID);
         }
     }
 

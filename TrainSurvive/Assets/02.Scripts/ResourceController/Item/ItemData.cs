@@ -57,14 +57,7 @@ public class ItemData
     /// 最大堆叠数
     /// </summary>
     public int MaxPileNum { get { return Item.MaxPileNum; } }
-    /// <summary>
-    /// 120 x 120 像素
-    /// </summary>
-    public Sprite BigSprite { get { return Item.BigSprite; } }
-    /// <summary>
-    /// 60 x 60 像素
-    /// </summary>
-    public Sprite SmallSprite { get { return Item.SmallSprite; } }
+    public Sprite ItemSprite { get { return Item.ItemSprite; } }
     /// <summary>
     /// 获取Item信息
     /// </summary>

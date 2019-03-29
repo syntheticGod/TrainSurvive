@@ -175,7 +175,7 @@ namespace WorldMap {
                     }
                     //生成指定气候的类型
                     GameObject o = Instantiate(climateObject[(int)mapData.spowns[i,j].climateType],
-                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * i, MapGenerate.spawnOffsetZ * j, 0),
+                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * i, MapGenerate.spawnOffsetY * j, 0),
                         Quaternion.identity);
                     //o.transform.Rotate(90, 0, 0);
                     o.transform.parent = climateParentObject.transform;
@@ -203,7 +203,7 @@ namespace WorldMap {
                     }
                     //生成指定气候的类型
                     GameObject o = Instantiate(terrainObject[(int)mapData.spowns[i, j].terrainType],
-                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * i, MapGenerate.spawnOffsetZ * j, 0) + terrainPos,
+                        MapGenerate.orign + new Vector3(MapGenerate.spawnOffsetX * i, MapGenerate.spawnOffsetY * j, 0) + terrainPos,
                         Quaternion.identity);
                     //o.transform.Rotate(90, 0, 0);
                     o.GetComponent<SpriteRenderer>().sortingOrder = 1;

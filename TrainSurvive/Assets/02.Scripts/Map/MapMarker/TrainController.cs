@@ -23,7 +23,6 @@ namespace WorldMap.Controller
         //private const int levelOfTrain = -1;
         private const int levelOfTrain = 0;
         //列车状态映射显示信息
-        private static string[] trainActionBtnStrs = { "开车", "开车", "停车中...", "停车" };
         private const int ECHO_FROM_TRAIN = 1;
         private static string[] bottomBtnsStrs = { "进入区域", "小队行动", "开车", "列车内部" };
         private Button[] bottomBtns;
@@ -53,7 +52,7 @@ namespace WorldMap.Controller
             ActiveBTs(!WorldForMap.Instance.IfTeamOuting);
             trainActionBtn = bottomBtns[2].transform.Find("Text").GetComponent<Text>();
             //列车图标
-            GOTool.CreateSpriteRenderer("Train", transform).sprite = StaticResource.GetSprite("Sprite/map/Train");
+            GOTool.CreateSpriteRenderer("Train", transform).sprite = StaticResource.GetSprite("Sprite/map/train_mark");
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
         protected override void OnEnable()
@@ -177,7 +176,6 @@ namespace WorldMap.Controller
                     }
                     else
                     {
-
                         Train.Instance.IsMovable = false;
                         ActiveBTs(false);
                         Team.Instance.OutPrepare();
@@ -234,20 +232,23 @@ namespace WorldMap.Controller
         }
         public void ObserverUpdate(int state, int echo)
         {
-            switch (echo)
-            {
-                case ECHO_FROM_TRAIN:
-                    if (state < trainActionBtnStrs.Length)
-                        trainActionBtn.text = trainActionBtnStrs[state];
-                    else
-                        Debug.LogError("系统：该列车状态无对应的显示信息");
-                    break;
-            }
         }
 
-        public void ObserverUpdate(int state, int echo, object tag = null)
+        public void ObsUpdate(int state, int echo, object tag = null)
         {
-            ObserverUpdate(state, echo);
+            switch ((Train.STATE)state)
+            {
+                case Train.STATE.STOP_TOWN:
+                case Train.STATE.STOP_RAIL:
+                    trainActionBtn.text = "开车";
+                    break;
+                case Train.STATE.RUNNING:
+                    trainActionBtn.text = "停车中...";
+                    break;
+                case Train.STATE.STOPING:
+                    trainActionBtn.text = "停车";
+                    break;
+            }
         }
     }
 }

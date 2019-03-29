@@ -35,23 +35,35 @@ namespace WorldMap.Model
             set
             {
                 state = value;
-                Notify((int)state);
                 switch (state)
                 {
                     case STATE.STOP_OUT:
                     case STATE.STOP_TOWN:
-                        WorldForMap.Instance.TeamStandeBy();
+                        World.getInstance().ifTeamMoving = false;
                         break;
                     case STATE.MOVING_TOP:
                     case STATE.MOVING_RIGHT:
                     case STATE.MOVING_BOTTOM:
                     case STATE.MOVING_LEFT:
-                        WorldForMap.Instance.TeamMoving();
+                        World.getInstance().ifTeamMoving = true;
                         break;
-                    case STATE.IN_TRAIN:
-                        WorldForMap.Instance.TeamGetIn();
+                    case STATE.IN_TRAIN://改变事物
+                        World.getInstance().ifTeamOuting = false;
+                        World.getInstance().ifTrainMoving = false;
+                        //探险队放回食物
+                        int remain = (int)World.getInstance().getFoodOut();
+                        World.getInstance().setFoodOut(0);
+                        if (World.getInstance().addFoodIn(remain) != 1)
+                        {
+                            Debug.LogWarning("探险队增加内部食物不正常");
+                        }
+                        Debug.Log("探险队：我们（人数：" + World.getInstance().numOut + "）回车了。" +
+                            "带回食物：" + remain + "，列车现在有食物：" + World.getInstance().getFoodIn());
+                        World.getInstance().numIn = World.getInstance().Persons.Count;
+                        World.getInstance().numOut = 0;
                         break;
                 }
+                Notify((int)state);
             }
         }
         //探险队是否可移动
@@ -113,7 +125,7 @@ namespace WorldMap.Model
         public void PassCenterCallBack(Vector2Int position)
         {
             Map map = Map.GetInstance();
-            map.MoveToThisSpawn(StaticResource.BlockIndex(position));
+            map.MoveToThisSpawn(position);
             World.getInstance().PMarker.TeamMapPos = position;
             OnPassBlockCenter?.Invoke(position);
             if (map.IfMonsterArea(position))
@@ -128,7 +140,7 @@ namespace WorldMap.Model
         /// </summary>
         public void OutPrepare()
         {
-            PosTeam = World.getInstance().PMarker.TrainMapPos;
+            PosTeam = StaticResource.BlockCenter(World.getInstance().PMarker.TrainMapPos);
             //准备事物
             int food = World.getInstance().Persons.Count * 200;
             if (food > World.getInstance().getFoodIn())

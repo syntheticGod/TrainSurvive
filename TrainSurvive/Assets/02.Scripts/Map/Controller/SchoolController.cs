@@ -41,7 +41,6 @@ namespace WorldMap.Controller
             m_titleString = "学校";
             base.CreateModel();
             SetBackground("tavern_bg_01");
-            int attriCount = (int)EAttribute.NUM;
             //英雄信息窗口
             {
                 RectTransform heroInfoBorad = new GameObject("HeroInfoBorad", typeof(Image)).GetComponent<RectTransform>();

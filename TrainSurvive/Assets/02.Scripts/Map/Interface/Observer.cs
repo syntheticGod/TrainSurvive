@@ -9,7 +9,7 @@ namespace WorldMap
 {
     public interface Observer
     {
-        void ObserverUpdate(int state, int echo, object tag = null);
+        void ObsUpdate(int state, int echo, object tag = null);
     }
 }
 

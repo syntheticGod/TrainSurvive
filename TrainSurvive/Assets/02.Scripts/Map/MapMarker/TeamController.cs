@@ -19,8 +19,6 @@ namespace WorldMap.Controller
     {
         //探险队icon最多显示个数
         public const int MAX_NUM_OF_TEAM_INVIEW = 5;
-        //private int levelOfTeam = -2;
-        private int levelOfTeam = 0;
         //视图
         private RectTransform teamModeBTs;
         private SpriteRenderer[] teamPersons;
@@ -66,12 +64,15 @@ namespace WorldMap.Controller
             for (int i = 0; i < MAX_NUM_OF_TEAM_INVIEW; i++)
             {
                 teamPersons[i] = GOTool.CreateSpriteRenderer("Person" + i, transform, false);
+                teamPersons[i].sortingOrder = 11;
             }
+            //根据地块的大小分配人物位置
+            float deltaOfEach = MapGenerate.spawnOffsetX / 4;
             teamPersons[0].transform.localPosition = new Vector3(0f, 0f, 0f);
-            teamPersons[1].transform.localPosition = new Vector3(-0.3f, -0.3f, 0f);
-            teamPersons[2].transform.localPosition = new Vector3(0.3f, -0.3f, 0f);
-            teamPersons[3].transform.localPosition = new Vector3(-0.3f, 0.3f, 0f);
-            teamPersons[4].transform.localPosition = new Vector3(0.3f, 0.3f, 0f);
+            teamPersons[1].transform.localPosition = new Vector3(-deltaOfEach, -deltaOfEach, 0f);
+            teamPersons[2].transform.localPosition = new Vector3(deltaOfEach, -deltaOfEach, 0f);
+            teamPersons[3].transform.localPosition = new Vector3(-deltaOfEach, deltaOfEach, 0f);
+            teamPersons[4].transform.localPosition = new Vector3(deltaOfEach, deltaOfEach, 0f);
 
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
@@ -89,7 +90,7 @@ namespace WorldMap.Controller
             Team team = Team.Instance;
             if (team.Run(ref current))
             {
-                transform.position = MathTool.AcceptZ(current, levelOfTeam);
+                transform.position = MathTool.AcceptZ(current, 0);
                 GetComponentInChildren<SpriteRenderer>().sortingOrder = 12;
             }
         }
@@ -259,22 +260,19 @@ namespace WorldMap.Controller
             Team.Instance.IsMovable = true;
             return true;
         }
-
         protected override bool UnfocusBehaviour()
         {
             Team.Instance.IsMovable = false;
             return true;
         }
-
         protected override bool ShowBehaviour()
         {
             ActiveBTs(true);
             cameraFocus.focusLock(transform);
-            transform.position = MathTool.AcceptZ(Team.Instance.MapPosTeam, levelOfTeam);
+            transform.position = MathTool.AcceptZ(Team.Instance.PosTeam, 0);
             RefreshView();
             return true;
         }
-
         protected override bool HideBehaviour()
         {
             ActiveBTs(false);
@@ -282,7 +280,7 @@ namespace WorldMap.Controller
                 gameObject.SetActive(false);
             return true;
         }
-        public void ObserverUpdate(int state, int echo)
+        public void ObsUpdate(int state, int echo, object tag = null)
         {
             Team.STATE tState = (Team.STATE)state;
             switch (tState)
@@ -300,10 +298,6 @@ namespace WorldMap.Controller
                     FaceTowardsLeft();
                     break;
             }
-        }
-        public void ObserverUpdate(int state, int echo, object tag = null)
-        {
-            ObserverUpdate(state, echo);
         }
     }
 }

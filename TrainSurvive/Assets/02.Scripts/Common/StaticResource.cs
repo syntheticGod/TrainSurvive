@@ -14,6 +14,7 @@ using TTT.Utility;
 using System.Collections;
 using Story.Scripts;
 using TTT.Common;
+using WorldMap;
 
 namespace TTT.Resource
 {
@@ -207,23 +208,29 @@ namespace TTT.Resource
         /// </summary>
         public static Vector2 BlockSize
         {
-            set;
-            get;
+            get
+            {
+                return new Vector2(MapGenerate.spawnOffsetX, MapGenerate.spawnOffsetY);
+            }
         }
         //地图第一块的中心坐标
         public static Vector2 MapOrigin
         {
-            set;
-            get;
+            get
+            {
+                return new Vector2(MapGenerate.orign.x, MapGenerate.orign.y);
+            }
         }
         /// <summary>
         ///方便块索引计算的 常量
-        ///(position - (o - b / 2)) / blockSize;
+        ///(position - (o - b / 2)) / b;
         /// </summary>
-        public static Vector2 MapOriginUnit
+        private static Vector2 MapOriginUnit
         {
-            set;
-            get;
+            get
+            {
+                return MapOrigin / BlockSize - new Vector2(0.5F, 0.5F);
+            }
         }
         /// <summary>
         /// 根据世界坐标计算地图坐标
@@ -232,8 +239,8 @@ namespace TTT.Resource
         /// <returns>地图坐标</returns>
         public static Vector2Int BlockIndex(Vector2 position)
         {
-            //因为块中心位于原点坐标处，所以要减去blockSize/2
-            //(position - (o - b / 2)) / blockSize;
+            //因为块中心位于原点坐标处，所以要减去b/2
+            //(position - (o - b / 2)) / b;
             //公式优化如下
             //position / blockSize - ((mapOrigin - blockSize/2)/blockSize)
             Vector2 index2F = position / BlockSize - MapOriginUnit;

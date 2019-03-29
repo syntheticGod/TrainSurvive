@@ -30,15 +30,17 @@ namespace WorldMap.Model
             set
             {
                 state = value;
-                this.Notify((int)state);
-                if(state == STATE.RUNNING)
+                switch (state)
                 {
-                    WorldForMap.Instance.TrainMoving();
+                    case STATE.RUNNING:
+                        World.getInstance().ifTrainMoving = true;
+                        break;
+                    case STATE.STOP_RAIL:
+                    case STATE.STOP_TOWN:
+                        World.getInstance().ifTrainMoving = false;
+                        break;
                 }
-                else if(state == STATE.STOP_RAIL || state == STATE.STOP_TOWN)
-                {
-                    WorldForMap.Instance.TrainStop();
-                }
+                Notify((int)state);
             }
         }
         //列车运行时下一目的地（城市位置）
@@ -67,7 +69,7 @@ namespace WorldMap.Model
             IsMovable = movable;
             MaxSpeed = maxSpeed;
             ifTemporarilyStop = false;
-            MinDeltaStep = 0.01F * StaticResource.BlockSize.x;
+            MinDeltaStep = 0.01F * MapGenerate.spawnOffsetX;
         }
         /// <summary>
         /// 初始状态等设置

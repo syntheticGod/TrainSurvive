@@ -61,20 +61,6 @@ namespace WorldMap
             get { return world.ifTeamOuting; }
         }
         /// <summary>
-        /// 探险队移动回调
-        /// </summary>
-        public void TeamMoving()
-        {
-            world.ifTrainMoving = true;
-        }
-        /// <summary>
-        /// 探险队停止回调
-        /// </summary>
-        public void TeamStandeBy()
-        {
-            world.ifTeamMoving = false;
-        }
-        /// <summary>
         /// 探险队采集
         /// </summary>
         /// <returns>
@@ -95,42 +81,11 @@ namespace WorldMap
                 FlowInfo.ShowInfo("采集信息", "很遗憾一个东西都没采集到");
             return true;
         }
-        /// <summary>
-        /// 探险队回车
-        /// </summary>
-        public void TeamGetIn()
-        {
-            world.ifTeamOuting = false;
-            world.ifTrainMoving = false;
-            //探险队放回食物
-            int remain = (int)world.getFoodOut();
-            world.setFoodOut(0);
-            if (world.addFoodIn(remain) != 1)
-            {
-                Debug.LogWarning("探险队增加内部食物不正常");
-            }
-            Debug.Log("探险队：我们（人数：" + world.numOut + "）回车了。" +
-                "带回食物：" + remain + "，列车现在有食物：" + world.getFoodIn());
-            world.numIn = world.Persons.Count;
-            world.numOut = 0;
-        }
         public int TeamGetFootOutMax()
         {
             return (int)world.getFoodOutMax();
         }
         //-----------------------------Team----------↑↑↑↑↑↑↑↑↑↑↑↑
-
-        //-----------------------------Train----------↓↓↓↓↓↓↓↓↓↓
-        public void TrainMoving()
-        {
-            world.ifTrainMoving = true;
-            if (WorldForMap.Instance.IfTeamOuting)
-                Debug.LogError("错误，小队外出状态下，列车被允许移动");
-        }
-        public void TrainStop()
-        {
-            world.ifTrainMoving = false;
-        }
         public int TrainGetFoodIn()
         {
             return (int)world.getFoodIn();
@@ -139,8 +94,6 @@ namespace WorldMap
         {
             return Mathf.Approximately(world.getEnergy(), 0);
         }
-        //-----------------------------Train----------↑↑↑↑↑↑↑↑↑↑↑↑
-        
     }
 }
 
