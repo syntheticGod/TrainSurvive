@@ -69,9 +69,12 @@ namespace WorldMap
         /// </returns>
         public bool DoGather()
         {
+            //取消体力限制
+            /*
             if (world.outVit < 20)
                 return false;
             world.addOutVit(-20);
+            */
             int number = 0;
             //采集次数
             int cntGather = 1;

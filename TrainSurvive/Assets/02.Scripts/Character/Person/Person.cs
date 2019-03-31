@@ -214,7 +214,7 @@ public class Person
     //以下获取的属性均保留numsLeft位小数
     public double getHpMax()
     {
-        double hpMax = 100 * (1 + 0.05 * vitality);
+        double hpMax = 500 * (1 + 0.05 * vitality);
         return Math.Round(hpMax, numsLeft);
     }
     public double getApMax()
@@ -237,7 +237,7 @@ public class Person
     }
     public double getValAtk()
     {
-        double atk = 10 * (1 + 0.05 * strength);
+        double atk = 50 * (1 + 0.05 * strength);
         if (hasWeapon)
         {
             atk = atk * weapon.facAtk;
@@ -246,7 +246,7 @@ public class Person
     }
     public double getValAts()
     {
-        double ats = 1 * (1 + 0.03 * agile);
+        double ats = 2 * (1 + 0.03 * agile);
         if (hasWeapon)
         {
             ats = ats * weapon.facAts;
@@ -255,7 +255,7 @@ public class Person
     }
     public double getValSpd()
     {
-        double spd = 1 * (1 + 0.02 * agile);
+        double spd = 2 * (1 + 0.02 * agile);
         if (hasWeapon)
         {
             spd = spd * weapon.facSpd;
@@ -273,7 +273,7 @@ public class Person
     }
     public double getValCrd()
     {
-        double crd = 1.6 + 0.03 * technique;
+        double crd = 2 + 0.03 * technique;
         if (hasWeapon)
         {
             crd = crd + weapon.modCrd;

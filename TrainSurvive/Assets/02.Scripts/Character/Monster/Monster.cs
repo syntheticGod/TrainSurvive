@@ -67,7 +67,7 @@ public class Monster {
     }
     public double getApRec()
     {
-        double apRec = 5 * (1 + 0.05 * intelligence);
+        double apRec = 0 * (1 + 0.05 * intelligence);
         return Math.Round(apRec, numsLeft) * rank;
     }
     public double getValAtk()
@@ -77,7 +77,7 @@ public class Monster {
     }
     public double getValAts()
     {
-        double ats = 1 * (1 + 0.03 * agile);
+        double ats = 0.2 * (1 + 0.03 * agile);
         return Math.Round(ats, numsLeft) * rank;
     }
     public double getValSpd()
