@@ -14,6 +14,7 @@ using WorldMap;
 using TTT.Xml;
 using WorldMap.Model;
 using System.Runtime.Serialization;
+using TTT.UI;
 
 namespace TTT.Team
 {
@@ -100,6 +101,7 @@ namespace TTT.Team
             if (NpcInfoLoader.Instance.Find(npcID, out npc))
             {
                 persons.Add(new Person(npc));
+                World.getInstance().Towns.RemoveNpc(npcID);
                 Notify((int)EAction.RECRUIT_PERSON, npcID);
             }
             else

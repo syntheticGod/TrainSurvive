@@ -46,16 +46,15 @@ namespace WorldMap.Controller
         private DialogueCursor dialogueCursor;
 
         private List<List<ChatSentence>> sentences;
-        private List<int> nullData;
         protected override void OnEnable()
         {
             base.OnEnable();
-            World.getInstance().Persons.Attach(this);
+            World.getInstance().Towns.Attach(this);
         }
         protected override void OnDisable()
         {
             base.OnDisable();
-            World.getInstance().Persons.Detach(this);
+            World.getInstance().Towns.Detach(this);
         }
         public void SetTown(TownData town)
         {
@@ -114,19 +113,15 @@ namespace WorldMap.Controller
         }
         protected override bool PrepareDataBeforeShowWindow()
         {
-            nullData = new List<int>();
-            for (int i = 0; i < 3; i++)
-            {
-                nullData.Add(i);
-            }
-            //Debug.Log("酒馆：我这里有" + currentTown.NPCCnt + "人");
+            tavernNPCListView.SetData(new List<int>(currentTown.Npcs));
+            townChatListView.SetData(sentences[0]);
             return true;
         }
         protected override void AfterShowWindow()
         {
-            tavernNPCListView.Datas = currentTown.Npcs;
+            tavernNPCListView.Refresh();
             tavernNPCListView.ClickManually(0);
-            townChatListView.Datas = sentences[0];
+            townChatListView.Refresh();
         }
         public void SetBtnText(string[] texts)
         {
@@ -200,7 +195,7 @@ namespace WorldMap.Controller
                 townChatListView.Datas = sentences[index];
                 int npc = tavernNPCListView[index - 1];
                 List<NpcDialogueInfo> dialogues = NpcDialogueInfoLoader.Instance.FindSatisfy(npc);
-                if(dialogues.Count == 0)
+                if (dialogues.Count == 0)
                 {
                     SetBtnText(null);
                     //清除按钮行为
@@ -254,7 +249,7 @@ namespace WorldMap.Controller
             {
                 int index = id - BUTTON_ID.TAVERN_BUTTON1;
                 //按钮行为：{ 0 无 | 1 继续 | 2 确定 | 3 取消 }
-                if(actions[index] == BUTTON_ACTION.CONTINUE || actions[index] == BUTTON_ACTION.OK)
+                if (actions[index] == BUTTON_ACTION.CONTINUE || actions[index] == BUTTON_ACTION.OK)
                 {
                     ChatSentence playerSentence = dialogueCursor.CurrentSentence;
                     Precondition failureCondition = null;
@@ -271,7 +266,7 @@ namespace WorldMap.Controller
                         FlowInfo.ShowInfo("失败", failureCondition.FailureMessage());
                     }
                 }
-                else if(actions[index] == BUTTON_ACTION.CANCEL)
+                else if (actions[index] == BUTTON_ACTION.CANCEL)
                 {
                     //前往大厅
                     ShowSelectedNpc(0);
@@ -281,15 +276,14 @@ namespace WorldMap.Controller
         public void ObsUpdate(int state, int echo, object tag = null)
         {
 
-            switch ((PersonSet.EAction)state)
+            switch ((TownDataSet.EAction)state)
             {
-                case PersonSet.EAction.RECRUIT_PERSON:
+                case TownDataSet.EAction.REMOVE_NPC:
                     int npcID = (int)tag;
                     int index = tavernNPCListView.IndexOf(npcID);
                     if (index == tavernNPCListView.SelectIndex)
                         ShowSelectedNpc(0);
                     tavernNPCListView.RemoveData(npcID);
-                    FlowInfo.ShowInfo("招募新人", NpcInfoLoader.Instance.Find(npcID).Name + "加入小队！");
                     break;
             }
         }

@@ -62,7 +62,7 @@ namespace WorldMap.Model
         public TownInfo(SerializationInfo info, StreamingContext context)
         {
             ID = info.GetInt32("ID");
-            Type = (ETownType)info.GetValue("Type", typeof(ETownType));
+            Type = (ETownType)info.GetValue("Type", typeof(int));
             Name = info.GetString("Name");
             Description = info.GetString("Description");
             PosInArea = new Vector2Int(info.GetInt32("PosXInArea"), info.GetInt32("PosYInArea"));
@@ -75,7 +75,7 @@ namespace WorldMap.Model
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("ID", ID, typeof(int));
-            info.AddValue("Type", Type, typeof(ETownType));
+            info.AddValue("Type", Type, typeof(int));
             info.AddValue("Name", Name, typeof(string));
             info.AddValue("Description", Description, typeof(string));
             info.AddValue("PosXInArea", PosInArea.x, typeof(int));

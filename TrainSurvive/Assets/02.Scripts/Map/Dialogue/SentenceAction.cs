@@ -7,6 +7,7 @@
 using System.Xml;
 using TTT.Item;
 using TTT.UI;
+using TTT.Xml;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WorldBattle;
@@ -70,7 +71,7 @@ namespace WorldMap.Model
                 case "get": Type = 0; break;
                 case "loss": Type = 1; break;
                 case "offer": Type = 2; break;
-                default:throw new XmlException("不支持的指令：" + words[0]);
+                default: throw new XmlException("不支持的指令：" + words[0]);
             }
             string[] item = words[2].Split(':');
             ItemID = int.Parse(item[0]);
@@ -108,9 +109,9 @@ namespace WorldMap.Model
             switch (words[0])
             {
                 case "take": Type = 0; break;
-                case "achieve":Type = 1;break;
+                case "achieve": Type = 1; break;
                 case "finish": Type = 2; break;
-                case "fight":Type = 3;break;
+                case "fight": Type = 3; break;
                 default: throw new XmlException("不支持的指令：" + words[0]);
             }
             string[] ids = words[2].Split(',');
@@ -121,7 +122,7 @@ namespace WorldMap.Model
 
         public override void DoAction()
         {
-            foreach(int TaskID in TaskIDs)
+            foreach (int TaskID in TaskIDs)
             {
                 Task task = TaskController.getInstance().getTask(TaskID);
                 if (task == null)
@@ -132,7 +133,7 @@ namespace WorldMap.Model
                 switch (Type)
                 {
                     case 0:
-                        if(task.condition == TaskController.TASKCONDITION.CAN_DO)
+                        if (task.condition == TaskController.TASKCONDITION.CAN_DO)
                         {
                             task.get_task();
                             FlowInfo.ShowInfo("接受新任务", task.name);
@@ -142,12 +143,12 @@ namespace WorldMap.Model
                             Debug.LogError("接受任务失败 任务ID：" + TaskID);
                         }
                         break;
-                    case 1:task.achieve_task();break;
+                    case 1: task.achieve_task(); break;
                     case 2:
                         FlowInfo.ShowInfo("完成任务", task.name);
                         task.finish_task();
                         break;
-                    case 3:task.enter_talk_battle();break;
+                    case 3: task.enter_talk_battle(); break;
                     default: throw new XmlException("不支持的指令：" + Type);
                 }
 
@@ -178,8 +179,21 @@ namespace WorldMap.Model
         {
             switch (Type)
             {
-                case 0: World.getInstance().Persons.RecruitNpc(NpcID); break;
-                case 1: throw new System.NotImplementedException();
+                case 0:
+                    {
+                        World.getInstance().Persons.RecruitNpc(NpcID);
+                        FlowInfo.ShowInfo("招募新人", NpcInfoLoader.Instance.Find(NpcID).Name + "加入小队！");
+                    }
+                    break;
+                case 1:
+                    {
+                        TownData town;
+                        if(World.getInstance().Towns.RemoveNpc(NpcID, out town))
+                        {
+                            FlowInfo.ShowInfo("事件", NpcInfoLoader.Instance.Find(NpcID).Name + "离开了" + town.Info.Name);
+                        }
+                    }
+                    break;
             }
         }
     }

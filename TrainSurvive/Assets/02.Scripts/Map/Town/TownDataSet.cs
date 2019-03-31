@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using TTT.UI;
 using TTT.Utility;
 using TTT.Xml;
 using UnityEngine;
@@ -14,27 +15,49 @@ using UnityEngine;
 namespace WorldMap.Model
 {
     [Serializable]
-    public class TownDataSet
+    public class TownDataSet : SubjectBase
     {
-        [SerializeField]
+        public enum EAction
+        {
+            NONE = -1,
+            /// <summary>
+            /// 删除NPC
+            /// </summary>
+            REMOVE_NPC,
+        }
         private List<TownData> towns = new List<TownData>();
-        [SerializeField]
         private int ID_Increasement = 1000;
         /// <summary>
         /// 城镇ID 到 城镇的映射
         /// </summary>
-        [SerializeField]
         private SerializableDictionary<int, TownData> idToTown = new SerializableDictionary<int, TownData>();
         /// <summary>
         /// 地图坐标 到 城镇的映射
         /// </summary>
-        [SerializeField]
         private SerializableDictionary<SerializableVector2Int, TownData> posToTown = new SerializableDictionary<SerializableVector2Int, TownData>();
         /// <summary>
         /// 区域坐标 到 城镇的映射
         /// </summary>
-        [SerializeField]
         private SerializableDictionary<SerializableVector2Int, TownData> arePosToTown = new SerializableDictionary<SerializableVector2Int, TownData>();
+        public TownDataSet()
+        {
+        }
+        public TownDataSet(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            towns = (List<TownData>)info.GetValue("Towns", typeof(List<TownData>));
+            idToTown = (SerializableDictionary<int, TownData>)info.GetValue("idToTowns", typeof(SerializableDictionary<int, TownData>));
+            posToTown = (SerializableDictionary<SerializableVector2Int, TownData>)info.GetValue("posToTowns", typeof(SerializableDictionary<SerializableVector2Int, TownData>));
+            arePosToTown = (SerializableDictionary<SerializableVector2Int, TownData>)info.GetValue("arePosToTowns", typeof(SerializableDictionary<SerializableVector2Int, TownData>));
+            ID_Increasement = info.GetInt32("ID_Inc");
+        }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Towns", towns);
+            info.AddValue("idToTowns", idToTown);
+            info.AddValue("posToTowns", posToTown);
+            info.AddValue("arePosToTowns", arePosToTown);
+            info.AddValue("ID_Inc", ID_Increasement);
+        }
         private void StoreTownData(TownData data)
         {
             towns.Add(data);
@@ -104,6 +127,36 @@ namespace WorldMap.Model
             TownData town;
             posToTown.TryGetValue(new SerializableVector2Int(pos), out town);
             return town;
+        }
+        /// <summary>
+        /// 在所有城镇中寻找NPC，再删除
+        /// </summary>
+        /// <param name="npcID"></param>
+        public bool RemoveNpc(int npcID, out TownData town)
+        {
+            for (int i = 0; i < towns.Count; ++i)
+            {
+                if (towns[i].RemoveNpc(npcID))
+                {
+                    town = towns[i];
+                    Notify((int)EAction.REMOVE_NPC, npcID);
+                    return true;
+                }
+            }
+            town = null;
+            return false;
+        }
+        public bool RemoveNpc(int npcID)
+        {
+            for (int i = 0; i < towns.Count; ++i)
+            {
+                if (towns[i].RemoveNpc(npcID))
+                {
+                    Notify((int)EAction.REMOVE_NPC, npcID);
+                    return true;
+                }
+            }
+            return false;
         }
         /// <summary>
         /// 根据城镇ID查找查找

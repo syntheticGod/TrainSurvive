@@ -34,43 +34,17 @@ namespace WorldMap.Model
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("TownInfo", Info, typeof(TownInfo));
-            info.AddValue("Npcs", Npcs, typeof(List<int>));
+            info.AddValue("Npcs", Npcs);
             info.AddValue("PosX", Pos.x, typeof(int));
             info.AddValue("PosY", Pos.y, typeof(int));
         }
         public TownInfo Info { get; private set; }
         public Vector2Int Pos { get; private set; }
         public List<int> Npcs { get; private set; }
-
         public int ID { get { return Info.ID; } }
-
-        /// <summary>
-        /// 招募NPC
-        /// </summary>
-        /// <param name="theOne"></param>
-        /// <returns></returns>
-        public bool RecruitNPC(int theOne)
+        public bool RemoveNpc(int npcID)
         {
-            //if (!NPCs.Remove(theOne))
-            //{
-            //    Debug.Log("城镇：酒馆中没有该NPC：" + theOne.Name);
-            //    return false;
-            //}
-            //Debug.Log("城镇：NPC：" + theOne.Name + "走了");
-            return true;
-        }
-        /// <summary>
-        /// 在城镇中寻找指定ID的NPC
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public NpcData FindNPCByID(int id)
-        {
-            //foreach (NpcData npc in NPCs)
-            //    if (npc.ID == id)
-            //        return npc;
-            //Debug.LogError("当前城镇" + Name + " 不存在指定NPC：" + id);
-            return null;
+            return Npcs.Remove(npcID);
         }
         /// <summary>
         /// 购买商品

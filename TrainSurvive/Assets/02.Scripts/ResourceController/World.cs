@@ -12,13 +12,6 @@ using TTT.Team;
 [System.Serializable]
 public class World
 {
-    private World()
-    {
-        //或许战略点一开始不为0？teamPoint = 10;
-        //测试用 xys
-        foodIn = (uint)foodInMax;
-        //----
-    }
     private static World instance;
     public static World getInstance()
     {
@@ -28,13 +21,26 @@ public class World
 
             if (File.Exists(path))
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(path, FileMode.Open);
-                instance = (World)bf.Deserialize(file);
-                file.Close();
+                FileStream file = null;
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    file = File.Open(path, FileMode.Open);
+                    instance = (World)bf.Deserialize(file);
+                }
+                finally
+                {
+                    if (file != null)
+                        file.Close();
+                }
             }
             else
+            {
                 instance = new World();
+                instance.foodIn = (uint)instance.foodInMax;
+                instance.storage.AddItem(232, 10);
+                instance.money = 1000;
+            }
         }
         return instance;
     }
@@ -118,7 +124,7 @@ public class World
     /// </summary>
     public float outMood = 0;
     public float outMoodMax = 100;
-    
+
     public int distView = 1;
 
     public int numWeapon = 101;
@@ -158,7 +164,7 @@ public class World
     public Tech[] techArray;
     public int techUnlock;
     public bool automata;
-    
+
     public int numIn;
     public int numOut;
     public uint teamPoint
