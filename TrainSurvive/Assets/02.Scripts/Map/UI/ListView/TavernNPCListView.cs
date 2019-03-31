@@ -35,7 +35,7 @@ namespace WorldMap.UI
         protected override void OnItemView(ListViewItem item, int id, int itemIndex)
         {
             NpcInfo info = NpcInfoLoader.Instance.Find(id);
-            ViewTool.ForceGetComponentInChildren<PersonBaseItem>(item, "NPC").GetComponentInChildren<Text>().text = info.Name;
+            ViewTool.ForceGetComponentInChildren<NPCBaseItem>(item, "NPC").ShowNpc(info);
             item.Tag = info;
         }
         protected override void OnPersistentItemView(ListViewItem item, int index)

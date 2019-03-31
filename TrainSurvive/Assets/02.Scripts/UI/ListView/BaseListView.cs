@@ -78,9 +78,7 @@ namespace TTT.UI.ListView
         public GameObject m_itemContentPrefab;
         private const int UNSELECTED = -1;
         /// <summary>
-        /// 是否允许item被选择（点一下item会显示灰色，点其他item时变回正常色）
-        /// 当IfSelectable设值成False时，所有的item会变为正常色。
-        /// 如果再次开启选择功能时，前一次选择的会再次变为灰色。
+        /// item是否可选，默认可选
         /// </summary>
         public bool IfSelectable
         {
@@ -515,53 +513,5 @@ namespace TTT.UI.ListView
             return m_datas.IndexOf(data);
         }
     }
-    public class ListViewItem : Image, IPointerClickHandler
-    {
-        public delegate void CallBackItemEvent(ListViewItem item);
-        private static int IncreaseingID = 0;
-        public static int GetNewIDUnsafely()
-        {
-            return IncreaseingID++;
-        }
-        private const int UNSET = -1;
-        //鼠标点击Item回调代理
-        public CallBackItemEvent callBackItemClick;
-        public Color BaseColor { set; get; } = new Color(1F, 1F, 1F, 1F);
-        public Color SelectedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F, 0.5F);
-        public Color ClickedColor { set; get; } = new Color(0.5F, 0.5F, 0.5F, 0.5F);
-        public object Tag { set; get; }
-        public int ID { private set; get; }
-        public ListViewItem()
-        {
-            ID = GetNewIDUnsafely();
-        }
-        public void ShowBaseColor()
-        {
-            color = BaseColor;
-        }
-        public void ShowSelectedColor()
-        {
-            color = SelectedColor;
-        }
-        public void Recycle()
-        {
-            color = BaseColor;
-            ID = UNSET;
-            Tag = null;
-        }
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            //Debug.Log("条款被点击了");
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                callBackItemClick?.Invoke(this);
-            }
-        }
-    }
-    public class NullListView : BaseListView<int>
-    {
-        protected override void OnItemView(ListViewItem item, int data, int itemIndex)
-        {
-        }
-    }
+    
 }

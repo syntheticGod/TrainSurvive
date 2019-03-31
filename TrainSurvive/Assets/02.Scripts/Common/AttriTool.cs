@@ -34,9 +34,10 @@ namespace TTT.Common
         public static string Chinese(EAttribute attribute)
         {
 #if DEBUG
-            if (attribute <= EAttribute.NONE || attribute >= EAttribute.NUM)
-                throw new System.IndexOutOfRangeException("不合法的属性枚举");
+            if (attribute < EAttribute.NONE || attribute >= EAttribute.NUM)
+                throw new System.IndexOutOfRangeException("不合法的属性枚举 " + attribute.ToString());
 #endif
+            if (attribute == EAttribute.NONE) return "无";
             return NameC[(int)attribute];
         }
         public static string English(EAttribute attribute)

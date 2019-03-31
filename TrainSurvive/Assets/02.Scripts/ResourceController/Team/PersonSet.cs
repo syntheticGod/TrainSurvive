@@ -82,6 +82,10 @@ namespace TTT.Team
         {
             return persons[index];
         }
+        public void Add(Person person)
+        {
+            persons.Add(person);
+        }
         public List<Person> CopyAll()
         {
             return new List<Person>(persons); ;
@@ -116,24 +120,6 @@ namespace TTT.Team
                     count++;
             }
             return count;
-        }
-        /// <summary>
-        /// 随机生成人物
-        /// </summary>
-        /// <param name="count"></param>
-        public void RandomPersons(int count)
-        {
-            World.getInstance().numIn = count;
-            for (int i = 0; i < count; i++)
-            {
-                Person person = Person.RandomPerson();
-                //默认全部出战，直到上限
-                if (i < MAX_NUMBER_FIGHER)
-                {
-                    person.ifReadyForFighting = true;
-                }
-                persons.Add(person);
-            }
         }
         /// <summary>
         /// 设置指定人物的出战设置

@@ -20,8 +20,6 @@ namespace WorldMap.Controller
 {
     public class TrainController : BaseController, Observer
     {
-        //private const int levelOfTrain = -1;
-        private const int levelOfTrain = 0;
         //列车状态映射显示信息
         private const int ECHO_FROM_TRAIN = 1;
         private static string[] bottomBtnsStrs = { "进入区域", "小队行动", "开车", "列车内部" };
@@ -67,15 +65,14 @@ namespace WorldMap.Controller
         }
         protected override void Start()
         {
-            Debug.Log("TrainController Start");
             base.Start();
-            transform.position = MathTool.AcceptZ(Train.Instance.PosTrain, levelOfTrain);
+            transform.position = Train.Instance.PosTrain;
             GetComponentInChildren<SpriteRenderer>().sortingOrder = 10;
         }
 #if DEBUG
         //瞬移列车 测试时使用
-        private Vector2 lashFlashPosition;
-        public Vector2 flashPosition;
+        private Vector2Int lastFlashPosition;
+        public Vector2Int flashPosition;
 #endif
         protected override void Update()
         {
@@ -111,16 +108,16 @@ namespace WorldMap.Controller
             }
             Vector2 current = MathTool.IgnoreZ(transform.position);
 #if DEBUG
-            if (!MathTool.Approximately(flashPosition, lashFlashPosition))
+            if (flashPosition != lastFlashPosition)
             {
-                train.FlashTo(ref current, flashPosition);
-                transform.position = MathTool.AcceptZ(current, levelOfTrain);
-                lashFlashPosition = flashPosition;
+                train.FlashTo(ref current, StaticResource.BlockCenter(flashPosition));
+                transform.position = current;
+                lastFlashPosition = flashPosition;
                 return;
             }
 #endif
             if (train.Run(ref current))
-                transform.position = MathTool.AcceptZ(current, levelOfTrain);
+                transform.position = current;
         }
         /// <summary>
         /// UI按钮的点击事件，地图的鼠标事件在Update中处理。
@@ -229,9 +226,6 @@ namespace WorldMap.Controller
         protected override bool HideBehaviour()
         {
             return false;
-        }
-        public void ObserverUpdate(int state, int echo)
-        {
         }
 
         public void ObsUpdate(int state, int echo, object tag = null)

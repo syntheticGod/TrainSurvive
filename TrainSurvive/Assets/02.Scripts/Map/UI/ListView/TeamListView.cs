@@ -74,8 +74,8 @@ namespace WorldMap.UI
             }
             public void Config(Person person)
             {
-                profile.sprite = person.IconBig;
-                infoText.text = string.Format("{0}\n{1}", person.SimpleInfo, person.ProfessionInfo);
+                profile.sprite = person.Icon;
+                infoText.text = string.Format("姓名：{0}\n专精：{1}", person.SimpleInfo, person.ProfessionInfo);
                 SetActionBtn(person.ifReadyForFighting);
                 currentData = person;
             }

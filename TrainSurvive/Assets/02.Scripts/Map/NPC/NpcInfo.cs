@@ -6,6 +6,8 @@
  */
 using System.Xml;
 using TTT.Common;
+using TTT.Resource;
+using UnityEngine;
 
 namespace WorldMap.Model
 {
@@ -23,6 +25,7 @@ namespace WorldMap.Model
         public int DecorationsID { get; private set; }
         public string Birthplace { get; private set; }
         public string Description { get; private set; }
+        public Sprite Icon { get { return StaticResource.GetSprite("Sprite/NPC/NPC_" + ID); } }
         public NpcInfo(XmlNode node)
         {
             ID = int.Parse(node.Attributes["id"].Value);

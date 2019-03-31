@@ -11,6 +11,7 @@ using WorldMap.Controller;
 
 using TTT.Resource;
 using TTT.Utility;
+using TTT.Team;
 
 namespace WorldMap
 {
@@ -20,9 +21,9 @@ namespace WorldMap
         public float maxSpeedForTrain = 1.0F;
         //探险队的最大速度
         public float maxSpeedForTeam = 0.7F;
-        
+
         public GameObject mapBuild;
-        
+
         private GameObject characterObject;
         private void Awake()
         {
@@ -51,7 +52,15 @@ namespace WorldMap
                 World.getInstance().Npcs.Init();
                 World.getInstance().Dialogues.InitOnce();
                 //初始化档案时随机生成3个人物
-                World.getInstance().Persons.RandomPersons(3);
+                World.getInstance().numIn = 3;
+                for (int i = 0; i < 3; i++)
+                {
+                    Person person = Person.RandomPerson(1000 + i);
+                    //默认全部出战，直到上限
+                    if (i < PersonSet.MAX_NUMBER_FIGHER)
+                        person.ifReadyForFighting = true;
+                    World.getInstance().Persons.Add(person);
+                }
                 World.getInstance().save();
             }
             Debug.Log(World.getInstance().Npcs.ToString());

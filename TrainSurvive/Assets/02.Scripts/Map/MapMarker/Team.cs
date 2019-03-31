@@ -87,9 +87,9 @@ namespace WorldMap.Model
         /// 配置探险队的初始坐标
         /// </summary>
         /// <param name="initPosition"></param>
-        public void Config(Vector2 initPosition)
+        public void Config(Vector2Int initPosition)
         {
-            PosTeam = initPosition;
+            PosTeam = StaticResource.BlockCenter(initPosition);
         }
         /// <summary>
         /// 探险队是上下左右，四个方向移动

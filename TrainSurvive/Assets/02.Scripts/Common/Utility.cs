@@ -365,6 +365,14 @@ namespace TTT.Utility
             child.transform.SetParent(parent.transform);
             child.transform.localPosition = Vector2.zero;
         }
+        /// <summary>
+        /// 将组件的pivot中心点固定在父组件的anchor处，并有vector大小的位移，同时该组件的大小为size。
+        /// </summary>
+        /// <param name="comp">组件</param>
+        /// <param name="pivot">该组件的中心点</param>
+        /// <param name="anchor">父组件的位置</param>
+        /// <param name="size">该组件的大小</param>
+        /// <param name="vector">偏移量</param>
         public static void CenterAt(Component comp, Vector2 pivot, Vector2 anchor, Vector2 size, Vector2 vector)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
@@ -374,6 +382,13 @@ namespace TTT.Utility
             rect.offsetMin = vector + (size * -pivot);
             rect.offsetMax = rect.offsetMin + size;
         }
+        /// <summary>
+        /// 将组件的pivot中心点固定在父组件的anchor处，该组件的大小为size
+        /// </summary>
+        /// <param name="comp">组件</param>
+        /// <param name="pivot">该组件的中心点</param>
+        /// <param name="anchor">父组件的位置</param>
+        /// <param name="size">该组件的大小</param>
         public static void CenterAt(Component comp, Vector2 pivot, Vector2 anchor, Vector2 size)
         {
             RectTransform rect = comp.GetComponent<RectTransform>();
@@ -439,10 +454,23 @@ namespace TTT.Utility
         {
             CenterAt(comp, pivot, new Vector2(1F, 0F), size, vector);
         }
+        /// <summary>
+        /// 将组件的pivot中心点固定在父组件的中心位置。组件大小为size
+        /// </summary>
+        /// <param name="comp">组件</param>
+        /// <param name="pivot">该组件的中心点</param>
+        /// <param name="size">该组件的大小</param>
         public static void Center(Component comp, Vector2 pivot, Vector2 size)
         {
             CenterAt(comp, pivot, new Vector2(0.5F, 0.5F), size);
         }
+        /// <summary>
+        /// 将组件的pivot中心点固定在父组件的中心位置，并位移vector。该组件的大小为size
+        /// </summary>
+        /// <param name="comp">组件</param>
+        /// <param name="pivot">该组件的中心点</param>
+        /// <param name="size">该组件的大小</param>
+        /// <param name="vector">位移</param>
         public static void Center(Component comp, Vector2 pivot, Vector2 size, Vector2 vector)
         {
             CenterAt(comp, pivot, new Vector2(0.5F, 0.5F), size, vector);

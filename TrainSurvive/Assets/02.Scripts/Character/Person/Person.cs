@@ -20,6 +20,7 @@ using TTT.Common;
 public class Person
 {
     #region 个人信息
+    public int ID { get; private set; }
     /// <summary>
     /// 人物姓名
     /// </summary>
@@ -28,14 +29,7 @@ public class Person
     /// 性别用ismale代替
     /// </summary>
     public bool ismale = true;
-    /// <summary>
-    /// 人物的小头像 60*60像素
-    /// </summary>
-    public Sprite IconSmall { get { return StaticResource.GetSprite("Commen/developing_icon_01_small"); } }
-    /// <summary>
-    /// 人物的大头像 120*120像素
-    /// </summary>
-    public Sprite IconBig { get { return StaticResource.GetSprite("Commen/developing_icon_01_big"); } }
+    public Sprite Icon { get { return StaticResource.GetSprite("Sprite/NPC/NPC_" + ID); } }
     public string SimpleInfo
     {
         get
@@ -498,8 +492,9 @@ public class Person
     #endregion 专精
 
     #region 构造函数
-    private Person()
+    private Person(int id)
     {
+        ID = id;
         //保留以后用
         profIDs = new int[3] { -1, -1, -1 };
         profAttris = new EAttribute[3] { EAttribute.NONE, EAttribute.NONE, EAttribute.NONE };
@@ -510,7 +505,7 @@ public class Person
         professionAvaliable = 1;
         ifReadyForFighting = false;
     }
-    public Person(NpcInfo npc) : this()
+    public Person(NpcInfo npc) : this(npc.ID)
     {
         ismale = npc.Gender;
         name = npc.Name;
@@ -534,9 +529,9 @@ public class Person
     /// 生成一个随机属性的人物（未持有武器）
     /// </summary>
     /// <returns></returns>
-    public static Person RandomPerson()
+    public static Person RandomPerson(int id)
     {
-        Person p = new Person();
+        Person p = new Person(id);
         p.ismale = MathTool.RandomInt(2) == 0;
         p.name = StaticResource.RandomNPCName(p.ismale);
         for (EAttribute itr = EAttribute.NONE + 1; itr < EAttribute.NUM; itr++)

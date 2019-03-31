@@ -18,7 +18,7 @@ namespace TestCharacter
         [SetUp]
         public void SetUp()
         {
-            person = Person.RandomPerson();
+            person = Person.RandomPerson(1000);
         }
         [TestCase]
         public void TestAddSkill()

@@ -76,12 +76,12 @@ namespace WorldMap.Controller
 
             cameraFocus = Camera.main.GetComponent<ICameraFocus>();
         }
-        //protected override void Start()
-        //{
-        //    base.Start();
-        //    Debug.Log("TeamController Start");
+        protected override void Start()
+        {
+            base.Start();
+            transform.position = Team.Instance.PosTeam;
         //    cameraFocus.focusLock(transform);
-        //}
+        }
         protected override void Update()
         {
             base.Update();
@@ -90,7 +90,7 @@ namespace WorldMap.Controller
             Team team = Team.Instance;
             if (team.Run(ref current))
             {
-                transform.position = MathTool.AcceptZ(current, 0);
+                transform.position = current;
                 GetComponentInChildren<SpriteRenderer>().sortingOrder = 12;
             }
         }

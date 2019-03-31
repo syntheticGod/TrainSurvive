@@ -123,11 +123,12 @@ namespace WorldMap.Controller
         }
         protected override bool PrepareDataBeforeShowWindow()
         {
+            teamListView.SetData(World.getInstance().Persons.CopyAll());
             return true;
         }
         protected override void AfterShowWindow()
         {
-            teamListView.Datas = World.getInstance().Persons.CopyAll();
+            teamListView.Refresh();
             if (teamListView.Datas.Count > 0)
                 teamListView.ClickManually(0);
         }
