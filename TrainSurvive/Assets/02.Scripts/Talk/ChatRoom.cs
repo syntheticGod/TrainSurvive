@@ -27,48 +27,20 @@ namespace Story.Communication
 
         public List<KeyValuePair<int, string>> chat()
         {
-
             List<KeyValuePair<int, string>> result = new List<KeyValuePair<int, string>>();
-
-            //todo test output
-            //---------------------------------------------------
-
-            var shuffled = shuffle(persons.Count);
+            //根据人物数量随机
+            List<int> shuffled = shuffle(persons.Count);
+            List<int> shuffledPersonIDs = new List<int>(shuffled.Count);
+            for (int i = 0; i < shuffled.Count; ++i)
+                shuffledPersonIDs.Add(persons[shuffled[i]]);
             //将乱序后的顺序分为几种对话段,2和3两种组
-            var divided = divide(shuffled);
-#if DEBUG
-            for (int i = 0; i < shuffled.Count; i++)
-            {
-                //Debug.Log("人物排序 ：" + shuffled[i]);
-            }
-#endif
+            List<List<int>> divided = divide(shuffledPersonIDs);
             List<KeyValuePair<chatType, List<int>>> chatPattern = matchChatType(divided);
-            for (int i = 0; i < chatPattern.Count; i++)
-            {
-                //Debug.Log("----" + chatPattern[i].Key.ToString());
-                List<int> g = chatPattern[i].Value;
-#if DEBUG
-                for (int j = 0; j < g.Count; j++)
-                {
-                    //Debug.Log(g[j]);
-                }
-#endif
-            }
-
-            //---------------------------------------------------
-
-
-            //todo for test
-            //List<KeyValuePair<chatType,List<int>>> chatPattern = matchChatType(divide(shuffle(persons.Count)));
-
-
-
             for (int i = 0; i < chatPattern.Count; i++)
             {
                 KeyValuePair<chatType, List<int>> stage = chatPattern[i];
                 result.AddRange(StaticResource.ChatScripts.getString(stage));
             }
-
             return result;
         }
 

@@ -70,6 +70,5 @@ public class KillRequirement : TaskRequirement
     public override void conditionChange(int numOrId)
     {
         killMonster(numOrId);
-        throw new NotImplementedException();
     }
 }
