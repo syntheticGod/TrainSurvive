@@ -13581,6 +13581,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 12800000, guid: bcc44a7f7934b444b89e75ff94600383,
         type: 3}
+    - target: {fileID: 224346036733515646, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224823362120317000, guid: a4b5a61f6f8fc5b4f958e631519c43ed,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.1176147
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4b5a61f6f8fc5b4f958e631519c43ed, type: 3}
 --- !u!1 &768579347 stripped
@@ -21765,7 +21775,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
