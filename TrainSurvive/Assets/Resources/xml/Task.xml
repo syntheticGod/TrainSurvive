@@ -175,4 +175,31 @@
       <reward type="item" id ="704" num="1" />
     </rewardList>
   </task>
+
+  <task id="22" name="昔日鹰眼" condition="1" description="找到夺走巴顿的眼珠的鹰王，并杀了它，为巴顿报仇！">
+    <influenceList>
+      <battle id="22" />
+    </influenceList>
+    <requimentList>
+      <requiment type="giveItem" itemId="722" num="1" />
+    </requimentList>
+  </task>
+
+  <task id="23" name="格物致知" condition="1" description="当被询问到何为格物致知时，老校长让你先去寻找100根原木。">
+    <requimentList>
+      <requiment type="hasItem" itemId="237" num="100" />
+    </requimentList>
+    <unlockList>
+      <unlock taskId="24" />
+    </unlockList>
+  </task>
+
+  <task id="24" name="知行合一" condition="0" description="准备好了之后，就与老校长对话吧。">
+    <influenceList>
+      <battle id="2" />
+    </influenceList>
+    <requimentList>
+      <requiment type="kill" monsterId="23" num="1" />
+    </requimentList>
+  </task>
 </tasklist>

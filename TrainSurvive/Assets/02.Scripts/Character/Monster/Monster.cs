@@ -103,7 +103,7 @@ public class Monster {
     public double getValErate()
     {
         double num = 0.02 * agile;
-        return Math.Round(num, numsLeft) * rank;
+        return Math.Round(num, numsLeft);
     }
     public double getValHit()
     {
