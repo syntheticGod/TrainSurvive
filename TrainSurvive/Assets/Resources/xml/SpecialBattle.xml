@@ -71,4 +71,13 @@
       <monster id="28" num="1" />
     </monsterList >
   </battle>
+
+  <battle id="22" name="向鹰王复仇" expNum="10" type="generate" posX="now" posY="now">
+    <monsterList>
+      <monster id="22" num="1" />
+    </monsterList >
+    <rewardList>
+      <reward type="item" id="722" num="1" />
+    </rewardList >
+  </battle>
 </battlelist>

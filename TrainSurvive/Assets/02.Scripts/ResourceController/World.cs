@@ -27,6 +27,8 @@ public class World
                     BinaryFormatter bf = new BinaryFormatter();
                     file = File.Open(path, FileMode.Open);
                     instance = (World)bf.Deserialize(file);
+                } catch {
+                    return new World();
                 }
                 finally
                 {

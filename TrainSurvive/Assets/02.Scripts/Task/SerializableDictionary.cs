@@ -7,7 +7,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using WorldMap.Model;
 
@@ -19,17 +21,23 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
     [SerializeField]
     private List<TValue> _values = new List<TValue>();
     public SerializableDictionary() { }
-    public SerializableDictionary(SerializationInfo info, StreamingContext context)
-    {
-        _keys = (List<TKey>)info.GetValue("keys", typeof(List<TKey>));
-        _values = (List<TValue>)info.GetValue("values", typeof(List<TValue>));
+    public SerializableDictionary(SerializationInfo info, StreamingContext context) {
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        _keys = (List<TKey>)binaryFormatter.Deserialize(new MemoryStream((byte[])info.GetValue("keys", typeof(byte[]))));
+        _values = (List<TValue>)binaryFormatter.Deserialize(new MemoryStream((byte[])info.GetValue("values", typeof(byte[]))));
         OnAfterDeserialize();
     }
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         OnBeforeSerialize();
-        info.AddValue("keys", _keys);
-        info.AddValue("values", _values);
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        MemoryStream stream = new MemoryStream();
+        binaryFormatter.Serialize(stream, _keys);
+        info.AddValue("keys", stream.GetBuffer());
+        stream.Close();
+        stream = new MemoryStream();
+        binaryFormatter.Serialize(stream, _values);
+        info.AddValue("values", stream.GetBuffer());
     }
     public void OnBeforeSerialize()
     {

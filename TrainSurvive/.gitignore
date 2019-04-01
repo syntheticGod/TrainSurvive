@@ -45,3 +45,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# 版本信息
+ProjectSettings/ProjectVersion.txt
+ProjectSettings/ProjectVersion.txt.rej
