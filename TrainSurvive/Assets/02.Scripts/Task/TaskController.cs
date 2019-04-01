@@ -13,6 +13,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class TaskController  {
+    public int taskid_battle = -1;//一次仅有一个用于战斗结束检测完成的战斗
     public const int taskMaxIndex = 30;//支持的任务个数容量
     public enum TASKCONDITION
     {

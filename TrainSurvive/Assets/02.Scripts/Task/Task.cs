@@ -63,6 +63,7 @@ public class Task  {
         {
             InitEnemys.setNextTalkBattle(task_battle.id);
             TimeController.getInstance()?.changeScene(true);
+            TaskController.getInstance().taskid_battle = id;
             SceneManager.LoadScene("BattleScene");
         }
     }
@@ -76,15 +77,22 @@ public class Task  {
 
         bool all_finish = true;
         foreach (TaskRequirement req in reqList)
-        {
+        {            
             if (req.achieveGoal() == false)
             {
+                Debug.Log("有条件未完成!"+ req.description);
                 all_finish = false;
                 break;
             }
+            else
+                Debug.Log("条件完成!条件情况："+req.description);
         }
         if (all_finish)
+        {
             condition = TaskController.TASKCONDITION.CAN_FINISH;
+            Debug.Log("任务"+id+"完成！");
+        }
+            
     }
 
 

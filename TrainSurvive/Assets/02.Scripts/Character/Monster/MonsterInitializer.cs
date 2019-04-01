@@ -199,6 +199,7 @@ namespace WorldBattle
                             if (req.GetType() == typeof(KillRequirement))
                             {
                                 actor.task_kill_handler += req.conditionChange;
+                                Debug.Log("委托已添加");
                             }
                         }
                 }

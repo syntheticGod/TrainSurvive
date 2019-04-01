@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class SpecialRequirement_1 : TaskRequirement
 {
     public SpecialRequirement_1()

@@ -124,9 +124,11 @@ namespace WorldMap.Model
 
         public override void DoAction()
         {
+            Debug.Log("task句子开始DoAction,type="+ Type);
             foreach (int TaskID in TaskIDs)
             {
                 Task task = TaskController.getInstance().getTask(TaskID);
+                Debug.Log("任务id=" + TaskID + "  任务状态=" + task.condition);
                 if (task == null)
                 {
                     Debug.LogError("任务不存在 ID" + TaskID);

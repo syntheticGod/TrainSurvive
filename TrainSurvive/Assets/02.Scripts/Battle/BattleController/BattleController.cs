@@ -28,6 +28,9 @@ namespace WorldBattle {
 
         private BattleController() { }
 
+        //当前的战斗用任务id
+        public int taskId_battle=TaskController.getInstance().taskid_battle;
+
         //战斗地图的起始坐标
         public Vector3 orign;
         //战斗地图的卷轴长度（假设战斗地图以x,z为平面）
@@ -188,7 +191,10 @@ namespace WorldBattle {
                 }
                 //显示胜利的文本
                 winText.SetActive(true);
-
+                Debug.Log("战斗任务完成，id=" + taskId_battle);
+                if(taskId_battle!=-1)
+                    TaskController.getInstance().getTask(taskId_battle).achieve_task();
+                TaskController.getInstance().taskid_battle = -1;
                 //开启协程过1秒后转入到战利品界面
                 StartCoroutine(displayDropSpoils());
                 

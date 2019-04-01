@@ -61,7 +61,9 @@ public class KillRequirement : TaskRequirement
     {
         if(targetId== monsterId)
         {
+            Debug.Log("任务条件完成：击杀id" + targetId + "  1个");
             hasKillNums++;
+            Debug.Log("已击杀id:" + targetId +"   "+ hasKillNums+"个");
             condition = "已击杀：" + monsterName + "  " + hasKillNums + "/" + needKillNums;
             description = "你还需要击杀" + monsterName + (needKillNums - hasKillNums) + "个！";//以后也可以只在npc那展示金钱数字，其他话在npc数据里补充
         }

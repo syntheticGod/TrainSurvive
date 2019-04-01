@@ -449,7 +449,10 @@ namespace WorldBattle {
             //如果当前生命值变成0，无论是技能，攻击，Buff，挂掉
             if (curHealthPoint <= 0.0f) {
                 if (!isPlayer)
+                {
                     task_kill_handler?.Invoke(task_monsterId);
+                    Debug.Log("击杀任务怪物,id="+task_monsterId);
+                }                   
                 changeSubState(ActionStateEnum.DEAD);
             }
         }
@@ -576,7 +579,7 @@ namespace WorldBattle {
 
             //如果当前不能释放技能，错误
             if (skillList[id].canReleaseSkill() == false) {
-                Debug.Log("当前技能" + id + " ap不够！");
+                //Debug.Log("当前技能" + id + " ap不够！");
                 return false;
             }
 
