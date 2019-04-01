@@ -39,7 +39,7 @@ public class World
                 instance = new World();
                 instance.foodIn = (uint)instance.foodInMax;
                 instance.storage.AddItem(232, 10);
-                instance.money = 1000;
+                instance.money = 9999999;
             }
         }
         return instance;
@@ -359,6 +359,17 @@ public class World
             resourceUI.setFoodOut(foodOut, foodOutMax);
         }
         return result;
+    }
+    public int addFood(int num)
+    {
+        if (ifTeamOuting)
+        {
+            return addFoodOut(num);
+        }
+        else
+        {
+            return addFoodIn(num);
+        }
     }
     /// <summary>
     /// num可为负代表减少

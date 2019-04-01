@@ -47,6 +47,7 @@ namespace WorldMap.Model
                         case "npc": preconditions[i] = new NpcCondition(words); break;
                         case "girl":
                         case "boy": preconditions[i] = new HeroCondition(words); break;
+                        case "skill": preconditions[i] = new SkillCondition(words); break;
                         default: throw new XmlException("不支持的指令：" + words[1]);
                     }
                 }
@@ -321,10 +322,12 @@ namespace WorldMap.Model
         {
             foreach (Person person in World.getInstance().Persons)
             {
+                int personGender = person.ismale ? 0 : 1;
+                if (personGender != Gender) continue;
                 bool satisfy = true;
                 for (int i = 0; i < AttriNumber.Length; i++)
                 {
-                    if (AttriComparer[i].Length != 0 && !SemanticCompare(person.AttriNumbers[i], AttriNumber[i], AttriComparer[i]))
+                    if (AttriComparer[i] != null && AttriComparer[i].Length != 0 && !SemanticCompare(person.AttriNumbers[i], AttriNumber[i], AttriComparer[i]))
                     {
                         satisfy = false;
                         break;
@@ -336,16 +339,45 @@ namespace WorldMap.Model
         }
         public override string FailureMessage()
         {
-            string[] message = { "多于", "多于或等于", "少于", "少于或等于", "等于" };
+            string[] message = { ">", ">=", "<", "<=", "==" };
             string ans = "队伍中不存在";
             for (int i = 0; i < AttriNumber.Length; i++)
             {
-                if (AttriComparer[i].Length != 0)
+                if (AttriComparer[i] != null && AttriComparer[i].Length != 0)
                 {
-                    ans += AttriTool.NameC[i] + message[SemanticCompareIndex(AttriComparer[i])] + "且";
+                    ans += AttriTool.NameC[i] + message[SemanticCompareIndex(AttriComparer[i])] + AttriNumber[i] + "且";
                 }
             }
-            return ans.Remove(ans.Length - 1) + "的人物";
+            return ans.Remove(ans.Length - 1) + "的" + ((Gender == 0) ? "男性" : "女性");
+        }
+    }
+    public class SkillCondition : Precondition
+    {
+        /// <summary>
+        /// {0 已获得 | 1 未获得}
+        /// </summary>
+        public int Type { get; private set; }
+        /// <summary>
+        /// 团队技能ID
+        /// </summary>
+        public int SkillID { get; private set; }
+        public SkillCondition(string[] cmd)
+        {
+            switch (cmd[0])
+            {
+                case "got": Type = 0; break;
+                case "ungot": Type = 1; break;
+                default: throw new XmlException("不支持的指令：" + cmd[0]);
+            }
+            SkillID = int.Parse(cmd[2]);
+        }
+        public override bool IfSatisfy()
+        {
+            return true;
+        }
+        public override string FailureMessage()
+        {
+            return "";
         }
     }
 }

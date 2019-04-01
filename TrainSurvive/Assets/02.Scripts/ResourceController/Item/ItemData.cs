@@ -28,7 +28,7 @@ public class ItemData
     /// <summary>
     /// 物品稀有度
     /// </summary>
-    public PublicData.Rarity Rarity { get {return Item.Rarity; } }
+    public PublicData.Rarity Rarity { get; private set; }
     /// <summary>
     /// 物品名字
     /// </summary>
@@ -107,6 +107,7 @@ public class ItemData
     {
         ID = info.GetInt32("ItemID");
         Number = info.GetInt32("Number");
+        Rarity = (PublicData.Rarity)info.GetInt32("Rarity");
     }
     /// <summary>
     /// 不需要保存稀有度的物品
@@ -114,14 +115,23 @@ public class ItemData
     /// </summary>
     /// <param name="itemID">物品ID</param>
     /// <param name="number">数量</param>
-    public ItemData(int itemID, int number)
+    public ItemData(int itemID, int number, bool randomRarity = false)
     {
         ID = itemID;
         Number = number;
+        if (randomRarity)
+        {
+            if (Item.Rarity == PublicData.Rarity.Random)
+                Rarity = (PublicData.Rarity)MathTool.RandomInt((int)PublicData.Rarity.NUM);
+            else
+                Rarity = Item.Rarity;
+        }
     }
     public virtual ItemData Clone()
     {
-        return new ItemData(ID, Number);
+        ItemData item = new ItemData(ID, Number, false);
+        item.Rarity = Rarity;
+        return item;
     }
 
     //----------
@@ -134,7 +144,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomMaterial()
     {
-        return new ItemData(237, 100);//MathTool.RandomRange(201, 254)
+        return new ItemData(237, 100, true);//MathTool.RandomRange(201, 254)
     }
     /// <summary>
     /// 随机生成指定数量的材料
@@ -143,7 +153,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomMaterial(int number)
     {
-        return new ItemData(materialIDPool[MathTool.RandomInt(materialIDPool.Length)], number);
+        return new ItemData(materialIDPool[MathTool.RandomInt(materialIDPool.Length)], number, true);
     }
     /// <summary>
     /// 随机生成武器，数量为1
@@ -151,7 +161,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomWeapon()
     {
-        return new ItemData(weaponIDPool[MathTool.RandomInt(weaponIDPool.Length)], 1);
+        return new ItemData(weaponIDPool[MathTool.RandomInt(weaponIDPool.Length)], 1, true);
     }
     /// <summary>
     /// 随机生成特殊物品，数量为1
@@ -159,7 +169,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomSpecail()
     {
-        return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], 1);
+        return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], 1, true);
     }
     /// <summary>
     /// 随机生成指定数量的特殊物品
@@ -168,7 +178,7 @@ public class ItemData
     /// <returns></returns>
     public static ItemData RandomSpecail(int number)
     {
-        return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], number);
+        return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], number, true);
     }
 }
 

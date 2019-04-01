@@ -19,7 +19,7 @@ namespace Assets._02.Scripts.zhxUIScripts
 {
     public static class PublicData
     {
-        public enum Rarity { NONE = -1, Random, Poor, Common, Rare, Epic, Legendary, NUM };         //劣质、普通、优良、精巧、传奇
+        public enum Rarity { NONE, Random = -1, Poor, Common, Rare, Epic, Legendary, NUM };         //劣质、普通、优良、精巧、传奇
         public enum ItemType
         {
             NONE = -1,

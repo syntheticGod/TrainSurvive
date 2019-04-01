@@ -21,7 +21,7 @@ public class SpecialRequirement_1 : TaskRequirement
     {
         foreach(Person p in World.getInstance().Persons)
         {
-            if (p.ismale = false && p.intelligence >= 25 && p.agile >= 15)
+            if (p.ismale == false && p.intelligence >= 25 && p.agile >= 15)
             {
                 isfinish = true;
                 break;

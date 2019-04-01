@@ -37,6 +37,8 @@ namespace WorldMap.Model
                         case "task": ans[i] = new TaskAction(words); break;
                         case "npc": ans[i] = new NpcAction(words); break;
                         case "money": ans[i] = new MoneyAction(words); break;
+                        case "food": ans[i] = new FoodAction(words); break;
+                        case "power": ans[i] = new PowerAction(words); break;
                         default: throw new XmlException("不支持的指令：" + words[1]);
                     }
                 }
@@ -158,7 +160,7 @@ namespace WorldMap.Model
     public class NpcAction : SentenceAction
     {
         /// <summary>
-        /// {0：招募NPC | 1：在大地图上消失NPC}
+        /// {0：招募NPC | 1：消失NPC}
         /// </summary>
         public int Type { get; private set; }
         /// <summary>
@@ -188,7 +190,7 @@ namespace WorldMap.Model
                 case 1:
                     {
                         TownData town;
-                        if(World.getInstance().Towns.RemoveNpc(NpcID, out town))
+                        if (World.getInstance().Towns.RemoveNpc(NpcID, out town))
                         {
                             FlowInfo.ShowInfo("事件", NpcInfoLoader.Instance.Find(NpcID).Name + "离开了" + town.Info.Name);
                         }
@@ -199,6 +201,9 @@ namespace WorldMap.Model
     }
     public class MoneyAction : SentenceAction
     {
+        /// <summary>
+        /// 0 失去 | 1 获得
+        /// </summary>
         public int Type { get; private set; }
         public int Money { get; private set; }
         public MoneyAction(string[] words)
@@ -206,13 +211,56 @@ namespace WorldMap.Model
             switch (words[0])
             {
                 case "loss": Type = 0; break;
+                case "get": Type = 1; break;
             }
             Money = int.Parse(words[2]);
         }
 
         public override void DoAction()
         {
-            World.getInstance().PayByMoney(Money);
+            int money = Money;
+            switch (Type)
+            {
+                case 0: money = -money; break;
+                case 1: break;
+            }
+            World.getInstance().addMoney(money);
+        }
+    }
+    public class FoodAction : SentenceAction
+    {
+        public int Type { get; private set; }
+        public int Food { get; private set; }
+        public FoodAction(string[] words)
+        {
+            switch (words[0])
+            {
+                case "get": Type = 0; break;
+            }
+            Food = int.Parse(words[2]);
+        }
+
+        public override void DoAction()
+        {
+            World.getInstance().addFood(Food);
+        }
+    }
+    public class PowerAction : SentenceAction
+    {
+        public int Type { get; private set; }
+        public int Power { get; private set; }
+        public PowerAction(string[] words)
+        {
+            switch (words[0])
+            {
+                case "get": Type = 0; break;
+            }
+            Power = int.Parse(words[2]);
+        }
+
+        public override void DoAction()
+        {
+            World.getInstance().addEnergy(Power);
         }
     }
 }

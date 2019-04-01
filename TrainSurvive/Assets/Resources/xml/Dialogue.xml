@@ -39,7 +39,7 @@
     <sentence speakerType="npc" type="0" content="待开发"/>
     <sentence speakerType="player" type="0" content="待开发"/>
   </dialogue>
-<!--NPC：弗里茨-->
+  <!--NPC：弗里茨-->
   <dialogue id="2" npcId="2" precondition="doing task 2">
     <sentence speakerType="npc" type="0" content="有事吗？"/>
     <sentence speakerType="player" type="0" content="你好，我想......"/>
@@ -141,7 +141,7 @@
     <sentence speakerType="npc" type="0" content="古书记载,离我们的城镇不远处,栖息着一对巨神鹰。由于长期受到火神殿的影响,它们的血富含火之魔力,可以治愈我的身体。咳咳..." />
     <sentence speakerType="player" type="0" content="我去帮你取回来！" />
     <sentence speakerType="npc" type="0" content="拜托你了。" />
-    <sentence speakerType="player" type="0" content="再见。" 
+    <sentence speakerType="player" type="0" content="再见。"
               action="finish task 7;take task 8"/>
   </dialogue>
   <dialogue id="11" npcId="4" precondition="doing task 8">
@@ -176,19 +176,19 @@
     <sentence speakerType="npc" type="0" content="什么？" />
     <sentence speakerType="player" type="0" content="现在我可以挑战你了吗？" />
     <sentence speakerType="npc" type="0" content="哈哈！你的能力已经达到了我心目中的标准。拿去吧，我的恩人。另外，这是我的戒指，请你一并收下它。" />
-    <sentence speakerType="player" type="0" content="请多保重。" 
+    <sentence speakerType="player" type="0" content="请多保重。"
               action="achieve task 9;finish task 9"/>
   </dialogue>
   <dialogue id="13" npcId="4" precondition="done task 9">
     <sentence speakerType="npc" type="0" content="加油，年轻人。" />
     <sentence speakerType="player" type="0" content="再见。" />
   </dialogue>
-  <!--人物：温蒂-->
+  <!--温蒂-->
   <dialogue id="14" npcId="5" precondition="doing task 10">
     <sentence speakerType="npc" type="0" content="你好啊，年轻人。" />
     <sentence speakerType="player" type="0" content="我想要风之徽章。" />
     <sentence speakerType="npc" type="0" content="很抱歉，我们风神殿最近很忙，如果是为了徽章，请下次再来吧。" />
-    <sentence speakerType="player" type="0" content="离开。" 
+    <sentence speakerType="player" type="0" content="离开。"
               action="achieve task 10;finish task 10;take task 11"/>
   </dialogue>
   <dialogue id="15" npcId="5" precondition="doing task 11">
@@ -253,7 +253,7 @@
     <sentence speakerType="player" type="0" content="哈哈。"
               action="finish task 15;take task 16"/>
   </dialogue>
-    <dialogue id="21" npcId="6" precondition="doing task 16">
+  <dialogue id="21" npcId="6" precondition="doing task 16">
     <sentence speakerType="npc" type="0" content="如果你准备好了，就去挑战我的二弟施泰罗。"/>
     <sentence speakerType="player" type="1" ok="来吧。" cancel="还没有。"
               action="fight task 16"/>
@@ -409,5 +409,154 @@
     <sentence speakerType="npc"     type="0" content="谢谢你，如果你需要帮助的话，我愿意加入。"/>
     <sentence speakerType="player" type="1" ok="来吧，我需要你。" cancel="暂时不需要，请你先保重身体。"
               action="recruit npc 25"/>
+  </dialogue>
+  <!--史蒂夫队长-->
+  <dialogue id="41" npcId="26" precondition="">
+    <sentence speakerType="npc"     type="0" content="嘿，你好！"/>
+    <sentence speakerType="player" type="0" content="你好，你愿意加入我吗？"/>
+    <sentence speakerType="npc"     type="0" content="我其实是一个退伍的特种士兵，给我500金币，你就可以雇佣我。"/>
+    <sentence speakerType="player" type="1" ok="给你钱，跟我走吧。" cancel="我暂时没有那么多钱。"
+              okcondition="have money 500" action="loss money 500;recruit npc 26"/>
+  </dialogue>
+  <!--怒风-->
+  <dialogue id="42" npcId="27" precondition="">
+    <sentence speakerType="npc"     type="0" content="来了，老弟。"/>
+    <sentence speakerType="player" type="0" content="??"/>
+    <sentence speakerType="npc"     type="0" content="走吧，我们一起去猎杀恶魔！"/>
+    <sentence speakerType="player" type="0" content="???"/>
+    <sentence speakerType="npc"     type="0" content="别担心，我是这个城里最厉害的恶魔猎手"/>
+    <sentence speakerType="player" type="1" ok="......好吧。" cancel="不，你是个疯子"
+              okcondition="" action="recruit npc 27"/>
+  </dialogue>
+  <!--小曦-->
+  <dialogue id="43" npcId="28" precondition="">
+    <sentence speakerType="npc"     type="0" content="你是谁？不要来打扰我。"/>
+    <sentence speakerType="player" type="0" content="准备转身离开......"/>
+    <sentence speakerType="npc"     type="0" content="不好意思，请等一下！"/>
+    <sentence speakerType="player" type="0" content="回头疑惑地看着她。"/>
+  </dialogue>
+  <!--日曦-->
+  <dialogue id="44" npcId="29" precondition="">
+    <sentence speakerType="npc"     type="0" content="呵……原来是你，你想请我去帮忙？那也不是不行。"/>
+    <sentence speakerType="player" type="0" content="欢迎"
+              action="recruit npc 29"/>
+  </dialogue>
+  <!--月曦-->
+  <dialogue id="45" npcId="30" precondition="">
+    <sentence speakerType="npc"     type="0" content="感谢你，帮我们脱离了危险，如果你需要伙伴，我十分乐意来帮忙！"/>
+    <sentence speakerType="player" type="0" content="欢迎"
+              action="recruit npc 30"/>
+  </dialogue>
+  <!--镇长-->
+  <dialogue id="45" npcId="31" precondition="">
+    <sentence speakerType="npc"     type="0" content="请过来以下！"/>
+    <sentence speakerType="player" type="0" content="怎么了，镇长？"/>
+    <sentence speakerType="npc"     type="0" content="在出发前，请带上这些物资，你会用得上地。"/>
+    <sentence speakerType="player" type="0" content="谢谢您，亲爱的镇长。"
+              action="get food 1000;get power 1000;get money 100;disappear npc 31"/>
+  </dialogue>
+  <!--流浪汉-->
+  <dialogue id="46" npcId="32" precondition="">
+    <sentence speakerType="npc"     type="0" content="嘿，少年！"/>
+    <sentence speakerType="player" type="0" content="什么？"/>
+    <sentence speakerType="npc"     type="0" content="我看你骨骼精奇，维护世界和平就靠你了，我这有本秘籍——或者你可以称他为技能书，见与你有缘，就1000金币卖给你了！"/>
+    <sentence speakerType="player" type="1" ok="交易成功。" cancel="我没有钱。"
+              action="loss money 1000;get item 130:1;disappear npc 32"/>
+  </dialogue>
+  <!--一个雪人-->
+  <dialogue id="47" npcId="33" precondition="">
+    <sentence speakerType="npc"     type="0" content="这是一个安静的雪人。"/>
+    <sentence speakerType="player" type="0" content="......"/>
+    <sentence speakerType="npc"     type="0" content="这个雪人有点胖，不如我们......"/>
+    <sentence speakerType="player" type="0" content="抓起一团雪球。"/>
+    <sentence speakerType="npc"     type="0" content="雪化了。"/>
+    <sentence speakerType="player" type="0" content="离开"
+              action="get item 128:1;disappear npc 33"/>
+  </dialogue>
+  <!--老校长-->
+  <dialogue id="48" npcId="34" precondition="unlock task 23;ungot skill 7">
+    <sentence speakerType="npc"     type="0" content="你要远行了吗？我的孩子。"/>
+    <sentence speakerType="player" type="0" content="是的，校长。"/>
+    <sentence speakerType="npc"     type="0" content="注意安全，如果你需要提升自我，别忘了回到学校里来。"/>
+    <sentence speakerType="player" type="0" content="好的，校长。"/>
+    <sentence speakerType="npc"     type="0" content="孩子，在你踏上征途之前，我希望你能反复思考两个问题。"/>
+    <sentence speakerType="player" type="0" content="哪两个？"/>
+    <sentence speakerType="npc"     type="0" content="第一，远行是为了做什么事？第二，你希望成为什么样的人？"/>
+    <sentence speakerType="player" type="0" content="我记住了，校长。"/>
+    <sentence speakerType="npc"     type="0" content="还有，当你希望追求更高一层的知识时，就回到鲁特镇吧，我有礼物要给你。祝你好运。"/>
+    <sentence speakerType="player" type="0" content="再见，请您多多保重。"/>
+  </dialogue>
+  <!--老校长-->
+  <dialogue id="49" npcId="34" precondition="unlock task 23;got skill 7">
+    <sentence speakerType="npc"     type="0" content="看起来你似乎遇到了困扰，我的孩子。"/>
+    <sentence speakerType="player" type="0" content="是的，您能帮帮我吗？"/>
+    <sentence speakerType="npc"     type="0" content="要知道，想要追求真理，仅仅依赖科普是远远不够的。"/>
+    <sentence speakerType="player" type="0" content="那应该怎么做呢？"/>
+    <sentence speakerType="npc"     type="0" content="先贤留下的智慧里，有一条提到了&quot;格物致知&quot;。"/>
+    <sentence speakerType="player" type="0" content="我似乎曾经听说过，不过那是什么？"/>
+    <sentence speakerType="npc"     type="0" content="你先去收集100棵原木再回来吧。"/>
+    <sentence speakerType="player" type="0" content="……好的。"
+              action="take task 23"/>
+  </dialogue>
+  <dialogue id="50" npcId="34" precondition="doing task 23">
+    <sentence speakerType="npc"     type="0" content="你收集够100根原木了吗？"/>
+    <sentence speakerType="player"     type="1" ok="带来了，请看。" cancel="离开。"
+              okcondition="have item 237:100"/>
+    <sentence speakerType="npc"     type="0" content="你有悟出什么吗？"/>
+    <sentence speakerType="player" type="0" content="呃…我不觉得有什么值得感悟的。"/>
+    <sentence speakerType="npc"     type="0" content="&quot;格物致知&quot;的原意为观察一个事物并发现他的本质，但事实上还可以领悟到事物之外的道理。"/>
+    <sentence speakerType="player" type="0" content="我只感受到了我再也不缺原木了。"/>
+    <sentence speakerType="npc"     type="0" content="哈哈！这也算是一种感悟。平时你总会感觉到木材不够用，但一旦你静下心来积少成多，问题就解决了。"/>
+    <sentence speakerType="player" type="0" content="我想我大概懂了。"/>
+    <sentence speakerType="npc"     type="0" content="孩子，我只能帮你到这儿了，剩下的道理得靠你自己思考了。另外，当你在专业知识的运用上遇到困扰时，再来找我，我为你准备了最后一课。"/>
+    <sentence speakerType="player" type="0" content="谢谢您。"
+              action="achieve task 23;finish task 23"/>
+  </dialogue>
+  <dialogue id="51" npcId="34" precondition="unlock task 24;ungot skill 10">
+    <sentence speakerType="npc"     type="0" content="上次的课程怎么样？当你在专业知识的运用上遇到困扰时，再来找我，我为你准备了最后一课。"/>
+    <sentence speakerType="player" type="0" content="离开。"/>
+  </dialogue>
+  <dialogue id="52" npcId="34" precondition="unlock task 24;got skill 10">
+    <sentence speakerType="npc"     type="0" content="干得不错！我的孩子。看来你已经在专精能力的培养上迈出了第一步。"/>
+    <sentence speakerType="player" type="0" content="呃，是的，请问您知道如何掌握第二门专精吗？"/>
+    <sentence speakerType="npc"     type="0" content="术业有专攻，掌握一门已是不易，何谈第二门？"/>
+    <sentence speakerType="player" type="0" content="因为我要拯救世界。"/>
+    <sentence speakerType="npc"     type="0" content="不错。当你准备好了，再回到我这里来，我为你准备了一场训练战。"/>
+    <sentence speakerType="player" type="0" content="好的。"
+              action="take task 24"/>
+  </dialogue>
+  <dialogue id="53" npcId="34" precondition="doing task 24">
+    <sentence speakerType="npc"     type="0" content="这场训练战，需要你自己观察并想出解决之策，你准备好了吗？"/>
+    <sentence speakerType="player" type="0" content="来吧。"
+              action="fight task 24"/>
+  </dialogue>
+  <dialogue id="54" npcId="34" precondition="done task 24">
+    <sentence speakerType="npc"     type="0" content="你做到了！果然没辜负我的期待。"/>
+    <sentence speakerType="player" type="0" content="呼……"/>
+    <sentence speakerType="npc"     type="0" content="有什么体会吗？"/>
+    <sentence speakerType="player" type="0" content="呃……我只知道它很强大，但它有个弱点——跑得慢。"/>
+    <sentence speakerType="npc"     type="0" content="所以你抓住了它这个弱点。"/>
+    <sentence speakerType="player" type="0" content="是的。"/>
+    <sentence speakerType="npc"     type="0" content="即使你知道需要很久才能战胜它，你也照样做了。"/>
+    <sentence speakerType="player" type="0" content="是的。"/>
+    <sentence speakerType="npc"     type="0" content="这就是我这次想传授给你的&quot;知行合一&quot;。"/>
+    <sentence speakerType="player" type="0" content="是的。"/>
+    <sentence speakerType="npc"     type="0" content="仅仅这些还不够，即使你知道它的弱点所在，也仍然需要漫长的时间去战胜这个体力强大的对手。"/>
+    <sentence speakerType="player" type="0" content="我似乎明白了。"/>
+    <sentence speakerType="npc"     type="0" content="这便是&quot;知行合一&quot;呀，将脑中所想转化为实际行动，并且花费极大的精力去坚持实现它——所以，你成功了。"/>
+    <sentence speakerType="player" type="0" content="bingo！"/>
+    <sentence speakerType="npc"     type="0" content="此外，相信你也发现了，它的体力十分强大，你一定想培养自己的力量来缩短战胜它的时间。"/>
+    <sentence speakerType="player" type="0" content="我恨不得在战斗中途就跑回学校来做力量训练。"/>
+    <sentence speakerType="npc"     type="0" content="但是，面对这样笨重但威力十足的对手，你必须要先让自己的行动变得迅速，否则即使力量再高也毫无用处。"/>
+    <sentence speakerType="player" type="0" content="所以，面对它，我只能在敏捷足够后再考虑培养力量。"/>
+    <sentence speakerType="npc"     type="0" content="这就是掌握两门专精的诀窍——在学习第二专精前，别忘了巩固好自己的第一专精。"/>
+    <sentence speakerType="player" type="0" content="我懂了！"/>
+    <sentence speakerType="npc"     type="0" content="聪明的孩子。我已经把我所会的全都教授给你了，你快继续探险吧，世界还等着你呢！"/>
+    <sentence speakerType="player" type="0" content="再会。"
+              action="achieve task 24;finish task 24"/>
+  </dialogue>
+  <dialogue id="55" npcId="34" precondition="finish task 24">
+    <sentence speakerType="npc"     type="0" content="孩子，我已经没有东西可以交给你了。当你迷茫时，你可以反复思考这两个问题：远行是为了做什么事？你希望成为什么样的人？"/>
+    <sentence speakerType="player" type="0" content="再见，尊敬的校长。"/>
   </dialogue>
 </dialogues>

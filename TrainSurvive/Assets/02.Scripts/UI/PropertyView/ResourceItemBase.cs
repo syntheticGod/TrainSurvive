@@ -84,7 +84,7 @@ namespace TTT.UI
         public virtual void Clear()
         {
             if (markImage)
-                markImage.color = markColors[(int)PublicData.Rarity.Random];
+                markImage.color = markColors[(int)PublicData.Rarity.Poor];
             if (targetImage)
                 targetImage.sprite = null;
             ItemID = -1;

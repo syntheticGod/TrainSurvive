@@ -75,7 +75,7 @@ namespace TTT.Item
         /// <param name="number">物品数量</param>
         public void AddItem(int itemID, int number)
         {
-            ItemData itemData = new ItemData(itemID, number);
+            ItemData itemData = new ItemData(itemID, number, true);
             storage.Add(itemData);
             Notify((int)EAction.ADD_ITEM, itemData);
         }

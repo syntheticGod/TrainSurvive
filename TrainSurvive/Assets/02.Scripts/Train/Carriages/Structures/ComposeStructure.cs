@@ -123,7 +123,7 @@ public class ComposeStructure : CarriageStructure {
         UpdateState("Running", false);
         Progress = 0;
         OnProgressUpdate?.Invoke(Progress, ProcessTime);
-        ItemData item = new WeaponData(Formulas[SelectedFormula].ToWeapon, Materials[0], Materials[1]);
+        ItemData item = new WeaponData(Formulas[SelectedFormula].ToWeapon, Materials[0], Materials[1], true);
         PublicMethod.AppendItemsInBackEnd(new ItemData[] { item });
         for (int i = 0; i < Materials.Length; i++) {
             Materials[i] = null;

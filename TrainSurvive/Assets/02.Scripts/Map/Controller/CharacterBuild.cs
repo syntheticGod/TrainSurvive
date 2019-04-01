@@ -59,6 +59,13 @@ namespace WorldMap
                     //默认全部出战，直到上限
                     if (i < PersonSet.MAX_NUMBER_FIGHER)
                         person.ifReadyForFighting = true;
+                    //测试温蒂任务，要求智力>=20 敏捷>=15 的女性
+                    if(i == 0)
+                    {
+                        person.ismale = false;
+                        person.intelligence = 25;
+                        person.agile = 15;
+                    }
                     World.getInstance().Persons.Add(person);
                 }
                 World.getInstance().save();

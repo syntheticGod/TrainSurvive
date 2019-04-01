@@ -58,12 +58,12 @@ namespace TTT.Item
         /// <param name="id">武器ID</param>
         /// <param name="component1">组件1</param>
         /// <param name="component2">组件2</param>
-        public WeaponData(int id, ComponentData component1, ComponentData component2) : base(id, 1)
+        public WeaponData(int id, ComponentData component1, ComponentData component2, bool randomRarity = false) : base(id, 1, randomRarity)
         {
             this.component1 = component1;
             this.component2 = component2;
         }
-        private WeaponData(int id, int number) : base(id, number)
+        private WeaponData(int id, int number, bool randomRarity = false) : base(id, number, randomRarity)
         {
             component1 = null;
             component2 = null;
@@ -85,7 +85,7 @@ namespace TTT.Item
         }
         public override ItemData Clone()
         {
-            WeaponData clone = new WeaponData(ID, Number);
+            WeaponData clone = new WeaponData(ID, Number, false);
             clone.component1 = component1.Clone() as ComponentData;
             clone.component2 = component2.Clone() as ComponentData;
             return clone;
