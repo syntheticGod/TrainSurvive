@@ -154,8 +154,9 @@ namespace WorldBattle
                 default: Debug.LogError("不支持该怪物等级，默认地将等级设为1"); break;
             }          
             int index_random = Random.Range(0, rank_idList[rank].Count);
-            initializeMonster(ref character, rank_idList[rank][index_random]);
-            Debug.Log("随机生成一个难度级别为" + level + "，等级为" + rank + "，ID为" + randomInt + "的怪物");
+            int monsterId = rank_idList[rank][index_random];
+            initializeMonster(ref character, monsterId);
+            Debug.Log("随机生成一个难度级别为" + level + "，等级为" + rank + "，ID为" + monsterId + "的怪物");
         }
         public BattleActor getBattleActor()
         {

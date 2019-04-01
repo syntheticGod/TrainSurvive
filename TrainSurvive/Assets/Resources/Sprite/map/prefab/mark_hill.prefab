@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4469756677792408}
   - component: {fileID: 212211712586512652}
   m_Layer: 0
-  m_Name: hill
+  m_Name: mark_hill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

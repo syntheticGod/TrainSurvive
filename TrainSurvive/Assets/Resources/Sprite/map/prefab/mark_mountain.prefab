@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4185689152197150}
   - component: {fileID: 212975237504804372}
   m_Layer: 0
-  m_Name: mountain
+  m_Name: mark_mountain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
