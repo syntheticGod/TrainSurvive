@@ -22,7 +22,8 @@ namespace TTT.Item
         {
             NONE = -1,
             ADD_ITEM,
-            REMOVE_ITEM
+            REMOVE_ITEM,
+            SORT_ITEM
         }
         private List<ItemData> storage;
         public int Count { get { return storage.Count; } }
@@ -121,6 +122,7 @@ namespace TTT.Item
                     else
                     {
                         storage[i].Number -= number;
+                        break;
                     }
                 }
             }
@@ -167,9 +169,11 @@ namespace TTT.Item
                         //两个物品的数量小于等于最大堆叠数，删去后一物品
                         storage[i].Number += storage[i + 1].Number;
                         storage.RemoveAt(i + 1);
+                        i--;
                     }
                 }
             }
+            Notify((int)EAction.SORT_ITEM);
         }
         public List<ItemData> CloneStorage()
         {

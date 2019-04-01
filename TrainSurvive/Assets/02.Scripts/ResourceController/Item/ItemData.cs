@@ -15,7 +15,7 @@ using TTT.Utility;
 using Assets._02.Scripts.zhxUIScripts;
 
 [Serializable]
-public class ItemData
+public class ItemData : IComparable
 {
     /// <summary>
     /// 物品ID
@@ -88,14 +88,20 @@ public class ItemData
     /// <returns></returns>
     public int CompareTo(ItemData other)
     {
-        if (ID != other.ID)
+        if (ID == other.ID)
         {
-            if (Number != other.Number)
-                return Number.CompareTo(other.Number);
-            else
+            if (Number == other.Number)
                 return Rarity.CompareTo(other.Rarity);
+            else
+                return Number.CompareTo(other.Number);
         }
         return ID.CompareTo(other.ID);
+    }
+    public int CompareTo(object obj)
+    {
+        ItemData other = obj as ItemData;
+        if (other == null) return -1;
+        return CompareTo(other);
     }
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -180,5 +186,6 @@ public class ItemData
     {
         return new ItemData(specailIDPool[MathTool.RandomInt(specailIDPool.Length)], number, true);
     }
+
 }
 

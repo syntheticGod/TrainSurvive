@@ -12,10 +12,12 @@ using TTT.Utility;
 using TTT.UI.ListView;
 using WorldMap.UI;
 using Assets._02.Scripts.zhxUIScripts;
+using WorldMap;
+using TTT.Item;
 
 namespace TTT.Controller
 {
-    public class PackController : WindowsController
+    public class PackController : WindowsController, Observer
     {
         //视图
         private DragableResourceLV packLV;
@@ -32,6 +34,16 @@ namespace TTT.Controller
         public Vector2 maxAnchor = defaultMaxAnchor;
         //数据
         private List<ItemData> items;
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            World.getInstance().storage.Attach(this);
+        }
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            World.getInstance().storage.Detach(this);
+        }
         protected override void CreateModel()
         {
             Vector2 pivotOfRightBottom = new Vector2(0, 0);
@@ -82,10 +94,11 @@ namespace TTT.Controller
             for (int i = 0; i < rightBottomBtnsName.Length; i++)
             {
                 rightBottomBtns[i] = ViewTool.CreateBtn(rightBottomBtnsName[i], rightBottomBtnsContent[i], btns);
+                int index = i;
+                rightBottomBtns[i].onClick.AddListener(delegate () { OnRightBottomBtnClick(index); });
                 ViewTool.RightBottom(rightBottomBtns[i], pivotOfRightBottom, sizeOfRightBottom, directionOfRightBottom);
                 directionOfRightBottom.y += sizeOfRightBottom.y;
             }
-            rightBottomBtns[0].onClick.AddListener(delegate () { OnRightBottomBtnClick(0); });
             topLeftBtns = new Button[topLeftBtnsName.Length];
             for (int i = 0; i < topLeftBtnsName.Length; i++)
             {
@@ -119,7 +132,12 @@ namespace TTT.Controller
         {
             switch (index)
             {
+                //托此丢弃
+                case 0:
+                    break;
+                //整理物品
                 case 1:
+                    World.getInstance().storage.SortStorage();
                     break;
             }
         }
@@ -127,19 +145,30 @@ namespace TTT.Controller
         {
             Hide();
         }
-
+        public void ObsUpdate(int state, int echo, object tag = null)
+        {
+            switch ((Storage.EAction)state)
+            {
+                case Storage.EAction.ADD_ITEM:
+                case Storage.EAction.REMOVE_ITEM:
+                case Storage.EAction.SORT_ITEM:UpdatePack(); break;
+            }
+        }
         protected override bool PrepareDataBeforeShowWindow()
         {
             items = World.getInstance().storage.CloneStorage();
+            packLV.SetData(items);
             return true;
         }
         protected override void AfterShowWindow()
         {
-            packLV.Datas = items;
+            packLV.Refresh();
         }
 
-        public void UpdatePack() {
-            OnEnable();
+        public void UpdatePack()
+        {
+            items = World.getInstance().storage.CloneStorage();
+            packLV.Datas = items;
         }
 #if DEBUG
         public void AddRandomMaterial()

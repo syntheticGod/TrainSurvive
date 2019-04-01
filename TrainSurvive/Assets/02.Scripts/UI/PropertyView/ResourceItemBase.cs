@@ -27,7 +27,7 @@ namespace TTT.UI
         protected Image targetImage;
 
         public int ItemID { get; protected set; } = -1;
-        
+
         // TODO:应该从资源文件中读取
         protected static Color[] markColors = new Color[]
         {
@@ -57,7 +57,8 @@ namespace TTT.UI
             ViewTool.FullFillRectTransform(targetImage, Vector2.zero, Vector2.zero);
         }
         /// <summary>
-        /// 通过物品的ID设置 图标 稀有度
+        /// 通过物品的ID设置 图标 
+        /// 稀有度为默认的普通状态
         /// </summary>
         /// <param name="id">物品ID</param>
         public void SetItemID(int id)
@@ -65,18 +66,31 @@ namespace TTT.UI
             ItemID = id;
             ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
             targetImage.sprite = item.ItemSprite;
-            markImage.color = markColors[(int)item.Rarity];
+            //如果是随机的稀有度，那么就默认为普通
+            int rarityIndex = (int)PublicData.Rarity.Common;
+            if (item.Rarity != PublicData.Rarity.Random)
+                rarityIndex = (int)item.Rarity;
+            markImage.color = markColors[rarityIndex];
         }
         /// <summary>
         /// 通过物品的ID设置 图标 稀有度
         /// </summary>
         /// <param name="id">物品ID</param>
         /// <param name="rarity">物品稀有度</param>
-        public void SetItemIDAndRarity(int id, PublicData.Rarity rarity) {
+        public void SetItemIDAndRarity(int id, PublicData.Rarity rarity)
+        {
             ItemID = id;
             ItemInfo item = StaticResource.GetItemInfoByID<ItemInfo>(id);
             targetImage.sprite = item.ItemSprite;
-            markImage.color = markColors[(int)rarity];
+            int rarityIndex = (int)rarity;
+            if (rarityIndex < 0 || rarityIndex >= markColors.Length)
+            {
+                Debug.LogError("物品{ID:" + id + "}的稀有度设置错误：" + rarityIndex);
+            }
+            else
+            {
+                markImage.color = markColors[rarityIndex];
+            }
         }
         /// <summary>
         /// 清除所有东西：id=-1、图片变为默认、稀有度变为最低
