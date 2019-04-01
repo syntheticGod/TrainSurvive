@@ -287,15 +287,15 @@ namespace WorldMap {
 
         /// <summary>
         /// 生成特殊战斗
-        /// 根据当前位置，在地块中随机选取一个位置生成特殊战斗
+        /// 根据区块坐标，在地块中随机选取一个位置生成特殊战斗
         /// </summary>
-        /// <param name="pos">当前位置</param>
+        /// <param name="arePos">区块坐标，不是位置坐标</param>
         /// <param name="specialId">特殊战斗id</param>
         /// <returns>
         /// TRUE：生成了一个特殊地区
         /// FALSE：无法生成特殊区域，该地块没有任何的空位
         /// </returns>
-        public bool generateSpecialArea(Vector2Int pos, int specialId) {
+        public bool generateSpecialArea(Vector2Int arePos, int specialId) {
             //获取城镇的行数和列数
             int townRowNum = towns.GetLength(0);
             int townColNum = towns.GetLength(1);
@@ -304,17 +304,14 @@ namespace WorldMap {
             int townRowSize = rowNum / townRowNum;
             int townColSize = colNum / townColNum;
 
-            //获取该点在大块的坐标
-            Vector2Int blockIndex = new Vector2Int(pos.x / townRowSize, pos.y / townColSize);
-
             //获取当前大块范围内可被作为特殊战斗的坐标
             List<Vector2Int> candidatePos = new List<Vector2Int>();
 
             //获取当前大块的范围
-            int starti = blockIndex.x * townRowSize;
-            int endi = (blockIndex.x + 1) * townRowSize;
-            int startj = blockIndex.y * townRowSize;
-            int endj = (blockIndex.y + 1) * townRowSize;
+            int starti = arePos.x * townRowSize;
+            int endi = (arePos.x + 1) * townRowSize;
+            int startj = arePos.y * townRowSize;
+            int endj = (arePos.y + 1) * townRowSize;
             //遍历大块的每个元素
             for (int i = starti; i < endi; i++) {
                 for (int j = startj; j < endj; j++) {
@@ -335,13 +332,13 @@ namespace WorldMap {
 
             //选取其中一个点作为特殊地区
             int randIndex = Random.Range(0, candidatePos.Count);
-
+            Vector2Int battleMapPos = candidatePos[randIndex];
             //设置特殊区域和区域id
-            map.spowns[candidatePos[randIndex].x, candidatePos[randIndex].y].SetSpecialTerrain(SpecialTerrainEnum.SPECIAL_AREA);
-            map.spowns[candidatePos[randIndex].x, candidatePos[randIndex].y].SetMonsterId(specialId);
+            map.spowns[battleMapPos.x, battleMapPos.y].SetSpecialTerrain(SpecialTerrainEnum.SPECIAL_AREA);
+            map.spowns[battleMapPos.x, battleMapPos.y].SetMonsterId(specialId);
 
             //生成对应的gameObject
-            ObjectGenerate.paintSpecialArea(pos);
+            ObjectGenerate.paintSpecialArea(battleMapPos);
 
             return true;
         }

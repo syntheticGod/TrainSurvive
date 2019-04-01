@@ -11,7 +11,8 @@ using System.IO;
 using UnityEngine;
 using WorldMap;
 
-public class SpecialBattleInitializer  {
+public class SpecialBattleInitializer
+{
 
     private SpecialBattleInitializer()
     {
@@ -20,9 +21,9 @@ public class SpecialBattleInitializer  {
     private static SpecialBattleInitializer instance;
     public static SpecialBattleInitializer getInstance()
     {
-         if (instance == null)
-                instance = new SpecialBattleInitializer();
-            return instance;
+        if (instance == null)
+            instance = new SpecialBattleInitializer();
+        return instance;
     }
     /// <summary>
     /// 读取xml获得特殊战斗结构体
@@ -41,12 +42,12 @@ public class SpecialBattleInitializer  {
         if (aimNode == null)
             return null;
         bt.id = battleId;
-        bt.name= aimNode.Attributes["name"].Value;
-        bt.expNum = int.Parse(aimNode.Attributes["expNum"].Value);   
+        bt.name = aimNode.Attributes["name"].Value;
+        bt.expNum = int.Parse(aimNode.Attributes["expNum"].Value);
         bt.is_talk_battle = aimNode.Attributes["type"].Value == "talk";
         if (!bt.is_talk_battle)
         {
-            bt.posX= aimNode.Attributes["posX"].Value;
+            bt.posX = aimNode.Attributes["posX"].Value;
             bt.posY = aimNode.Attributes["posY"].Value;
         }
 
@@ -70,7 +71,7 @@ public class SpecialBattleInitializer  {
                     int id = int.Parse(reward.Attributes["id"].Value);
                     int num = int.Parse(reward.Attributes["num"].Value);
                     bt.rewardList.Add(new System.ValueTuple<int, int>(id, num));
-                }            
+                }
             }
         }
         return bt;
@@ -84,23 +85,20 @@ public class SpecialBattleInitializer  {
     {
         if (battle.is_talk_battle)
             return false;
-        int posX;
-        int posY;
+        Vector2Int curPos;
         if (battle.posX == "now")
         {
-            Vector2Int teamPosition = World.getInstance().PMarker.TeamMapPos;
-            Vector2Int blockPos = Map.GetInstance().CalArea(World.getInstance().PMarker.MapPos);
-            posX = blockPos.x;
-            posY= blockPos.y;
-            Debug.Log("特殊战斗生成于当前区块，位置:" + posX + "," + posY);
+            curPos = Map.GetInstance().CalArea(World.getInstance().PMarker.MapPos);
+            Debug.Log("特殊战斗生成于当前区块，位置:" + curPos.x + "," + curPos.x);
         }
         else
         {
-            posX = int.Parse(battle.posX);
-            posY = int.Parse(battle.posY);
-            Debug.Log("特殊战斗生成于指定区块，位置:" + posX + "," + posY);
+            curPos = new Vector2Int();
+            curPos.x = int.Parse(battle.posX);
+            curPos.y = int.Parse(battle.posY);
+            Debug.Log("特殊战斗生成于指定区块，位置:" + curPos.x + "," + curPos.y);
         }
-        return Map.GetInstance().generateSpecialArea(new Vector2Int(posX, posY), battle.id);
+        return Map.GetInstance().generateSpecialArea(curPos, battle.id);
     }
 
     /// <summary>

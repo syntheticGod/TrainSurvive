@@ -6,6 +6,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using TTT.Resource;
 using UnityEngine;
 using static WorldMap.SpawnPoint;
 
@@ -17,10 +18,11 @@ namespace WorldMap {
         /// </summary>
         public static void paintSpecialArea(Vector2Int pos) {
             //生成特殊战斗区域对象
-            Vector3 loc = MapGenerate.orign + MonsterGenerate.monsterPicOffset
-                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0);
+            //Vector3 loc = MapGenerate.orign + MonsterGenerate.monsterPicOffset
+            //                        + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0);
+            
             Debug.Log("特殊战斗生成于" + pos.x + "," + pos.y);
-            GameObject o = Instantiate(MonsterGenerate.specialAreaPic, loc,Quaternion.identity);
+            GameObject o = Instantiate(MonsterGenerate.specialAreaPic, StaticResource.BlockCenter(pos), Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.monsterParent;
             o.GetComponent<SpriteRenderer>().sortingOrder = 7;
