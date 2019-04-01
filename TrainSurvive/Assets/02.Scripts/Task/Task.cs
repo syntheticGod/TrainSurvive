@@ -49,7 +49,11 @@ public class Task  {
             return has_talk_ballte();
 
         if(task_battle!=null&& !task_battle.is_talk_battle)
+        {
+            TaskController.getInstance().taskid_battle = id;
             SpecialBattleInitializer.getInstance().generateSpecialBattle(task_battle);
+        }
+            
 
         condition = TaskController.TASKCONDITION.DOING;
         return has_talk_ballte();

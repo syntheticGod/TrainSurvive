@@ -17,10 +17,10 @@ namespace WorldMap {
         /// </summary>
         public static void paintSpecialArea(Vector2Int pos) {
             //生成特殊战斗区域对象
-            GameObject o = Instantiate(MonsterGenerate.specialAreaPic,
-                                    MapGenerate.orign + MonsterGenerate.monsterPicOffset
-                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0),
-                                    Quaternion.identity);
+            Vector3 loc = MapGenerate.orign + MonsterGenerate.monsterPicOffset
+                                    + new Vector3(MapGenerate.spawnOffsetX * pos.x, MapGenerate.spawnOffsetY * pos.y, 0);
+            Debug.Log("特殊战斗生成于" + pos.x + "," + pos.y);
+            GameObject o = Instantiate(MonsterGenerate.specialAreaPic, loc,Quaternion.identity);
             //设置父节点
             o.transform.parent = MonsterGenerate.monsterParent;
             o.GetComponent<SpriteRenderer>().sortingOrder = 7;

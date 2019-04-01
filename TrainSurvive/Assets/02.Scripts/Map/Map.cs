@@ -134,6 +134,19 @@ namespace WorldMap {
                 spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.MONSTER;
         }
         /// <summary>
+        /// 判断是否是特殊战斗区域
+        /// </summary>
+        /// <param name="position">地图坐标，不是世界坐标</param>
+        /// <returns>
+        /// TRUE：是怪物区域
+        /// FALSE：不是怪物区域
+        /// </returns>
+        public bool IfSpecialBattleArea(Vector2Int position)
+        {
+            return IfInter(position) &&
+                spowns[position.x, position.y].specialTerrainType == SpawnPoint.SpecialTerrainEnum.SPECIAL_AREA;
+        }
+        /// <summary>
         /// 获取指定位置怪物级别
         /// </summary>
         /// <param name="position">地图坐标，不是世界坐标</param>

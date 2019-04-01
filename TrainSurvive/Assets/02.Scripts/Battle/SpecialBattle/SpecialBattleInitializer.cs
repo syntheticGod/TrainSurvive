@@ -89,14 +89,16 @@ public class SpecialBattleInitializer  {
         if (battle.posX == "now")
         {
             Vector2Int teamPosition = World.getInstance().PMarker.TeamMapPos;
-            Vector2Int blockPos = Map.GetInstance().CalArea(teamPosition);
+            Vector2Int blockPos = Map.GetInstance().CalArea(World.getInstance().PMarker.MapPos);
             posX = blockPos.x;
             posY= blockPos.y;
+            Debug.Log("特殊战斗生成于当前区块，位置:" + posX + "," + posY);
         }
         else
         {
             posX = int.Parse(battle.posX);
             posY = int.Parse(battle.posY);
+            Debug.Log("特殊战斗生成于指定区块，位置:" + posX + "," + posY);
         }
         return Map.GetInstance().generateSpecialArea(new Vector2Int(posX, posY), battle.id);
     }

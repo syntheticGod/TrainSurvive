@@ -46,7 +46,7 @@ namespace WorldMap {
             }
 
             //获取特殊区域的prefab
-            specialAreaPic = (GameObject)Resources.Load("Sprite/map/prefab/special");
+            specialAreaPic = (GameObject)Resources.Load("Sprite/map/prefab/mark_special");
 
             //获取资源已被采集的prefab
             isGatheredPic = (GameObject)Resources.Load("Sprite/map/prefab/isGathered");

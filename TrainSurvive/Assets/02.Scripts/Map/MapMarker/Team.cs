@@ -128,7 +128,7 @@ namespace WorldMap.Model
             map.MoveToThisSpawn(position);
             World.getInstance().PMarker.TeamMapPos = position;
             OnPassBlockCenter?.Invoke(position);
-            if (map.IfMonsterArea(position))
+            if (map.IfMonsterArea(position)||map.IfSpecialBattleArea(position))
             {
                 TimeController.getInstance()?.changeScene(true);
                 //触发战斗

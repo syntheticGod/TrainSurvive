@@ -57,7 +57,8 @@ namespace WorldBattle {
 
                 //获取探险队所在地块的怪物难度系数或者特殊战斗id
                 Vector2Int teamPosition = World.getInstance().PMarker.TeamMapPos;
-                int monsterLevel = WorldMap.Map.GetInstance().GetMonsterLevel(teamPosition); ;
+                int monsterLevel = WorldMap.Map.GetInstance().GetMonsterLevel(teamPosition);
+                Debug.Log("当前队伍位置：" + teamPosition.x + "," + teamPosition.y);
                 switch (WorldMap.Map.GetInstance().spowns[teamPosition.x, teamPosition.y].specialTerrainType) {
                     case WorldMap.SpawnPoint.SpecialTerrainEnum.MONSTER:
                         //根据玩家出战人数n，随机产生敌人数量
@@ -123,6 +124,7 @@ namespace WorldBattle {
                         foreach (ValueTuple<int, int> rewardTurple in battleInfo.rewardList)//添加战利品，目前仅特殊战斗有指定战利品
                         {
                             battleController.dropsList.Add(rewardTurple);
+                            Debug.Log("战利品添加:物品id" + rewardTurple.Item1+"*"+rewardTurple.Item2);
                         }
                         break;
                 }

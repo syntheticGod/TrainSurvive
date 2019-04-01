@@ -191,7 +191,7 @@ namespace WorldBattle {
                 }
                 //显示胜利的文本
                 winText.SetActive(true);
-                Debug.Log("战斗任务完成，id=" + taskId_battle);
+                Debug.Log("战斗完成，任务id=" + taskId_battle);
                 if(taskId_battle!=-1)
                     TaskController.getInstance().getTask(taskId_battle).achieve_task();
                 TaskController.getInstance().taskid_battle = -1;
@@ -224,13 +224,16 @@ namespace WorldBattle {
 
             //获取掉落的战利品
             int index = 0;
-            foreach(ValueTuple<int,int> t in dropsList)
+            if (dropsList != null)
             {
-                ItemData assets = new ItemData(t.Item1, t.Item2);
-                DropSpoils.setItem(dropSpoilsPanel.transform, assets, index);//貌似多个同一材料在UI组件上可能出BUG？
-                World.getInstance().storage.AddItem(assets);
-                index++;
-            }
+                foreach (ValueTuple<int, int> t in dropsList)
+                {
+                    ItemData assets = new ItemData(t.Item1, t.Item2);
+                    DropSpoils.setItem(dropSpoilsPanel.transform, assets, index);//貌似多个同一材料在UI组件上可能出BUG？
+                    World.getInstance().storage.AddItem(assets);
+                    index++;
+                }
+            }        
 
             //测试用，暂时保留
             for (int i = 0; i < 12; i++) {
