@@ -88,7 +88,7 @@
     <property basicRange="2" vitality="50" strength="20" agile="0" technique="0" intelligence="0" model="1" size="1" rank="2" exp="50"/>
     <skillList>
       <skill id="4"/>
-      <skill id="31"/>
+      <skill id="29"/>
     </skillList>
     <AI type="3"/>
   </monster>
