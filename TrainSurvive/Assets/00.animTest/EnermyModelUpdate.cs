@@ -18,13 +18,13 @@ namespace WorldBattle {
         // Start is called before the first frame update
         void Start()
         {
+            UpdateModel();
 
         }
 
         // Update is called once per frame
         void Update()
         {
-            UpdateModel();
         }
 
         void UpdateModel()
@@ -51,7 +51,13 @@ namespace WorldBattle {
                         this.GetComponent<SpriteRenderer>().sprite = model1;
                         break;
                     case 2:
-                        this.GetComponent<SpriteRenderer>().sprite = model2;
+                        //野兽太多了，为展示效果，分下流
+                        int a = Random.Range(0, 100);
+                        if (a < 25)
+                            this.GetComponent<SpriteRenderer>().sprite = model1;
+                        else if (a > 75) this.GetComponent<SpriteRenderer>().sprite = model3;
+                        else
+                            this.GetComponent<SpriteRenderer>().sprite = model2;
                         break;
                     case 4:
                         this.GetComponent<SpriteRenderer>().sprite = model3;
