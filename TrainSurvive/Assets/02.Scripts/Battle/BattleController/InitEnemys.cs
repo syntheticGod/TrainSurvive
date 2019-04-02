@@ -38,7 +38,7 @@ namespace WorldBattle {
                 battleController.enemyPanels = new List<GameObject>();
                 for (int i = 0; i < battleController.enemyNum; i++) {
                     //生成敌人
-                    GameObject curPlayer = Instantiate(battleController.player,
+                    GameObject curPlayer = Instantiate(battleController.enermy,
                         battleController.orign,
                         Quaternion.identity);
                     curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
@@ -85,7 +85,7 @@ namespace WorldBattle {
                     battleController.enemyPanels = new List<GameObject>();
                     for (int i = 0; i < battleController.enemyNum; i++) {
                         //生成敌人
-                        GameObject curPlayer = Instantiate(battleController.player,
+                        GameObject curPlayer = Instantiate(battleController.enermy,
                             battleController.orign,
                             Quaternion.identity);
                         curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
@@ -110,7 +110,7 @@ namespace WorldBattle {
                             int index = 0;
                             for (int i = 0; i < monsterTurple.Item2; i++) {
                                 //生成敌人
-                                GameObject curPlayer = Instantiate(battleController.player, battleController.orign, Quaternion.identity);
+                                GameObject curPlayer = Instantiate(battleController.enermy, battleController.orign, Quaternion.identity);
                                 curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
                                 BattleActor battleActor;
@@ -135,7 +135,7 @@ namespace WorldBattle {
                     int index = 0;
                     for (int i = 0; i < monsterTurple.Item2; i++) {
                         //生成敌人
-                        GameObject curPlayer = Instantiate(battleController.player, battleController.orign, Quaternion.identity);
+                        GameObject curPlayer = Instantiate(battleController.enermy, battleController.orign, Quaternion.identity);
                         curPlayer.transform.rotation = Quaternion.Euler(curPlayer.transform.eulerAngles + new Vector3(0, 180.0f, 0));
 
                         BattleActor battleActor;

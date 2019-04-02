@@ -76,9 +76,10 @@ namespace WorldBattle {
                 );
 
                 //给每个人增加普攻击退
+                /*先关闭
                 battleActor.enemyActors[atkTarget].changeRealPos(
                     battleActor.enemyActors[atkTarget].pos + battleActor.getMotionDir() * battleActor.repelDistance
-                    );
+                    );*/
 
                 //给攻击目标执行被动技能
                 battleActor.releaseAttackPassiveSkill(battleActor.enemyActors[atkTarget]);

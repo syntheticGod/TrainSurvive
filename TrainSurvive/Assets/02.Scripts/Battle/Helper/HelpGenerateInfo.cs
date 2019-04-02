@@ -42,7 +42,7 @@ namespace WorldBattle {
             textMesh.alignment = TextAlignment.Center;
             textMesh.anchor = TextAnchor.MiddleCenter;
             //设置字体大小
-            textMesh.fontSize = (int)(fontSize / textCharacterSize);
+            textMesh.fontSize = 2*(int)(fontSize / textCharacterSize);
             textMesh.characterSize = textCharacterSize;
             //设置字体加粗
             textMesh.fontStyle = FontStyle.Bold;

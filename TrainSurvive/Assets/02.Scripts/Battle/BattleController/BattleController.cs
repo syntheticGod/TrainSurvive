@@ -70,6 +70,7 @@ namespace WorldBattle {
 
         //玩家的gameObject
         public GameObject player;
+        public GameObject enermy;
 
         //保存玩家的父级
         public GameObject playersRoot;
